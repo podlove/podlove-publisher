@@ -84,9 +84,10 @@ export function parsePodloveChapters(input: string): PodloveChapter[] {
     var start = npt.parse(tag.getAttribute('start') || '')
     var title = tag.getAttribute('title') || ''
     var href = tag.getAttribute('href') || ''
+    var image = tag.getAttribute('image') || ''
 
     if (start !== null) {
-      result.push({ start: start, title: title.trim(), ...(href ? { href: href.trim() } : {}) })
+      result.push({ start: start, title: title.trim(), ...(href ? { href: href.trim() } : {}), ...(image ? { image: image.trim() } : {}) })
     }
 
     return result
