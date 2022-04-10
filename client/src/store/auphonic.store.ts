@@ -84,6 +84,7 @@ export const initialState: State = {
   service_files: {},
   tracks: [],
   file_selections: {},
+  current_file_selection: null,
 }
 
 export const INIT = 'podlove/publisher/auphonic/INIT'
