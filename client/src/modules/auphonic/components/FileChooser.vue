@@ -5,7 +5,7 @@
       <div>
         <label class="block text-sm font-medium text-gray-700">Upload Method</label>
         <select
-          v-model="currentServiceSelection"
+          @change="set('currentServiceSelection', $event.target.value)"
           class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
         >
           <option v-for="service in services" :key="service.uuid" :value="service.uuid">
@@ -28,12 +28,7 @@
               name="file-upload"
               type="file"
               class="sr-only"
-              @input="
-                (event) => {
-                  this.fileValue = event.target.files[0]
-                  this.emitValue()
-                }
-              "
+              @input="set('fileValue', $event.target.files[0])"
             />
           </label>
         </div>
@@ -48,8 +43,7 @@
               id="audio_source_url"
               class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
               placeholder="https://example.com/audio.flac"
-              v-model="urlValue"
-              @input="emitValue"
+              @input="set('urlValue', $event.target.value)"
             />
           </div>
         </div>
@@ -59,11 +53,10 @@
               >File</label
             >
             <select
-              v-model="fileSelection"
               name="audio_external_file"
               id="audio_external_file"
               class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
-              @change="handleExternalFileSelection"
+              @change="set('fileSelection', $event.target.value)"
             >
               <option v-for="file in serviceFiles" :key="file" :value="file">
                 {{ file }}
@@ -78,19 +71,12 @@
 </template>
 
 <script lang="ts">
-// NEXT UP: returning picked values from FileChooser to parent component so it can be converted into API params
-import { ref, defineComponent, nextTick } from 'vue'
-import Module from '@components/module/Module.vue'
-import PodloveButton from '@components/button/Button.vue'
-import { PlusSmIcon } from '@heroicons/vue/outline'
+import { defineComponent } from 'vue'
 import { selectors } from '@store'
 
 import { injectStore, mapState } from 'redux-vuex'
 import * as auphonic from '@store/auphonic.store'
 import { Service } from '@store/auphonic.store'
-import SelectProduction from './components/SelectProduction.vue'
-import ManageProductionForm from './components/ManageProductionForm.vue'
-import AuphonicLogo from './components/Logo.vue'
 
 import {
   Listbox,
@@ -102,7 +88,7 @@ import {
 import { CheckIcon, SelectorIcon } from '@heroicons/vue/solid'
 
 export default defineComponent({
-  emits: ['update:modelValue'],
+  props: ['file_key'],
 
   components: {
     Listbox,
@@ -114,19 +100,11 @@ export default defineComponent({
     SelectorIcon,
   },
 
-  data() {
-    return {
-      currentServiceSelection: null,
-      fileSelection: null,
-      urlValue: null,
-      fileValue: null,
-    }
-  },
-
   setup() {
     const state = mapState({
       services: selectors.auphonic.incomingServices,
       serviceFiles: selectors.auphonic.serviceFiles,
+      fileSelections: selectors.auphonic.fileSelections,
     })
 
     return {
@@ -136,48 +114,18 @@ export default defineComponent({
   },
 
   methods: {
-    async handleExternalFileSelection() {
-      await nextTick()
-      this.emitValue()
-    },
-    emitValue() {
-      const service = this.currentService
-      let value = null
-
-      switch (service.type) {
-        case 'url':
-          value = this.urlValue
-          break
-        case 'file':
-          value = this.fileValue
-          break
-
-        default:
-          value = this.fileSelection
-          break
-      }
-
-      this.$emit('update:modelValue', { service, value })
-    },
-  },
-
-  watch: {
-    ready() {
-      this.currentServiceSelection = this.state.services[0]?.uuid
-    },
-    async currentServiceSelection(uuid) {
-      this.dispatch(auphonic.selectService(uuid))
-
-      await nextTick()
-
-      this.emitValue()
+    set(prop, value) {
+      this.dispatch(
+        auphonic.updateFileSelection({
+          key: this.file_key,
+          prop,
+          value,
+        })
+      )
     },
   },
 
   computed: {
-    ready(): boolean {
-      return this.state.services.length > 0
-    },
     services(): Service[] {
       return this.state.services
     },
@@ -189,6 +137,22 @@ export default defineComponent({
         ? this.state.serviceFiles[this.currentServiceSelection]
         : null
     },
+    fileSelection(): any {
+      return this.state.fileSelections[this.file_key]
+    },
+    currentServiceSelection(): any {
+      return this.fileSelection?.currentServiceSelection
+    },
+  },
+
+  mounted() {
+    this.dispatch(
+      auphonic.updateFileSelection({
+        key: this.file_key,
+        prop: 'currentServiceSelection',
+        value: 'url',
+      })
+    )
   },
 })
 </script>

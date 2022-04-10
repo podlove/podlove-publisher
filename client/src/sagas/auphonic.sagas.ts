@@ -10,6 +10,8 @@ import { selectors } from '@store'
 function* auphonicSaga(): any {
   const apiClient: PodloveApiClient = yield createApi()
   yield fork(initialize, apiClient)
+  yield takeEvery(auphonic.UPDATE_FILE_SELECTION, handleFileSelection)
+  yield takeEvery(auphonic.SET_SERVICE_FILES, handleServiceFilesAvailable)
 }
 
 function* initialize(api: PodloveApiClient) {
@@ -111,6 +113,32 @@ function* handleCreateMultitrackProduction(auphonicApi: AuphonicApiClient) {
   const production = result.data
 
   yield put(auphonic.setProduction(production))
+}
+
+function* handleServiceFilesAvailable(action: {
+  type: string
+  payload: { uuid: string; files: string[] }
+}) {
+  const currentKey: string = yield select(selectors.auphonic.currentFileSelection)
+
+  // select first available file
+  yield put(
+    auphonic.updateFileSelection({
+      key: currentKey,
+      prop: 'fileSelection',
+      value: action.payload.files[0],
+    })
+  )
+}
+
+function* handleFileSelection(action: {
+  type: string
+  payload: { key: string; prop: string; value: any }
+}) {
+  const { prop, value } = action.payload
+  if (prop === 'currentServiceSelection') {
+    yield put(auphonic.selectService(value))
+  }
 }
 
 export default function () {

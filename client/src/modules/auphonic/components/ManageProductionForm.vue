@@ -49,13 +49,7 @@
                     </div>
                     <div class="mt-4 sm:mt-0 sm:col-span-2">
                       <div class="flex flex-col sm:flex-row gap-3">
-                        <FileChooser
-                          @update:modelValue="
-                            (value) => {
-                              updateTrack('fileSelection', value, index)
-                            }
-                          "
-                        />
+                        <FileChooser :file_key="`${production.uuid}_t${index}`" />
                       </div>
                     </div>
                   </div>
@@ -150,7 +144,7 @@
           <fieldset class="sm:col-span-4">
             <legend class="text-base font-medium text-gray-900">Audio Source</legend>
             <div class="mt-2 flex">
-              <FileChooser @update:modelValue="(value) => (fileSelection = value)" />
+              <FileChooser :file_key="production.uuid" />
             </div>
           </fieldset>
         </div>
@@ -159,9 +153,6 @@
 
     <div class="pt-5">
       <div class="flex justify-end gap-3">
-        <podlove-button variant="secondary" @click="handleUpload"
-          >Upload (debug only)</podlove-button
-        >
         <podlove-button variant="secondary">Cancel</podlove-button>
         <podlove-button variant="primary">Start Production</podlove-button>
       </div>
@@ -179,7 +170,8 @@ import { selectors } from '@store'
 
 import { injectStore, mapState } from 'redux-vuex'
 import * as auphonic from '@store/auphonic.store'
-import { Production, AudioTrack } from '@store/auphonic.store'
+import { Production, AudioTrack, FileSelection } from '@store/auphonic.store'
+
 
 export default defineComponent({
   components: {
@@ -188,9 +180,7 @@ export default defineComponent({
   },
 
   data() {
-    return {
-      fileSelection: {},
-    }
+    return {}
   },
 
   setup() {
@@ -198,15 +188,13 @@ export default defineComponent({
       state: mapState({
         production: selectors.auphonic.production,
         tracks: selectors.auphonic.tracks,
+        fileSelections: selectors.auphonic.fileSelections,
       }),
       dispatch: injectStore().dispatch,
     }
   },
 
   methods: {
-    handleUpload() {
-      this.dispatch(auphonic.uploadFile(this.fileSelection.value))
-    },
     addTrack() {
       this.dispatch(auphonic.addTrack())
     },
@@ -229,6 +217,25 @@ export default defineComponent({
     },
     isMultitrack(): boolean {
       return this.state.production && this.state.production.is_multitrack
+    },
+    fileSelections(): any {
+      const prepareFile = (selection: FileSelection) => {
+        switch (selection.currentServiceSelection) {
+          case 'url':
+            return { service: 'url', value: selection.urlValue }
+          case 'file':
+            return { service: 'file', value: selection.fileValue }
+          default:
+            return { service: selection.currentServiceSelection, value: selection.fileSelection }
+        }
+      }
+
+      return this.isMultitrack
+        ? this.tracks.reduce((agg, _track, index) => {
+            agg.push(prepareFile(this.state.fileSelections[`${this.production.uuid}_t${index}`]))
+            return agg
+          }, [])
+        : prepareFile(this.state.fileSelections[this.production.uuid])
     },
   },
 })
