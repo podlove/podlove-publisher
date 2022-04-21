@@ -121,11 +121,11 @@
                               :id="`track_${index}_fgbg`"
                               class="mt-1 block w-[168px] pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
                             >
-                              <option value="0">Auto</option>
-                              <option value="1">Foreground Track</option>
-                              <option value="2">Background Track</option>
-                              <option value="3">Duck this Track</option>
-                              <option value="4">Unchanged (Foreground)</option>
+                              <option value="auto">Auto</option>
+                              <option value="foreground">Foreground Track</option>
+                              <option value="background">Background Track</option>
+                              <option value="ducking">Duck this Track</option>
+                              <option value="unchanged">Unchanged (Foreground)</option>
                             </select>
                           </div>
                         </div>
