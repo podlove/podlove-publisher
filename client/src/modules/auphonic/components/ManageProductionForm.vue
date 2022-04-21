@@ -51,10 +51,13 @@
                       <div class="flex flex-col sm:flex-row gap-3">
                         <FileChooser :file_key="`${production.uuid}_t${index}`" />
                       </div>
+                      <div v-if="track.input_file_name" class="mt-1 text-sm text-gray-700">
+                        Current File: {{ track.input_file_name }}
+                      </div>
                     </div>
                   </div>
                 </div>
-                <div role="group" class="pt-6">
+                <div role="group" class="pt-6 bg-gr">
                   <div class="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-baseline">
                     <div>
                       <div class="text-base font-medium text-gray-900 sm:text-sm sm:text-gray-700">

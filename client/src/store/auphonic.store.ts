@@ -41,6 +41,28 @@ export type Production = {
   metadata: Metadata
   creation_time: string
   is_multitrack: boolean
+  multi_input_files: AuphonicInputFile[]
+}
+
+export type AuphonicInputFile = {
+  id: string
+  input_file: string
+  input_filetype: string
+  input_length: number
+  service: string | null
+  type: 'multitrack' | string
+  offset: number
+  input_channels: number
+  input_bitrate: number
+  input_samplerate: number
+  algorithms: AuphonicTrackAlgorithms
+}
+
+export type AuphonicTrackAlgorithms = {
+  backforeground: string
+  denoise: boolean
+  denoiseamount: number
+  hipfilter: boolean
 }
 
 export type Preset = Production & {
@@ -50,6 +72,7 @@ export type Preset = Production & {
 export type AudioTrack = {
   identifier: string
   fileSelection: any
+  input_file_name: string
   filtering: boolean
   noise_and_hum_reduction: boolean
   fore_background: string
@@ -201,10 +224,25 @@ export const reducer = handleActions(
       ...state,
       productions: action.payload,
     }),
-    [SET_PRODUCTION]: (state: State, action: { payload: Production | null }): State => ({
-      ...state,
-      production: action.payload,
-    }),
+    [SET_PRODUCTION]: (state: State, action: { payload: Production | null }): State => {
+      return {
+        ...state,
+        production: action.payload,
+        tracks:
+          action.payload?.multi_input_files?.reduce((acc, file) => {
+            return [
+              ...acc,
+              {
+                identifier: file.id,
+                filtering: file.algorithms.hipfilter,
+                noise_and_hum_reduction: file.algorithms.denoise,
+                fore_background: file.algorithms.backforeground,
+                input_file_name: file.input_file,
+              } as AudioTrack,
+            ]
+          }, [] as AudioTrack[]) || [],
+      }
+    },
     [SET_TOKEN]: (state: State, action: { payload: string | null }): State => ({
       ...state,
       token: action.payload,
