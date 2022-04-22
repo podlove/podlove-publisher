@@ -157,7 +157,17 @@
     <div class="pt-5">
       <div class="flex justify-end gap-3">
         <podlove-button variant="secondary">Cancel</podlove-button>
+        <podlove-button variant="secondary" @click="saveProduction">Save Production</podlove-button>
         <podlove-button variant="primary">Start Production</podlove-button>
+      </div>
+    </div>
+
+    <div class="pt-5">
+      <div class="bg-white overflow-hidden shadow rounded-lg">
+        <div class="px-4 py-5 sm:px-6">Production Payload Preview</div>
+        <div class="bg-gray-50 px-4 py-5 sm:p-6 font-mono whitespace-pre">
+          {{ JSON.stringify(payload, null, '\t') }}
+        </div>
       </div>
     </div>
   </form>
@@ -192,12 +202,21 @@ export default defineComponent({
         production: selectors.auphonic.production,
         tracks: selectors.auphonic.tracks,
         fileSelections: selectors.auphonic.fileSelections,
+        productionPayload: selectors.auphonic.productionPayload,
       }),
       dispatch: injectStore().dispatch,
     }
   },
 
   methods: {
+    saveProduction() {
+      this.dispatch(
+        auphonic.saveProduction({
+          uuid: this.production.uuid,
+          payload: this.payload,
+        })
+      )
+    },
     addTrack() {
       this.dispatch(auphonic.addTrack())
     },
@@ -221,8 +240,15 @@ export default defineComponent({
     isMultitrack(): boolean {
       return this.state.production && this.state.production.is_multitrack
     },
+    productionPayload(): object {
+      return this.state.productionPayload
+    },
     fileSelections(): any {
       const prepareFile = (selection: FileSelection) => {
+        if (!selection) {
+          return {}
+        }
+
         switch (selection.currentServiceSelection) {
           case 'url':
             return { service: 'url', value: selection.urlValue }
@@ -239,6 +265,42 @@ export default defineComponent({
             return agg
           }, [])
         : prepareFile(this.state.fileSelections[this.production.uuid])
+    },
+    payload(): object {
+      const payload = {
+        reset_data: true,
+        ...this.productionPayload,
+        // FIXME: only override type=multitrack files, keep intro/outro files intact
+        multi_input_files: this.tracks.map((track, index) => {
+          let fileReference = {}
+
+          if (this.fileSelections[index].service == 'url') {
+            fileReference = {
+              input_file: this.fileSelections[index].value,
+            }
+          } else if (this.fileSelections[index].service == 'file') {
+            // is uploaded separately
+          } else {
+            fileReference = {
+              service: this.fileSelections[index].service,
+              input_file: this.fileSelections[index].value,
+            }
+          }
+
+          return {
+            type: 'multitrack',
+            id: track.identifier,
+            ...fileReference,
+            algorithms: {
+              denoise: track.noise_and_hum_reduction,
+              hipfilter: track.filtering,
+              backforeground: track.fore_background,
+            },
+          }
+        }),
+      }
+
+      return payload
     },
   },
 })

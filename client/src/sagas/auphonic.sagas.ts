@@ -70,6 +70,17 @@ function* initializeAuphonicApi() {
   )
   yield takeEvery(auphonic.selectService, fetchServiceFiles, auphonicApi)
   yield takeEvery(auphonic.uploadFile, uploadFile, auphonicApi)
+  yield takeEvery(auphonic.saveProduction, handleSaveProduction, auphonicApi)
+}
+
+function* handleSaveProduction(
+  auphonicApi: AuphonicApiClient,
+  action: { type: string; payload: any }
+) {
+  const uuid = action.payload.uuid
+  const payload = action.payload.payload
+  const { result } = yield auphonicApi.post(`production/${uuid}.json`, payload)
+  console.log({ result })
 }
 
 function* uploadFile(auphonicApi: AuphonicApiClient, action: { type: string; payload: File }) {
