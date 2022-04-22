@@ -33,6 +33,7 @@ const auphonic = {
   productionId: createSelector(root.auphonic, auphonicStore.selectors.productionId),
   productions: createSelector(root.auphonic, auphonicStore.selectors.productions),
   production: createSelector(root.auphonic, auphonicStore.selectors.production),
+  productionPayload: createSelector(root.auphonic, auphonicStore.selectors.productionPayload),
   incomingServices: createSelector(root.auphonic, auphonicStore.selectors.incomingServices),
   outgoingServices: createSelector(root.auphonic, auphonicStore.selectors.outgoingServices),
   serviceFiles: createSelector(root.auphonic, auphonicStore.selectors.serviceFiles),
