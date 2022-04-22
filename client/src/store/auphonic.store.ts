@@ -42,6 +42,13 @@ export type Production = {
   creation_time: string
   is_multitrack: boolean
   multi_input_files: AuphonicInputFile[]
+  input_file: string
+  chapters: object[]
+  output_basename: string
+  output_files: object[]
+  outgoing_services: object[]
+  algorithms: object
+  speech_recognition: object
 }
 
 export type AuphonicInputFile = {
@@ -118,6 +125,7 @@ export const SET_SERVICES = 'podlove/publisher/auphonic/SET_SERVICES'
 export const CREATE_PRODUCTION = 'podlove/publisher/auphonic/CREATE_PRODUCTION'
 export const CREATE_MULTITRACK_PRODUCTION =
   'podlove/publisher/auphonic/CREATE_MULTITRACK_PRODUCTION'
+export const SAVE_PRODUCTION = 'podlove/publisher/auphonic/SAVE_PRODUCTION'
 export const SELECT_SERVICE = 'podlove/publisher/auphonic/SELECT_SERVICE'
 export const SET_SERVICE_FILES = 'podlove/publisher/auphonic/SET_SERVICE_FILES'
 export const UPLOAD_FILE = 'podlove/publisher/auphonic/UPLOAD_FILE'
@@ -135,6 +143,7 @@ export const setProduction = createAction<Production>(SET_PRODUCTION)
 export const setProductions = createAction<Production[]>(SET_PRODUCTIONS)
 export const createProduction = createAction<string>(CREATE_PRODUCTION)
 export const createMultitrackProduction = createAction<string>(CREATE_MULTITRACK_PRODUCTION)
+export const saveProduction = createAction<Production>(SAVE_PRODUCTION)
 
 // Presets
 export const setPresets = createAction<Preset[]>(SET_PRESETS)
@@ -251,11 +260,70 @@ export const reducer = handleActions(
   initialState
 )
 
+const chaptersPayload = (chapters) => {
+  return chapters.map((chapter) => {
+    let payload: {
+      start: string
+      title: string
+      image?: string
+      url?: string
+    } = {
+      start: chapter.start,
+      title: chapter.title,
+    }
+
+    if (chapter.image) {
+      payload.image = chapter.image
+    }
+
+    if (chapter.url) {
+      payload.url = chapter.url
+    }
+
+    return payload
+  })
+}
+
+const outputFilesPayload = (output_files) => {
+  return output_files.map((file) => {
+    return {
+      format: file.format,
+      bitrate: file.bitrate,
+      suffix: file.suffix,
+      ending: file.ending,
+      filename: file.filename,
+      mono_mixdown: file.mono_mixdown,
+      split_on_chapters: file.split_on_chapters,
+      outgoing_services: file.outgoing_services,
+    }
+  })
+}
+
+const productionPayload = (state: State) => {
+  const production = state.production
+
+  return {
+    reset_data: true,
+    uuid: production?.uuid,
+    // image: production?.image,
+    metadata: production?.metadata,
+    input_file: production?.input_file,
+    chapters: chaptersPayload(production?.chapters),
+    output_files: outputFilesPayload(production?.output_files),
+    output_basename: production?.output_basename,
+    outgoing_services: production?.outgoing_services,
+    algorithms: production?.algorithms,
+    speech_recognition: production?.speech_recognition,
+    multi_input_files: production?.multi_input_files,
+  }
+}
+
 export const selectors = {
   token: (state: State) => state.token,
   production: (state: State) => state.production,
   productionId: (state: State) => state.production?.uuid,
   productions: (state: State) => state.productions,
+  productionPayload,
   services: (state: State) => state.services,
   incomingServices: (state: State) => state.services.filter((s: Service) => s.incoming),
   outgoingServices: (state: State) => state.services.filter((s: Service) => s.outgoing),
