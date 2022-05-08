@@ -20,44 +20,62 @@
         <div v-if="isMultitrack">
           <h2 class="pb-4 text-base font-semibold">Audio Tracks</h2>
 
-          <div class="bg-white shadow overflow-hidden rounded-md">
+          <div class="bg-white shadow overflow-hidden rounded-md max-w-3xl">
             <ul role="list" class="divide-y divide-gray-200">
-              <li v-for="(track, index) in tracks" :key="`track-${index}`" class="px-6 py-4">
-                <div class="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:pt-5">
-                  <label
-                    for="first-name"
-                    class="text-base font-medium text-gray-900 sm:text-sm sm:text-gray-700"
-                  >
-                    Track Identifier
-                  </label>
-                  <div class="mt-1 sm:mt-0 sm:col-span-2">
-                    <input
-                      type="text"
-                      :value="track.identifier"
-                      @input="updateTrack('identifier', $event.target.value, index)"
-                      class="max-w-lg block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:max-w-xs sm:text-sm border-gray-300 rounded-md"
-                    />
-                  </div>
-                </div>
-
-                <div role="group" class="pt-6">
-                  <div class="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-baseline">
-                    <div>
-                      <div class="text-base font-medium text-gray-900 sm:text-sm sm:text-gray-700">
-                        File
+              <li
+                v-for="(track, index) in tracks"
+                :key="`xtrack-${index}`"
+                class="px-6 py-4 divide-y divide-gray-200 space-y-4"
+              >
+                <div class="md:flex md:gap-4">
+                  <div class="md:grid md:grid-cols-3 md:gap-12">
+                    <div class="md:col-span-1">
+                      <label
+                        :for="`track-id-${index}`"
+                        class="block text-sm font-medium text-gray-700"
+                        >Track Identifier</label
+                      >
+                      <input
+                        :id="`track-id-${index}`"
+                        type="text"
+                        :value="track.identifier"
+                        @input="updateTrack('identifier', $event.target.value, index)"
+                        class="mt-1 max-w-lg block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:max-w-xs sm:text-sm border-gray-300 rounded-md"
+                      />
+                    </div>
+                    <div class="mt-5 md:mt-0 md:col-span-2">
+                      <div class="sm:items-baseline">
+                        <div class="mt-4 sm:mt-0">
+                          <div class="flex flex-col sm:flex-row gap-3">
+                            <FileChooser :file_key="`${production.uuid}_t${index}`" />
+                          </div>
+                          <div v-if="track.input_file_name" class="mt-1 text-sm text-gray-700">
+                            Current File: {{ track.input_file_name }}
+                          </div>
+                        </div>
                       </div>
                     </div>
-                    <div class="mt-4 sm:mt-0 sm:col-span-2">
-                      <div class="flex flex-col sm:flex-row gap-3">
-                        <FileChooser :file_key="`${production.uuid}_t${index}`" />
-                      </div>
-                      <div v-if="track.input_file_name" class="mt-1 text-sm text-gray-700">
-                        Current File: {{ track.input_file_name }}
-                      </div>
+                  </div>
+                  <div class="mt-5 md:mt-1">
+                    <div title="Algorithm Settings" @click="toggleAlgorithmSettingVisible(index)">
+                      <span
+                        v-if="algorithmSettingsVisible(index)"
+                        class="flex sm:mt-[26px] gap-1 items-center text-sm text-gray-700 cursor-pointer"
+                      >
+                        <ChevronRightIcon class="h-6 w-6 text-gray-500" />
+                        <span class="block md:hidden">Hide Algorithm Settings</span>
+                      </span>
+                      <span
+                        v-else
+                        class="flex sm:mt-[26px] gap-1 items-center text-sm text-gray-700 cursor-pointer"
+                      >
+                        <ChevronDownIcon class="h-6 w-6 text-gray-500" />
+                        <span class="block md:hidden">Show Algorithm Settings</span>
+                      </span>
                     </div>
                   </div>
                 </div>
-                <div role="group" class="pt-6 bg-gr">
+                <div role="group" class="pt-6 bg-gr" v-show="algorithmSettingsVisible(index)">
                   <div class="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-baseline">
                     <div>
                       <div class="text-base font-medium text-gray-900 sm:text-sm sm:text-gray-700">
@@ -138,9 +156,6 @@
                 </div>
               </li>
             </ul>
-            <div class="bg-gray-50 px-4 py-4 sm:px-6">
-              <podlove-button variant="primary" @click="addTrack">Add Track</podlove-button>
-            </div>
           </div>
         </div>
         <div v-else class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
@@ -185,19 +200,26 @@ import { injectStore, mapState } from 'redux-vuex'
 import * as auphonic from '@store/auphonic.store'
 import { Production, AudioTrack, FileSelection } from '@store/auphonic.store'
 
+import { CogIcon, ChevronDownIcon, ChevronRightIcon } from '@heroicons/vue/outline'
+
 // NEXT UP: think about updating the production via API
 // - should it just happen automatically every X seconds? how's the UX for that?
 // - uploads need to be separate from that though, right?
-// - verify that track data is restored from API after page reload
+// x verify that track data is restored from API after page reload
 
 export default defineComponent({
   components: {
     PodloveButton,
     FileChooser,
+    CogIcon,
+    ChevronDownIcon,
+    ChevronRightIcon,
   },
 
   data() {
-    return {}
+    return {
+      algorithmSettings: {},
+    }
   },
 
   setup() {
@@ -231,6 +253,14 @@ export default defineComponent({
           index,
         })
       )
+    },
+    algorithmSettingsVisible(index): boolean {
+      return this.algorithmSettings[index] || false
+    },
+    toggleAlgorithmSettingVisible(index): void {
+      this.algorithmSettings[index] = this.algorithmSettings.hasOwnProperty(index)
+        ? !this.algorithmSettings[index]
+        : true
     },
   },
 
@@ -310,7 +340,7 @@ export default defineComponent({
 })
 
 // NOTES
-// - generate tracks from episode contributors
-// - remove algorithms or at least hide them
+// x generate tracks from episode contributors
+// x remove algorithms or at least hide them
 // - maybe/somehow: connect track id to contributor
 </script>
