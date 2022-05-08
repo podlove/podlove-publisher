@@ -478,7 +478,15 @@ class WP_REST_PodloveTranscripts_Controller extends WP_REST_Controller
                     $voice_assignment->save();
                 }
             }
+        } else {
+            if (isset($request['asset'])) {
+                if (Transcripts::transcript_import_from_asset($episode) !== true) {
+                    return new \Podlove\Api\Error\InternalServerError('internal_server_error', 'Sorry, we can not import the transcript from an asset.');
+                }
+            }
+        }
 
+        if (isset($request['content']) || isset($request['asset'])) {
             $transcript = Transcript::get_transcript($episode->id);
             $transcript = array_map(function ($t) {
                 return [
