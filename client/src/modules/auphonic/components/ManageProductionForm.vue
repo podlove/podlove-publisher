@@ -185,6 +185,10 @@ import { injectStore, mapState } from 'redux-vuex'
 import * as auphonic from '@store/auphonic.store'
 import { Production, AudioTrack, FileSelection } from '@store/auphonic.store'
 
+// NEXT UP: think about updating the production via API
+// - should it just happen automatically every X seconds? how's the UX for that?
+// - uploads need to be separate from that though, right?
+// - verify that track data is restored from API after page reload
 
 export default defineComponent({
   components: {
@@ -304,4 +308,9 @@ export default defineComponent({
     },
   },
 })
+
+// NOTES
+// - generate tracks from episode contributors
+// - remove algorithms or at least hide them
+// - maybe/somehow: connect track id to contributor
 </script>
