@@ -32,7 +32,7 @@ add_action('admin_print_styles', function () {
         add_filter('script_loader_tag', 'add_type_attribute' , 10, 3);
         wp_enqueue_style('podlove-vue-app-client', \Podlove\PLUGIN_URL.'/client/dist/style.css', [], $version);
 
-        $episode = Podlove\Model\Episode::find_one_by_post_id(get_the_ID());
+        $episode = Podlove\Model\Episode::find_or_create_by_post_id(get_the_ID());
 
         if (!$episode) {
           wp_localize_script(
