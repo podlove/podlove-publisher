@@ -9,7 +9,7 @@
       >
         <span class="w-full inline-flex truncate">
           <span v-if="currentProduction" class="truncate">{{
-            currentProduction._select.name
+            currentProduction.metadata.title
           }}</span>
           <span v-else class="truncate">Select Existing Production</span>
         </span>

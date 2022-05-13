@@ -46,6 +46,8 @@ export default defineComponent({
           return `focus:outline-none text-gray-700 bg-white border border-gray-300 hover:bg-gray-50 focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:bg-gray-100`
         case 'primary':
           return `focus:ring-offset-2 text-white focus:ring-indigo-500 bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-300`
+        case 'primary-disabled':
+          return `focus:ring-offset-2 text-white focus:ring-indigo-500 bg-indigo-600 opacity-50 cursor-not-allowed`
         case 'secondary':
           return `focus:ring-offset-2 text-indigo-700 focus:ring-indigo-500 bg-indigo-100 hover:bg-indigo-200 disabled:bg-indigo-50`
         case 'danger':
