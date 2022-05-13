@@ -206,6 +206,7 @@ import { CogIcon, ChevronDownIcon, ChevronRightIcon } from '@heroicons/vue/outli
 // - should it just happen automatically every X seconds? how's the UX for that?
 // - uploads need to be separate from that though, right?
 // x verify that track data is restored from API after page reload
+// - fix: when there is a "current file" restored from auphonic, the file selector must reflect that value (and, more importantly, a save must not override the file selection)
 
 export default defineComponent({
   components: {
