@@ -198,7 +198,7 @@ export const reducer = handleActions(
             fileSelection: null,
             filtering: true,
             noise_and_hum_reduction: false,
-            fore_background: '0',
+            fore_background: 'auto',
             track_gain: '0',
           },
         ],

@@ -365,7 +365,6 @@ export default defineComponent({
 // - maybe/somehow: connect track id to contributor
 // FIXME
 // - when there is a "current file" restored from auphonic, the file selector must reflect that value (and, more importantly, a save must not override the file selection)
-// - adding tracks needs to set a valid backforeground value
 // NEXT
 // - display status
 //   - query only status: https://auphonic.com/api/production/{uuid}/status.json
