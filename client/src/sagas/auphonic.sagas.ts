@@ -108,7 +108,9 @@ function defaultTitle() {
 }
 
 function* handleCreateProduction(auphonicApi: AuphonicApiClient) {
+  const preset: auphonic.Preset = yield select(selectors.auphonic.preset)
   const { result } = yield auphonicApi.post(`productions.json`, {
+    preset: preset.uuid,
     metadata: { title: defaultTitle() },
   })
   const production = result.data
@@ -117,7 +119,9 @@ function* handleCreateProduction(auphonicApi: AuphonicApiClient) {
 }
 
 function* handleCreateMultitrackProduction(auphonicApi: AuphonicApiClient) {
+  const preset: auphonic.Preset = yield select(selectors.auphonic.preset)
   const { result } = yield auphonicApi.post(`productions.json`, {
+    preset: preset.uuid,
     metadata: { title: defaultTitle() },
     is_multitrack: true,
   })
