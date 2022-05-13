@@ -156,6 +156,9 @@
                 </div>
               </li>
             </ul>
+            <div class="bg-gray-50 px-4 py-4 sm:px-6">
+              <podlove-button variant="primary" @click="addTrack">Add Track</podlove-button>
+            </div>
           </div>
         </div>
         <div v-else class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
