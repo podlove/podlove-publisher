@@ -128,6 +128,8 @@ export const CREATE_PRODUCTION = 'podlove/publisher/auphonic/CREATE_PRODUCTION'
 export const CREATE_MULTITRACK_PRODUCTION =
   'podlove/publisher/auphonic/CREATE_MULTITRACK_PRODUCTION'
 export const SAVE_PRODUCTION = 'podlove/publisher/auphonic/SAVE_PRODUCTION'
+export const START_PRODUCTION = 'podlove/publisher/auphonic/START_PRODUCTION'
+export const DESELECT_PRODUCTION = 'podlove/publisher/auphonic/DESELECT_PRODUCTION'
 export const SELECT_SERVICE = 'podlove/publisher/auphonic/SELECT_SERVICE'
 export const SET_SERVICE_FILES = 'podlove/publisher/auphonic/SET_SERVICE_FILES'
 export const UPLOAD_FILE = 'podlove/publisher/auphonic/UPLOAD_FILE'
@@ -143,10 +145,12 @@ export const setToken = createAction<string>(SET_TOKEN)
 
 // Productions
 export const setProduction = createAction<Production>(SET_PRODUCTION)
+export const deselectProduction = createAction<Production>(DESELECT_PRODUCTION)
 export const setProductions = createAction<Production[]>(SET_PRODUCTIONS)
 export const createProduction = createAction<string>(CREATE_PRODUCTION)
 export const createMultitrackProduction = createAction<string>(CREATE_MULTITRACK_PRODUCTION)
 export const saveProduction = createAction<Production>(SAVE_PRODUCTION)
+export const startProduction = createAction<Production>(START_PRODUCTION)
 
 // Presets
 export const setPresets = createAction<Preset[]>(SET_PRESETS)
@@ -256,6 +260,13 @@ export const reducer = handleActions(
           }, [] as AudioTrack[]) || [],
       }
     },
+    [DESELECT_PRODUCTION]: (state: State): State => ({
+      ...state,
+      production: null,
+      tracks: [],
+      file_selections: [],
+      current_file_selection: null,
+    }),
     [SET_PRESET]: (state: State, action: { payload: Preset | null }): State => ({
       ...state,
       preset: action.payload,
@@ -269,6 +280,10 @@ export const reducer = handleActions(
 )
 
 const chaptersPayload = (chapters) => {
+  if (!chapters) {
+    return []
+  }
+
   return chapters.map((chapter) => {
     let payload: {
       start: string
@@ -293,6 +308,10 @@ const chaptersPayload = (chapters) => {
 }
 
 const outputFilesPayload = (output_files) => {
+  if (!output_files) {
+    return []
+  }
+
   return output_files.map((file) => {
     return {
       format: file.format,
