@@ -2,17 +2,30 @@
   <form class="space-y-8 divide-y divide-gray-200">
     <div class="space-y-8 divide-y divide-gray-200">
       <div>
-        <div>
-          <h3 class="text-lg leading-6 font-medium text-gray-900">Manage Production</h3>
-          <p class="mt-1 text-sm text-gray-500">
-            {{ production?.metadata?.title }}
-            <a
-              :href="production?.edit_page"
-              target="_blank"
-              class="cursor-pointer bg-white rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500"
-              >edit in Auphonic</a
+        <div class="flex justify-between items-start">
+          <div>
+            <h3 class="text-lg leading-6 font-medium text-gray-900">Manage Production</h3>
+            <p class="mt-1 text-sm text-gray-500">
+              {{ production?.metadata?.title }}
+              <br class="block sm:hidden" />
+              <a
+                :href="production?.edit_page"
+                target="_blank"
+                class="cursor-pointer bg-white rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500"
+                >edit in Auphonic</a
+              >
+            </p>
+          </div>
+          <div class="mt-1">
+            <button
+              type="button"
+              class="bg-white rounded-md text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              @click="deselectProduction"
             >
-          </p>
+              <span class="sr-only">Change Production</span>
+              <XIcon class="h-6 w-6" aria-hidden="true" />
+            </button>
+          </div>
         </div>
 
         <div class="h-6"></div>
@@ -176,7 +189,7 @@
       <div class="flex justify-end gap-3">
         <podlove-button variant="secondary">Cancel</podlove-button>
         <podlove-button variant="secondary" @click="saveProduction">Save Production</podlove-button>
-        <podlove-button variant="primary">Start Production</podlove-button>
+        <podlove-button variant="primary" @click="startProduction">Start Production</podlove-button>
       </div>
     </div>
 
@@ -203,13 +216,7 @@ import { injectStore, mapState } from 'redux-vuex'
 import * as auphonic from '@store/auphonic.store'
 import { Production, AudioTrack, FileSelection } from '@store/auphonic.store'
 
-import { CogIcon, ChevronDownIcon, ChevronRightIcon } from '@heroicons/vue/outline'
-
-// NEXT UP: think about updating the production via API
-// - should it just happen automatically every X seconds? how's the UX for that?
-// - uploads need to be separate from that though, right?
-// x verify that track data is restored from API after page reload
-// - fix: when there is a "current file" restored from auphonic, the file selector must reflect that value (and, more importantly, a save must not override the file selection)
+import { XIcon, CogIcon, ChevronDownIcon, ChevronRightIcon } from '@heroicons/vue/outline'
 
 export default defineComponent({
   components: {
@@ -218,6 +225,7 @@ export default defineComponent({
     CogIcon,
     ChevronDownIcon,
     ChevronRightIcon,
+    XIcon,
   },
 
   data() {
@@ -246,6 +254,12 @@ export default defineComponent({
           payload: this.payload,
         })
       )
+    },
+    startProduction() {
+      this.dispatch(auphonic.startProduction({ uuid: this.production.uuid }))
+    },
+    deselectProduction() {
+      this.dispatch(auphonic.deselectProduction())
     },
     addTrack() {
       this.dispatch(auphonic.addTrack())
@@ -343,8 +357,38 @@ export default defineComponent({
   },
 })
 
-// NOTES
-// x generate tracks from episode contributors
-// x remove algorithms or at least hide them
+// TODO
+// - think about save/upload/start flow
+//   - there should not be an upload button
+//   - is it possible there is no "save" button, only "start"?
+//   - if there is a save button, it must be impossible to "forget" to save before starting (for example by autosave before start)
 // - maybe/somehow: connect track id to contributor
+// FIXME
+// - when there is a "current file" restored from auphonic, the file selector must reflect that value (and, more importantly, a save must not override the file selection)
+// - adding tracks needs to set a valid backforeground value
+// NEXT
+// - display status
+//   - query only status: https://auphonic.com/api/production/{uuid}/status.json
+//   - all status codes: https://auphonic.com/api/info/production_status.json
+// - when status is something indicating it's "processing", poll for changes
+// - when starting a production, use the response as new production value
+
+// === STATUS CODES ===
+// {
+//     "0": "File Upload",
+//     "1": "Waiting",
+//     "2": "Error",
+//     "3": "Done",
+//     "4": "Audio Processing",
+//     "5": "Audio Encoding",
+//     "6": "Outgoing File Transfer",
+//     "7": "Audio Mono Mixdown",
+//     "8": "Split Audio On Chapter Marks",
+//     "9": "Incomplete",
+//     "10": "Production Not Started Yet",
+//     "11": "Production Outdated",
+//     "12": "Incoming File Transfer",
+//     "13": "Stopping the Production",
+//     "14": "Speech Recognition"
+// }
 </script>

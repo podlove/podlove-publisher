@@ -71,6 +71,23 @@ function* initializeAuphonicApi() {
   yield takeEvery(auphonic.selectService, fetchServiceFiles, auphonicApi)
   yield takeEvery(auphonic.uploadFile, uploadFile, auphonicApi)
   yield takeEvery(auphonic.saveProduction, handleSaveProduction, auphonicApi)
+  yield takeEvery(auphonic.startProduction, handleStartProduction, auphonicApi)
+  yield takeEvery(auphonic.deselectProduction, handleDeselectProduction, auphonicApi)
+}
+
+function* handleDeselectProduction(auphonicApi: AuphonicApiClient) {
+  const {
+    result: { data: productions },
+  } = yield auphonicApi.get(`productions.json`, { limit: 10, minimal_data: true })
+  yield put(auphonic.setProductions(productions))
+}
+
+function* handleStartProduction(
+  auphonicApi: AuphonicApiClient,
+  action: { type: string; payload: any }
+) {
+  const uuid = action.payload.uuid
+  const { result } = yield auphonicApi.post(`production/${uuid}/start.json`, {})
 }
 
 function* handleSaveProduction(
@@ -80,7 +97,6 @@ function* handleSaveProduction(
   const uuid = action.payload.uuid
   const payload = action.payload.payload
   const { result } = yield auphonicApi.post(`production/${uuid}.json`, payload)
-  console.log({ result })
 }
 
 function* uploadFile(auphonicApi: AuphonicApiClient, action: { type: string; payload: File }) {
