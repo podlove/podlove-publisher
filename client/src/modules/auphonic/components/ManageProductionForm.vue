@@ -365,6 +365,9 @@ export default defineComponent({
 //   - is it possible there is no "save" button, only "start"?
 //   - if there is a save button, it must be impossible to "forget" to save before starting (for example by autosave before start)
 // - maybe/somehow: connect track id to contributor
+// - hide audio tracks when status is related to "processing/done"?
+// - show spinners & deactivate buttons while waiting for blocking API responses like starting the production
+// - disable "start production" when status is "incomplete"?
 // FIXME
 // - when there is a "current file" restored from auphonic, the file selector must reflect that value (and, more importantly, a save must not override the file selection)
 // NEXT
@@ -372,7 +375,7 @@ export default defineComponent({
 //   - query only status: https://auphonic.com/api/production/{uuid}/status.json
 //   - all status codes: https://auphonic.com/api/info/production_status.json
 // - when status is something indicating it's "processing", poll for changes
-// - when starting a production, use the response as new production value
+// - how do I get the episode title (and other episode metadata)? I can fetch it via API but that may not be up to date?
 
 // === STATUS CODES ===
 // {
