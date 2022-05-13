@@ -9,6 +9,11 @@
           <SelectProduction />
         </div>
       </div>
+      <div class="mt-8 flex justify-center align-middle content-center items-center gap-3">
+        <div class="w-full max-w-md">
+          <SelectPreset />
+        </div>
+      </div>
       <div class="mt-10 flex justify-center align-middle content-center items-center gap-3">
         <podlove-button variant="primary" @click="createProduction"
           ><plus-sm-icon class="-ml-0.5 mr-2 h-4 w-4" aria-hidden="true" /> Create
@@ -40,6 +45,7 @@ import { selectors } from '@store'
 import { injectStore, mapState } from 'redux-vuex'
 import * as auphonic from '@store/auphonic.store'
 import SelectProduction from './components/SelectProduction.vue'
+import SelectPreset from './components/SelectPreset.vue'
 import ManageProductionForm from './components/ManageProductionForm.vue'
 import AuphonicLogo from './components/Logo.vue'
 
@@ -49,6 +55,7 @@ export default defineComponent({
     PodloveButton,
     PlusSmIcon,
     SelectProduction,
+    SelectPreset,
     ManageProductionForm,
     AuphonicLogo,
   },
