@@ -98,6 +98,7 @@ export type State = {
   production: Production | null
   productions: Production[] | null
   presets: Preset[] | null
+  preset: Preset | null
   services: Service[]
   service_files: object
   tracks: AudioTrack[]
@@ -110,6 +111,7 @@ export const initialState: State = {
   production: null,
   productions: [],
   presets: [],
+  preset: null,
   services: [],
   service_files: {},
   tracks: [],
@@ -133,6 +135,7 @@ export const SELECT_TRACKS = 'podlove/publisher/auphonic/SELECT_TRACKS'
 export const ADD_TRACK = 'podlove/publisher/auphonic/ADD_TRACK'
 export const UPDATE_TRACK = 'podlove/publisher/auphonic/UPDATE_TRACK'
 export const SET_PRESETS = 'podlove/publisher/auphonic/SET_PRESETS'
+export const SET_PRESET = 'podlove/publisher/auphonic/SET_PRESET'
 export const UPDATE_FILE_SELECTION = 'podlove/publisher/auphonic/UPDATE_FILE_SELECTION'
 
 export const init = createAction<void>(INIT)
@@ -147,6 +150,7 @@ export const saveProduction = createAction<Production>(SAVE_PRODUCTION)
 
 // Presets
 export const setPresets = createAction<Preset[]>(SET_PRESETS)
+export const setPreset = createAction<Preset[]>(SET_PRESET)
 
 // Files & File Services
 export const setServices = createAction<Service[]>(SET_SERVICES)
@@ -252,6 +256,10 @@ export const reducer = handleActions(
           }, [] as AudioTrack[]) || [],
       }
     },
+    [SET_PRESET]: (state: State, action: { payload: Preset | null }): State => ({
+      ...state,
+      preset: action.payload,
+    }),
     [SET_TOKEN]: (state: State, action: { payload: string | null }): State => ({
       ...state,
       token: action.payload,
@@ -323,6 +331,8 @@ export const selectors = {
   production: (state: State) => state.production,
   productionId: (state: State) => state.production?.uuid,
   productions: (state: State) => state.productions,
+  presets: (state: State) => state.presets,
+  preset: (state: State) => state.preset,
   productionPayload,
   services: (state: State) => state.services,
   incomingServices: (state: State) => state.services.filter((s: Service) => s.incoming),
