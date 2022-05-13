@@ -87,7 +87,10 @@ function* handleStartProduction(
   action: { type: string; payload: any }
 ) {
   const uuid = action.payload.uuid
-  const { result } = yield auphonicApi.post(`production/${uuid}/start.json`, {})
+  const {
+    result: { data: production },
+  } = yield auphonicApi.post(`production/${uuid}/start.json`, {})
+  yield put(auphonic.setProduction(production))
 }
 
 function* handleSaveProduction(
@@ -96,7 +99,10 @@ function* handleSaveProduction(
 ) {
   const uuid = action.payload.uuid
   const payload = action.payload.payload
-  const { result } = yield auphonicApi.post(`production/${uuid}.json`, payload)
+  const {
+    result: { data: production },
+  } = yield auphonicApi.post(`production/${uuid}.json`, payload)
+  yield put(auphonic.setProduction(production))
 }
 
 function* uploadFile(auphonicApi: AuphonicApiClient, action: { type: string; payload: File }) {
