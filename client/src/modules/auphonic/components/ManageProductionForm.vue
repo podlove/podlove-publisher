@@ -37,11 +37,7 @@
 
           <div class="bg-white shadow overflow-hidden rounded-md max-w-3xl">
             <ul role="list" class="divide-y divide-gray-200">
-              <li
-                v-for="(track, index) in tracks"
-                :key="`xtrack-${index}`"
-                class="px-6 py-4 divide-y divide-gray-200 space-y-4"
-              >
+              <li v-for="(track, index) in tracks" :key="`xtrack-${index}`" class="px-6 py-4">
                 <div class="md:flex md:gap-4">
                   <div class="md:grid md:grid-cols-3 md:gap-12">
                     <div class="md:col-span-1">
