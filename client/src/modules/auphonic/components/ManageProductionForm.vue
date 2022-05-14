@@ -370,8 +370,8 @@ export default defineComponent({
 // - display status
 //   - query only status: https://auphonic.com/api/production/{uuid}/status.json
 //   - all status codes: https://auphonic.com/api/info/production_status.json
-// - when status is something indicating it's "processing", poll for changes
-// - how do I get the episode title (and other episode metadata)? I can fetch it via API but that may not be up to date?
+// - when status is something indicating it's "processing", poll for changes (NOT IN 2, 3, 9, 10, 11)
+// - how do I get the episode title, slug (and other episode metadata)? I can fetch it via API but that may not be up to date?
 
 // === STATUS CODES ===
 // {
