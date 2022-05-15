@@ -3,6 +3,8 @@
 namespace Podlove\Api\Episodes;
 
 use Podlove\Model\Episode;
+use Podlove\Model\EpisodeAsset;
+use Podlove\Model\MediaFile;
 use Podlove\Model\Podcast;
 use WP_Error;
 use WP_REST_Controller;
@@ -402,6 +404,7 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
         }
 
         $episode = Episode::find_by_id($id);
+        $isSlugSet = false;
 
         if (!$episode) {
             return new \Podlove\Api\Error\NotFound();
@@ -440,6 +443,7 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
         if (isset($request['slug'])) {
             $slug = $request['slug'];
             $episode->slug = $slug;
+            $isSlugSet = true;
         }
 
         if (isset($request['soundbite_start'])) {
@@ -458,6 +462,16 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
         }
 
         $episode->save();
+
+        if ($isSlugSet == true) {
+            $assets = EpisodeAsset::all();
+
+            foreach($assets as $asset) {
+                $file = MediaFile::find_or_create_by_episode_id_and_episode_asset_id($episode->id, $asset->id);
+                $file->determine_file_size();
+                $file->save();
+            }
+        }
 
         return new \Podlove\Api\Response\OkResponse([
             'status' => 'ok'
