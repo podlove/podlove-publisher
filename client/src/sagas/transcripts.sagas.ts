@@ -15,6 +15,7 @@ function* transcriptsSaga(): any {
   yield takeEvery(transcriptsStore.IMPORT_TRANSCRIPTS, importTranscripts, apiClient)
   yield takeEvery(transcriptsStore.UPDATE_VOICE, updateVoice, apiClient)
   yield takeEvery(transcriptsStore.DELETE_TRANSCRIPTS, deleteTranscripts, apiClient)
+  yield takeEvery(transcriptsStore.IMPORT_ASSET_TRANSCRIPTS, importTranscriptFromAsset, apiClient)
 }
 
 function* initialize(api: PodloveApiClient) {
@@ -38,6 +39,18 @@ function* importTranscripts(
 ) {
   const episodeId: string = yield select(selectors.episode.id)
   const { result } = yield api.put(`transcripts/${episodeId}`, { content: action.payload })
+
+  if (result) {
+    yield fork(initialize, api)
+  }
+}
+
+function* importTranscriptFromAsset(
+  api: PodloveApiClient,
+  action: { type: string }
+) {
+  const episodeId: string = yield select(selectors.episode.id)
+  const { result } = yield api.put(`transcripts/${episodeId}`, { asset: 1})
 
   if (result) {
     yield fork(initialize, api)

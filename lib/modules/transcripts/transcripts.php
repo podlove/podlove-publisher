@@ -117,7 +117,7 @@ class Transcripts extends \Podlove\Modules\Base
             'key' => 'transcripts',
             'options' => [
                 'callback' => function () {
-                  ?>
+                    ?>
   <div data-client="podlove" style="margin: 15px 0;">
     <podlove-transcripts></podlove-transcripts>
   </div>
@@ -235,7 +235,7 @@ class Transcripts extends \Podlove\Modules\Base
     /**
      * Import transcript from remote file.
      */
-    public function transcript_import_from_asset(Episode $episode)
+    public static function transcript_import_from_asset(Episode $episode)
     {
         $asset_assignment = Model\AssetAssignment::get_instance();
 
