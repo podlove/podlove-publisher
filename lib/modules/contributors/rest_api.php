@@ -365,7 +365,7 @@ class WP_REST_PodloveContributors_Controller extends WP_REST_Controller
             [
                 'methods' => \WP_REST_Server::READABLE,
                 'callback' => [$this, 'get_episodes'],
-                'permission_callback' => '__return_true',
+                'permission_callback' => [$this, 'get_item_permissions_check'],
             ],
         ]);
     }
