@@ -2,8 +2,12 @@
 
 namespace Podlove\Modules\Social;
 
+use Podlove\Modules\Contributors\Model\Contributor;
 use Podlove\Modules\Social\Model\ContributorService;
 use Podlove\Modules\Social\Model\Service;
+use Podlove\Modules\Social\Model\ShowService;
+use WP_REST_Controller;
+use WP_REST_Server;
 
 class REST_API
 {
@@ -81,51 +85,192 @@ class REST_API
     }
 }
 
-class REST_API_V2
-{
-    const api_namespace = 'podlove/v2';
-    const api_base = 'social';
 
-    // todo: delete
-    // todo: create
-    // todo: update
+class WP_REST_PodloveContributorService_Controller extends WP_REST_Controller
+{
+    public function __construct()
+    {
+        $this->namespace = "podlove/v2";
+        $this->rest_base = "social";
+    }
 
     public function register_routes()
     {
-        register_rest_route(self::api_namespace, self::api_base.'/services', [
+        register_rest_route($this->namespace, $this->rest_base.'/services', [
             [
                 'methods' => \WP_REST_Server::READABLE,
-                'callback' => [$this, 'get_services'],
+                'callback' => [$this, 'get_items'],
                 'args' => [
                     'category' => [
-                        'description' => __('category: social, donation, internal'),
+                        'description' => __('category: social, donation, internal', 'podlove-podcasting-plugin-for-wordpress'),
                         'type' => 'string',
                     ],
                 ],
-                'permission_callback' => '__return_true',
+                'permission_callback' => [$this, 'get_item_permissions_check'],
             ],
         ]);
 
-        register_rest_route(self::api_namespace, self::api_base.'/services/contributor/(?P<id>[\d]+)', [
+        register_rest_route($this->namespace, $this->rest_base.'/contributors/(?P<id>[\d]+)', [
             [
                 'methods' => \WP_REST_Server::READABLE,
-                'callback' => [$this, 'get_contributor_services'],
+                'callback' => [$this, 'get_items_contributor_services'],
                 'args' => [
                     'id' => [
-                        'description' => __('contributor id'),
+                        'description' => __('contributor id', 'podlove-podcasting-plugin-for-wordpress'),
                         'type' => 'string',
                     ],
                     'category' => [
-                        'description' => __('category: social, donation, internal'),
+                        'description' => __('category: social, donation, internal', 'podlove-podcasting-plugin-for-wordpress'),
                         'type' => 'string',
                     ]
                 ],
-                'permission_callback' => '__return_true',
+                'permission_callback' => [$this, 'get_item_permissions_check'],
+            ],
+            [
+                'methods' => \WP_REST_Server::CREATABLE,
+                'callback' => [$this, 'create_item_contributor_services'],
+                'args' => [
+                    'id' => [
+                        'description' => __('contributor id', 'podlove-podcasting-plugin-for-wordpress'),
+                        'type' => 'string',
+                    ],
+                    'category' => [
+                        'description' => __('category: social, donation, internal', 'podlove-podcasting-plugin-for-wordpress'),
+                        'type' => 'string',
+                    ]
+                ],
+                'permission_callback' => [$this, 'create_item_permissions_check'],
+            ],
+        ]);
+
+        register_rest_route($this->namespace, $this->rest_base.'/contributors/service/(?P<id>[\d]+)', [
+            [
+                'methods' => \WP_REST_Server::READABLE,
+                'callback' => [$this, 'get_item_contributor_services'],
+                'args' => [
+                    'id' => [
+                        'description' => __('contributor social service id', 'podlove-podcasting-plugin-for-wordpress'),
+                        'type' => 'string',
+                    ],
+                    'category' => [
+                        'description' => __('category: social, donation, internal', 'podlove-podcasting-plugin-for-wordpress'),
+                        'type' => 'string',
+                    ]
+                ],
+                'permission_callback' => [$this, 'get_item_permissions_check'],
+            ],
+            [
+                'methods' => \WP_REST_Server::EDITABLE,
+                'callback' => [$this, 'update_item_contributor_services'],
+                'args' => [
+                    'id' => [
+                        'description' => __('contributor social service id', 'podlove-podcasting-plugin-for-wordpress'),
+                        'type' => 'string',
+                    ],
+                    'category' => [
+                        'description' => __('category: social, donation, internal', 'podlove-podcasting-plugin-for-wordpress'),
+                        'type' => 'string',
+                    ]
+                ],
+                'permission_callback' => [$this, 'update_item_permissions_check'],
+            ],
+            [
+                'methods' => \WP_REST_Server::DELETABLE,
+                'callback' => [$this, 'delete_item_contributor_services'],
+                'args' => [
+                    'id' => [
+                        'description' => __('contributor social service id', 'podlove-podcasting-plugin-for-wordpress'),
+                        'type' => 'string',
+                    ],
+                    'category' => [
+                        'description' => __('category: social, donation, internal', 'podlove-podcasting-plugin-for-wordpress'),
+                        'type' => 'string',
+                    ]
+                ],
+                'permission_callback' => [$this, 'delete_item_permissions_check'],
+            ],
+        ]);
+
+        register_rest_route($this->namespace, $this->rest_base.'/podcast', [
+            [
+                'methods' => \WP_REST_Server::READABLE,
+                'callback' => [$this, 'get_items_podcast_services'],
+                'args' => [
+                    'category' => [
+                        'description' => __('category: social, donation, internal', 'podlove-podcasting-plugin-for-wordpress'),
+                        'type' => 'string',
+                    ]
+                ],
+                'permission_callback' => [$this, 'get_item_permissions_check'],
+            ],
+            [
+                'methods' => \WP_REST_Server::CREATABLE,
+                'callback' => [$this, 'create_item_podcast_services'],
+                'args' => [
+                    'category' => [
+                        'description' => __('category: social, donation, internal', 'podlove-podcasting-plugin-for-wordpress'),
+                        'type' => 'string',
+                    ]
+                ],
+                'permission_callback' => [$this, 'create_item_permissions_check'],
+            ],
+        ]);
+
+        register_rest_route($this->namespace, $this->rest_base.'/podcast/service/(?P<id>[\d]+)', [
+            [
+                'methods' => \WP_REST_Server::READABLE,
+                'callback' => [$this, 'get_item_podcast_services'],
+                'args' => [
+                    'id' => [
+                        'description' => __('podcast social service id', 'podlove-podcasting-plugin-for-wordpress'),
+                        'type' => 'string',
+                    ],
+                    'category' => [
+                        'description' => __('category: social, donation, internal', 'podlove-podcasting-plugin-for-wordpress'),
+                        'type' => 'string',
+                    ]
+                ],
+                'permission_callback' => [$this, 'get_item_permissions_check'],
+            ],
+            [
+                'methods' => \WP_REST_Server::EDITABLE,
+                'callback' => [$this, 'update_item_podcast_services'],
+                'args' => [
+                    'id' => [
+                        'description' => __('podcast social service id', 'podlove-podcasting-plugin-for-wordpress'),
+                        'type' => 'string',
+                    ],
+                    'category' => [
+                        'description' => __('category: social, donation, internal', 'podlove-podcasting-plugin-for-wordpress'),
+                        'type' => 'string',
+                    ]
+                ],
+                'permission_callback' => [$this, 'update_item_permissions_check'],
+            ],
+            [
+                'methods' => \WP_REST_Server::DELETABLE,
+                'callback' => [$this, 'delete_item_podcast_services'],
+                'args' => [
+                    'id' => [
+                        'description' => __('podcast social service id', 'podlove-podcasting-plugin-for-wordpress'),
+                        'type' => 'string',
+                    ],
+                    'category' => [
+                        'description' => __('category: social, donation, internal', 'podlove-podcasting-plugin-for-wordpress'),
+                        'type' => 'string',
+                    ]
+                ],
+                'permission_callback' => [$this, 'delete_item_permissions_check'],
             ],
         ]);
     }
 
-    public function get_services($request)
+    public function get_item_permissions_check($request)
+    {
+        return true;
+    }
+
+    public function get_items($request)
     {
         $category = $request->get_param('category');
         $services = Service::all();
@@ -143,16 +288,238 @@ class REST_API_V2
         return new \WP_REST_Response($result);
     }
 
-    public function get_contributor_services($request)
+    public function get_items_contributor_services($request)
     {
-        $contributor = $request->get_param('id');
+        $id = $request->get_param('id');
+        $contributor = Contributor::find_by_id($id);
+        if (!$contributor)
+            return new \Podlove\Api\Error\NotFound();
+
         $category = $request->get_param('category');
-        $services = ContributorService::find_by_contributor_id_and_category($contributor, $category);
+        $services = ContributorService::find_by_contributor_id_and_category($id, $category);
 
         $entries = array_map(function ($entry) {
             return $entry->to_array();
         }, $services);
 
-        return new \WP_REST_Response($entries);
+        return new \Podlove\Api\Response\OkResponse($entries);
     }
+
+    public function get_items_podcast_services($request)
+    {
+        $category = $request->get_param('category');
+        $services = ContributorService::find_by_category($category);
+
+        $entries = array_map(function ($entry) {
+            return $entry->to_array();
+        }, $services);
+
+        return new \Podlove\Api\Response\OkResponse($entries);
+    }
+
+    public function get_item_contributor_services($request)
+    {
+        $id = $request->get_param('id');
+        $service = ContributorService::find_by_id($id);
+        
+        if (!$service) {
+            return new \Podlove\Api\Error\NotFound();
+        }
+
+        $data = [
+            '_version' => 'v2',
+            'contributor_id' => $service->contributor_id,
+            'service_id' => $service->service_id,
+            'account_url' => $service->get_service_url(),
+            'title' => $service->title,
+            'position' => $service->position
+        ];
+
+        return new \Podlove\Api\Response\OkResponse($data);
+    }
+
+    public function get_item_podcast_services($request)
+    {
+        $id = $request->get_param('id');
+        $service = ShowService::find_by_id($id);
+        
+        if (!$service) {
+            return new \Podlove\Api\Error\NotFound();
+        }
+
+        $data = [
+            '_version' => 'v2',
+            'service_id' => $service->service_id,
+            'account_url' => $service->get_service_url(),
+            'title' => $service->title,
+            'position' => $service->position
+        ];
+
+        return new \Podlove\Api\Response\OkResponse($data);
+    }
+
+    public function create_item_permissions_check($request)
+    {
+        if (!current_user_can('edit_posts')) {
+            return new \Podlove\Api\Error\ForbiddenAccess();
+        }
+
+        return true;
+    }
+
+    public function create_item_contributor_services($request)
+    {
+        $id = $request->get_param('id');
+        $contributor = Contributor::find_by_id($id);
+        if (!$contributor)
+            return new \Podlove\Api\Error\NotFound();
+
+        $service = new ContributorService();
+        $service->contributor_id = $id;
+        $service->save();
+    
+        return new \Podlove\Api\Response\CreateResponse([
+            'status' => 'ok',
+            'id' => $service->id
+        ]);
+    }
+
+    public function create_item_podcast_services($request)
+    {
+        $service = new ShowService();
+        $service->save();
+
+        return new \Podlove\Api\Response\CreateResponse([
+            'status' => 'ok',
+            'id' => $service->id
+        ]);
+    }
+
+    public function update_item_permissions_check($request)
+    {
+        if (!current_user_can('edit_posts')) {
+            return new \Podlove\Api\Error\ForbiddenAccess();
+        }
+
+        return true;
+    }
+
+    public function update_item_contributor_services($request)
+    {
+        $id = $request->get_param('id');
+        $service = ContributorService::find_by_id($id);
+        
+        if (!$service) {
+            return new \Podlove\Api\Error\NotFound();
+        }
+
+        if (isset($request['contributor_id'])) {
+            $cid = $request['contributor_id'];
+            $service->contributor_id = $cid;
+        }
+
+        if (isset($request['service_id'])) {
+            $sid = $request['service_id'];
+            $service->service_id = $sid;
+        }
+
+        if (isset($request['account'])) {
+            $val = $request['value'];
+            $service->value = $val;
+        }
+
+        if (isset($request['title'])) {
+            $title = $request['title'];
+            $service->title = $title;
+        }
+
+        if (isset($request['position'])) {
+            $pos = $request['position'];
+            $service->position = $pos;
+        }
+
+        $service->save();
+
+        return new \Podlove\Api\Response\OkResponse([
+            'status' => 'ok'
+        ]);
+    }
+
+    public function update_item_podcast_services($request)
+    {
+        $id = $request->get_param('id');
+        $service = ShowService::find_by_id($id);
+        
+        if (!$service) {
+            return new \Podlove\Api\Error\NotFound();
+        }
+
+        if (isset($request['service_id'])) {
+            $sid = $request['service_id'];
+            $service->service_id = $sid;
+        }
+
+        if (isset($request['account'])) {
+            $val = $request['value'];
+            $service->value = $val;
+        }
+
+        if (isset($request['title'])) {
+            $title = $request['title'];
+            $service->title = $title;
+        }
+
+        if (isset($request['position'])) {
+            $pos = $request['position'];
+            $service->position = $pos;
+        }
+
+        $service->save();
+
+        return new \Podlove\Api\Response\OkResponse([
+            'status' => 'ok'
+        ]);
+    }
+
+    public function delete_item_permissions_check($request)
+    {
+        if (!current_user_can('edit_posts')) {
+            return new \Podlove\Api\Error\ForbiddenAccess();
+        }
+
+        return true;
+    }
+
+    public function delete_item_contributor_services($request)
+    {
+        $id = $request->get_param('id');
+        $service = ContributorService::find_by_id($id);
+        
+        if (!$service) {
+            return new \Podlove\Api\Error\NotFound();
+        }
+
+        $service->delete();
+
+        return new \Podlove\Api\Response\OkResponse([
+            'status' => 'ok'
+        ]);
+    }
+
+    public function delete_item_podcast_services($request)
+    {
+        $id = $request->get_param('id');
+        $service = ShowService::find_by_id($id);
+        
+        if (!$service) {
+            return new \Podlove\Api\Error\NotFound();
+        }
+
+        $service->delete();
+
+        return new \Podlove\Api\Response\OkResponse([
+            'status' => 'ok'
+        ]);
+    }
+
 }
