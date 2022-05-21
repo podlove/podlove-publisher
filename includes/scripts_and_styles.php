@@ -61,12 +61,17 @@ add_action('admin_print_styles', function () {
 
             add_filter('podlove_data_js', function ($data) use ($episode) {
               $data['episode'] = json_encode(array(
+                'id' => $episode->id,
                 'duration' => $episode->duration,
-                'id' => $episode->id
+                'slug' => $episode->slug,
+                'title' => $episode->title,
+                'summary' => $episode->summary,
+                'number' => $episode->number
               ));
 
               $data['post'] = json_encode(array(
-                'id' => get_the_ID()
+                'id' => get_the_ID(),
+                'title' => get_the_title()
               ));
 
               $data['api'] = json_encode(array(

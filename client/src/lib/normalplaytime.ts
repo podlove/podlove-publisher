@@ -20,7 +20,7 @@ const parse_ms_string = function (msstring: string) {
 }
 
 export const parse = function (timestring: string): number | null {
-  timestring = timestring.trim()
+  timestring = (timestring || '').trim()
 
   const pattern_seconds = /^(\d+)(?:\.(\d+))?$/
   const pattern_minutes = /^(\d+):(\d\d?)(?:\.(\d+))?$/

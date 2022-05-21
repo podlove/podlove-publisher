@@ -20,6 +20,7 @@ export const reducer = handleActions(
       id: get(action, ['payload', 'episode', 'id'], null),
       duration: Timestamp.fromString(get(action, ['payload', 'episode', 'duration'], null)).totalMs,
     }),
+
   },
   initialState
 )

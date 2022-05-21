@@ -42,7 +42,8 @@ const runtime = {
 }
 
 const post = {
-  id: createSelector(root.post, postStore.selectors.id)
+  id: createSelector(root.post, postStore.selectors.id),
+  title: createSelector(root.post, postStore.selectors.title)
 }
 
 const transcripts = {

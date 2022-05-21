@@ -23,6 +23,7 @@ import notificationSaga from '../sagas/notification.saga'
 import chaptersSaga from '../sagas/chapters.sagas'
 import transcriptsSaga from '../sagas/transcripts.sagas'
 import contributorsSaga from '../sagas/contributors.sagas'
+import wordpressSaga from '../sagas/wordpress.sagas'
 
 export interface State {
   lifecycle: LifecycleState;
@@ -44,5 +45,6 @@ sagas.run(notificationSaga());
 sagas.run(chaptersSaga());
 sagas.run(transcriptsSaga());
 sagas.run(contributorsSaga());
+sagas.run(wordpressSaga());
 
 export { selectors, sagas }

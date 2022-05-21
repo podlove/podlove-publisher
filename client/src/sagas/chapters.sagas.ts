@@ -1,6 +1,5 @@
 import { TakeableChannel } from '@redux-saga/core'
 import { select, takeEvery, call, put, fork } from 'redux-saga/effects'
-import { get } from 'lodash'
 
 import keyboard from '@podlove/utils/keyboard'
 import { selectors } from '@store'
@@ -13,6 +12,7 @@ import { PodloveChapter } from '../types/chapters.types'
 import { channel, takeFirst } from '../sagas/helper'
 import { createApi } from '../sagas/api'
 import { parseAudacityChapters, parseMp4Chapters, parseHindeburgChapters, parsePodloveChapters } from '@lib/chapters'
+import * as wordpress from '../lib/wordpress'
 
 function* chaptersSaga(): any {
   const apiClient: PodloveApiClient = yield createApi()
@@ -220,14 +220,12 @@ function* handleKeydown(input: {
 }
 
 function* selectImageFromLibrary() {
-  const mediaSelector = get(window, ['wp', 'media'], null)
-
-  if (!mediaSelector) {
+  if (!wordpress.media) {
     console.warn('media selector not available')
     return
   }
 
-  const mediaLibrary = mediaSelector({
+  const mediaLibrary = wordpress.media({
     title: 'Select or Upload Media Of Your Chosen Persuasion',
     button: {
       text: 'Use this media'
@@ -241,7 +239,7 @@ function* selectImageFromLibrary() {
       resolve(url);
     });
   });
-  
+
   mediaLibrary.open();
 
   try {
@@ -252,7 +250,7 @@ function* selectImageFromLibrary() {
 }
 
 function* setChapterImage(url: string) {
-  
+
 }
 
 export default function () {
