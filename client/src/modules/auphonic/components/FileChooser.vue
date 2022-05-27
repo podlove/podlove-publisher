@@ -8,7 +8,12 @@
           @change="set('currentServiceSelection', $event.target.value)"
           class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
         >
-          <option v-for="service in services" :key="service.uuid" :value="service.uuid">
+          <option
+            v-for="service in services"
+            :key="service.uuid"
+            :value="service.uuid"
+            :selected="service.uuid == currentServiceSelection"
+          >
             {{ service.type }}: {{ service.display_name }}
           </option>
         </select>
@@ -57,7 +62,7 @@
               class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
               @change="set('fileSelection', $event.target.value)"
             >
-              <option v-for="file in serviceFiles" :key="file" :value="file">
+              <option v-for="file in serviceFiles" :key="file" :value="file" d>
                 {{ file }}
               </option>
             </select>
@@ -137,6 +142,8 @@ export default defineComponent({
         : null
     },
     fileSelection(): any {
+      console.log(this.file_key, this.state.fileSelections[this.file_key])
+
       return this.state.fileSelections[this.file_key]
     },
     currentServiceSelection(): any {
@@ -145,13 +152,19 @@ export default defineComponent({
   },
 
   mounted() {
-    this.dispatch(
-      auphonic.updateFileSelection({
-        key: this.file_key,
-        prop: 'currentServiceSelection',
-        value: 'url',
-      })
-    )
+    console.log('m', this.currentServiceSelection, this.fileSelection)
+    console.log('s', this.services)
+
+    // TODO: restore values if present, otherwise set default below
+
+    // FIXME: only if no value is set!
+    // this.dispatch(
+    //   auphonic.updateFileSelection({
+    //     key: this.file_key,
+    //     prop: 'currentServiceSelection',
+    //     value: 'url',
+    //   })
+    // )
   },
 })
 </script>

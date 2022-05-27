@@ -245,6 +245,20 @@ export const reducer = handleActions(
       return {
         ...state,
         production: action.payload,
+        file_selections:
+          action.payload?.multi_input_files?.reduce((acc, file, index) => {
+            console.log(file.service)
+
+            return {
+              ...acc,
+              [`${action.payload?.uuid}_t${index}`]: {
+                currentServiceSelection: file.service ? file.service : 'url',
+                fileSelection: file.service ? file.input_file : null,
+                urlValue: !file.service ? file.input_file : null,
+                fileValue: null,
+              } as FileSelection,
+            }
+          }, {}) || {},
         tracks:
           action.payload?.multi_input_files?.reduce((acc, file) => {
             return [
