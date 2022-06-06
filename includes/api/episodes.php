@@ -223,7 +223,7 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
                         'description' => __('Duration of the episode', 'podlove-podcasting-plugin-for-wordpress'),
                         'type' => 'string',
                         'validate_callback' => '\Podlove\Api\Validation::timestamp'
-                    ]
+                    ],
                     'explicit' => [
                         'description' => __('explicit content?', 'podlove-podcasting-plugin-for-wordpress'),
                         'type' => 'string',
