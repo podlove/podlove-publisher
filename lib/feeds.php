@@ -108,7 +108,7 @@ function should_redirect_to_proxy()
     }
 
     // don't redirect when a feed proxy crawler is requesting
-    if (preg_match('/feedburner|feedsqueezer|feedvalidator|feedpress/i', $_SERVER['HTTP_USER_AGENT'])) {
+    if (preg_match('/feedburner|feedsqueezer|feedvalidator|feedpress/i', $_SERVER['HTTP_USER_AGENT'] ?? '')) {
         return false;
     }
 
