@@ -20,7 +20,7 @@ function register_podcast_feeds()
     }
 
     // changing feed settings may affect permalinks, so we need to flush
-    if (isset($_REQUEST['page']) && $_REQUEST['page'] == 'podlove_feeds_settings_handle') {
+    if ($_REQUEST['page'] ?? '' === 'podlove_feeds_settings_handle') {
         set_transient('podlove_needs_to_flush_rewrite_rules', true);
     }
 }
@@ -194,12 +194,12 @@ function check_for_and_do_compression($content_type = 'application/rss+xml')
     // if zlib output compression is already active, don't gzip
     // (both cannot be active at the same time)
     $ob_status = ob_get_status();
-    if (isset($ob_status['name']) && $ob_status['name'] == 'zlib output compression') {
+    if (isset($ob_status['name']) && $ob_status['name'] === 'zlib output compression') {
         return false;
     }
 
     // don't gzip if client doesn't accept it
-    if (isset($_SERVER['HTTP_ACCEPT_ENCODING']) && stripos($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip') === false) {
+    if (stripos($_SERVER['HTTP_ACCEPT_ENCODING'] ?? '', 'gzip') === false) {
         return false;
     }
 
