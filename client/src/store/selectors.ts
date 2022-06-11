@@ -15,11 +15,11 @@ const root = {
   runtime: (state: State) => state.runtime,
   post: (state: State) => state.post,
   transcripts: (state: State) => state.transcripts,
-  contributors: (state: State) => state.contributors
+  contributors: (state: State) => state.contributors,
 }
 
 const lifecycle = {
-  bootstrapped: createSelector(root.bootstrapped, lifecycleStore.selectors.bootstrapped)
+  bootstrapped: createSelector(root.bootstrapped, lifecycleStore.selectors.bootstrapped),
 }
 
 const chapters = {
@@ -30,7 +30,11 @@ const chapters = {
 
 const episode = {
   id: createSelector(root.episode, episodeStore.selectors.id),
-  duration: createSelector(root.episode, episodeStore.selectors.duration)
+  duration: createSelector(root.episode, episodeStore.selectors.duration),
+  number: createSelector(root.episode, episodeStore.selectors.number),
+  title: createSelector(root.episode, episodeStore.selectors.title),
+  subtitle: createSelector(root.episode, episodeStore.selectors.subtitle),
+  summary: createSelector(root.episode, episodeStore.selectors.summary),
 }
 
 const runtime = {
@@ -43,16 +47,16 @@ const runtime = {
 
 const post = {
   id: createSelector(root.post, postStore.selectors.id),
-  title: createSelector(root.post, postStore.selectors.title)
+  title: createSelector(root.post, postStore.selectors.title),
 }
 
 const transcripts = {
   list: createSelector(root.transcripts, transcriptsStore.selectors.transcripts),
-  voices: createSelector(root.transcripts, transcriptsStore.selectors.voices)
+  voices: createSelector(root.transcripts, transcriptsStore.selectors.voices),
 }
 
 const contributors = {
-  list: createSelector(root.contributors, contributorsStore.selectors.list)
+  list: createSelector(root.contributors, contributorsStore.selectors.list),
 }
 
 export default { lifecycle, chapters, episode, runtime, post, transcripts, contributors }

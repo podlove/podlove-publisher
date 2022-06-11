@@ -11,6 +11,8 @@
     </script>
 
     <div data-client="podlove">
+      <podlove-description></podlove-description>
+      <div class="h-5"></div>
       <podlove-chapters></podlove-chapters>
       <div class="h-5"></div>
       <podlove-transcripts></podlove-transcripts>
@@ -19,7 +21,8 @@
     <script type="module" src="./src/client.ts"></script>
 
     <script>
-      fetch('http://localhost:3000/wp-json/jwt-auth/v1/token', {
+      window.addEventListener('load', () => {
+        fetch('http://localhost:3000/wp-json/jwt-auth/v1/token', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -45,20 +48,21 @@
             }
            */
           window.initPodloveUI({
-            baseUrl: 'http://podlove.local',
+            baseUrl: 'http://publisher.local',
             api: {
               base: 'http://localhost:3000/wp-json/podlove',
               bearer: token,
             },
             post: {
-              id: '60',
+              id: 33,
             },
             episode: {
-              id: '8',
-              duration: '01:40:02.577',
+              id: '4',
+              duration: null,
             },
           })
         })
+      })
     </script>
   </body>
 </html>

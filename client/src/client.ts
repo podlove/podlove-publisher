@@ -1,9 +1,11 @@
-import { provideStore } from 'redux-vuex'
 import { createApp } from 'vue'
+import { provideStore } from 'redux-vuex'
+import { createI18n } from 'vue-i18n'
 
 import { store } from '@store'
 import modules from './modules'
 import { init } from './store/lifecycle.store'
+import { messages } from './translations'
 import './style.css'
 
 window.addEventListener('load', () => {
@@ -16,7 +18,15 @@ window.addEventListener('load', () => {
       },
     })
 
+    const i18n = createI18n({
+      locale: navigator.language,
+      fallbackLocale: 'en',
+      messages
+    })
+
     provideStore({ store, app })
+
+    app.use(i18n)
     app.mount(elem)
   });
 });

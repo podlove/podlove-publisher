@@ -24,6 +24,7 @@ import chaptersSaga from '../sagas/chapters.sagas'
 import transcriptsSaga from '../sagas/transcripts.sagas'
 import contributorsSaga from '../sagas/contributors.sagas'
 import wordpressSaga from '../sagas/wordpress.sagas'
+import episodeSaga from '../sagas/episode.sagas'
 
 export interface State {
   lifecycle: LifecycleState;
@@ -46,5 +47,6 @@ sagas.run(chaptersSaga());
 sagas.run(transcriptsSaga());
 sagas.run(contributorsSaga());
 sagas.run(wordpressSaga());
+sagas.run(episodeSaga());
 
 export { selectors, sagas }

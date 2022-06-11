@@ -8,6 +8,7 @@
     <transcripts-list />
   </module>
 </template>
+
 <script lang="ts">
 import { defineComponent } from 'vue'
 import { injectStore } from 'redux-vuex'
