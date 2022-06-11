@@ -10,8 +10,6 @@ use Podlove\NormalPlayTime;
 use WP_REST_Controller;
 use WP_REST_Server;
 
-use function Podlove\Api\Episodes\chapters;
-
 add_action('rest_api_init', function () {
     $controller = new WP_REST_PodloveChapters_Controller();
     $controller->register_routes();
@@ -194,8 +192,7 @@ class WP_REST_PodloveChapters_Controller extends WP_REST_Controller
                 } else {
                     if (strlen($image) == 0) {
                         $chapters->addChapter(new Chapter($npt, $title, $url));
-                    }
-                    else {
+                    } else {
                         $chapters->addChapter(new Chapter($npt, $title, $url, $image));
                     }
                 }
@@ -260,8 +257,7 @@ class WP_REST_PodloveChapters_Controller extends WP_REST_Controller
                 } else {
                     if (strlen($image) == 0) {
                         $chapters->addChapter(new Chapter($npt, $title, $url));
-                    }
-                    else {
+                    } else {
                         $chapters->addChapter(new Chapter($npt, $title, $url, $image));
                     }
                 }
