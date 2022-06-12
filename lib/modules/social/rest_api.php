@@ -110,6 +110,14 @@ class WP_REST_PodloveContributorService_Controller extends WP_REST_Controller
             ],
         ]);
 
+        register_rest_route($this->namespace, $this->rest_base.'/services/(?P<id>[\d]+)', [
+            [
+                'methods' => \WP_REST_Server::READABLE,
+                'callback' => [$this, 'get_item'],
+                'permission_callback' => [$this, 'get_item_permissions_check'],
+            ],
+        ]);
+
         register_rest_route($this->namespace, $this->rest_base.'/contributors/(?P<id>[\d]+)', [
             [
                 'methods' => \WP_REST_Server::READABLE,
@@ -285,7 +293,7 @@ class WP_REST_PodloveContributorService_Controller extends WP_REST_Controller
             }
         }
 
-        return new \WP_REST_Response($result);
+        return new \Podlove\Api\Response\OkResponse($result);
     }
 
     public function get_items_contributor_services($request)
@@ -301,8 +309,13 @@ class WP_REST_PodloveContributorService_Controller extends WP_REST_Controller
         $result = [];
         foreach ($services as $service) {
             $item = $service->to_array();
-            $item['account_url'] = $service->get_service_url();
-            array_push($result, $item);
+            $val['id'] = $service->id;
+            $val['contributor_id'] = $item['contributor_id'];
+            $val['service_id'] = $item['service_id'];
+            $val['account_url'] = $service->get_service_url();
+            $val['title'] = $item['title'];
+            $val['position'] = $item['position'];
+            array_push($result, $val);
         }
 
         return new \Podlove\Api\Response\OkResponse($result);
@@ -311,14 +324,39 @@ class WP_REST_PodloveContributorService_Controller extends WP_REST_Controller
     public function get_items_podcast_services($request)
     {
         $category = $request->get_param('category');
-        $services = ContributorService::find_by_category($category);
+        $services = ShowService::find_by_category($category);
 
         $result = [];
         foreach ($services as $service) {
             $item = $service->to_array();
-            $item['account_url'] = $service->get_service_url();
-            array_push($result, $item);
+            $val['id'] = $service->id;
+            $val['service_id'] = $item['service_id'];
+            $val['account_url'] = $service->get_service_url();
+            $val['title'] = $item['title'];
+            $val['position'] = $item['position'];
+            array_push($result, $val);
         }
+
+        return new \Podlove\Api\Response\OkResponse($result);
+    }
+
+    public function get_item($request)
+    {
+        $id = $request->get_param('id');
+        $service = Service::find_by_id($id);
+        
+        if (!$service) {
+            return new \Podlove\Api\Error\NotFound();
+        }
+
+        $result = [
+            'category' => $service->category,
+            'title' => $service->title,
+            'description' => $service->description,
+            'logo' => $service->logo,
+            'url_scheme' => $service->url_scheme,
+            'logo_url' => $service->image()->url()
+        ];
 
         return new \Podlove\Api\Response\OkResponse($result);
     }
@@ -333,7 +371,6 @@ class WP_REST_PodloveContributorService_Controller extends WP_REST_Controller
         }
 
         $data = [
-            '_version' => 'v2',
             'contributor_id' => $service->contributor_id,
             'service_id' => $service->service_id,
             'account_url' => $service->get_service_url(),
@@ -354,7 +391,6 @@ class WP_REST_PodloveContributorService_Controller extends WP_REST_Controller
         }
 
         $data = [
-            '_version' => 'v2',
             'service_id' => $service->service_id,
             'account_url' => $service->get_service_url(),
             'title' => $service->title,
@@ -430,7 +466,7 @@ class WP_REST_PodloveContributorService_Controller extends WP_REST_Controller
         }
 
         if (isset($request['account'])) {
-            $val = $request['value'];
+            $val = $request['account'];
             $service->value = $val;
         }
 
@@ -466,7 +502,7 @@ class WP_REST_PodloveContributorService_Controller extends WP_REST_Controller
         }
 
         if (isset($request['account'])) {
-            $val = $request['value'];
+            $val = $request['account'];
             $service->value = $val;
         }
 
