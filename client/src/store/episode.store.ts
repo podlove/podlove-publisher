@@ -50,7 +50,7 @@ export const reducer = handleActions(
     [SET]: (state: State, action: typeof update): State => ({
       ...state,
       number: get(action, ['payload', 'number']),
-      title: get(action, ['payload', 'title']),
+      title: get(action, ['payload', 'title_clean']),
       duration: get(action, ['payload', 'duration']),
       subtitle: get(action, ['payload', 'subtitle']),
       summary: get(action, ['payload', 'summary']),
