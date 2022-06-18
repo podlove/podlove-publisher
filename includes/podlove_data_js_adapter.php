@@ -37,7 +37,7 @@ function podlove_js_adapter_inject_settings($data)
 {
     $defaults = \Podlove\get_setting_defaults();
 
-    $settings_tab_names = array_keys($defaults);
+    $settings_tab_names = ['website', 'metadata', 'tracking'];
 
     $data['expert_settings'] = array_reduce($settings_tab_names, function ($tabs, $tab_name) use ($defaults) {
         $tabs[$tab_name] = array_reduce(array_keys($defaults[$tab_name]), function ($settings, $setting_name) use ($tab_name) {
