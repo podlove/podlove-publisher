@@ -60,24 +60,24 @@ add_action('admin_print_styles', function () {
             );
 
             add_filter('podlove_data_js', function ($data) use ($episode) {
-              $data['episode'] = json_encode(array(
-                'id' => $episode->id,
-                'duration' => $episode->duration,
-                'slug' => $episode->slug,
-                'title' => $episode->title,
-                'summary' => $episode->summary,
-                'number' => $episode->number
-              ));
+              $data['episode'] = [
+                  'id' => $episode->id,
+                  'duration' => $episode->duration,
+                  'slug' => $episode->slug,
+                  'title' => $episode->title,
+                  'summary' => $episode->summary,
+                  'number' => $episode->number                
+              ];
 
-              $data['post'] = json_encode(array(
-                'id' => get_the_ID(),
-                'title' => get_the_title()
-              ));
+              $data['post'] = [
+                  'id' => get_the_ID(),
+                  'title' => get_the_title()
+              ];
 
-              $data['api'] = json_encode(array(
-                'base' => esc_url_raw(rest_url('podlove')),
-                'nonce' => wp_create_nonce('wp_rest'),
-              ));
+              $data['api'] = [
+                  'base' => esc_url_raw(rest_url('podlove')),
+                  'nonce' => wp_create_nonce('wp_rest'),
+              ];
 
               return $data;
             });

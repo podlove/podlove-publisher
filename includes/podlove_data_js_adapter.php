@@ -12,13 +12,16 @@
  */
 add_action('admin_head', 'podlove_init_js_adapter', 3);
 
+add_filter('podlove_data_js', 'podlove_js_adapter_inject_settings');
+
 function podlove_init_js_adapter()
 {
     $data = apply_filters('podlove_data_js', []); ?>
+
     <script>
       window.PODLOVE_DATA = window.PODLOVE_DATA || {};
       <?php foreach ($data as $key => $value) { ?>
-          window.PODLOVE_DATA['<?php echo $key; ?>'] = JSON.parse('<?php echo $value; ?>');
+          window.PODLOVE_DATA['<?php echo $key; ?>'] = <?php echo json_encode($value); ?>;
       <?php } ?>
 
       window.addEventListener('load', function () {
@@ -28,4 +31,23 @@ function podlove_init_js_adapter()
       })
     </script>
 <?php
+}
+
+function podlove_js_adapter_inject_settings($data)
+{
+    $defaults = \Podlove\get_setting_defaults();
+
+    $settings_tab_names = array_keys($defaults);
+
+    $data['expert_settings'] = array_reduce($settings_tab_names, function ($tabs, $tab_name) use ($defaults) {
+        $tabs[$tab_name] = array_reduce(array_keys($defaults[$tab_name]), function ($settings, $setting_name) use ($tab_name) {
+            $settings[$setting_name] = \Podlove\get_setting($tab_name, $setting_name);
+
+            return $settings;
+        }, []);
+
+        return $tabs;
+    }, []);
+
+    return $data;
 }
