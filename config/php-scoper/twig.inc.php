@@ -1,11 +1,5 @@
 <?php
 
-// TODO:
-// x move this to config/php-scoper/twig.inc.php
-// - add one more file per extension, for example config/php-scoper/piwik.inc.php
-// - then have one php-scoper command aliased per file
-// - see for reference: https://github.com/Yoast/wordpress-seo/blob/8c160393e32febadd3bb36b6e7f99606c280def1/composer.json#L126
-
 declare(strict_types=1);
 
 use Isolated\Symfony\Component\Finder\Finder;

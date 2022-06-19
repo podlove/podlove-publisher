@@ -34,7 +34,10 @@ composer_with_prefixing:
 	mkdir -p vendor-prefixed
 	composer install --no-progress --prefer-dist --optimize-autoloader --no-dev
 	composer prefix-dependencies
-	composer install --no-progress --prefer-dist --optimize-autoloader --no-dev
+	rm -rf vendor/piwik
+	rm -rf vendor/twig
+	composer dump-autoload --classmap-authoritative
+	# composer install --no-progress --prefer-dist --optimize-autoloader --no-dev
 
 install_php_scoper:
 	mkdir -p vendor-prefixed
@@ -57,7 +60,9 @@ build:
 	mkdir -p vendor-prefixed
 	composer install --no-progress --prefer-dist --optimize-autoloader --no-dev
 	composer prefix-dependencies
-	composer install --no-progress --prefer-dist --optimize-autoloader --no-dev
+	rm -rf vendor/piwik
+	rm -rf vendor/twig
+	composer dump-autoload --classmap-authoritative
 	# client
 	make client
 

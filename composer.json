@@ -45,10 +45,14 @@
   },
   "scripts": {
     "prefix-dependencies": [
-      "composer prefix-twig"
+      "composer prefix-twig",
+      "composer prefix-piwik"
     ],
     "prefix-twig": [
       "@php ./vendor-bin/php-scoper/vendor/humbug/php-scoper/bin/php-scoper add-prefix --prefix=PodlovePublisher_Vendor --output-dir=./vendor-prefixed/twig --config=config/php-scoper/twig.inc.php --force"
+    ],
+    "prefix-piwik": [
+      "@php ./vendor-bin/php-scoper/vendor/humbug/php-scoper/bin/php-scoper add-prefix --prefix=PodlovePublisher_Vendor --output-dir=./vendor-prefixed/piwik --config=config/php-scoper/piwik.inc.php --force"
     ]
   }
 }
