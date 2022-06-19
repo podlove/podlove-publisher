@@ -2,8 +2,8 @@
 
 namespace Podlove\Model;
 
-use DeviceDetector\DeviceDetector;
 use Podlove\Jobs\CronJobRunner;
+use PodlovePublisher_Vendor\DeviceDetector\DeviceDetector;
 
 class UserAgent extends Base
 {
@@ -51,10 +51,10 @@ class UserAgent extends Base
         }, null);
 
         if ($user_agent_match) {
-            $this->client_name = $user_agent_match->app;
+            $this->client_name = isset($user_agent_match->app) ? $user_agent_match->app : '';
             $this->os_name = self::normalizeOS($user_agent_match->os);
 
-            if ($user_agent_match->bot) {
+            if (isset($user_agent_match->bot) && $user_agent_match->bot) {
                 $this->bot = 1;
             }
 

@@ -2,7 +2,7 @@
 
 require_once 'vendor/autoload.php';
 
-use DeviceDetector\DeviceDetector;
+use PodlovePublisher_Vendor\DeviceDetector\DeviceDetector;
 
 $userAgent = $argv[1];
 $dd = new DeviceDetector($userAgent);

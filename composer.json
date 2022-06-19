@@ -1,44 +1,58 @@
 {
-    "name": "podlove/podcast-publisher",
-    "description": "Podcast Publishing Plugin for WordPress",
-    "license": "MIT",
-    "require": {
-        "php": "^7.0",
-        "podlove/podlove-timeline": "1.*",
-        "monolog/monolog": "1.*",
-        "symfony/yaml": "3.4.*",
-        "symfony/polyfill-mbstring": "1.19.0",
-        "twig/twig": "2.12.5",
-        "twig/extensions": "1.5.*",
-        "geoip2/geoip2": "~2.0",
-        "piwik/device-detector": "~3.12",
-        "phpunit/php-timer": "~1.0",
-        "podlove/webvtt-parser": "^1.1.5",
-        "geertw/ip-anonymizer": "^1.1",
-        "dariuszp/cli-progress-bar": "^1.0",
-        "league/csv": "9.5.0",
-        "gajus/dindent": "^2.0"
+  "name": "podlove/podcast-publisher",
+  "description": "Podcast Publishing Plugin for WordPress",
+  "license": "MIT",
+  "require": {
+    "php": "^7.0",
+    "podlove/podlove-timeline": "1.*",
+    "monolog/monolog": "1.*",
+    "symfony/yaml": "3.4.*",
+    "symfony/polyfill-mbstring": "1.19.0",
+    "twig/twig": "2.12.5",
+    "twig/extensions": "1.5.*",
+    "geoip2/geoip2": "~2.0",
+    "piwik/device-detector": "~3.12",
+    "phpunit/php-timer": "~1.0",
+    "podlove/webvtt-parser": "^1.1.5",
+    "geertw/ip-anonymizer": "^1.1",
+    "dariuszp/cli-progress-bar": "^1.0",
+    "league/csv": "9.5.0",
+    "gajus/dindent": "^2.0"
+  },
+  "require-dev": {
+    "pear/pear_exception": "1.0.*@dev",
+    "podlove/comment-introspection": "dev-master",
+    "phpunit/phpunit": "^6.5.14",
+    "bamarni/composer-bin-plugin": "1.4.1"
+  },
+  "autoload": {
+    "classmap": [
+      "lib/",
+      "includes/",
+      "vendor-prefixed/"
+    ],
+    "exclude-from-classmap": [
+      "/vendor/twig"
+    ]
+  },
+  "config": {
+    "platform": {
+      "php": "7.0.33"
     },
-    "require-dev": {
-        "pear/pear_exception": "1.0.*@dev",
-        "podlove/comment-introspection": "dev-master",
-        "phpunit/phpunit": "^6.5.14",
-        "bamarni/composer-bin-plugin": "1.4.1"
-    },
-    "autoload": {
-		"classmap": [
-			"lib/",
-			"includes/",
-			"vendor-prefixed/"
-        ],
-        "exclude-from-classmap": ["/vendor/twig"]
-	},
-    "config": {
-        "platform": {
-            "php": "7.0.33"
-        },
-        "allow-plugins": {
-            "bamarni/composer-bin-plugin": true
-        }
+    "allow-plugins": {
+      "bamarni/composer-bin-plugin": true
     }
+  },
+  "scripts": {
+    "prefix-dependencies": [
+      "composer prefix-twig",
+      "composer prefix-piwik"
+    ],
+    "prefix-twig": [
+      "@php ./vendor-bin/php-scoper/vendor/humbug/php-scoper/bin/php-scoper add-prefix --prefix=PodlovePublisher_Vendor --output-dir=./vendor-prefixed/twig --config=config/php-scoper/twig.inc.php --force"
+    ],
+    "prefix-piwik": [
+      "@php ./vendor-bin/php-scoper/vendor/humbug/php-scoper/bin/php-scoper add-prefix --prefix=PodlovePublisher_Vendor --output-dir=./vendor-prefixed/piwik --config=config/php-scoper/piwik.inc.php --force"
+    ]
+  }
 }

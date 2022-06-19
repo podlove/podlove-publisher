@@ -37,9 +37,12 @@ player:
 
 composer_with_prefixing:
 	mkdir -p vendor-prefixed
-	composer install --no-progress --prefer-dist --optimize-autoloader 	--no-dev
-	./vendor-bin/php-scoper/vendor/humbug/php-scoper/bin/php-scoper add-prefix --prefix=PodlovePublisher_Vendor --output-dir=./vendor-prefixed/twig --config=scoper.inc.php
 	composer install --no-progress --prefer-dist --optimize-autoloader --no-dev
+	composer prefix-dependencies
+	rm -rf vendor/piwik
+	rm -rf vendor/twig
+	composer dump-autoload --classmap-authoritative
+	# composer install --no-progress --prefer-dist --optimize-autoloader --no-dev
 
 install_php_scoper:
 	mkdir -p vendor-prefixed
@@ -50,13 +53,16 @@ install_php_scoper:
 
 build:
 	mkdir -p vendor-prefixed
-	composer install --no-progress --prefer-dist --optimize-autoloader 	--no-dev
-	./vendor-bin/php-scoper/vendor/humbug/php-scoper/bin/php-scoper add-prefix --prefix=PodlovePublisher_Vendor --output-dir=./vendor-prefixed/twig --config=scoper.inc.php
 	composer install --no-progress --prefer-dist --optimize-autoloader --no-dev
-	npm install
-	npm run production
-	rm -rf dist
-	mkdir dist
+	composer prefix-dependencies
+
+	rm -rf vendor/piwik
+	rm -rf vendor/twig
+	composer dump-autoload --classmap-authoritative
+
+	rm -rf dist/*
+	mkdir -p dist
+
 	# move everything into dist
 	rsync -r --exclude=.git --exclude=node_modules --exclude=./dist . dist
 	# cleanup
