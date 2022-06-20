@@ -40,7 +40,7 @@
       </div>
       <div v-if="state.selected" class="md:w-4/12 sm:w-full md:mx-4 md:my-2 mt-0">
         <div class="mb-5 mt-2">
-          <label for="chapter-title" class="block text-sm font-medium text-gray-700">Title</label>
+          <label for="chapter-title" class="block text-sm font-medium text-gray-700">{{ __('Title') }}</label>
           <div class="mt-1">
             <input
               name="chapter-title"
@@ -53,7 +53,7 @@
         </div>
         <div class="mb-5">
           <label for="chapter-href" class="block text-sm font-medium text-gray-700"
-            >Url <span class="text-xs">(optional)</span></label
+            >Url <span class="text-xs">{{ __('(optional)') }}</span></label
           >
           <div class="mt-1">
             <input
@@ -66,7 +66,7 @@
           </div>
         </div>
         <div class="mb-5">
-          <label for="chapter-start" class="block text-sm font-medium text-gray-700">Start</label>
+          <label for="chapter-start" class="block text-sm font-medium text-gray-700">{{ __('Start') }}</label>
           <div class="mt-1">
             <input
               name="chapter-title"
@@ -80,7 +80,7 @@
         <div class="mb-5 flex items-end">
           <div class="w-5/6">
             <label for="chapter-image" class="block text-sm font-medium text-gray-700"
-              >Image <span class="text-xs">(optional)</span></label
+              >Image <span class="text-xs">{{ __('(optional)') }}</span></label
             >
             <div class="mt-1">
               <input
@@ -93,28 +93,28 @@
             </div>
           </div>
           <div class="w-1/6 ml-1">
-            <podlove-button variant="secondary" @click="selectImage()">Select</podlove-button>
+            <podlove-button variant="secondary" @click="selectImage()">{{ __('Select') }}</podlove-button>
           </div>
         </div>
         <div class="mb-5 ml-1">
-          <podlove-button variant="danger" @click="removeChapter()">Delete Chapter</podlove-button>
+          <podlove-button variant="danger" @click="removeChapter()">{{ __('Delete Chapter') }}</podlove-button>
         </div>
       </div>
     </div>
     <div class="m-3">
       <podlove-button variant="primary" @click="addChapter()">
-        <plus-sm-icon class="-ml-0.5 mr-2 h-4 w-4" aria-hidden="true" /> Add Chapter
+        <plus-sm-icon class="-ml-0.5 mr-2 h-4 w-4" aria-hidden="true" /> {{ __('Add Chapter') }}
       </podlove-button>
     </div>
   </div>
   <div v-else class="text-center h-96 flex items-center justify-center flex-col">
     <bookmark-alt-icon class="mx-auto h-12 w-12 text-gray-400" />
 
-    <h3 class="mt-2 text-sm font-medium text-gray-900">No chapters</h3>
-    <p class="mt-1 text-sm text-gray-500">Get started by creating a new chapter.</p>
+    <h3 class="mt-2 text-sm font-medium text-gray-900">{{ __('No chapters') }}</h3>
+    <p class="mt-1 text-sm text-gray-500">{{ __('Get started by creating a new chapter.') }}</p>
     <div class="mt-6">
       <podlove-button variant="primary" @click="addChapter()" class="ml-1">
-        <plus-sm-icon class="-ml-0.5 mr-2 h-4 w-4" aria-hidden="true" /> Add Chapter
+        <plus-sm-icon class="-ml-0.5 mr-2 h-4 w-4" aria-hidden="true" /> {{ __('Add Chapter') }}
       </podlove-button>
     </div>
   </div>

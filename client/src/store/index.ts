@@ -17,6 +17,7 @@ import { State as runtimeState } from './runtime.store'
 import { State as postState } from './post.store'
 import { State as transcriptsState } from './transcripts.store'
 import { State as contributorsState } from './contributors.store'
+import { State as settingsState } from './settings.store'
 
 import lifecycleSaga from '../sagas/lifecycle.sagas'
 import notificationSaga from '../sagas/notification.saga'
@@ -34,6 +35,7 @@ export interface State {
   post: postState;
   transcripts: transcriptsState;
   contributors: contributorsState;
+  settings: settingsState;
 }
 
 const sagas = createSagaMiddleware()

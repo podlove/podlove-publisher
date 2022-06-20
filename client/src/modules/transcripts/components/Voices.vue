@@ -1,9 +1,9 @@
 <template>
   <div v-if="state.voices.length > 0">
-    <podlove-button variant="secondary" size="small" @click="openVoices()">Voices</podlove-button>
+    <podlove-button variant="secondary" size="small" @click="openVoices()">{{ __('Voices') }}</podlove-button>
     <modal :open="modalOpen" @close="closeVoices()">
       <div class="border-gray-200 border-b pb-2 px-4 -mx-6 mb-4">
-        <h3 class="text-lg leading-6 font-medium text-gray-900">Transcript Voices</h3>
+        <h3 class="text-lg leading-6 font-medium text-gray-900">{{ __('Transcript Voices') }}</h3>
       </div>
       <div
         v-for="(voice, vindex) in state.voices"

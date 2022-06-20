@@ -1,6 +1,6 @@
 <template>
   <div>
-    <label for="episode-title" class="block text-sm font-medium text-gray-700">{{ $t('episode.title.label') }}</label>
+    <label for="episode-title" class="block text-sm font-medium text-gray-700">{{ __('Title') }}</label>
     <div class="mt-1">
       <input
         name="episode-title"
@@ -18,7 +18,7 @@
         @input="updateTitle($event)"
       />
     </div>
-    <p class="mt-2 text-sm text-gray-500">{{ $t('episode.title.description') }}</p>
+    <p class="mt-2 text-sm text-gray-500">{{ __('Clear, concise name for your episode. It is recommended to not include the podcast title, episode number, season number or date in this tag.') }}</p>
   </div>
 </template>
 

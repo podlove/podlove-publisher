@@ -7,6 +7,7 @@ import * as runtimeStore from './runtime.store'
 import * as postStore from './post.store'
 import * as transcriptsStore from './transcripts.store'
 import * as contributorsStore from './contributors.store'
+import * as settingsStore from './settings.store'
 
 const root = {
   bootstrapped: (state: State) => state.lifecycle,
@@ -16,6 +17,7 @@ const root = {
   post: (state: State) => state.post,
   transcripts: (state: State) => state.transcripts,
   contributors: (state: State) => state.contributors,
+  settings: (state: State) => state.settings,
 }
 
 const lifecycle = {
@@ -59,4 +61,11 @@ const contributors = {
   list: createSelector(root.contributors, contributorsStore.selectors.list),
 }
 
-export default { lifecycle, chapters, episode, runtime, post, transcripts, contributors }
+const settings = {
+  autoGenerateEpisodeTitle: createSelector(
+    root.settings,
+    settingsStore.selectors.autoGenerateEpisodeTitle
+  ),
+}
+
+export default { lifecycle, chapters, episode, runtime, post, transcripts, contributors, settings }

@@ -1,7 +1,7 @@
 <template>
   <div>
     <label for="summary" class="block text-sm font-medium text-gray-700">{{
-      $t('episode.summary.label')
+      __('Summary')
     }}</label>
     <div class="mt-1">
       <textarea
@@ -31,17 +31,22 @@
 
 <script lang="ts">
 import { injectStore, mapState } from 'redux-vuex'
-import { defineComponent } from 'vue'
+import { computed, defineComponent } from 'vue'
 
 import { update as updateEpisode } from '@store/episode.store'
 import { selectors } from '@store'
 
 export default defineComponent({
   setup() {
-    return {
-      state: mapState({
+    const state = mapState({
         summary: selectors.episode.summary,
-      }),
+      });
+
+    const charactersLeft = computed(() => 4000 - (state?.summary?.length || ''));
+
+    return {
+      state,
+      charactersLeft,
       dispatch: injectStore().dispatch,
     }
   },
@@ -53,11 +58,5 @@ export default defineComponent({
       )
     },
   },
-
-  computed: {
-    charactersLeft() {
-      return 4000 - (this.state.summary || '').length
-    }
-  }
 })
 </script>

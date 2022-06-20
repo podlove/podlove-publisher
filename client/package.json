@@ -34,7 +34,6 @@
     "redux-vuex": "3.0.0-beta.6",
     "reselect": "4.1.5",
     "vue": "3.2.31",
-    "vue3-popper": "1.4.2",
-    "vue-i18n": "9.1.10"
+    "vue3-popper": "1.4.2"
   }
 }

@@ -30,8 +30,8 @@
   <div v-else class="text-center h-96 flex items-center justify-center flex-col">
     <document-text-icon class="mx-auto h-12 w-12 text-gray-400" />
 
-    <h3 class="mt-2 text-sm font-medium text-gray-900">No transcripts</h3>
-    <p class="mt-1 text-sm text-gray-500">Get started by importing a transcript.</p>
+    <h3 class="mt-2 text-sm font-medium text-gray-900">{{ __('No: transcripts') }}</h3>
+    <p class="mt-1 text-sm text-gray-500">{{ __('Get started by importing a transcript.') }}</p>
     <div class="mt-6">
       <transcripts-import outlet="content" class="mr-1" />
     </div>

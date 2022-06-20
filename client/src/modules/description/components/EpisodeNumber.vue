@@ -1,6 +1,6 @@
 <template>
   <div>
-    <label for="episode-number" class="block text-sm font-medium text-gray-700">{{ $t('episode.number.label') }}</label>
+    <label for="episode-number" class="block text-sm font-medium text-gray-700">{{ __('Number') }}</label>
     <div class="mt-1 mb-1">
       <input
         name="episode-number"
@@ -18,7 +18,7 @@
         @input="updateNumber($event)"
       />
     </div>
-   <p class="mt-2 text-sm text-gray-500">{{ $t('episode.number.description') }}</p>
+   <p class="mt-2 text-sm text-gray-500">{{ __('An episode number (1, 2, 3 etc.)') }}</p>
   </div>
 </template>
 

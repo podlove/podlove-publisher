@@ -1,7 +1,7 @@
 <template>
   <div>
     <label for="subtitle" class="block text-sm font-medium text-gray-700">{{
-      $t('episode.subtitle.label')
+      __('Subtitle')
     }}</label>
     <div class="mt-1">
       <textarea
@@ -24,7 +24,7 @@
       ></textarea>
     </div>
     <p class="mt-2 text-sm text-gray-500 flex justify-between">
-      <span>{{ $t('episode.subtitle.description') }}</span>
+      <span>{{ __('Single sentence describing the episode.') }}</span>
       <span>{{ charactersLeft }}</span>
     </p>
   </div>
@@ -32,17 +32,22 @@
 
 <script lang="ts">
 import { injectStore, mapState } from 'redux-vuex'
-import { defineComponent } from 'vue'
+import { computed, defineComponent } from 'vue'
 
 import { update as updateEpisode } from '@store/episode.store'
 import { selectors } from '@store'
 
 export default defineComponent({
   setup() {
-    return {
-      state: mapState({
+    const state =  mapState({
         subtitle: selectors.episode.subtitle,
-      }),
+      })
+
+    const charactersLeft = computed(() => 255 - (state?.subtitle?.length || ''));
+
+    return {
+      state,
+      charactersLeft,
       dispatch: injectStore().dispatch,
     }
   },
@@ -53,12 +58,6 @@ export default defineComponent({
         updateEpisode({ prop: 'subtitle', value: (event.target as HTMLInputElement).value })
       )
     },
-  },
-
-  computed: {
-    charactersLeft() {
-      return 255 - (this.state.subtitle || '').length
-    }
   }
 })
 </script>

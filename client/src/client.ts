@@ -1,11 +1,11 @@
 import { createApp } from 'vue'
 import { provideStore } from 'redux-vuex'
-import { createI18n } from 'vue-i18n'
 
 import { store } from '@store'
 import modules from './modules'
 import { init } from './store/lifecycle.store'
-import { messages } from './translations'
+import translationPlugin from './plugins/translations'
+
 import './style.css'
 
 window.addEventListener('load', () => {
@@ -15,18 +15,13 @@ window.addEventListener('load', () => {
     const app = createApp({
       components: {
         ...modules,
-      },
+      }
     })
 
-    const i18n = createI18n({
-      locale: navigator.language,
-      fallbackLocale: 'en',
-      messages
-    })
 
     provideStore({ store, app })
 
-    app.use(i18n)
+    app.use(translationPlugin, { domain: 'podlove-podcasting-plugin-for-wordpress' })
     app.mount(elem)
   });
 });
