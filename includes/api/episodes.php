@@ -217,6 +217,16 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
                         'description' => __('Episode media file slug.', 'podlove-podcasting-plugin-for-wordpress'),
                         'type' => 'string',
                     ],
+                    'duration' => [
+                        'description' => __('Duration of the episode', 'podlove-podcasting-plugin-for-wordpress'),
+                        'type' => 'string',
+                        'validate_callback' => '\Podlove\Api\Validation::timestamp'
+                    ],
+                    'type' => [
+                        'description' => __('Episode type. May be used by podcast clients.', 'podlove-podcasting-plugin-for-wordpress'),
+                        'type' => 'string',
+                        'enum' => ['full', 'trailer', 'bonus']
+                    ],
                     'explicit' => [
                         'description' => __('explicit content?', 'podlove-podcasting-plugin-for-wordpress'),
                         'type' => 'string',
@@ -298,6 +308,10 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
     {
         $id = $request->get_param('id');
         $episode = Episode::find_by_id($id);
+        if (!$episode) {
+            return false;
+        }
+
         $post = $episode->post();
         if (!$post) {
             return false;
@@ -333,6 +347,8 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
             'subtitle' => trim($episode->subtitle),
             'summary' => trim($episode->summary),
             'duration' => $episode->get_duration('full'),
+            'type' => $episode->type,
+            'publicationDate' => mysql2date('c', $post->post_date),
             'poster' => $episode->cover_art_with_fallback()->setWidth(500)->url(),
             'link' => get_permalink($episode->post_id),
             'audio' => \podlove_pwp5_audio_files($episode, null),
@@ -440,6 +456,11 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
         if (isset($request['slug'])) {
             $slug = $request['slug'];
             $episode->slug = $slug;
+        }
+
+        if (isset($request['type'])) {
+            $type = $request['type'];
+            $episode->type = $type;
         }
 
         if (isset($request['soundbite_start'])) {
