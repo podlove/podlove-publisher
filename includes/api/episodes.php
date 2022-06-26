@@ -474,7 +474,7 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
 
         $episode->save();
 
-        if ($isSlugSet == true) {
+        if ($isSlugSet) {
             $assets = EpisodeAsset::all();
 
             foreach($assets as $asset) {

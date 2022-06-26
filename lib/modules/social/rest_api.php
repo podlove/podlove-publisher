@@ -121,7 +121,7 @@ class WP_REST_PodloveContributorService_Controller extends WP_REST_Controller
         register_rest_route($this->namespace, $this->rest_base.'/contributors/(?P<id>[\d]+)', [
             [
                 'methods' => \WP_REST_Server::READABLE,
-                'callback' => [$this, 'get_items_contributor_services'],
+                'callback' => [$this, 'get_contributor_services'],
                 'args' => [
                     'id' => [
                         'description' => __('contributor id', 'podlove-podcasting-plugin-for-wordpress'),
@@ -136,7 +136,7 @@ class WP_REST_PodloveContributorService_Controller extends WP_REST_Controller
             ],
             [
                 'methods' => \WP_REST_Server::CREATABLE,
-                'callback' => [$this, 'create_item_contributor_services'],
+                'callback' => [$this, 'create_contributor_service'],
                 'args' => [
                     'id' => [
                         'description' => __('contributor id', 'podlove-podcasting-plugin-for-wordpress'),
@@ -154,7 +154,7 @@ class WP_REST_PodloveContributorService_Controller extends WP_REST_Controller
         register_rest_route($this->namespace, $this->rest_base.'/contributors/service/(?P<id>[\d]+)', [
             [
                 'methods' => \WP_REST_Server::READABLE,
-                'callback' => [$this, 'get_item_contributor_services'],
+                'callback' => [$this, 'get_contributor_service'],
                 'args' => [
                     'id' => [
                         'description' => __('contributor social service id', 'podlove-podcasting-plugin-for-wordpress'),
@@ -169,7 +169,7 @@ class WP_REST_PodloveContributorService_Controller extends WP_REST_Controller
             ],
             [
                 'methods' => \WP_REST_Server::EDITABLE,
-                'callback' => [$this, 'update_item_contributor_services'],
+                'callback' => [$this, 'update_contributor_service'],
                 'args' => [
                     'id' => [
                         'description' => __('contributor social service id', 'podlove-podcasting-plugin-for-wordpress'),
@@ -184,7 +184,7 @@ class WP_REST_PodloveContributorService_Controller extends WP_REST_Controller
             ],
             [
                 'methods' => \WP_REST_Server::DELETABLE,
-                'callback' => [$this, 'delete_item_contributor_services'],
+                'callback' => [$this, 'delete_contributor_service'],
                 'args' => [
                     'id' => [
                         'description' => __('contributor social service id', 'podlove-podcasting-plugin-for-wordpress'),
@@ -202,7 +202,7 @@ class WP_REST_PodloveContributorService_Controller extends WP_REST_Controller
         register_rest_route($this->namespace, $this->rest_base.'/podcast', [
             [
                 'methods' => \WP_REST_Server::READABLE,
-                'callback' => [$this, 'get_items_podcast_services'],
+                'callback' => [$this, 'get_podcast_services'],
                 'args' => [
                     'category' => [
                         'description' => __('category: social, donation, internal', 'podlove-podcasting-plugin-for-wordpress'),
@@ -213,7 +213,7 @@ class WP_REST_PodloveContributorService_Controller extends WP_REST_Controller
             ],
             [
                 'methods' => \WP_REST_Server::CREATABLE,
-                'callback' => [$this, 'create_item_podcast_services'],
+                'callback' => [$this, 'create_podcast_service'],
                 'args' => [
                     'category' => [
                         'description' => __('category: social, donation, internal', 'podlove-podcasting-plugin-for-wordpress'),
@@ -227,7 +227,7 @@ class WP_REST_PodloveContributorService_Controller extends WP_REST_Controller
         register_rest_route($this->namespace, $this->rest_base.'/podcast/service/(?P<id>[\d]+)', [
             [
                 'methods' => \WP_REST_Server::READABLE,
-                'callback' => [$this, 'get_item_podcast_services'],
+                'callback' => [$this, 'get_podcast_service'],
                 'args' => [
                     'id' => [
                         'description' => __('podcast social service id', 'podlove-podcasting-plugin-for-wordpress'),
@@ -242,7 +242,7 @@ class WP_REST_PodloveContributorService_Controller extends WP_REST_Controller
             ],
             [
                 'methods' => \WP_REST_Server::EDITABLE,
-                'callback' => [$this, 'update_item_podcast_services'],
+                'callback' => [$this, 'update_podcast_service'],
                 'args' => [
                     'id' => [
                         'description' => __('podcast social service id', 'podlove-podcasting-plugin-for-wordpress'),
@@ -257,7 +257,7 @@ class WP_REST_PodloveContributorService_Controller extends WP_REST_Controller
             ],
             [
                 'methods' => \WP_REST_Server::DELETABLE,
-                'callback' => [$this, 'delete_item_podcast_services'],
+                'callback' => [$this, 'delete_podcast_service'],
                 'args' => [
                     'id' => [
                         'description' => __('podcast social service id', 'podlove-podcasting-plugin-for-wordpress'),
@@ -296,7 +296,7 @@ class WP_REST_PodloveContributorService_Controller extends WP_REST_Controller
         return new \Podlove\Api\Response\OkResponse($result);
     }
 
-    public function get_items_contributor_services($request)
+    public function get_contributor_services($request)
     {
         $id = $request->get_param('id');
         $contributor = Contributor::find_by_id($id);
@@ -321,7 +321,7 @@ class WP_REST_PodloveContributorService_Controller extends WP_REST_Controller
         return new \Podlove\Api\Response\OkResponse($result);
     }
 
-    public function get_items_podcast_services($request)
+    public function get_podcast_services($request)
     {
         $category = $request->get_param('category');
         $services = ShowService::find_by_category($category);
@@ -361,7 +361,7 @@ class WP_REST_PodloveContributorService_Controller extends WP_REST_Controller
         return new \Podlove\Api\Response\OkResponse($result);
     }
 
-    public function get_item_contributor_services($request)
+    public function get_contributor_service($request)
     {
         $id = $request->get_param('id');
         $service = ContributorService::find_by_id($id);
@@ -381,7 +381,7 @@ class WP_REST_PodloveContributorService_Controller extends WP_REST_Controller
         return new \Podlove\Api\Response\OkResponse($data);
     }
 
-    public function get_item_podcast_services($request)
+    public function get_podcast_service($request)
     {
         $id = $request->get_param('id');
         $service = ShowService::find_by_id($id);
@@ -409,7 +409,7 @@ class WP_REST_PodloveContributorService_Controller extends WP_REST_Controller
         return true;
     }
 
-    public function create_item_contributor_services($request)
+    public function create_contributor_service($request)
     {
         $id = $request->get_param('id');
         $contributor = Contributor::find_by_id($id);
@@ -426,7 +426,7 @@ class WP_REST_PodloveContributorService_Controller extends WP_REST_Controller
         ]);
     }
 
-    public function create_item_podcast_services($request)
+    public function create_podcast_service($request)
     {
         $service = new ShowService();
         $service->save();
@@ -446,7 +446,7 @@ class WP_REST_PodloveContributorService_Controller extends WP_REST_Controller
         return true;
     }
 
-    public function update_item_contributor_services($request)
+    public function update_contributor_service($request)
     {
         $id = $request->get_param('id');
         $service = ContributorService::find_by_id($id);
@@ -487,7 +487,7 @@ class WP_REST_PodloveContributorService_Controller extends WP_REST_Controller
         ]);
     }
 
-    public function update_item_podcast_services($request)
+    public function update_podcast_service($request)
     {
         $id = $request->get_param('id');
         $service = ShowService::find_by_id($id);
@@ -532,7 +532,7 @@ class WP_REST_PodloveContributorService_Controller extends WP_REST_Controller
         return true;
     }
 
-    public function delete_item_contributor_services($request)
+    public function delete_contributor_service($request)
     {
         $id = $request->get_param('id');
         $service = ContributorService::find_by_id($id);
@@ -548,7 +548,7 @@ class WP_REST_PodloveContributorService_Controller extends WP_REST_Controller
         ]);
     }
 
-    public function delete_item_podcast_services($request)
+    public function delete_podcast_service($request)
     {
         $id = $request->get_param('id');
         $service = ShowService::find_by_id($id);

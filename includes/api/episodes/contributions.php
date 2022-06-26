@@ -77,17 +77,17 @@ class WP_REST_PodloveEpisodeContributions_Controller extends WP_REST_Controller
             ],
             [
                 'methods' => WP_REST_Server::READABLE,
-                'callback' => [$this, 'get_item_contribution'],
+                'callback' => [$this, 'get_contribution'],
                 'permission_callback' => [$this, 'get_item_permissions_check'],
             ],
             [
                 'methods' => WP_REST_Server::EDITABLE,
-                'callback' => [$this, 'update_item_contribution'],
+                'callback' => [$this, 'update_contribution'],
                 'permission_callback' => [$this, 'update_item_permissions_check'],
             ],
             [
                 'methods' => WP_REST_Server::DELETABLE,
-                'callback' => [$this, 'delete_item_contribution'],
+                'callback' => [$this, 'delete_contribution'],
                 'permission_callback' => [$this, 'delete_item_permissions_check'],
             ]
         ]);
@@ -114,7 +114,7 @@ class WP_REST_PodloveEpisodeContributions_Controller extends WP_REST_Controller
         ]);
     }
 
-    public function get_item_contribution($request)
+    public function get_contribution($request)
     {
         $id = $request->get_param('id');
 
@@ -179,7 +179,7 @@ class WP_REST_PodloveEpisodeContributions_Controller extends WP_REST_Controller
         ]);
     }
 
-    public function update_item_contribution($request)
+    public function update_contribution($request)
     {
         $id = $request->get_param('id');
 
@@ -243,7 +243,7 @@ class WP_REST_PodloveEpisodeContributions_Controller extends WP_REST_Controller
         ]);
     }
 
-    public function delete_item_contribution($request)
+    public function delete_contribution($request)
     {
         $id = $request->get_param('id');
         if (!$id) {
