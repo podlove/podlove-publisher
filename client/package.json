@@ -21,6 +21,7 @@
     "vue-tsc": "0.33.7"
   },
   "dependencies": {
+    "@babel/types": "^7.18.7",
     "@headlessui/vue": "1.5.0",
     "@heroicons/vue": "1.0.6",
     "@podlove/utils": "5.7.4",
