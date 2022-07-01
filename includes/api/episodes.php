@@ -3,6 +3,8 @@
 namespace Podlove\Api\Episodes;
 
 use Podlove\Model\Episode;
+use Podlove\Model\EpisodeAsset;
+use Podlove\Model\MediaFile;
 use Podlove\Model\Podcast;
 use WP_Error;
 use WP_REST_Controller;
@@ -217,6 +219,11 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
                         'description' => __('Episode media file slug.', 'podlove-podcasting-plugin-for-wordpress'),
                         'type' => 'string',
                     ],
+                    'duration' => [
+                        'description' => __('Duration of the episode', 'podlove-podcasting-plugin-for-wordpress'),
+                        'type' => 'string',
+                        'validate_callback' => '\Podlove\Api\Validation::timestamp'
+                    ],
                     'explicit' => [
                         'description' => __('explicit content?', 'podlove-podcasting-plugin-for-wordpress'),
                         'type' => 'string',
@@ -234,8 +241,7 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
                     ],
                     'soundbite_title' => [
                         'description' => __('Title for the podcast::soundbite tag', 'podlove-podcasting-plugin-for-wordpress'),
-                        'type' => 'string',
-                        'validate_callback' => '\Podlove\Api\Validation::timestamp'
+                        'type' => 'string'
                     ]
                 ],
                 'methods' => WP_REST_Server::EDITABLE,
@@ -319,6 +325,7 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
         $id = $request->get_param('id');
         $episode = Episode::find_by_id($id);
         $podcast = Podcast::get();
+        $post = get_post($episode->post_id);
         $explicit = false;
         if ($episode->explicit != 0) {
             $explicit = true;
@@ -333,6 +340,7 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
             'subtitle' => trim($episode->subtitle),
             'summary' => trim($episode->summary),
             'duration' => $episode->get_duration('full'),
+            'publicationDate' => mysql2date('c', $post->post_date),
             'poster' => $episode->cover_art_with_fallback()->setWidth(500)->url(),
             'link' => get_permalink($episode->post_id),
             'audio' => \podlove_pwp5_audio_files($episode, null),
@@ -402,6 +410,7 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
         }
 
         $episode = Episode::find_by_id($id);
+        $isSlugSet = false;
 
         if (!$episode) {
             return new \Podlove\Api\Error\NotFound();
@@ -440,6 +449,12 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
         if (isset($request['slug'])) {
             $slug = $request['slug'];
             $episode->slug = $slug;
+            $isSlugSet = true;
+        }
+
+        if (isset($request['duration'])) {
+            $duration = $request['duration'];
+            $episode->duration = $duration;
         }
 
         if (isset($request['soundbite_start'])) {
@@ -458,6 +473,16 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
         }
 
         $episode->save();
+
+        if ($isSlugSet == true) {
+            $assets = EpisodeAsset::all();
+
+            foreach($assets as $asset) {
+                $file = MediaFile::find_or_create_by_episode_id_and_episode_asset_id($episode->id, $asset->id);
+                $file->determine_file_size();
+                $file->save();
+            }
+        }
 
         return new \Podlove\Api\Response\OkResponse([
             'status' => 'ok'
