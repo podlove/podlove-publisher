@@ -106,6 +106,11 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2022-07-01 =
+
+- feat(api): add routes to handle episode contributions and social services
+- feat(api): episode duration and slug enhancements
+
 = 2022-06-19 =
 
 - fix(core): incompatibility with matomo plugin by vendor-prefixing the device detector library
