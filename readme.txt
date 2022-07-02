@@ -106,6 +106,16 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2022-07-01 =
+
+- feat(api): add routes to handle episode contributions and social services
+- feat(api): episode duration and slug enhancements
+
+= 2022-06-19 =
+
+- fix(core): incompatibility with matomo plugin by vendor-prefixing the device detector library
+- fix(shows): display episode summary in show feeds instead of the show summary
+
 = 2022-03-23 =
 
 We're working on bringing the whole JavaScript codebase onto a modern foundation. You will discover the Chapter Marks and Transcripts sections have a new look, as they are the first components we upgraded. They should be functionally equivalent to before.

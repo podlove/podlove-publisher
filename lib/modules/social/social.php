@@ -408,7 +408,7 @@ class Social extends \Podlove\Modules\Base
     {
         $api_v1 = new REST_API();
         $api_v1->register_routes();
-        $api_v2 = new REST_API_V2();
+        $api_v2 = new WP_REST_PodloveContributorService_Controller();
         $api_v2->register_routes();
     }
 }

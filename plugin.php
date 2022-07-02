@@ -221,7 +221,6 @@ require_once \Podlove\PLUGIN_DIR.'includes/auto_post_titles.php';
 require_once \Podlove\PLUGIN_DIR.'includes/cache.php';
 require_once \Podlove\PLUGIN_DIR.'includes/capabilities.php';
 require_once \Podlove\PLUGIN_DIR.'includes/chapters.php';
-require_once \Podlove\PLUGIN_DIR.'includes/cover_art.php';
 require_once \Podlove\PLUGIN_DIR.'includes/deprecations.php';
 require_once \Podlove\PLUGIN_DIR.'includes/detect_duplicate_slugs.php';
 require_once \Podlove\PLUGIN_DIR.'includes/donation_banner.php';

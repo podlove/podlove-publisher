@@ -27,7 +27,7 @@ add_action('admin_print_styles', function () {
     // vue job dashboard
     if ($is_episode_edit_screen || in_array($screen->base, $vue_screens)) {
         wp_enqueue_script('podlove-episode-vue-apps', \Podlove\PLUGIN_URL.'/js/dist/app.js', ['underscore', 'jquery'], $version, true);
-        wp_enqueue_script('podlove-vue-app-client', \Podlove\PLUGIN_URL.'/client/dist/client.js', [], $version, false);
+        wp_enqueue_script('podlove-vue-app-client', \Podlove\PLUGIN_URL.'/client/dist/client.js', ['wp-i18n'], $version, false);
         wp_enqueue_script('podlove-vue-app-client', \Podlove\PLUGIN_URL.'/client/dist/chunk_vendor.js', [], $version, false);
         add_filter('script_loader_tag', 'add_type_attribute' , 10, 3);
         wp_enqueue_style('podlove-vue-app-client', \Podlove\PLUGIN_URL.'/client/dist/style.css', [], $version);
@@ -66,7 +66,7 @@ add_action('admin_print_styles', function () {
                   'slug' => $episode->slug,
                   'title' => $episode->title,
                   'summary' => $episode->summary,
-                  'number' => $episode->number                
+                  'number' => $episode->number
               ];
 
               $data['post'] = [
