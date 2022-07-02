@@ -77,23 +77,19 @@
             />
           </div>
         </div>
-        <div class="mb-5 flex items-end">
-          <div class="w-5/6">
-            <label for="chapter-image" class="block text-sm font-medium text-gray-700"
-              >Image <span class="text-xs">{{ __('(optional)') }}</span></label
-            >
-            <div class="mt-1">
-              <input
-                name="chapter-image"
-                type="text"
-                class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
-                @change="updateChapter('image', $event)"
-                :value="state.selected.image"
-              />
-            </div>
-          </div>
-          <div class="w-1/6 ml-1">
-            <podlove-button variant="secondary" @click="selectImage()">{{ __('Select') }}</podlove-button>
+        <div class="mb-5">
+          <label for="chapter-image" class="block text-sm font-medium text-gray-700"
+            >{{ __('Image') }} <span class="text-xs">{{ __('(optional)') }}</span></label
+          >
+          <div class="mt-1 relative">
+            <input
+              name="chapter-image"
+              type="text"
+              class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+              @change="updateChapter('image', $event)"
+              :value="state.selected.image"
+            />
+            <button @click="selectImage()" :title="__('Select Chapter Image')" class="absolute right-2 top-1/2 -mt-3 text-gray-400 hover:text-gray-700"><upload-icon class="w-6 h-6" /></button>
           </div>
         </div>
         <div class="mb-5 ml-1">
@@ -133,7 +129,7 @@ import {
   add as addChapter,
   selectImage,
 } from '@store/chapters.store'
-import { PlusSmIcon, BookmarkAltIcon } from '@heroicons/vue/outline'
+import { PlusSmIcon, BookmarkAltIcon, UploadIcon } from '@heroicons/vue/outline'
 
 import PodloveButton from '@components/button/Button.vue'
 import { PodloveChapter } from '../../../types/chapters.types'
@@ -147,7 +143,7 @@ interface Chapter {
 }
 
 export default defineComponent({
-  components: { PodloveButton, PlusSmIcon, BookmarkAltIcon },
+  components: { PodloveButton, PlusSmIcon, BookmarkAltIcon, UploadIcon },
 
   setup() {
     return {

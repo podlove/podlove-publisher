@@ -1,9 +1,16 @@
 <template>
   <module name="description" title="Episode Description">
     <div class="p-3">
-      <div class="block md:flex mb-2">
-        <episode-number class="w-full md:w-2/12 mr-5 mb-5" />
-        <episode-title class="w-full md:w-10/12 mb-5" />
+      <div class="flex justify-items-stretch mb-5">
+        <episode-poster class="mr-5"/>
+        <div class="mb-2 w-full">
+          <episode-number class="w-full mb-5" />
+          <episode-type class="w-full" />
+        </div>
+      </div>
+
+      <div class="mb-5">
+        <episode-title class="w-full" />
       </div>
       <div class="mb-5">
         <episode-subtitle class="w-full" />
@@ -22,18 +29,22 @@ import { injectStore } from 'redux-vuex'
 import Module from '@components/module/Module.vue'
 import * as episode from '@store/episode.store'
 
+import EpisodePoster from './components/EpisodePoster.vue'
 import EpisodeNumber from './components/EpisodeNumber.vue'
 import EpisodeTitle from './components/EpisodeTitle.vue'
 import EpisodeSubtitle from './components/EpisodeSubtitle.vue'
 import EpisodeSummary from './components/EpisodeSummary.vue'
+import EpisodeType from './components/EpisodeType.vue'
 
 export default defineComponent({
   components: {
     Module,
+    EpisodePoster,
     EpisodeNumber,
     EpisodeTitle,
     EpisodeSubtitle,
-    EpisodeSummary
+    EpisodeSummary,
+    EpisodeType
   },
 
   setup(): { dispatch: Function } {

@@ -8,10 +8,12 @@ import * as postStore from './post.store'
 import * as transcriptsStore from './transcripts.store'
 import * as contributorsStore from './contributors.store'
 import * as settingsStore from './settings.store'
+import * as podcastStore from './podcast.store'
 
 const root = {
-  bootstrapped: (state: State) => state.lifecycle,
+  lifecycle: (state: State) => state.lifecycle,
   chapters: (state: State) => state.chapters,
+  podcast: (state: State) => state.podcast,
   episode: (state: State) => state.episode,
   runtime: (state: State) => state.runtime,
   post: (state: State) => state.post,
@@ -21,8 +23,20 @@ const root = {
 }
 
 const lifecycle = {
-  bootstrapped: createSelector(root.bootstrapped, lifecycleStore.selectors.bootstrapped),
+  bootstrapped: createSelector(root.lifecycle, lifecycleStore.selectors.bootstrapped),
 }
+
+const podcast = {
+  title: createSelector(root.podcast, podcastStore.selectors.title),
+  subtitle: createSelector(root.podcast, podcastStore.selectors.subtitle),
+  summary: createSelector(root.podcast, podcastStore.selectors.summary),
+  mnemonic: createSelector(root.podcast, podcastStore.selectors.mnemonic),
+  itunesType: createSelector(root.podcast, podcastStore.selectors.itunesType),
+  author: createSelector(root.podcast, podcastStore.selectors.author),
+  poster: createSelector(root.podcast, podcastStore.selectors.poster),
+  link: createSelector(root.podcast, podcastStore.selectors.link)
+}
+
 
 const chapters = {
   list: createSelector(root.chapters, chaptersStore.selectors.chapters),
@@ -37,6 +51,9 @@ const episode = {
   title: createSelector(root.episode, episodeStore.selectors.title),
   subtitle: createSelector(root.episode, episodeStore.selectors.subtitle),
   summary: createSelector(root.episode, episodeStore.selectors.summary),
+  type: createSelector(root.episode, episodeStore.selectors.type),
+  poster: createSelector(root.episode, episodeStore.selectors.poster),
+  mnemonic: createSelector(root.episode, episodeStore.selectors.mnemonic),
 }
 
 const runtime = {
@@ -66,6 +83,14 @@ const settings = {
     root.settings,
     settingsStore.selectors.autoGenerateEpisodeTitle
   ),
+  blogTitleTemplate: createSelector(
+    root.settings,
+    settingsStore.selectors.blogTitleTemplate
+  ),
+  episodeNumberPadding: createSelector(
+    root.settings,
+    settingsStore.selectors.episodeNumberPadding
+  ),
 }
 
-export default { lifecycle, chapters, episode, runtime, post, transcripts, contributors, settings }
+export default { lifecycle, podcast, chapters, episode, runtime, post, transcripts, contributors, settings }

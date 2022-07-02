@@ -90,5 +90,7 @@ export const reducer = handleActions({
 }, initialState);
 
 export const selectors = {
-  autoGenerateEpisodeTitle: (state: State) => state.website.enable_generated_blog_post_title
+  autoGenerateEpisodeTitle: (state: State) => state.website.enable_generated_blog_post_title,
+  blogTitleTemplate: (state: State) => state.website.blog_title_template,
+  episodeNumberPadding: (state: State) => state.website.episode_number_padding,
 }

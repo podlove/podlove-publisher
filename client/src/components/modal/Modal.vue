@@ -2,7 +2,7 @@
 <template>
   <TransitionRoot as="template" :show="open">
     <Dialog as="div" @close="close()" data-client="podlove">
-      <div class="fixed z-10 inset-0 overflow-y-auto font-sans">
+      <div class="fixed inset-0 overflow-y-auto font-sans" style="z-index: 10000;">
         <div
           class="
             flex
@@ -56,8 +56,12 @@
                 shadow-xl
                 transform
                 transition-all
-                sm:my-8 sm:align-middle sm:max-w-sm sm:w-full sm:p-6
+                sm:my-8 sm:align-middle sm:w-full sm:p-6
               "
+              :class="{
+                'sm:max-w-sm': size === 'small',
+                'sm:max-w-md': size === 'medium'
+              }"
             >
               <div class="hidden sm:block absolute top-0 right-0 pt-4 pr-4">
                 <button
@@ -95,13 +99,17 @@ export default defineComponent({
     DialogOverlay,
     TransitionChild,
     TransitionRoot,
-    XIcon
+    XIcon,
   },
   props: {
     open: {
       type: Boolean,
       default: true,
-    }
+    },
+    size: {
+      type: String,
+      default: 'small',
+    },
   },
   methods: {
     close() {

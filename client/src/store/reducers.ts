@@ -7,6 +7,7 @@ import * as postStore from './post.store'
 import * as transcriptsStore from './transcripts.store'
 import * as contributorsStore from './contributors.store'
 import * as settingsStore from './settings.store'
+import * as podcastStore from './podcast.store'
 
 export default combineReducers({
   lifecycle: lifecycleStore.reducer,
@@ -17,4 +18,5 @@ export default combineReducers({
   transcripts: transcriptsStore.reducer,
   contributors: contributorsStore.reducer,
   settings: settingsStore.reducer,
+  podcast: podcastStore.reducer
 })

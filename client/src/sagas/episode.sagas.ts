@@ -1,7 +1,10 @@
 import { PodloveApiClient } from '@lib/api'
 import { selectors } from '@store'
-import { fork, put, select, throttle } from 'redux-saga/effects'
+import { get } from 'lodash'
+import { Action } from 'redux'
+import { fork, put, select, takeEvery, throttle } from 'redux-saga/effects'
 import * as episode from '../store/episode.store'
+import * as wordpress from '../store/wordpress.store'
 import { createApi } from './api'
 import { takeFirst } from './helper'
 
@@ -10,13 +13,16 @@ interface EpisodeData {
   title: string
   subtitle: string
   summary: string
+  poster: string
 }
 
 function* episodeSaga(): any {
   const apiClient: PodloveApiClient = yield createApi()
   yield fork(initialize, apiClient)
 
-  yield throttle(1000, episode.UPDATE, save, apiClient)
+  yield throttle(3000, episode.UPDATE, save, apiClient)
+  yield takeEvery(episode.SELECT_POSTER, selectImageFromLibrary)
+  yield takeEvery(episode.SET_POSTER, updatePoster)
 }
 
 function* initialize(api: PodloveApiClient) {
@@ -28,17 +34,24 @@ function* initialize(api: PodloveApiClient) {
   }
 }
 
-function* save(api: PodloveApiClient) {
+function* save(api: PodloveApiClient, action: Action) {
   const episodeId: string = yield select(selectors.episode.id)
+  const prop = get(action, ['payload', 'prop'])
+  const value = get(action, ['payload', 'value'], null)
 
-  const payload: EpisodeData = {
-    number: yield select(selectors.episode.number),
-    title: yield select(selectors.episode.title),
-    subtitle: yield select(selectors.episode.subtitle),
-    summary: yield select(selectors.episode.summary),
+  if (!prop) {
+    return
   }
 
-  yield api.post(`episodes/${episodeId}`, payload)
+  yield api.put(`episodes/${episodeId}`, { [prop]: value })
+}
+
+function* selectImageFromLibrary() {
+  yield put(wordpress.selectImageFromLibrary({ onSuccess: { type: episode.SET_POSTER } }))
+}
+
+function* updatePoster(action: Action) {
+  yield put(episode.update({ prop: 'poster', value: get(action, ['payload']) }))
 }
 
 export default function () {
