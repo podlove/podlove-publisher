@@ -331,26 +331,60 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
             $explicit = true;
         }
 
-        $data = [
-            '_version' => 'v2',
-            'id' => $id,
-            'post_id' => $episode->post_id,
-            'title' => get_the_title($episode->post_id),
-            'title_clean' => $episode->title,
-            'subtitle' => trim($episode->subtitle),
-            'summary' => trim($episode->summary),
-            'duration' => $episode->get_duration('full'),
-            'publicationDate' => mysql2date('c', $post->post_date),
-            'poster' => $episode->cover_art_with_fallback()->setWidth(500)->url(),
-            'link' => get_permalink($episode->post_id),
-            'audio' => \podlove_pwp5_audio_files($episode, null),
-            'files' => \podlove_pwp5_files($episode, null),
-            'number' => $episode->number,
-            'mnemonic' => $podcast->mnemonic.($episode->number < 100 ? '0' : '').($episode->number < 10 ? '0' : '').$episode->number,
-            'soundbite_start' => $episode->soundbite_start,
-            'soundbite_duration' => $episode->soundbite_duration,
-            'explicit' => $explicit
-        ];
+        $isSeasonsActive = false;
+        if (\Podlove\Modules\Base::is_active('seasons'))
+            $isSeasonsActive = true;
+
+        if ($isSeasonsActive) {
+            $season_id = null;
+            $season = \Podlove\Modules\Seasons\Model\Season::for_episode($episode);
+            if ($season) {
+                $season_id = $season->id;
+            }
+            $data = [
+                '_version' => 'v2',
+                'id' => $id,
+                'post_id' => $episode->post_id,
+                'season_id' => $season_id,
+                'title' => get_the_title($episode->post_id),
+                'title_clean' => $episode->title,
+                'subtitle' => trim($episode->subtitle),
+                'summary' => trim($episode->summary),
+                'duration' => $episode->get_duration('full'),
+                'publicationDate' => mysql2date('c', $post->post_date),
+                'poster' => $episode->cover_art_with_fallback()->setWidth(500)->url(),
+                'link' => get_permalink($episode->post_id),
+                'audio' => \podlove_pwp5_audio_files($episode, null),
+                'files' => \podlove_pwp5_files($episode, null),
+                'number' => $episode->number,
+                'mnemonic' => $podcast->mnemonic.($episode->number < 100 ? '0' : '').($episode->number < 10 ? '0' : '').$episode->number,
+                'soundbite_start' => $episode->soundbite_start,
+                'soundbite_duration' => $episode->soundbite_duration,
+                'explicit' => $explicit
+            ];
+        }
+        else {
+            $data = [
+                '_version' => 'v2',
+                'id' => $id,
+                'post_id' => $episode->post_id,
+                'title' => get_the_title($episode->post_id),
+                'title_clean' => $episode->title,
+                'subtitle' => trim($episode->subtitle),
+                'summary' => trim($episode->summary),
+                'duration' => $episode->get_duration('full'),
+                'publicationDate' => mysql2date('c', $post->post_date),
+                'poster' => $episode->cover_art_with_fallback()->setWidth(500)->url(),
+                'link' => get_permalink($episode->post_id),
+                'audio' => \podlove_pwp5_audio_files($episode, null),
+                'files' => \podlove_pwp5_files($episode, null),
+                'number' => $episode->number,
+                'mnemonic' => $podcast->mnemonic.($episode->number < 100 ? '0' : '').($episode->number < 10 ? '0' : '').$episode->number,
+                'soundbite_start' => $episode->soundbite_start,
+                'soundbite_duration' => $episode->soundbite_duration,
+                'explicit' => $explicit
+            ];
+        }
 
         return new \Podlove\Api\Response\OkResponse($data);
     }
