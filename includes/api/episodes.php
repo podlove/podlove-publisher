@@ -229,6 +229,11 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
                         'type' => 'string',
                         'enum' => ['full', 'trailer', 'bonus']
                     ],
+                    'cover' => [
+                        'description' => __('An url for the episode cover', 'podlove-podcasting-plugin-for-wordpress'),
+                        'type' => 'string',
+                        'validate_callback' => '\Podlove\Api\Validation::episodeCover'
+                    ],
                     'explicit' => [
                         'description' => __('explicit content?', 'podlove-podcasting-plugin-for-wordpress'),
                         'type' => 'string',
@@ -470,6 +475,16 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
         if (isset($request['type'])) {
             $type = $request['type'];
             $episode->type = $type;
+        }
+        
+        if (isset($request['cover'])) {
+            $cover = $request['cover'];
+            $episode->cover_art = $cover;
+        }
+
+        if (isset($request['duration'])) {
+            $duration = $request['duration'];
+            $episode->duration = $duration;
         }
 
         if (isset($request['soundbite_start'])) {
