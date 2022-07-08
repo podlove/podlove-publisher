@@ -6,6 +6,7 @@ use Podlove\Model\Episode;
 use Podlove\Model\EpisodeAsset;
 use Podlove\Model\MediaFile;
 use Podlove\Model\Podcast;
+use Podlove\Modules\Seasons;
 use WP_Error;
 use WP_REST_Controller;
 use WP_REST_Response;
@@ -352,6 +353,8 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
             'explicit' => $explicit
         ];
 
+        $data = $this->enrich_with_season($data, $episode);
+
         return new \Podlove\Api\Response\OkResponse($data);
     }
 
@@ -477,7 +480,7 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
         if ($isSlugSet) {
             $assets = EpisodeAsset::all();
 
-            foreach($assets as $asset) {
+            foreach ($assets as $asset) {
                 $file = MediaFile::find_or_create_by_episode_id_and_episode_asset_id($episode->id, $asset->id);
                 $file->determine_file_size();
                 $file->save();
@@ -514,5 +517,21 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
         return new \Podlove\Api\Response\OkResponse([
             'status' => 'ok'
         ]);
+    }
+
+    private function enrich_with_season($data, Episode $episode)
+    {
+        if (!\Podlove\Modules\Base::is_active('seasons')) {
+            return $data;
+        }
+
+        $season = Seasons\Model\Season::for_episode($episode);
+        if (!$season) {
+            return $data;
+        }
+
+        $data['season_id'] = (int) $season->id;
+
+        return $data;
     }
 }

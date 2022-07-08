@@ -106,6 +106,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2022-07-08 =
+
+- feat(api): include season_id in episode
+
 = 2022-07-01 =
 
 - feat(api): add routes to handle episode contributions and social services
