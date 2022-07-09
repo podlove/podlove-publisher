@@ -74,6 +74,14 @@ add_action('admin_print_styles', function () {
                 'nonce' => wp_create_nonce('wp_rest'),
               ));
 
+              $assignments = \Podlove\Model\AssetAssignment::get_instance();
+
+              $data['assignments'] = json_encode([
+                  'image' => $assignments->image,
+                  'chapters' => $assignments->chapters,
+                  'transcript' => $assignments->transcript
+              ]);              
+
               return $data;
             });
         }
