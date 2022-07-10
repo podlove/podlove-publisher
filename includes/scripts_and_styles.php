@@ -61,27 +61,27 @@ add_action('admin_print_styles', function () {
             );
 
             add_filter('podlove_data_js', function ($data) use ($episode) {
-                $data['episode'] = json_encode([
+                $data['episode'] = [
                     'duration' => $episode->duration,
                     'id' => $episode->id
-                ]);
+                ];
 
-                $data['post'] = json_encode([
+                $data['post'] = [
                     'id' => get_the_ID()
-                ]);
+                ];
 
-                $data['api'] = json_encode([
+                $data['api'] = [
                     'base' => esc_url_raw(rest_url('podlove')),
                     'nonce' => wp_create_nonce('wp_rest'),
-                ]);
+                ];
 
                 $assignments = \Podlove\Model\AssetAssignment::get_instance();
 
-                $data['assignments'] = json_encode([
+                $data['assignments'] = [
                     'image' => $assignments->image,
                     'chapters' => $assignments->chapters,
                     'transcript' => $assignments->transcript
-                ]);
+                ];
 
                 return $data;
             });

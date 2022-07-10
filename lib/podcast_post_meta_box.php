@@ -239,12 +239,7 @@ class Podcast_Post_Meta_Box
         $episode_data = $episode_data['_podlove_meta'];
 
         $episode_data_filter = [
-            'number' => FILTER_SANITIZE_NUMBER_INT,
-            'title' => ['flags' => FILTER_FLAG_NO_ENCODE_QUOTES, 'filter' => FILTER_SANITIZE_STRING],
-            'subtitle' => ['flags' => FILTER_FLAG_NO_ENCODE_QUOTES, 'filter' => FILTER_SANITIZE_STRING],
-            'summary' => ['flags' => FILTER_FLAG_NO_ENCODE_QUOTES, 'filter' => FILTER_SANITIZE_STRING],
             'slug' => FILTER_SANITIZE_STRING,
-            'type' => FILTER_SANITIZE_STRING,
             'duration' => FILTER_SANITIZE_STRING,
             'episode_assets' => ['flags' => FILTER_REQUIRE_ARRAY, 'filter' => FILTER_SANITIZE_STRING],
             'guid' => FILTER_SANITIZE_STRING,
@@ -254,9 +249,6 @@ class Podcast_Post_Meta_Box
         $episode_data = filter_var_array($episode_data, $episode_data_filter);
 
         $episode_data = apply_filters('podlove_episode_data_before_save', $episode_data);
-
-        $episode_data['subtitle'] = \Podlove\maybe_encode_emoji($episode_data['subtitle']);
-        $episode_data['summary'] = \Podlove\maybe_encode_emoji($episode_data['summary']);
 
         // save changes
         $episode = \Podlove\Model\Episode::find_or_create_by_post_id($post_id);
