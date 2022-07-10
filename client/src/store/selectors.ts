@@ -91,6 +91,7 @@ const settings = {
     root.settings,
     settingsStore.selectors.episodeNumberPadding
   ),
+  imageAsset: createSelector(root.settings, settingsStore.selectors.imageAsset)
 }
 
 export default { lifecycle, podcast, chapters, episode, runtime, post, transcripts, contributors, settings }

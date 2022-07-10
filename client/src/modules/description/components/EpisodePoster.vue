@@ -67,6 +67,7 @@
           text-gray-500
           opacity-100
         "
+        v-if="state.asset === 'manual'"
       >
         <pencil-icon class="h-6 w-6" aria-hidden="true" />
       </div>
@@ -86,6 +87,7 @@
           opacity-0
           hover:opacity-100
         "
+        v-if="state.asset === 'manual'"
       >
         <podlove-button @click="openModal()" class="w-32 mb-2"
           ><span class="w-full text-center">{{ __('URL') }}</span></podlove-button
@@ -120,6 +122,7 @@ export default defineComponent({
     return {
       state: mapState({
         poster: selectors.episode.poster,
+        asset: selectors.settings.imageAsset
       }),
       dispatch: injectStore().dispatch,
     }
@@ -147,7 +150,7 @@ export default defineComponent({
 
     updatePoster(value: string) {
       this.dispatch(
-        updateEpisode({ prop: 'cover', value })
+        updateEpisode({ prop: 'poster', value })
       )
     },
   },
