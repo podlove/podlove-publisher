@@ -1,6 +1,6 @@
 import * as auphonic from '@store/auphonic.store'
 import { takeFirst } from '../sagas/helper'
-import { put, fork, takeEvery, select } from 'redux-saga/effects'
+import { put, fork, takeEvery, select, all, call } from 'redux-saga/effects'
 import { createApi } from '../sagas/api'
 import { createApi as createAuphonicApi } from '../sagas/auphonic.api'
 import { PodloveApiClient } from '@lib/api'
@@ -93,15 +93,46 @@ function* handleStartProduction(
   yield put(auphonic.setProduction(production))
 }
 
+function* handleSaveTrack(auphonicApi: AuphonicApiClient, uuid: String, trackWrapper: any) {
+  let payload = trackWrapper.payload
+
+  const id_old = payload.id
+  const id_new = payload.id_new
+
+  delete payload.id_new
+  payload.id = id_new
+
+  // TODO: upload file if necessary
+  switch (trackWrapper.state) {
+    case 'edited':
+      yield auphonicApi.post(`production/${uuid}/multi_input_files/${id_old}.json`, payload)
+      break
+    case 'new':
+      yield auphonicApi.post(`production/${uuid}.json`, {
+        multi_input_files: [trackWrapper.payload],
+      })
+      break
+  }
+}
+
 function* handleSaveProduction(
   auphonicApi: AuphonicApiClient,
   action: { type: string; payload: any }
 ) {
   const uuid = action.payload.uuid
-  const payload = action.payload.payload
+  const productionPayload = action.payload.productionPayload
+  const tracksPayload = action.payload.tracksPayload
+
+  // save multi_input_files by saving/updating each track individually
+  yield all(
+    tracksPayload.map((trackWrapper: any) => call(handleSaveTrack, auphonicApi, uuid, trackWrapper))
+  )
+
+  // after the tracks, update all other metadata
   const {
     result: { data: production },
-  } = yield auphonicApi.post(`production/${uuid}.json`, payload)
+  } = yield auphonicApi.post(`production/${uuid}.json`, productionPayload)
+
   yield put(auphonic.setProduction(production))
 }
 

@@ -49,8 +49,8 @@
                       <input
                         :id="`track-id-${index}`"
                         type="text"
-                        :value="track.identifier"
-                        @input="updateTrack('identifier', $event.target.value, index)"
+                        :value="track.identifier_new"
+                        @input="updateTrack('identifier_new', $event.target.value, index)"
                         class="mt-1 max-w-lg block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:max-w-xs sm:text-sm border-gray-300 rounded-md"
                       />
                     </div>
@@ -193,6 +193,15 @@
 
     <div class="pt-5">
       <div class="bg-white overflow-hidden shadow rounded-lg">
+        <div class="px-4 py-5 sm:px-6">Tracks Payload Preview</div>
+        <div class="bg-gray-50 px-4 py-5 sm:p-6 font-mono whitespace-pre">
+          {{ JSON.stringify(tracksPayload, null, '\t') }}
+        </div>
+      </div>
+    </div>
+
+    <div class="pt-5">
+      <div class="bg-white overflow-hidden shadow rounded-lg">
         <div class="px-4 py-5 sm:px-6">Production Payload Preview</div>
         <div class="bg-gray-50 px-4 py-5 sm:p-6 font-mono whitespace-pre">
           {{ JSON.stringify(payload, null, '\t') }}
@@ -249,7 +258,8 @@ export default defineComponent({
       this.dispatch(
         auphonic.saveProduction({
           uuid: this.production.uuid,
-          payload: this.payload,
+          productionPayload: this.payload,
+          tracksPayload: this.tracksPayload,
         })
       )
     },
@@ -316,14 +326,17 @@ export default defineComponent({
           }, [])
         : prepareFile(this.state.fileSelections[this.production.uuid])
     },
-    payload(): object {
-      const payload = {
-        reset_data: true,
-        ...this.productionPayload,
-        // FIXME: only override type=multitrack files, keep intro/outro files intact
-        multi_input_files: this.tracks.map((track, index) => {
-          let fileReference = {}
+    tracksPayload() {
+      return this.tracks
+        .map((track, index) => {
+          const state = track.save_state
 
+          if (state == 'unchanged') {
+            return {}
+          }
+
+          // FIXME: currently service is always url when selecting an existing production
+          let fileReference = {}
           if (this.fileSelections[index].service == 'url') {
             fileReference = {
               input_file: this.fileSelections[index].value,
@@ -338,16 +351,52 @@ export default defineComponent({
           }
 
           return {
-            type: 'multitrack',
-            id: track.identifier,
-            ...fileReference,
-            algorithms: {
-              denoise: track.noise_and_hum_reduction,
-              hipfilter: track.filtering,
-              backforeground: track.fore_background,
+            state,
+            payload: {
+              type: 'multitrack',
+              id: track.identifier,
+              id_new: track.identifier_new,
+              ...fileReference,
+              algorithms: {
+                denoise: track.noise_and_hum_reduction,
+                hipfilter: track.filtering,
+                backforeground: track.fore_background,
+              },
             },
           }
-        }),
+        })
+        .filter((t) => Object.keys(t).length > 0)
+    },
+    payload(): object {
+      const payload = {
+        // reset_data: true,
+        ...this.productionPayload,
+        // FIXME: only override type=multitrack files, keep intro/outro files intact
+        // multi_input_files: this.tracks.map((track, index) => {
+        //   let fileReference = {}
+        //   if (this.fileSelections[index].service == 'url') {
+        //     fileReference = {
+        //       input_file: this.fileSelections[index].value,
+        //     }
+        //   } else if (this.fileSelections[index].service == 'file') {
+        //     // is uploaded separately
+        //   } else {
+        //     fileReference = {
+        //       service: this.fileSelections[index].service,
+        //       input_file: this.fileSelections[index].value,
+        //     }
+        //   }
+        //   return {
+        //     type: 'multitrack',
+        //     id: track.identifier,
+        //     ...fileReference,
+        //     algorithms: {
+        //       denoise: track.noise_and_hum_reduction,
+        //       hipfilter: track.filtering,
+        //       backforeground: track.fore_background,
+        //     },
+        //   }
+        // }),
       }
 
       return payload
