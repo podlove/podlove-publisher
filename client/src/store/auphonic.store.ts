@@ -78,12 +78,14 @@ export type Preset = Production & {
 
 export type AudioTrack = {
   identifier: string
+  identifier_new: string
   fileSelection: any
   input_file_name: string
   filtering: boolean
   noise_and_hum_reduction: boolean
   fore_background: string
   track_gain: string
+  save_state: 'new' | 'unchanged' | 'edited' | 'deleted'
 }
 
 export type FileSelection = {
@@ -176,6 +178,7 @@ export const reducer = handleActions(
       state: State,
       action: { type: string; payload: { key: string; prop: string; value: string | null } }
     ): State => {
+      // FIXME: mark track as modified when selection changes
       return {
         ...state,
         current_file_selection: action.payload.key,
@@ -189,17 +192,22 @@ export const reducer = handleActions(
       }
     },
     [ADD_TRACK]: (state: State, action): State => {
+      const id = `Track ${state.tracks.length + 1}`
+
       return {
         ...state,
         tracks: [
           ...state.tracks,
           {
-            identifier: `Track ${state.tracks.length + 1}`,
+            identifier: id,
+            identifier_new: id,
             fileSelection: null,
+            input_file_name: '',
             filtering: true,
             noise_and_hum_reduction: false,
             fore_background: 'auto',
             track_gain: '0',
+            save_state: 'new',
           },
         ],
       }
@@ -208,10 +216,30 @@ export const reducer = handleActions(
       state: State,
       action: { type: string; payload: { track: Partial<AudioTrack>; index: number } }
     ): State => {
+      // save_state: 'new' | 'unchanged' | 'edited' | 'deleted'
+      const track_save_state = (
+        track: Partial<AudioTrack>,
+        track_payload: Partial<AudioTrack>
+      ): Partial<AudioTrack> => {
+        const old_state = track.save_state
+
+        if (old_state == 'new') {
+          return { save_state: 'new' }
+        }
+
+        return { save_state: 'edited' }
+      }
+
       const tracks = state.tracks.reduce(
         (result: AudioTrack[], track, trackIndex) => [
           ...result,
-          trackIndex === action.payload.index ? { ...track, ...action.payload.track } : track,
+          trackIndex === action.payload.index
+            ? {
+                ...track,
+                ...action.payload.track,
+                ...track_save_state(track, action.payload.track),
+              }
+            : track,
         ],
         []
       )
@@ -265,10 +293,12 @@ export const reducer = handleActions(
               ...acc,
               {
                 identifier: file.id,
+                identifier_new: file.id,
                 filtering: file.algorithms.hipfilter,
                 noise_and_hum_reduction: file.algorithms.denoise,
                 fore_background: file.algorithms.backforeground,
                 input_file_name: file.input_file,
+                save_state: 'unchanged',
               } as AudioTrack,
             ]
           }, [] as AudioTrack[]) || [],
@@ -344,7 +374,7 @@ const productionPayload = (state: State) => {
   const production = state.production
 
   return {
-    reset_data: true,
+    // reset_data: true,
     uuid: production?.uuid,
     // image: production?.image,
     metadata: production?.metadata,
@@ -355,7 +385,8 @@ const productionPayload = (state: State) => {
     outgoing_services: production?.outgoing_services,
     algorithms: production?.algorithms,
     speech_recognition: production?.speech_recognition,
-    multi_input_files: production?.multi_input_files,
+    // TODO: do we remove this here?
+    // multi_input_files: production?.multi_input_files,
   }
 }
 
