@@ -92,7 +92,7 @@ import {
 import { CheckIcon, SelectorIcon } from '@heroicons/vue/solid'
 
 export default defineComponent({
-  props: ['file_key'],
+  props: ['file_key', 'track_index'],
 
   components: {
     Listbox,
@@ -126,6 +126,16 @@ export default defineComponent({
           value,
         })
       )
+
+      if (this.track_index) {
+        // mark track as modified
+        this.dispatch(
+          auphonic.updateTrack({
+            track: {},
+            index: this.track_index,
+          })
+        )
+      }
     },
   },
 
