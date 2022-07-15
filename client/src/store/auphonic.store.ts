@@ -275,12 +275,20 @@ export const reducer = handleActions(
         production: action.payload,
         file_selections:
           action.payload?.multi_input_files?.reduce((acc, file, index) => {
-            console.log(file.service)
+            let service = file.service
+
+            if (!service) {
+              if (file.input_file.substring(0, 4) == 'http') {
+                service = 'url'
+              } else {
+                service = 'file'
+              }
+            }
 
             return {
               ...acc,
               [`${action.payload?.uuid}_t${index}`]: {
-                currentServiceSelection: file.service ? file.service : 'url',
+                currentServiceSelection: service,
                 fileSelection: file.service ? file.input_file : null,
                 urlValue: !file.service ? file.input_file : null,
                 fileValue: null,
