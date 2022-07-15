@@ -65,17 +65,21 @@ const uploadApi =
     urlProcessor?: (url: string) => string
   }) =>
   (url: string, data: any, { query }: ApiOptions = {}) => {
-    const formData = new FormData()
-    formData.append('input_file', data)
+    // const formData = new FormData()
+    // formData.append('input_file', data)
 
-    return axios.post(
-      addQuery(urlProcessor ? urlProcessor(url) : url, query),
-      { data: formData },
-      {
-        headers: authHeaders({ bearer }),
-        onUploadProgress: (e) => console.log('progress', e),
-      }
-    )
+    // FIXME: single track
+
+    // mulittrack:
+    const formData = new FormData()
+    formData.append(data.track_id, data.file)
+
+    return axios.post(addQuery(urlProcessor ? urlProcessor(url) : url, query), formData, {
+      headers: {
+        ...authHeaders({ bearer }),
+      },
+      onUploadProgress: (e) => console.log('progress', e),
+    })
   }
 
 export interface AuphonicApiClient {

@@ -338,6 +338,8 @@ export default defineComponent({
             return {}
           }
 
+          let upload = {}
+
           // FIXME: currently service is always url when selecting an existing production
           let fileReference = {}
           if (this.fileSelections[index].service == 'url') {
@@ -345,7 +347,10 @@ export default defineComponent({
               input_file: this.fileSelections[index].value,
             }
           } else if (this.fileSelections[index].service == 'file') {
-            // is uploaded separately
+            upload = {
+              track_id: track.identifier_new,
+              file: this.fileSelections[index].value,
+            }
           } else {
             fileReference = {
               service: this.fileSelections[index].service,
@@ -355,6 +360,7 @@ export default defineComponent({
 
           return {
             state,
+            upload,
             payload: {
               type: 'multitrack',
               id: track.identifier,

@@ -23,12 +23,12 @@
       <div v-if="currentService">
         <div v-if="currentService.type === 'file'">
           <label
-            for="file-upload"
+            :for="file_key + 'file-upload'"
             class="relative cursor-pointer bg-white rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500"
           >
             <div class="sm:mt-8">Upload a file</div>
             <input
-              id="file-upload"
+              :id="file_key + 'file-upload'"
               name="file-upload"
               type="file"
               class="sr-only"
@@ -37,14 +37,16 @@
           </label>
         </div>
         <div v-else-if="currentService.type === 'url'">
-          <label for="audio_source_url" class="block text-sm font-medium text-gray-700"
+          <label
+            :for="file_key + 'audio_source_url'"
+            class="block text-sm font-medium text-gray-700"
             >File URL</label
           >
           <div class="mt-1">
             <input
               type="url"
               name="audio_source_url"
-              id="audio_source_url"
+              :id="file_key + 'audio_source_url'"
               class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
               placeholder="https://example.com/audio.flac"
               @input="set('urlValue', $event.target.value)"
@@ -53,12 +55,12 @@
         </div>
         <div v-else>
           <div v-if="serviceFiles !== null">
-            <label for="audio_external_file" class="block text-sm font-medium text-gray-700"
+            <label :for="file_key + 'external_file'" class="block text-sm font-medium text-gray-700"
               >File</label
             >
             <select
               name="audio_external_file"
-              id="audio_external_file"
+              :id="file_key + 'external_file'"
               class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
               @change="set('fileSelection', $event.target.value)"
             >
@@ -127,7 +129,7 @@ export default defineComponent({
         })
       )
 
-      if (this.track_index) {
+      if (Number.isInteger(this.track_index)) {
         // mark track as modified
         this.dispatch(
           auphonic.updateTrack({
