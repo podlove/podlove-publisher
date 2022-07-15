@@ -102,15 +102,20 @@ function* handleSaveTrack(auphonicApi: AuphonicApiClient, uuid: String, trackWra
   delete payload.id_new
   payload.id = id_new
 
-  // TODO: upload file if necessary
   switch (trackWrapper.state) {
     case 'edited':
       yield auphonicApi.post(`production/${uuid}/multi_input_files/${id_old}.json`, payload)
+      if (trackWrapper.upload) {
+        yield auphonicApi.upload(`production/${uuid}/upload.json`, trackWrapper.upload)
+      }
       break
     case 'new':
       yield auphonicApi.post(`production/${uuid}.json`, {
         multi_input_files: [trackWrapper.payload],
       })
+      if (trackWrapper.upload) {
+        yield auphonicApi.upload(`production/${uuid}/upload.json`, trackWrapper.upload)
+      }
       break
   }
 }
