@@ -58,7 +58,10 @@
                       <div class="sm:items-baseline">
                         <div class="mt-4 sm:mt-0">
                           <div class="flex flex-col sm:flex-row gap-3">
-                            <FileChooser :file_key="`${production.uuid}_t${index}`" />
+                            <FileChooser
+                              :track_index="index"
+                              :file_key="`${production.uuid}_t${index}`"
+                            />
                           </div>
                           <div v-if="track.input_file_name" class="mt-1 text-sm text-gray-700">
                             Current File: {{ track.input_file_name }}
