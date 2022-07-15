@@ -188,7 +188,6 @@
 
     <div class="pt-5">
       <div class="flex justify-end gap-3">
-        <podlove-button variant="secondary">Cancel</podlove-button>
         <podlove-button variant="secondary" @click="saveProduction">Save Production</podlove-button>
         <podlove-button variant="primary" @click="startProduction">Start Production</podlove-button>
       </div>
