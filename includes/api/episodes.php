@@ -358,6 +358,7 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
             'type' => $episode->type,
             'publicationDate' => mysql2date('c', $post->post_date),
             'poster' => $episode->cover_art_with_fallback()->setWidth(500)->url(),
+            'episode_poster' => $episode->cover,
             'link' => get_permalink($episode->post_id),
             'audio' => \podlove_pwp5_audio_files($episode, null),
             'files' => \podlove_pwp5_files($episode, null),
@@ -480,9 +481,9 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
             $episode->type = $type;
         }
         
-        if (isset($request['cover'])) {
-            $cover = $request['cover'];
-            $episode->cover_art = $cover;
+        if (isset($request['episode_poster'])) {
+            $episode_poster = $request['episode_poster'];
+            $episode->cover_art = $episode_poster;
         }
 
         if (isset($request['duration'])) {
