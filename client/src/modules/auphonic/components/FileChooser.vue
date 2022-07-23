@@ -26,7 +26,11 @@
             :for="file_key + 'file-upload'"
             class="relative cursor-pointer bg-white rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500"
           >
-            <div class="sm:mt-8">Upload a file</div>
+            <div class="sm:mt-8" v-if="filenameSelectedForUpload">
+              Upload
+              <span class="text-sm font-normal">{{ filenameSelectedForUpload }}</span>
+            </div>
+            <div class="sm:mt-8" v-else>Upload a file</div>
             <input
               :id="file_key + 'file-upload'"
               name="file-upload"
@@ -157,6 +161,9 @@ export default defineComponent({
       console.log(this.file_key, this.state.fileSelections[this.file_key])
 
       return this.state.fileSelections[this.file_key]
+    },
+    filenameSelectedForUpload(): any {
+      return this.fileSelection?.fileValue?.name
     },
     currentServiceSelection(): any {
       return this.fileSelection?.currentServiceSelection
