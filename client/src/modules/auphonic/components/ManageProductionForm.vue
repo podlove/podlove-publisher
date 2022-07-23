@@ -32,7 +32,10 @@
 
         <div class="h-6"></div>
 
-        <div v-if="isMultitrack">
+        <div v-if="showUploadScreen">Uploading...</div>
+        <div v-if="showProcessingScreen">Processing...</div>
+
+        <div v-if="isMultitrack && showTrackEditor">
           <h2 class="pb-4 text-base font-semibold">Audio Tracks</h2>
 
           <div class="bg-white shadow overflow-hidden rounded-md max-w-3xl">
@@ -175,7 +178,7 @@
             </div>
           </div>
         </div>
-        <div v-else class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+        <div v-else-if="showTrackEditor" class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
           <fieldset class="sm:col-span-4">
             <legend class="text-base font-medium text-gray-900">Audio Source</legend>
             <div class="mt-2 flex">
@@ -295,6 +298,15 @@ export default defineComponent({
   computed: {
     production(): Production {
       return this.state.production || {}
+    },
+    showProcessingScreen() {
+      return [1, 4, 5, 6, 7, 8, 12, 13, 14].includes(this.production.status)
+    },
+    showUploadScreen() {
+      return this.production.status === 0
+    },
+    showTrackEditor() {
+      return [9, 10, 11].includes(this.production.status)
     },
     tracks(): AudioTrack[] {
       return this.state.tracks || []
