@@ -18,8 +18,10 @@ export type State = {
   subtitle: string | null
   summary: string | null
   type: 'full' | 'trailer' | 'bonus' | null
+  episode_poster: string | null
   poster: string | null
   mnemonic: string | null
+  explicit: boolean | null
 }
 
 export const initialState: State = {
@@ -30,8 +32,10 @@ export const initialState: State = {
   title: null,
   summary: null,
   type: null,
+  episode_poster: null,
   poster: null,
-  mnemonic: null
+  mnemonic: null,
+  explicit: null
 }
 
 export const update = createAction<{ prop: string; value: string }>(UPDATE)
@@ -43,8 +47,10 @@ export const set = createAction<{
   title?: string,
   subtitle?: string,
   summary?: string,
+  episode_poster?: string,
   poster?: string,
   mnemonic?: string,
+  explicit? : boolean
 }>(SET);
 
 export const reducer = handleActions(
@@ -66,8 +72,10 @@ export const reducer = handleActions(
       subtitle: get(action, ['payload', 'subtitle']),
       summary: get(action, ['payload', 'summary']),
       type: get(action, ['payload', 'type']),
+      episode_poster: get(action, ['payload', 'episode_poster']),
       poster: get(action, ['payload', 'poster']),
       mnemonic: get(action, ['payload', 'mnemonic']),
+      explicit: get(action, ['payload', 'explicit']),
     }),
   },
   initialState
@@ -81,6 +89,7 @@ export const selectors = {
   subtitle: (state: State) => state.subtitle,
   summary: (state: State) => state.summary,
   type: (state: State) => state.type,
-  poster: (state: State) => state.poster,
+  poster: (state: State) => state.episode_poster || state.poster,
   mnemonic: (state: State) => state.mnemonic,
+  explicit: (state: State) => state.explicit,
 }

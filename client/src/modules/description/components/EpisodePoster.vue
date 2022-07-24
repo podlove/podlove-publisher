@@ -150,7 +150,7 @@ export default defineComponent({
 
     updatePoster(value: string) {
       this.dispatch(
-        updateEpisode({ prop: 'poster', value })
+        updateEpisode({ prop: 'episode_poster', value })
       )
     },
   },

@@ -54,6 +54,7 @@ const episode = {
   type: createSelector(root.episode, episodeStore.selectors.type),
   poster: createSelector(root.episode, episodeStore.selectors.poster),
   mnemonic: createSelector(root.episode, episodeStore.selectors.mnemonic),
+  explicit: createSelector(root.episode, episodeStore.selectors.explicit),
 }
 
 const runtime = {
@@ -91,7 +92,8 @@ const settings = {
     root.settings,
     settingsStore.selectors.episodeNumberPadding
   ),
-  imageAsset: createSelector(root.settings, settingsStore.selectors.imageAsset)
+  imageAsset: createSelector(root.settings, settingsStore.selectors.imageAsset),
+  enableEpisodeExplicit: createSelector(root.settings, settingsStore.selectors.enableEpisodeExplicit)
 }
 
 export default { lifecycle, podcast, chapters, episode, runtime, post, transcripts, contributors, settings }

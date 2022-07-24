@@ -105,19 +105,19 @@ export const reducer = handleActions(
             action,
             ['payload', 'expert_settings', 'metadata', 'enable_episode_explicit'],
             null
-          ) === 1,
+          ) === '1',
         enable_episode_license:
           get(
             action,
             ['payload', 'expert_settings', 'metadata', 'enable_episode_license'],
             null
-          ) === 1,
+          ) === '1',
         enable_episode_recording_date:
           get(
             action,
             ['payload', 'expert_settings', 'metadata', 'enable_episode_license'],
             null
-          ) === 1,
+          ) === '1',
       },
       tracking: {
         mode: get(action, ['payload', 'expert_settings', 'tracking', 'mode'], null),
@@ -182,5 +182,6 @@ export const selectors = {
   autoGenerateEpisodeTitle: (state: State) => state.website.enable_generated_blog_post_title,
   blogTitleTemplate: (state: State) => state.website.blog_title_template,
   episodeNumberPadding: (state: State) => state.website.episode_number_padding,
-  imageAsset: (state: State) => state.assets.image
+  imageAsset: (state: State) => state.assets.image,
+  enableEpisodeExplicit: (state: State) => state.metadata.enable_episode_explicit
 }

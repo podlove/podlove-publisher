@@ -1,10 +1,13 @@
 <template>
-  <module name="description" title="Episode Description">
+  <module name="description" :title="__('Episode Description')">
     <div class="p-3">
       <div class="flex justify-items-stretch mb-5">
         <episode-poster class="mr-5"/>
         <div class="mb-2 w-full">
-          <episode-number class="w-full mb-5" />
+          <div class="flex mb-5">
+            <episode-number class="w-full" />
+            <episode-content v-if="state.explicitContentEnabled" class="ml-5 w-full" />
+          </div>
           <episode-type class="w-full" />
         </div>
       </div>
@@ -24,13 +27,16 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import { injectStore } from 'redux-vuex'
+import { mapState, injectStore } from 'redux-vuex'
+
+import { selectors } from '@store'
 
 import Module from '@components/module/Module.vue'
 import * as episode from '@store/episode.store'
 
 import EpisodePoster from './components/EpisodePoster.vue'
 import EpisodeNumber from './components/EpisodeNumber.vue'
+import EpisodeContent from './components/EpisodeContent.vue'
 import EpisodeTitle from './components/EpisodeTitle.vue'
 import EpisodeSubtitle from './components/EpisodeSubtitle.vue'
 import EpisodeSummary from './components/EpisodeSummary.vue'
@@ -41,14 +47,18 @@ export default defineComponent({
     Module,
     EpisodePoster,
     EpisodeNumber,
+    EpisodeContent,
     EpisodeTitle,
     EpisodeSubtitle,
     EpisodeSummary,
     EpisodeType
   },
 
-  setup(): { dispatch: Function } {
+  setup() {
     return {
+      state: mapState({
+        explicitContentEnabled: selectors.settings.enableEpisodeExplicit,
+      }),
       dispatch: injectStore().dispatch,
     }
   },

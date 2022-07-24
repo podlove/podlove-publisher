@@ -51,7 +51,7 @@ function* selectImageFromLibrary() {
 }
 
 function* updatePoster(action: Action) {
-  yield put(episode.update({ prop: 'poster', value: get(action, ['payload']) }))
+  yield put(episode.update({ prop: 'episode_poster', value: get(action, ['payload']) }))
 }
 
 export default function () {

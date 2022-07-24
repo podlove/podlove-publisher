@@ -1,5 +1,5 @@
 <template>
-  <module name="transcript" title="Transcripts">
+  <module name="transcript" :title="__('Transcripts')">
     <template v-slot:actions>
       <transcripts-voices class="mr-1" />
       <transcripts-export class="mr-1" />
