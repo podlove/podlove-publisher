@@ -5,11 +5,6 @@
     <link rel="shortcut icon" href="#" />
   </head>
   <body class="bg-gray-100 p-2">
-    <script>
-      window.ajaxurl = '/wp-admin/admin-ajax.php'
-      window.apiPrefix = '/api'
-    </script>
-
     <div data-client="podlove">
       <podlove-description></podlove-description>
       <div class="h-5"></div>
@@ -21,47 +16,38 @@
     <script type="module" src="./src/client.ts"></script>
 
     <script>
+      const user = 'admin' // the user name NOT the token name
+      const applicationPassword = `tl7g aZOT cPDq RsWI HtR7 6XRR`
+
       window.addEventListener('load', () => {
-        fetch('http://localhost:3000/wp-json/jwt-auth/v1/token', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ username: 'api', password: 'api' }),
-      })
-        .then((res) => res.json())
-        .then(({ token }) => {
-          /**
-           *  Accepts init action
-            {
-              api?: {
-                base: string;
-                nonce: string;
-              },
-              post?: {
-                id: string;
-              },
-              episode?: {
-                id: string;
-                duration?: string;
-              }
+        fetch('http://localhost:3000/wp-json/podlove/v2/episodes')
+          .then((res) => res.json())
+          .then(({ results }) => {
+            if (!results.length) {
+              throw new Error('Missing Episodes')
             }
-           */
-          window.initPodloveUI({
-            baseUrl: 'http://publisher.local',
-            api: {
-              base: 'http://localhost:3000/wp-json/podlove',
-              bearer: token,
-            },
-            post: {
-              id: 33,
-            },
-            episode: {
-              id: '4',
-              duration: null,
-            },
+
+            return results[0]
           })
-        })
+          .then((episode) =>
+            fetch(`http://localhost:3000/wp-json/podlove/v2/episodes/${episode.id}`)
+          )
+          .then((res) => res.json())
+          .then(({ id, post_id }) => {
+            window.initPodloveUI({
+              baseUrl: 'http://publisher.local',
+              api: {
+                base: 'http://localhost:3000/wp-json/podlove',
+                auth: btoa(`${user}:${applicationPassword}`),
+              },
+              post: {
+                id: post_id
+              },
+              episode: {
+                id
+              },
+            })
+          })
       })
     </script>
   </body>

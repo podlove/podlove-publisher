@@ -10,8 +10,8 @@ import * as chapters from '@store/chapters.store'
 import * as wordpress from '@store/wordpress.store'
 
 import { PodloveChapter } from '../types/chapters.types'
-import { channel, takeFirst } from '../sagas/helper'
-import { createApi } from '../sagas/api'
+import { channel, takeFirst } from './helper'
+import { createApi } from './api'
 import { parseAudacityChapters, parseMp4Chapters, parseHindeburgChapters, parsePodloveChapters } from '@lib/chapters'
 
 function* chaptersSaga(): any {

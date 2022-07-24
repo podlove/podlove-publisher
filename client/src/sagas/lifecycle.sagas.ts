@@ -2,7 +2,6 @@ import { eventChannel, END, EventChannel } from 'redux-saga'
 import { call, takeEvery, put } from 'redux-saga/effects'
 
 import * as lifecycle from '@store/lifecycle.store'
-import { sleep } from './helper'
 
 function lifecycleSaga(): () => any {
   return function* () {
