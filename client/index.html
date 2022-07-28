@@ -11,6 +11,8 @@
     </script>
 
     <div data-client="podlove">
+      <podlove-contributors></podlove-contributors>
+      <div class="h-5"></div>
       <podlove-chapters></podlove-chapters>
       <div class="h-5"></div>
       <podlove-transcripts></podlove-transcripts>
@@ -24,7 +26,7 @@
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ username: 'api', password: 'api' }),
+        body: JSON.stringify({ username: 'admin', password: 'admin' }),
       })
         .then((res) => res.json())
         .then(({ token }) => {
@@ -45,17 +47,17 @@
             }
            */
           window.initPodloveUI({
-            baseUrl: 'http://podlove.local',
+            baseUrl: 'http://podlovers.local',
             api: {
               base: 'http://localhost:3000/wp-json/podlove',
               bearer: token,
             },
             post: {
-              id: '60',
+              id: '309',
             },
             episode: {
-              id: '8',
-              duration: '01:40:02.577',
+              id: '33',
+              duration: '00:54:34.758',
             },
           })
         })
