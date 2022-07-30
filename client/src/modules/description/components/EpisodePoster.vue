@@ -18,7 +18,7 @@
             rounded-md
             pr-8
           "
-          :value="state.poster"
+          :value="state.episodePoster"
           @change="updatePoster($event?.target?.value)"
         />
         <button class="absolute right-2 top-1/2 -mt-3 text-gray-400 hover:text-gray-700" :title="__('Clear Input')" @click="updatePoster(null)"><x-icon class="w-6 h-6" /></button>
@@ -49,7 +49,7 @@
         overflow-hidden
         bg-cover bg-no-repeat bg-center
       "
-      :style="{ 'background-image': `url(${state.poster})` }"
+      :style="{ 'background-image': `url(${state.episodePoster || state.poster})` }"
     >
       <div
         class="
@@ -92,8 +92,11 @@
         <podlove-button @click="openModal()" class="w-32 mb-2"
           ><span class="w-full text-center">{{ __('URL') }}</span></podlove-button
         >
-        <podlove-button class="w-32 text-center" @click="selectImage()"
+        <podlove-button class="w-32 text-center mb-2" @click="selectImage()"
           ><span class="w-full text-center">{{ __('Media') }}</span></podlove-button
+        >
+        <podlove-button variant="danger" class="w-32 text-center" :disabled="state.episodePoster === null" @click="updatePoster(null)"
+          ><span class="w-full text-center">{{ __('Reset') }}</span></podlove-button
         >
       </div>
     </div>
@@ -122,6 +125,7 @@ export default defineComponent({
     return {
       state: mapState({
         poster: selectors.episode.poster,
+        episodePoster: selectors.episode.episodePoster,
         asset: selectors.settings.imageAsset
       }),
       dispatch: injectStore().dispatch,

@@ -53,6 +53,7 @@ const episode = {
   summary: createSelector(root.episode, episodeStore.selectors.summary),
   type: createSelector(root.episode, episodeStore.selectors.type),
   poster: createSelector(root.episode, episodeStore.selectors.poster),
+  episodePoster: createSelector(root.episode, episodeStore.selectors.episodePoster),
   mnemonic: createSelector(root.episode, episodeStore.selectors.mnemonic),
   explicit: createSelector(root.episode, episodeStore.selectors.explicit),
 }

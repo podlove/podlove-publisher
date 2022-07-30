@@ -8,7 +8,9 @@
       border border-transparent
       shadow-sm
       whitespace-nowrap
+      disabled:opacity-75
     "
+    :disabled="disabled"
     :class="[variantClass, sizeClass]"
   >
     <slot />
@@ -31,19 +33,23 @@ export default defineComponent({
       type: String as PropType<ButtonSize>,
       default: 'medium',
     },
+    disabled: {
+      type: Boolean,
+      default: false,
+    },
   },
 
   computed: {
     variantClass() {
       switch (this.variant) {
         case 'default':
-          return `focus:outline-none text-gray-700 bg-white border border-gray-300 hover:bg-gray-50 focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500`
+          return `focus:outline-none text-gray-700 bg-white border border-gray-300 hover:bg-gray-50 focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:bg-gray-100`
         case 'primary':
-          return `focus:ring-offset-2 text-white focus:ring-indigo-500 bg-indigo-600 hover:bg-indigo-700`
+          return `focus:ring-offset-2 text-white focus:ring-indigo-500 bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-300`
         case 'secondary':
-          return `focus:ring-offset-2 text-indigo-700 focus:ring-indigo-500 bg-indigo-100 hover:bg-indigo-200`
+          return `focus:ring-offset-2 text-indigo-700 focus:ring-indigo-500 bg-indigo-100 hover:bg-indigo-200 disabled:bg-indigo-50`
         case 'danger':
-          return `bg-red-600 text-white hover:bg-red-700 focus:ring-2 focus:ring-offset-2 focus:ring-red-500`
+          return `bg-red-600 text-white hover:bg-red-700 focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:bg-red-300`
       }
     },
 

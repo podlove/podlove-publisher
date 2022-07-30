@@ -89,7 +89,8 @@ export const selectors = {
   subtitle: (state: State) => state.subtitle,
   summary: (state: State) => state.summary,
   type: (state: State) => state.type,
-  poster: (state: State) => state.episode_poster || state.poster,
+  poster: (state: State) => state.poster,
+  episodePoster: (state: State) => state.episode_poster,
   mnemonic: (state: State) => state.mnemonic,
   explicit: (state: State) => state.explicit,
 }
