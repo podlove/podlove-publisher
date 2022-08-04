@@ -1,10 +1,6 @@
 <template>
   <module name="contributors" title="Contributors">
-    <!-- <template v-slot:actions>
-      <chapters-import class="mr-1"></chapters-import>
-      <chapters-export></chapters-export>
-    </template>
-    <chapters-form></chapters-form> -->
+    <contributors-form></contributors-form>
   </module>
 </template>
 
@@ -17,11 +13,14 @@ import { injectStore } from 'redux-vuex'
 
 import * as contributors from '@store/contributors.store'
 
+import ContributorsForm from './components/Form.vue'
+
 export default defineComponent({
   components: {
     Module,
     TabsContainer,
     Tab,
+    ContributorsForm,
   },
 
   setup(): { dispatch: Function } {
