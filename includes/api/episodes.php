@@ -341,9 +341,9 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
         $episode = Episode::find_by_id($id);
         $podcast = Podcast::get();
         $post = get_post($episode->post_id);
-        $explicit = false;
+        $explicit = 'no';
         if ($episode->explicit != 0) {
-            $explicit = true;
+            $explicit = 'yes';
         }
 
         $data = [
