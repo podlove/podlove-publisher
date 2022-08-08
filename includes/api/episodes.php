@@ -238,7 +238,7 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
                     'explicit' => [
                         'description' => __('explicit content?', 'podlove-podcasting-plugin-for-wordpress'),
                         'type' => 'string',
-                        'enum' => ['yes', 'no']
+                        'enum' => ['true', 'false']
                     ],
                     'soundbite_start' => [
                         'description' => __('Start value of podcast:soundbite tag', 'podlove-podcasting-plugin-for-wordpress'),
@@ -458,9 +458,9 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
         if (isset($request['explicit'])) {
             $explicit = $request['explicit'];
             $explicit_lowercase = strtolower($explicit);
-            if ($explicit_lowercase == 'no') {
+            if ($explicit_lowercase == 'false') {
                 $episode->explicit = 0;
-            } elseif ($explicit_lowercase == 'yes') {
+            } elseif ($explicit_lowercase == 'true') {
                 $episode->explicit = 1;
             }
         }
