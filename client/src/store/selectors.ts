@@ -51,7 +51,9 @@ const transcripts = {
 }
 
 const contributors = {
-  list: createSelector(root.contributors, contributorsStore.selectors.list)
+  list: createSelector(root.contributors, contributorsStore.selectors.list),
+  groups: createSelector(root.contributors, contributorsStore.selectors.groups),
+  roles: createSelector(root.contributors, contributorsStore.selectors.roles),
 }
 
 export default { lifecycle, chapters, episode, runtime, post, transcripts, contributors }

@@ -11,3 +11,16 @@ export interface PodloveContributor {
   organisation: string;
   slug: string;
 }
+
+export interface PodloveGroup {
+  id: string;
+  slug: string;
+  title: string;
+}
+
+
+export interface PodloveRole {
+  id: string;
+  slug: string;
+  title: string;
+}
