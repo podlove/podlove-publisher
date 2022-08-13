@@ -237,8 +237,7 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
                     ],
                     'explicit' => [
                         'description' => __('explicit content?', 'podlove-podcasting-plugin-for-wordpress'),
-                        'type' => 'string',
-                        'enum' => ['true', 'false']
+                        'type' => 'boolean'
                     ],
                     'soundbite_start' => [
                         'description' => __('Start value of podcast:soundbite tag', 'podlove-podcasting-plugin-for-wordpress'),
@@ -480,7 +479,7 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
             $type = $request['type'];
             $episode->type = $type;
         }
-        
+
         if (isset($request['episode_poster'])) {
             $episode_poster = $request['episode_poster'];
             $episode->cover_art = $episode_poster;
