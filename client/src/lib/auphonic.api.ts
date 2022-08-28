@@ -65,14 +65,12 @@ const uploadApi =
     urlProcessor?: (url: string) => string
   }) =>
   (url: string, data: any, { query }: ApiOptions = {}) => {
-    // const formData = new FormData()
-    // formData.append('input_file', data)
-
-    // FIXME: single track
-
-    // mulittrack:
     const formData = new FormData()
-    formData.append(data.track_id, data.file)
+
+    // track id for multitrack, 'input_file' for single track
+    const id = data.track_id || 'input_file'
+
+    formData.append(id, data.file)
 
     return axios.post(addQuery(urlProcessor ? urlProcessor(url) : url, query), formData, {
       headers: {
