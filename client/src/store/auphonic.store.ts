@@ -49,6 +49,7 @@ export type Production = {
   outgoing_services: object[]
   algorithms: object
   speech_recognition: object
+  service: string | null
 }
 
 export type AuphonicInputFile = {
@@ -270,31 +271,62 @@ export const reducer = handleActions(
       productions: action.payload,
     }),
     [SET_PRODUCTION]: (state: State, action: { payload: Production | null }): State => {
+      const production = action.payload
+
+      const file_selections = () => {
+        if (production?.is_multitrack) {
+          return (
+            production?.multi_input_files?.reduce((acc, file, index) => {
+              let service = file.service
+
+              if (!service) {
+                if (file.input_file.substring(0, 4) == 'http') {
+                  service = 'url'
+                } else {
+                  service = 'file'
+                }
+              }
+
+              return {
+                ...acc,
+                [`${production?.uuid}_t${index}`]: {
+                  currentServiceSelection: service,
+                  fileSelection: file.service ? file.input_file : null,
+                  urlValue: !file.service ? file.input_file : null,
+                  fileValue: null,
+                } as FileSelection,
+              }
+            }, {}) || {}
+          )
+        } else {
+          // single track
+
+          let service = production?.service
+          const input_file = production?.input_file
+
+          if (!service) {
+            if (input_file?.substring(0, 4) == 'http') {
+              service = 'url'
+            } else {
+              service = 'file'
+            }
+          }
+
+          return {
+            [`${production?.uuid}`]: {
+              currentServiceSelection: service,
+              fileSelection: service ? input_file : null,
+              urlValue: !service ? input_file : null,
+              fileValue: null,
+            } as FileSelection,
+          }
+        }
+      }
+
       return {
         ...state,
-        production: action.payload,
-        file_selections:
-          action.payload?.multi_input_files?.reduce((acc, file, index) => {
-            let service = file.service
-
-            if (!service) {
-              if (file.input_file.substring(0, 4) == 'http') {
-                service = 'url'
-              } else {
-                service = 'file'
-              }
-            }
-
-            return {
-              ...acc,
-              [`${action.payload?.uuid}_t${index}`]: {
-                currentServiceSelection: service,
-                fileSelection: file.service ? file.input_file : null,
-                urlValue: !file.service ? file.input_file : null,
-                fileValue: null,
-              } as FileSelection,
-            }
-          }, {}) || {},
+        production: production,
+        file_selections: file_selections(),
         tracks:
           action.payload?.multi_input_files?.reduce((acc, file) => {
             return [
