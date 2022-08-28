@@ -320,7 +320,12 @@ export default defineComponent({
       return this.state.production && this.state.production.is_multitrack
     },
     productionPayload(): object {
-      return this.state.productionPayload
+      let payload = this.state.productionPayload
+
+      // remove output_files from payload, because it doubles them
+      const { output_files, ...newPayload } = payload
+
+      return newPayload
     },
     fileSelections(): any {
       const prepareFile = (selection: FileSelection) => {
