@@ -135,7 +135,6 @@ export const START_PRODUCTION = 'podlove/publisher/auphonic/START_PRODUCTION'
 export const DESELECT_PRODUCTION = 'podlove/publisher/auphonic/DESELECT_PRODUCTION'
 export const SELECT_SERVICE = 'podlove/publisher/auphonic/SELECT_SERVICE'
 export const SET_SERVICE_FILES = 'podlove/publisher/auphonic/SET_SERVICE_FILES'
-export const UPLOAD_FILE = 'podlove/publisher/auphonic/UPLOAD_FILE'
 export const SELECT_TRACKS = 'podlove/publisher/auphonic/SELECT_TRACKS'
 export const ADD_TRACK = 'podlove/publisher/auphonic/ADD_TRACK'
 export const UPDATE_TRACK = 'podlove/publisher/auphonic/UPDATE_TRACK'
@@ -164,7 +163,6 @@ export const setServices = createAction<Service[]>(SET_SERVICES)
 export const setServiceFiles =
   createAction<{ uuid: string; files: string[] | null }>(SET_SERVICE_FILES)
 export const selectService = createAction<string>(SELECT_SERVICE)
-export const uploadFile = createAction<File>(UPLOAD_FILE)
 export const updateFileSelection =
   createAction<{ key: string; prop: string; value: string | null }>(UPDATE_FILE_SELECTION)
 

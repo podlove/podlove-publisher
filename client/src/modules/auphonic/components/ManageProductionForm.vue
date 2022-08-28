@@ -407,7 +407,9 @@ export default defineComponent({
             input_file: this.fileSelections.value,
           }
         } else if (this.fileSelections.service == 'file') {
-          // FIXME: tbd
+          fileReference = {
+            input_file: this.fileSelections.value,
+          }
         } else {
           fileReference = {
             service: this.fileSelections.service,

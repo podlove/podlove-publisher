@@ -69,7 +69,6 @@ function* initializeAuphonicApi() {
     auphonicApi
   )
   yield takeEvery(auphonic.selectService, fetchServiceFiles, auphonicApi)
-  yield takeEvery(auphonic.uploadFile, uploadFile, auphonicApi)
   yield takeEvery(auphonic.saveProduction, handleSaveProduction, auphonicApi)
   yield takeEvery(auphonic.startProduction, handleStartProduction, auphonicApi)
   yield takeEvery(auphonic.deselectProduction, handleDeselectProduction, auphonicApi)
@@ -130,10 +129,19 @@ function* handleSaveProduction(
   const productionPayload = action.payload.productionPayload
   const tracksPayload = action.payload.tracksPayload
 
-  // save multi_input_files by saving/updating each track individually
   yield all(
     tracksPayload.map((trackWrapper: any) => call(handleSaveTrack, auphonicApi, uuid, trackWrapper))
   )
+
+  // handle single track if input_file is set
+  // FIXME: only upload when changed, see multitrack logic
+  const input_file = productionPayload.input_file
+  if (typeof input_file == 'object') {
+    yield auphonicApi.upload(`production/${uuid}/upload.json`, {
+      file: input_file,
+    })
+    delete productionPayload.input_file
+  }
 
   // after the tracks, update all other metadata
   const {
@@ -141,11 +149,6 @@ function* handleSaveProduction(
   } = yield auphonicApi.post(`production/${uuid}.json`, productionPayload)
 
   yield put(auphonic.setProduction(production))
-}
-
-function* uploadFile(auphonicApi: AuphonicApiClient, action: { type: string; payload: File }) {
-  const uuid: string = yield select(selectors.auphonic.productionId)
-  yield auphonicApi.upload(`production/${uuid}/upload.json`, action.payload)
 }
 
 function* fetchServiceFiles(
