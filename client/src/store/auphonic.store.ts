@@ -290,7 +290,7 @@ export const reducer = handleActions(
                 [`${production?.uuid}_t${index}`]: {
                   currentServiceSelection: service,
                   fileSelection: file.service ? file.input_file : null,
-                  urlValue: !file.service ? file.input_file : null,
+                  urlValue: service == 'url' ? file.input_file : null,
                   fileValue: null,
                 } as FileSelection,
               }
@@ -314,7 +314,7 @@ export const reducer = handleActions(
             [`${production?.uuid}`]: {
               currentServiceSelection: service,
               fileSelection: service ? input_file : null,
-              urlValue: !service ? input_file : null,
+              urlValue: service == 'url' ? input_file : null,
               fileValue: null,
             } as FileSelection,
           }

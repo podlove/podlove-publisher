@@ -199,15 +199,19 @@ function* handleServiceFilesAvailable(action: {
   payload: { uuid: string; files: string[] }
 }) {
   const currentKey: string = yield select(selectors.auphonic.currentFileSelection)
+  const selection: any = yield select(selectors.auphonic.fileSelections)
 
-  // select first available file
-  yield put(
-    auphonic.updateFileSelection({
-      key: currentKey,
-      prop: 'fileSelection',
-      value: action.payload.files[0],
-    })
-  )
+  // set default, but only if necessary
+  if (!selection[currentKey].fileSelection) {
+    // select first available file
+    yield put(
+      auphonic.updateFileSelection({
+        key: currentKey,
+        prop: 'fileSelection',
+        value: action.payload.files[0],
+      })
+    )
+  }
 }
 
 function* handleFileSelection(action: {
