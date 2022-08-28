@@ -181,8 +181,13 @@
         <div v-else-if="showTrackEditor" class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
           <fieldset class="sm:col-span-4">
             <legend class="text-base font-medium text-gray-900">Audio Source</legend>
-            <div class="mt-2 flex">
-              <FileChooser :file_key="production.uuid" />
+            <div class="mt-2">
+              <div class="flex flex-col sm:flex-row gap-3">
+                <FileChooser :file_key="production.uuid" />
+              </div>
+              <div v-if="fileSelections.value" class="mt-1 text-sm text-gray-700">
+                Current File: {{ fileSelections.value }}
+              </div>
             </div>
           </fieldset>
         </div>
@@ -341,6 +346,10 @@ export default defineComponent({
         : prepareFile(this.state.fileSelections[this.production.uuid])
     },
     tracksPayload() {
+      if (!this.isMultitrack) {
+        return []
+      }
+
       return this.tracks
         .map((track, index) => {
           const state = track.save_state
@@ -388,38 +397,29 @@ export default defineComponent({
         .filter((t) => Object.keys(t).length > 0)
     },
     payload(): object {
-      const payload = {
-        // reset_data: true,
-        ...this.productionPayload,
-        // FIXME: only override type=multitrack files, keep intro/outro files intact
-        // multi_input_files: this.tracks.map((track, index) => {
-        //   let fileReference = {}
-        //   if (this.fileSelections[index].service == 'url') {
-        //     fileReference = {
-        //       input_file: this.fileSelections[index].value,
-        //     }
-        //   } else if (this.fileSelections[index].service == 'file') {
-        //     // is uploaded separately
-        //   } else {
-        //     fileReference = {
-        //       service: this.fileSelections[index].service,
-        //       input_file: this.fileSelections[index].value,
-        //     }
-        //   }
-        //   return {
-        //     type: 'multitrack',
-        //     id: track.identifier,
-        //     ...fileReference,
-        //     algorithms: {
-        //       denoise: track.noise_and_hum_reduction,
-        //       hipfilter: track.filtering,
-        //       backforeground: track.fore_background,
-        //     },
-        //   }
-        // }),
+      let fileReference = {}
+      let upload = {}
+
+      // for single track, add file selection to payload
+      if (!this.isMultitrack) {
+        if (this.fileSelections.service == 'url') {
+          fileReference = {
+            input_file: this.fileSelections.value,
+          }
+        } else if (this.fileSelections.service == 'file') {
+          // FIXME: tbd
+        } else {
+          fileReference = {
+            service: this.fileSelections.service,
+            input_file: this.fileSelections.value,
+          }
+        }
       }
 
-      return payload
+      return {
+        ...this.productionPayload,
+        ...fileReference,
+      }
     },
   },
 })
