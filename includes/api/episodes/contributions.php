@@ -3,6 +3,8 @@
 namespace Podlove\Api\Episodes;
 
 use Podlove\Model\Episode;
+use Podlove\Modules\Contributors\Model\Contributor;
+use Podlove\Modules\Contributors\Model\DefaultContribution;
 use Podlove\Modules\Contributors\Model\EpisodeContribution;
 use WP_REST_Controller;
 use WP_REST_Server;
@@ -30,6 +32,11 @@ class WP_REST_PodloveEpisodeContributions_Controller extends WP_REST_Controller
                 'permission_callback' => [$this, 'get_item_permissions_check'],
             ],
             [
+                'methods' => WP_REST_Server::CREATABLE,
+                'callback' => [$this, 'create_item'],
+                'permission_callback' => [$this, 'create_item_permissions_check'],
+            ],
+            [
                 'args' => [
                     'contributors' => [
                         'description' => __('List of contributors of the episode', 'podlove-podcasting-plugin-for-wordpress'),
@@ -45,14 +52,20 @@ class WP_REST_PodloveEpisodeContributions_Controller extends WP_REST_Controller
                                 'group_id' => [
                                     'description' => __('Id of group of the contributor', 'podlove-podcasting-plugin-for-wordpress'),
                                     'type' => 'integer',
+                                    'validate_callback' => '\Podlove\Api\Validation::isContributorGroupIdExist'
                                 ],
                                 'role_id' => [
                                     'description' => __('Id of role of the contributor', 'podlove-podcasting-plugin-for-wordpress'),
                                     'type' => 'integer',
+                                    'validate_callback' => '\Podlove\Api\Validation::isContributorRoleIdExist'
                                 ],
                                 'comment' => [
                                     'description' => __('Comment to the contributor', 'podlove-podcasting-plugin-for-wordpress'),
                                     'type' => 'string'
+                                ],
+                                'default_contributor' => [
+                                    'description' => __('Is the contributor a default contributor', 'podlove-podcasting-plugin-for-wordpress'),
+                                    'type' => 'boolean'
                                 ]
                             ]
                         ]
@@ -98,6 +111,13 @@ class WP_REST_PodloveEpisodeContributions_Controller extends WP_REST_Controller
         $id = $request->get_param('id');
 
         $results = array_map(function ($contributor) {
+
+            if (self::isContributorVisible($contributor->contributor_id) == false) {
+                if (!current_user_can('edit_posts')) {
+                    return;
+                }
+            }    
+
             return [
                 'id' => $contributor->id,
                 'contributor_id' => $contributor->contributor_id,
@@ -105,12 +125,15 @@ class WP_REST_PodloveEpisodeContributions_Controller extends WP_REST_Controller
                 'group_id' => $contributor->group_id,
                 'position' => $contributor->position,
                 'comment' => $contributor->comment,
+                'default_contributor' => self::isContributorDefault($contributor->contributor_id),
             ];
         }, EpisodeContribution::find_all_by_episode_id($id));
 
+        $results_clean = array_filter($results, "self::isEmpty");
+
         return new \Podlove\Api\Response\OkResponse([
             '_version' => 'v2',
-            'contribution' => $results
+            'contribution' => $results_clean
         ]);
     }
 
@@ -123,6 +146,12 @@ class WP_REST_PodloveEpisodeContributions_Controller extends WP_REST_Controller
             return new \Podlove\Api\Error\NotFound();
         }
 
+        if (self::isContributorVisible($contribution->contributor_id) == false) {
+            if (!current_user_can('edit_posts')) {
+                return new \Podlove\Api\Error\ForbiddenAccess();
+            }
+        }
+    
         return new \Podlove\Api\Response\OkResponse([
             'id' => $contribution->id,
             'contributor_id' => $contribution->contributor_id,
@@ -130,11 +159,44 @@ class WP_REST_PodloveEpisodeContributions_Controller extends WP_REST_Controller
             'group_id' => $contribution->group_id,
             'position' => $contribution->position,
             'comment' => $contribution->comment,
+            'default_contributor' => self::isContributorDefault($contribution->contributor_id),
         ]);
     }
 
     public function get_item_permissions_check($request)
     {
+        return true;
+    }
+
+    public function create_item($request)
+    {
+        $id = $request->get_param('id');
+        if (!$id) {
+            return;
+        }
+
+        $episode = Episode::find_by_id($id);
+
+        if (!$episode) {
+            return new \Podlove\Api\Error\NotFound();
+        }
+
+        $contribution = new EpisodeContribution();
+        $contribution->episode_id = $id;
+        $contribution->save();
+
+        return new \Podlove\Api\Response\CreateResponse([
+            'status' => 'ok',
+            'id' => $contribution->id
+        ]);        
+    }
+
+    public function create_item_permission_check($request)
+    {
+        if (!current_user_can('edit_posts')) {
+            return new \Podlove\Api\Error\ForbiddenAccess();
+        }
+
         return true;
     }
 
@@ -271,5 +333,30 @@ class WP_REST_PodloveEpisodeContributions_Controller extends WP_REST_Controller
         }
 
         return true;
+    }
+
+    private function isContributorDefault($id) 
+    {
+        $defaultContributor = DefaultContribution::find_all_by_property('contributor_id', $id);
+        if ($defaultContributor)
+            return true;
+
+        return false;
+    }
+
+    private function isContributorVisible($id)
+    {
+        $contributor = Contributor::find_by_id($id);
+        if ($contributor) {
+            if ($contributor->visibility > 0)
+                return true;
+        }
+
+        return false;
+    }
+
+    private function isEmpty($var)
+    {
+        return ($var !== NULL && $var !== "");
     }
 }
