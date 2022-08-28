@@ -53,6 +53,7 @@
               :id="file_key + 'audio_source_url'"
               class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
               placeholder="https://example.com/audio.flac"
+              :value="urlFieldValue"
               @input="set('urlValue', $event.target.value)"
             />
           </div>
@@ -66,6 +67,7 @@
               name="audio_external_file"
               :id="file_key + 'external_file'"
               class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+              :value="externalFileFieldValue"
               @change="set('fileSelection', $event.target.value)"
             >
               <option v-for="file in serviceFiles" :key="file" :value="file" d>
@@ -168,22 +170,12 @@ export default defineComponent({
     currentServiceSelection(): any {
       return this.fileSelection?.currentServiceSelection
     },
-  },
-
-  mounted() {
-    console.log('m', this.currentServiceSelection, this.fileSelection)
-    console.log('s', this.services)
-
-    // TODO: restore values if present, otherwise set default below
-
-    // FIXME: only if no value is set!
-    // this.dispatch(
-    //   auphonic.updateFileSelection({
-    //     key: this.file_key,
-    //     prop: 'currentServiceSelection',
-    //     value: 'url',
-    //   })
-    // )
+    urlFieldValue(): string {
+      return this.fileSelection.urlValue
+    },
+    externalFileFieldValue(): string {
+      return this.fileSelection.fileSelection
+    },
   },
 })
 </script>
