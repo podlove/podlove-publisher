@@ -185,8 +185,8 @@
               <div class="flex flex-col sm:flex-row gap-3">
                 <FileChooser :file_key="production.uuid" />
               </div>
-              <div v-if="fileSelections.value" class="mt-1 text-sm text-gray-700">
-                Current File: {{ fileSelections.value }}
+              <div v-if="production.input_file" class="mt-1 text-sm text-gray-700">
+                Current File: {{ production.input_file }}
               </div>
             </div>
           </fieldset>

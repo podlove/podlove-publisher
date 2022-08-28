@@ -129,6 +129,7 @@ function* handleSaveProduction(
   const productionPayload = action.payload.productionPayload
   const tracksPayload = action.payload.tracksPayload
 
+  // save multi_input_files by saving/updating each track individually
   yield all(
     tracksPayload.map((trackWrapper: any) => call(handleSaveTrack, auphonicApi, uuid, trackWrapper))
   )
