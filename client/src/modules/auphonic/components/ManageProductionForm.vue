@@ -33,7 +33,22 @@
         <div class="h-6"></div>
 
         <div v-if="showUploadScreen">Uploading...</div>
-        <div v-if="showProcessingScreen">Processing...</div>
+
+        <div v-if="showProcessingScreen">
+          <div class="rounded-md bg-indigo-50 p-4">
+            <div class="flex">
+              <div class="flex-shrink-0">
+                <DatabaseIcon class="h-5 w-5 text-indigo-400" aria-hidden="true" />
+              </div>
+              <div class="ml-3">
+                <h3 class="text-sm font-medium text-indigo-800">{{ production.status_string }}</h3>
+                <div class="mt-2 text-sm text-indigo-700">
+                  <p>Auphonic is now processing your production. Please wait for it to finish.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
 
         <div v-if="isMultitrack && showTrackEditor">
           <h2 class="pb-4 text-base font-semibold">Audio Tracks</h2>
@@ -233,7 +248,13 @@ import { injectStore, mapState } from 'redux-vuex'
 import * as auphonic from '@store/auphonic.store'
 import { Production, AudioTrack, FileSelection } from '@store/auphonic.store'
 
-import { XIcon, CogIcon, ChevronDownIcon, ChevronRightIcon } from '@heroicons/vue/outline'
+import {
+  XIcon,
+  CogIcon,
+  ChevronDownIcon,
+  ChevronRightIcon,
+  DatabaseIcon,
+} from '@heroicons/vue/outline'
 
 export default defineComponent({
   components: {
@@ -243,6 +264,7 @@ export default defineComponent({
     ChevronDownIcon,
     ChevronRightIcon,
     XIcon,
+    DatabaseIcon,
   },
 
   data() {
