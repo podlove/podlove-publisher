@@ -7,16 +7,16 @@
             <h3 class="text-lg leading-6 font-medium text-gray-900">Manage Production</h3>
             <p class="mt-1 text-sm text-gray-500">
               {{ production?.metadata?.title }}
-              <br class="block sm:hidden" />
-              <a
-                :href="production?.edit_page"
-                target="_blank"
-                class="cursor-pointer bg-white rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500"
-                >edit in Auphonic</a
-              >
             </p>
           </div>
-          <div class="mt-1">
+          <div class="mt-1 flex space-x-4">
+            <a
+              :href="production?.edit_page"
+              target="_blank"
+              class="inline-flex items-center rounded border border-gray-300 bg-white px-2.5 py-1.5 text-xs font-medium text-gray-500 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+              >Edit in Auphonic <ExternalLinkIcon class="ml-1 -mr-0.5 h-4 w-4" aria-hidden="true"
+            /></a>
+
             <button
               type="button"
               class="bg-white rounded-md text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
