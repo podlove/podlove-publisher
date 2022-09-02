@@ -9,7 +9,11 @@
               {{ production?.metadata?.title }}
             </p>
           </div>
-          <div class="mt-1 flex space-x-4">
+          <div class="mt-1 flex items-center space-x-4">
+            <span v-if="isSaving" class="inline-flex items-center animate-pulse text-green-600">
+              <CloudIcon class="mr-1 h-4 w-4" aria-hidden="true" />
+              Saving
+            </span>
             <a
               :href="production?.edit_page"
               target="_blank"
@@ -279,6 +283,7 @@ import {
   DatabaseIcon,
   ClipboardCheckIcon,
   ExternalLinkIcon,
+  CloudIcon,
 } from '@heroicons/vue/outline'
 
 export default defineComponent({
@@ -292,6 +297,7 @@ export default defineComponent({
     DatabaseIcon,
     ClipboardCheckIcon,
     ExternalLinkIcon,
+    CloudIcon,
   },
 
   data() {
@@ -307,6 +313,7 @@ export default defineComponent({
         tracks: selectors.auphonic.tracks,
         fileSelections: selectors.auphonic.fileSelections,
         productionPayload: selectors.auphonic.productionPayload,
+        isSaving: selectors.auphonic.isSaving,
       }),
       dispatch: injectStore().dispatch,
     }
@@ -352,6 +359,9 @@ export default defineComponent({
   computed: {
     production(): Production {
       return this.state.production || {}
+    },
+    isSaving(): boolean {
+      return this.state.isSaving
     },
     showProcessingScreen() {
       return [1, 4, 5, 6, 7, 8, 12, 13, 14].includes(this.production.status)
