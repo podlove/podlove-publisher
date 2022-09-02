@@ -107,6 +107,7 @@ export type State = {
   tracks: AudioTrack[]
   file_selections: object
   current_file_selection: string | null
+  is_saving: boolean
 }
 
 export const initialState: State = {
@@ -120,6 +121,7 @@ export const initialState: State = {
   tracks: [],
   file_selections: {},
   current_file_selection: null,
+  is_saving: false,
 }
 
 export const INIT = 'podlove/publisher/auphonic/INIT'
@@ -143,6 +145,8 @@ export const SET_PRESET = 'podlove/publisher/auphonic/SET_PRESET'
 export const UPDATE_FILE_SELECTION = 'podlove/publisher/auphonic/UPDATE_FILE_SELECTION'
 export const START_POLLING = 'podlove/publisher/auphonic/START_POLLING'
 export const STOP_POLLING = 'podlove/publisher/auphonic/STOP_POLLING'
+export const START_SAVING = 'podlove/publisher/auphonic/START_SAVING'
+export const STOP_SAVING = 'podlove/publisher/auphonic/STOP_SAVING'
 
 export const init = createAction<void>(INIT)
 export const setToken = createAction<string>(SET_TOKEN)
@@ -176,6 +180,10 @@ export const updateTrack = createAction<{ track: AudioTrack; index: number }>(UP
 // Polling
 export const startPolling = createAction<void>(START_POLLING)
 export const stopPolling = createAction<void>(STOP_POLLING)
+
+// Saving State
+export const startSaving = createAction<void>(START_SAVING)
+export const stopSaving = createAction<void>(STOP_SAVING)
 
 export const reducer = handleActions(
   {
@@ -363,6 +371,14 @@ export const reducer = handleActions(
       ...state,
       token: action.payload,
     }),
+    [START_SAVING]: (state: State, action: { payload: null }): State => ({
+      ...state,
+      is_saving: true,
+    }),
+    [STOP_SAVING]: (state: State, action: { payload: null }): State => ({
+      ...state,
+      is_saving: false,
+    }),
   },
   initialState
 )
@@ -449,4 +465,5 @@ export const selectors = {
   tracks: (state: State) => state.tracks,
   fileSelections: (state: State) => state.file_selections,
   currentFileSelection: (state: State) => state.current_file_selection,
+  isSaving: (state: State) => state.is_saving,
 }

@@ -73,6 +73,7 @@ function* initializeAuphonicApi() {
   yield takeEvery(auphonic.startProduction, handleStartProduction, auphonicApi)
   yield takeEvery(auphonic.deselectProduction, handleDeselectProduction, auphonicApi)
 
+  // poll production updates while production is running
   // TODO: start polling when loading a production that is in production
   yield takeEvery(auphonic.startProduction, function* () {
     yield put(auphonic.startPolling())
@@ -157,6 +158,8 @@ function* handleSaveProduction(
   auphonicApi: AuphonicApiClient,
   action: { type: string; payload: any }
 ) {
+  yield put(auphonic.startSaving())
+
   const uuid = action.payload.uuid
   const productionPayload = action.payload.productionPayload
   const tracksPayload = action.payload.tracksPayload
@@ -182,6 +185,7 @@ function* handleSaveProduction(
   } = yield auphonicApi.post(`production/${uuid}.json`, productionPayload)
 
   yield put(auphonic.setProduction(production))
+  yield put(auphonic.stopSaving())
 }
 
 function* fetchServiceFiles(
