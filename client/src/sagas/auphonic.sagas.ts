@@ -1,6 +1,6 @@
 import * as auphonic from '@store/auphonic.store'
 import { takeFirst } from '../sagas/helper'
-import { put, fork, takeEvery, select, all, call } from 'redux-saga/effects'
+import { delay, put, take, fork, takeEvery, select, all, call, race } from 'redux-saga/effects'
 import { createApi } from '../sagas/api'
 import { createApi as createAuphonicApi } from '../sagas/auphonic.api'
 import { PodloveApiClient } from '@lib/api'
@@ -72,6 +72,38 @@ function* initializeAuphonicApi() {
   yield takeEvery(auphonic.saveProduction, handleSaveProduction, auphonicApi)
   yield takeEvery(auphonic.startProduction, handleStartProduction, auphonicApi)
   yield takeEvery(auphonic.deselectProduction, handleDeselectProduction, auphonicApi)
+
+  // TODO: start polling when loading a production that is in production
+  yield takeEvery(auphonic.startProduction, function* () {
+    yield put(auphonic.startPolling())
+  })
+  yield call(pollWatcherSaga, auphonicApi)
+}
+
+function* pollWatcherSaga(auphonicApi: AuphonicApiClient) {
+  while (true) {
+    yield take(auphonic.START_POLLING)
+    yield race([call(pollProductionSaga, auphonicApi), take(auphonic.STOP_POLLING)])
+  }
+}
+
+function* pollProductionSaga(auphonicApi: AuphonicApiClient) {
+  while (true) {
+    let uuid: string = yield select(selectors.auphonic.productionId)
+
+    let {
+      result: { data: production },
+    } = yield auphonicApi.get(`production/${uuid}.json`)
+
+    yield put(auphonic.setProduction(production))
+
+    // DONE
+    if (production.status == 3) {
+      yield put(auphonic.stopPolling())
+    }
+
+    yield delay(2500)
+  }
 }
 
 function* handleDeselectProduction(auphonicApi: AuphonicApiClient) {

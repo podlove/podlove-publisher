@@ -141,6 +141,8 @@ export const UPDATE_TRACK = 'podlove/publisher/auphonic/UPDATE_TRACK'
 export const SET_PRESETS = 'podlove/publisher/auphonic/SET_PRESETS'
 export const SET_PRESET = 'podlove/publisher/auphonic/SET_PRESET'
 export const UPDATE_FILE_SELECTION = 'podlove/publisher/auphonic/UPDATE_FILE_SELECTION'
+export const START_POLLING = 'podlove/publisher/auphonic/START_POLLING'
+export const STOP_POLLING = 'podlove/publisher/auphonic/STOP_POLLING'
 
 export const init = createAction<void>(INIT)
 export const setToken = createAction<string>(SET_TOKEN)
@@ -170,6 +172,10 @@ export const updateFileSelection =
 export const selectTracks = createAction<string>(SELECT_TRACKS)
 export const addTrack = createAction<void>(ADD_TRACK)
 export const updateTrack = createAction<{ track: AudioTrack; index: number }>(UPDATE_TRACK)
+
+// Polling
+export const startPolling = createAction<void>(START_POLLING)
+export const stopPolling = createAction<void>(STOP_POLLING)
 
 export const reducer = handleActions(
   {
