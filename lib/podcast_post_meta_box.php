@@ -239,12 +239,7 @@ class Podcast_Post_Meta_Box
         $episode_data = $episode_data['_podlove_meta'];
 
         $episode_data_filter = [
-            'number' => FILTER_SANITIZE_NUMBER_INT,
-            'title' => ['flags' => FILTER_FLAG_NO_ENCODE_QUOTES, 'filter' => FILTER_SANITIZE_STRING],
-            'subtitle' => ['flags' => FILTER_FLAG_NO_ENCODE_QUOTES, 'filter' => FILTER_SANITIZE_STRING],
-            'summary' => ['flags' => FILTER_FLAG_NO_ENCODE_QUOTES, 'filter' => FILTER_SANITIZE_STRING],
             'slug' => FILTER_SANITIZE_STRING,
-            'type' => FILTER_SANITIZE_STRING,
             'duration' => FILTER_SANITIZE_STRING,
             'episode_assets' => ['flags' => FILTER_REQUIRE_ARRAY, 'filter' => FILTER_SANITIZE_STRING],
             'guid' => FILTER_SANITIZE_STRING,
@@ -254,9 +249,6 @@ class Podcast_Post_Meta_Box
         $episode_data = filter_var_array($episode_data, $episode_data_filter);
 
         $episode_data = apply_filters('podlove_episode_data_before_save', $episode_data);
-
-        $episode_data['subtitle'] = \Podlove\maybe_encode_emoji($episode_data['subtitle']);
-        $episode_data['summary'] = \Podlove\maybe_encode_emoji($episode_data['summary']);
 
         // save changes
         $episode = \Podlove\Model\Episode::find_or_create_by_post_id($post_id);
@@ -323,68 +315,7 @@ class Podcast_Post_Meta_Box
     private static function get_form_data($episode)
     {
         $form_data = [
-            [
-                'type' => 'string',
-                'key' => 'number',
-                'options' => [
-                    'label' => __('Number', 'podlove-podcasting-plugin-for-wordpress'),
-                    'description' => __('An episode number (1, 2, 3 etc.)', 'podlove-podcasting-plugin-for-wordpress'),
-                    'html' => [
-                        'class' => 'podlove-check-input',
-                    ],
-                    'type' => 'number',
-                    'positive_number' => 1
-                ],
-                'position' => 1200,
-            ], ['type' => 'string',
-                'key' => 'title',
-                'options' => [
-                    'label' => __('Title', 'podlove-podcasting-plugin-for-wordpress'),
-                    'description' => __('Clear, concise name for your episode. It is recommended to not include the podcast title, episode number, season number or date in this tag.', 'podlove-podcasting-plugin-for-wordpress'),
-                    'html' => [
-                        'class' => 'podlove-check-input',
-                    ],
-                ],
-                'position' => 1100,
-            ], [
-                'type' => 'text',
-                'key' => 'subtitle',
-                'options' => [
-                    'label' => __('Subtitle', 'podlove-podcasting-plugin-for-wordpress'),
-                    'description' => __('Single sentence describing the episode.', 'podlove-podcasting-plugin-for-wordpress'),
-                    'html' => [
-                        'class' => 'large-text podlove-check-input',
-                        'rows' => 2,
-                    ],
-                ],
-                'position' => 1000,
-            ], [
-                'type' => 'text',
-                'key' => 'summary',
-                'options' => [
-                    'label' => __('Summary', 'podlove-podcasting-plugin-for-wordpress'),
-                    'description' => '',
-                    'html' => [
-                        'class' => 'large-text podlove-check-input',
-                        'rows' => 3,
-                    ],
-                ],
-                'position' => 900,
-            ], [
-                'type' => 'select',
-                'key' => 'type',
-                'options' => [
-                    'label' => __('Type', 'podlove-podcasting-plugin-for-wordpress'),
-                    'description' => __('Episode type. May be used by podcast clients.', 'podlove-podcasting-plugin-for-wordpress'),
-                    'html' => [
-                        'class' => 'large-text podlove-check-input',
-                        'rows' => 3,
-                    ],
-                    'default' => 'full',
-                    'options' => \Podlove\episode_types(),
-                ],
-                'position' => 890,
-            ], [
+          [
                 'type' => 'string',
                 'key' => 'slug',
                 'options' => [
@@ -407,7 +338,20 @@ class Podcast_Post_Meta_Box
                 'key' => 'episode_assets',
                 'options' => Podcast_Post_Meta_Box::episode_assets_form($episode),
                 'position' => 300,
-            ],
+            ], [
+              'type' => 'callback',
+              'key' => 'descriptions',
+              'options' => [
+                  'callback' => function () {
+                  ?>
+                    <div data-client="podlove" style="margin: 15px 0;">
+                      <podlove-description></podlove-description>
+                    </div>
+                  <?php
+                  }
+              ],
+              'position' => 900,
+          ]
         ];
 
         // allow modules to add / change the form

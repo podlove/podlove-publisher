@@ -1,9 +1,11 @@
-import { select } from 'redux-saga/effects'
+import { call, select } from 'redux-saga/effects'
 import { podlove } from '../lib/api'
 import { selectors, store } from '@store'
 import { notify } from '@store/notification.store'
+import { waitFor } from './helper';
 
 export function* createApi() {
+  yield call(waitFor, selectors.lifecycle.bootstrapped);
   const base: string = yield select(selectors.runtime.base)
   const nonce: string = yield select(selectors.runtime.nonce)
   const auth: string = yield select(selectors.runtime.auth)

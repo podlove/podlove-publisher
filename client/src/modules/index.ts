@@ -1,7 +1,7 @@
 import { defineAsyncComponent } from 'vue'
 
 export default {
-  PodloveShowNotes: defineAsyncComponent(() => import('./shownotes')),
+  PodloveDescription: defineAsyncComponent(() => import('./description')),
   PodloveChapters: defineAsyncComponent(() => import('./chapters')),
-  PodloveTranscripts: defineAsyncComponent(() => import('./transcripts')),
+  PodloveTranscripts: defineAsyncComponent(() => import('./transcripts'))
 }

@@ -17,12 +17,17 @@ import { State as runtimeState } from './runtime.store'
 import { State as postState } from './post.store'
 import { State as transcriptsState } from './transcripts.store'
 import { State as contributorsState } from './contributors.store'
+import { State as settingsState } from './settings.store'
+import { State as podcastState } from './podcast.store'
 
 import lifecycleSaga from '../sagas/lifecycle.sagas'
+import podcastSaga from '../sagas/podcast.sagas'
 import notificationSaga from '../sagas/notification.saga'
 import chaptersSaga from '../sagas/chapters.sagas'
 import transcriptsSaga from '../sagas/transcripts.sagas'
 import contributorsSaga from '../sagas/contributors.sagas'
+import wordpressSaga from '../sagas/wordpress.sagas'
+import episodeSaga from '../sagas/episode.sagas'
 
 export interface State {
   lifecycle: LifecycleState;
@@ -32,6 +37,8 @@ export interface State {
   post: postState;
   transcripts: transcriptsState;
   contributors: contributorsState;
+  settings: settingsState;
+  podcast: podcastState;
 }
 
 const sagas = createSagaMiddleware()
@@ -44,5 +51,8 @@ sagas.run(notificationSaga());
 sagas.run(chaptersSaga());
 sagas.run(transcriptsSaga());
 sagas.run(contributorsSaga());
+sagas.run(wordpressSaga());
+sagas.run(episodeSaga());
+sagas.run(podcastSaga());
 
 export { selectors, sagas }

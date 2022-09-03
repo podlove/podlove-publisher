@@ -1,5 +1,5 @@
 <template>
-  <module name="chapters" title="Chapter Marks">
+  <module name="chapters" :title="__('Chapter Marks')">
     <template v-slot:actions>
       <chapters-import class="mr-1"></chapters-import>
       <chapters-export></chapters-export>

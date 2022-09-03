@@ -33,6 +33,21 @@ class Validation
         return false;
     }
 
+    public static function episodeCover($param, $request, $key)
+    {
+        $asset_assignment = Podlove\Model\AssetAssignment::get_instance();
+        if ($asset_assignment->image == 'manual') {
+            if (isset($param['cover'])) {
+                $cover = $param['cover'];
+                if (!Validation::url($cover, $request, $key)) {
+                    return false;
+                }
+                return true;
+            }
+        }
+        return false;
+    }
+
     public static function maxLength255($param, $request, $key)
     {
         if (isset($param) && gettype($param) == 'string') {

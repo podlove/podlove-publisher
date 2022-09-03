@@ -28,7 +28,7 @@ add_action('admin_print_styles', function () {
     // vue job dashboard
     if ($is_episode_edit_screen || in_array($screen->base, $vue_screens)) {
         wp_enqueue_script('podlove-episode-vue-apps', \Podlove\PLUGIN_URL.'/js/dist/app.js', ['underscore', 'jquery'], $version, true);
-        wp_enqueue_script('podlove-vue-app-client', \Podlove\PLUGIN_URL.'/client/dist/client.js', [], $version, false);
+        wp_enqueue_script('podlove-vue-app-client', \Podlove\PLUGIN_URL.'/client/dist/client.js', ['wp-i18n'], $version, false);
         wp_enqueue_script('podlove-vue-app-client', \Podlove\PLUGIN_URL.'/client/dist/chunk_vendor.js', [], $version, false);
         add_filter('script_loader_tag', 'add_type_attribute', 10, 3);
         wp_enqueue_style('podlove-vue-app-client', \Podlove\PLUGIN_URL.'/client/dist/style.css', [], $version);
@@ -61,27 +61,27 @@ add_action('admin_print_styles', function () {
             );
 
             add_filter('podlove_data_js', function ($data) use ($episode) {
-                $data['episode'] = json_encode([
+                $data['episode'] = [
                     'duration' => $episode->duration,
                     'id' => $episode->id
-                ]);
+                ];
 
-                $data['post'] = json_encode([
+                $data['post'] = [
                     'id' => get_the_ID()
-                ]);
+                ];
 
-                $data['api'] = json_encode([
+                $data['api'] = [
                     'base' => esc_url_raw(rest_url('podlove')),
                     'nonce' => wp_create_nonce('wp_rest'),
-                ]);
+                ];
 
                 $assignments = \Podlove\Model\AssetAssignment::get_instance();
 
-                $data['assignments'] = json_encode([
+                $data['assignments'] = [
                     'image' => $assignments->image,
                     'chapters' => $assignments->chapters,
                     'transcript' => $assignments->transcript
-                ]);
+                ];
 
                 return $data;
             });

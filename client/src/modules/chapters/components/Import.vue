@@ -2,34 +2,34 @@
   <tooltip>
     <template v-slot:trigger>
       <podlove-button variant="secondary" size="small" @click="simulateImportClick()"
-        >Import</podlove-button
+        >{{ __('Import') }}</podlove-button
       >
       <input ref="import" type="file" @change="importChapters" class="hidden" />
     </template>
     <template v-slot:content>
       <div class="text-xs">
-        <p class="text-gray-600 leading-3 font-semibold mb-2">Accepts:</p>
+        <p class="text-gray-600 leading-3 font-semibold mb-2">{{ __('Accepts:') }}</p>
         <ul class="text-gray-500 ml-1">
           <li class="mb-1">
             <a
               class="text-blue-500 underline"
               href="https://podlove.org/simple-chapters/"
               target="_blank"
-              >Podlove Simple Chapters</a
+              >{{ __('Podlove Simple Chapters') }}</a
             >
             (<code>.psc</code>),
           </li>
           <li class="mb-1">
             <a class="text-blue-500 underline" href="http://www.audacityteam.org" target="_blank"
-              >Audacity</a
+              >{{ __('Audacity') }}</a
             >
-            Track Labels,
+            {{ __('Track Labels') }},
           </li>
           <li class="mb-1">
             <a class="text-blue-500 underline" href="https://hindenburg.com" target="_blank"
-              >Hindenburg</a
+              >{{ __('Hindenburg') }}</a
             >
-            project files and MP4Chaps (<code>.txt</code>)
+            {{ __('project files and MP4Chaps') }} (<code>.txt</code>)
           </li>
         </ul>
       </div>

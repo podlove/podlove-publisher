@@ -225,10 +225,19 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
                         'type' => 'string',
                         'validate_callback' => '\Podlove\Api\Validation::timestamp'
                     ],
+                    'type' => [
+                        'description' => __('Episode type. May be used by podcast clients.', 'podlove-podcasting-plugin-for-wordpress'),
+                        'type' => 'string',
+                        'enum' => ['full', 'trailer', 'bonus']
+                    ],
+                    'cover' => [
+                        'description' => __('An url for the episode cover', 'podlove-podcasting-plugin-for-wordpress'),
+                        'type' => 'string',
+                        'validate_callback' => '\Podlove\Api\Validation::episodeCover'
+                    ],
                     'explicit' => [
                         'description' => __('explicit content?', 'podlove-podcasting-plugin-for-wordpress'),
-                        'type' => 'string',
-                        'enum' => ['yes', 'no']
+                        'type' => 'boolean'
                     ],
                     'soundbite_start' => [
                         'description' => __('Start value of podcast:soundbite tag', 'podlove-podcasting-plugin-for-wordpress'),
@@ -305,6 +314,10 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
     {
         $id = $request->get_param('id');
         $episode = Episode::find_by_id($id);
+        if (!$episode) {
+            return false;
+        }
+
         $post = $episode->post();
         if (!$post) {
             return false;
@@ -341,8 +354,10 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
             'subtitle' => trim($episode->subtitle),
             'summary' => trim($episode->summary),
             'duration' => $episode->get_duration('full'),
+            'type' => $episode->type,
             'publicationDate' => mysql2date('c', $post->post_date),
             'poster' => $episode->cover_art_with_fallback()->setWidth(500)->url(),
+            'episode_poster' => $episode->cover,
             'link' => get_permalink($episode->post_id),
             'audio' => \podlove_pwp5_audio_files($episode, null),
             'files' => \podlove_pwp5_files($episode, null),
@@ -442,9 +457,9 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
         if (isset($request['explicit'])) {
             $explicit = $request['explicit'];
             $explicit_lowercase = strtolower($explicit);
-            if ($explicit_lowercase == 'no') {
+            if ($explicit_lowercase == 'false') {
                 $episode->explicit = 0;
-            } elseif ($explicit_lowercase == 'yes') {
+            } elseif ($explicit_lowercase == 'true') {
                 $episode->explicit = 1;
             }
         }
@@ -453,6 +468,21 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
             $slug = $request['slug'];
             $episode->slug = $slug;
             $isSlugSet = true;
+        }
+
+        if (isset($request['duration'])) {
+            $duration = $request['duration'];
+            $episode->duration = $duration;
+        }
+
+        if (isset($request['type'])) {
+            $type = $request['type'];
+            $episode->type = $type;
+        }
+
+        if (isset($request['episode_poster'])) {
+            $episode_poster = $request['episode_poster'];
+            $episode->cover_art = $episode_poster;
         }
 
         if (isset($request['duration'])) {
