@@ -106,6 +106,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2022-09-04 =
+
+- feat: New UI module for episode description related information
+
 = 2022-07-25 =
 
 - update webvtt parser to support closing voice tags and a missing trailing newline
