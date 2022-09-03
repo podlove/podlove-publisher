@@ -538,7 +538,7 @@ class WP_REST_PodloveContributors_Controller extends WP_REST_Controller
 
         return new \Podlove\Api\Response\OkResponse([
             '_version' => 'v2',
-            'daefaults' => $entries
+            'defaults' => $entries
         ]);
     }
 
