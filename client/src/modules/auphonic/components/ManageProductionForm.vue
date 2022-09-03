@@ -314,6 +314,13 @@ export default defineComponent({
         fileSelections: selectors.auphonic.fileSelections,
         productionPayload: selectors.auphonic.productionPayload,
         isSaving: selectors.auphonic.isSaving,
+        episode_title: selectors.episode.title,
+        episode_subtitle: selectors.episode.subtitle,
+        episode_summary: selectors.episode.summary,
+        episode_number: selectors.episode.number,
+        podcast_title: selectors.podcast.title,
+        podcast_author: selectors.podcast.author,
+        podcast_link: selectors.podcast.link,
       }),
       dispatch: injectStore().dispatch,
     }
@@ -384,7 +391,19 @@ export default defineComponent({
       // remove output_files from payload, because it doubles them
       const { output_files, ...newPayload } = payload
 
-      return newPayload
+      return {
+        ...newPayload,
+        metadata: {
+          ...newPayload.metadata,
+          title: this.state.episode_title,
+          subtitle: this.state.episode_subtitle,
+          summary: this.state.episode_summary,
+          artist: this.state.podcast_author,
+          album: this.state.podcast_title,
+          url: this.state.podcast_link,
+          track: this.state.episode_number,
+        },
+      }
     },
     fileSelections(): any {
       const prepareFile = (selection: FileSelection) => {
