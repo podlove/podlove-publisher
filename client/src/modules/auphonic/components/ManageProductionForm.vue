@@ -274,6 +274,7 @@ import { selectors } from '@store'
 import { injectStore, mapState } from 'redux-vuex'
 import * as auphonic from '@store/auphonic.store'
 import { Production, AudioTrack, FileSelection } from '@store/auphonic.store'
+import Timestamp from '@lib/timestamp'
 
 import {
   XIcon,
@@ -321,6 +322,7 @@ export default defineComponent({
         podcast_title: selectors.podcast.title,
         podcast_author: selectors.podcast.author,
         podcast_link: selectors.podcast.link,
+        chapters: selectors.chapters.list,
       }),
       dispatch: injectStore().dispatch,
     }
@@ -403,6 +405,13 @@ export default defineComponent({
           url: this.state.podcast_link,
           track: this.state.episode_number,
         },
+        chapters: this.state.chapters.map((chapter) => {
+          return {
+            title: chapter.title,
+            url: chapter.href,
+            start: new Timestamp(chapter.start).pretty,
+          }
+        }),
       }
     },
     fileSelections(): any {

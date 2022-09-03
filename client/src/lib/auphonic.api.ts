@@ -54,6 +54,26 @@ const createApi =
     }).then(responseParser(errorHandler))
   }
 
+const deleteApi =
+  ({
+    errorHandler,
+    bearer,
+    method,
+    urlProcessor,
+  }: {
+    errorHandler?: Function
+    bearer?: string
+    method: 'DELETE'
+    urlProcessor?: (url: string) => string
+  }) =>
+  (url: string, data: any, { headers, query }: ApiOptions = {}) => {
+    return fetch(addQuery(urlProcessor ? urlProcessor(url) : url, query), {
+      method,
+      headers: defaultHeaders({ bearer }, headers),
+      body: JSON.stringify(data),
+    }).then(responseParser(errorHandler))
+  }
+
 const uploadApi =
   ({
     errorHandler,
@@ -98,6 +118,12 @@ export const auphonic = curry(
       bearer,
       errorHandler,
       method: 'POST',
+      urlProcessor: (endpoint) => `${base}/${endpoint}`,
+    }),
+    delete: deleteApi({
+      bearer,
+      errorHandler,
+      method: 'DELETE',
       urlProcessor: (endpoint) => `${base}/${endpoint}`,
     }),
     upload: uploadApi({
