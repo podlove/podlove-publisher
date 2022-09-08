@@ -356,6 +356,7 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
             'duration' => $episode->get_duration('full'),
             'type' => $episode->type,
             'publicationDate' => mysql2date('c', $post->post_date),
+            'recording_date' => $episode->recording_date,
             'poster' => $episode->cover_art_with_fallback()->setWidth(500)->url(),
             'episode_poster' => $episode->cover,
             'link' => get_permalink($episode->post_id),
@@ -473,6 +474,11 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
         if (isset($request['duration'])) {
             $duration = $request['duration'];
             $episode->duration = $duration;
+        }
+
+        if (isset($request['recording_date'])) {
+            $recording_date = $request['recording_date'];
+            $episode->recording_date = $recording_date;
         }
 
         if (isset($request['type'])) {
