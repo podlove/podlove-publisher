@@ -242,24 +242,6 @@
         <podlove-button variant="primary" @click="startProduction">Start Production</podlove-button>
       </div>
     </div>
-
-    <div class="pt-5">
-      <div class="bg-white overflow-hidden shadow rounded-lg">
-        <div class="px-4 py-5 sm:px-6">Tracks Payload Preview</div>
-        <div class="bg-gray-50 px-4 py-5 sm:p-6 font-mono whitespace-pre">
-          {{ JSON.stringify(tracksPayload, null, '\t') }}
-        </div>
-      </div>
-    </div>
-
-    <div class="pt-5">
-      <div class="bg-white overflow-hidden shadow rounded-lg">
-        <div class="px-4 py-5 sm:px-6">Production Payload Preview</div>
-        <div class="bg-gray-50 px-4 py-5 sm:p-6 font-mono whitespace-pre">
-          {{ JSON.stringify(payload, null, '\t') }}
-        </div>
-      </div>
-    </div>
   </form>
 </template>
 
