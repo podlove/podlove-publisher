@@ -252,6 +252,10 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
                     'soundbite_title' => [
                         'description' => __('Title for the podcast::soundbite tag', 'podlove-podcasting-plugin-for-wordpress'),
                         'type' => 'string'
+                    ],
+                    'auphonic_production_id' => [
+                        'description' => 'Auphonic Production ID',
+                        'type' => 'string'
                     ]
                 ],
                 'methods' => WP_REST_Server::EDITABLE,
@@ -366,7 +370,8 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
             'mnemonic' => $podcast->mnemonic.($episode->number < 100 ? '0' : '').($episode->number < 10 ? '0' : '').$episode->number,
             'soundbite_start' => $episode->soundbite_start,
             'soundbite_duration' => $episode->soundbite_duration,
-            'explicit' => $explicit
+            'explicit' => $explicit,
+            'auphonic_production_id' => \get_post_meta($episode->post_id, 'auphonic_production_id', true)
         ];
 
         $data = $this->enrich_with_season($data, $episode);
@@ -509,6 +514,10 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
         if (isset($request['soundbite_title'])) {
             $title = $request['soundbite_title'];
             $episode->soundbite_title = $title;
+        }
+
+        if (isset($request['auphonic_production_id'])) {
+            \update_post_meta($episode->post_id, 'auphonic_production_id', $request['auphonic_production_id']);
         }
 
         $episode->save();

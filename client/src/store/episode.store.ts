@@ -22,6 +22,7 @@ export type State = {
   poster: string | null
   mnemonic: string | null
   explicit: boolean | null
+  auphonicProductionId: 'string' | null
 }
 
 export const initialState: State = {
@@ -35,23 +36,25 @@ export const initialState: State = {
   episode_poster: null,
   poster: null,
   mnemonic: null,
-  explicit: null
+  explicit: null,
+  auphonicProductionId: null,
 }
 
 export const update = createAction<{ prop: string; value: string | boolean; }>(UPDATE)
 export const init = createAction<void>(INIT)
 export const selectPoster = createAction<void>(SELECT_POSTER)
 export const set = createAction<{
-  number?: string,
-  duration?: string,
-  title?: string,
-  subtitle?: string,
-  summary?: string,
-  episode_poster?: string,
-  poster?: string,
-  mnemonic?: string,
-  explicit? : boolean
-}>(SET);
+  number?: string
+  duration?: string
+  title?: string
+  subtitle?: string
+  summary?: string
+  episode_poster?: string
+  poster?: string
+  mnemonic?: string
+  explicit?: boolean
+  auphonicProductionId?: string
+}>(SET)
 
 export const reducer = handleActions(
   {
@@ -62,7 +65,7 @@ export const reducer = handleActions(
     }),
     [UPDATE]: (state: State, action: typeof update): State => ({
       ...state,
-      [get(action, ['payload', 'prop'])]:  get(action, ['payload', 'value'], null)
+      [get(action, ['payload', 'prop'])]: get(action, ['payload', 'value'], null),
     }),
     [SET]: (state: State, action: typeof update): State => ({
       ...state,
@@ -76,6 +79,7 @@ export const reducer = handleActions(
       poster: get(action, ['payload', 'poster']),
       mnemonic: get(action, ['payload', 'mnemonic']),
       explicit: get(action, ['payload', 'explicit']),
+      auphonicProductionId: get(action, ['payload', 'auphonic_production_id']),
     }),
   },
   initialState
@@ -93,4 +97,5 @@ export const selectors = {
   episodePoster: (state: State) => state.episode_poster,
   mnemonic: (state: State) => state.mnemonic,
   explicit: (state: State) => state.explicit,
+  auphonicProductionId: (state: State) => state.auphonicProductionId,
 }
