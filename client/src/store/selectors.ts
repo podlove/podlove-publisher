@@ -74,6 +74,7 @@ const episode = {
   episodePoster: createSelector(root.episode, episodeStore.selectors.episodePoster),
   mnemonic: createSelector(root.episode, episodeStore.selectors.mnemonic),
   explicit: createSelector(root.episode, episodeStore.selectors.explicit),
+  auphonicProductionId: createSelector(root.episode, episodeStore.selectors.auphonicProductionId),
 }
 
 const runtime = {

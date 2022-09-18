@@ -20,6 +20,7 @@ function* initialize(api: PodloveApiClient) {
   if (result) {
     yield put(auphonic.setToken(result))
     yield fork(initializeAuphonicApi)
+    yield takeEvery(auphonic.SET_PRODUCTION, memorizeSelectedProduction, api)
   }
 }
 
@@ -61,6 +62,8 @@ function* initializeAuphonicApi() {
       ...services,
     ])
   )
+
+  yield call(maybeRestoreProductionSelection)
 
   yield takeEvery(auphonic.CREATE_PRODUCTION, handleCreateProduction, auphonicApi)
   yield takeEvery(
@@ -260,6 +263,28 @@ function* handleFileSelection(action: {
   const { prop, value } = action.payload
   if (prop === 'currentServiceSelection') {
     yield put(auphonic.selectService(value))
+  }
+}
+
+function* memorizeSelectedProduction(api: PodloveApiClient) {
+  const episodeId: string = yield select(selectors.episode.id)
+  const uuid: string = yield select(selectors.auphonic.productionId)
+
+  yield api.put(`episodes/${episodeId}`, { auphonic_production_id: uuid })
+}
+
+function* maybeRestoreProductionSelection() {
+  const episodeId: string = yield select(selectors.episode.id)
+  const memorizedProductionId: string = yield select(selectors.episode.auphonicProductionId)
+  const selectedProductionId: string = yield select(selectors.auphonic.productionId)
+  const productions: auphonic.Production[] = yield select(selectors.auphonic.productions)
+
+  if (!selectedProductionId && memorizedProductionId && episodeId) {
+    const production = productions.find((production) => production.uuid == memorizedProductionId)
+
+    if (production) {
+      yield put(auphonic.setProduction(production))
+    }
   }
 }
 
