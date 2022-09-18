@@ -319,6 +319,7 @@ export default defineComponent({
         episode_subtitle: selectors.episode.subtitle,
         episode_summary: selectors.episode.summary,
         episode_number: selectors.episode.number,
+        episode_poster: selectors.episode.poster || selectors.podcast.poster,
         podcast_title: selectors.podcast.title,
         podcast_author: selectors.podcast.author,
         podcast_link: selectors.podcast.link,
@@ -387,6 +388,10 @@ export default defineComponent({
     isMultitrack(): boolean {
       return this.state.production && this.state.production.is_multitrack
     },
+    isLocalDevelopment(): boolean {
+      // @ts-ignore
+      return import.meta.env.MODE == 'development'
+    },
     productionPayload(): object {
       let payload = this.state.productionPayload
 
@@ -395,6 +400,9 @@ export default defineComponent({
 
       return {
         ...newPayload,
+        // TODO: rewrite image logic to use file upload instead of url, then we
+        // do not need this isLocalDevelopment switch any more
+        image: this.isLocalDevelopment ? '' : this.state.episode_poster,
         metadata: {
           ...newPayload.metadata,
           title: this.state.episode_title,
