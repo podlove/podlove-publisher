@@ -252,6 +252,10 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
                     'soundbite_title' => [
                         'description' => __('Title for the podcast::soundbite tag', 'podlove-podcasting-plugin-for-wordpress'),
                         'type' => 'string'
+                    ],
+                    'auphonic_production_id' => [
+                        'description' => 'Auphonic Production ID',
+                        'type' => 'string'
                     ]
                 ],
                 'methods' => WP_REST_Server::EDITABLE,
