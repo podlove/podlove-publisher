@@ -63,6 +63,7 @@ function* initializeAuphonicApi() {
     ])
   )
 
+  // TODO: module UI should be in loading state until restoration is done
   yield call(maybeRestoreProductionSelection)
 
   yield takeEvery(auphonic.CREATE_PRODUCTION, handleCreateProduction, auphonicApi)
