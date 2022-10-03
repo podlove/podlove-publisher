@@ -29,6 +29,12 @@ class WP_REST_Podlove_Controller extends WP_REST_Controller
      */
     public function register_routes()
     {
+        $categories = \Podlove\Itunes\categories(false);
+        $categories_enum = [];
+        foreach ($categories as $key => $val) {
+            array_push( $categories_enum, $val );
+        }
+
         register_rest_route($this->namespace, '/'.$this->rest_base, [
             [
                 'methods' => WP_REST_Server::READABLE,
@@ -39,7 +45,50 @@ class WP_REST_Podlove_Controller extends WP_REST_Controller
                 'methods' => WP_REST_Server::EDITABLE,
                 'callback' => [$this, 'update_item'],
                 'permission_callback' => [$this, 'update_item_permissions_check'],
-                'args' => $this->get_endpoint_args_for_item_schema(false),
+                'args' => [
+                    'title' => [
+                        'description' => __('', 'podlove-podcasting-plugin-for-wordpress'),
+                        'type' => 'string',
+                    ],
+                    'subtitle' => [
+                        'description' => __('', 'podlove-podcasting-plugin-for-wordpress'),
+                        'type' => 'string',
+                    ],
+                    'summary' => [
+                        'description' => __('', 'podlove-podcasting-plugin-for-wordpress'),
+                        'type' => 'string',
+                    ],
+                    'author_name' => [
+                        'description' => __('', 'podlove-podcasting-plugin-for-wordpress'),
+                        'type' => 'string',
+                    ],
+                    'mnemonic' => [
+                        'description' => __('', 'podlove-podcasting-plugin-for-wordpress'),
+                        'type' => 'string',
+                    ],
+                    'funding_url' => [
+                        'description' => __('', 'podlove-podcasting-plugin-for-wordpress'),
+                        'type' => 'string',
+                        'validate_callback' => '\Podlove\Api\Validation::url'
+                    ],
+                    'funding_label' => [
+                        'description' => __('', 'podlove-podcasting-plugin-for-wordpress'),
+                        'type' => 'string',
+                    ],
+                    'copyright' => [
+                        'description' => __('', 'podlove-podcasting-plugin-for-wordpress'),
+                        'type' => 'string',
+                    ],
+                    'expicit' => [
+                        'description' => __('', 'podlove-podcasting-plugin-for-wordpress'),
+                        'type' => 'boolean',
+                    ],
+                    'category' => [
+                        'description' => __('', 'podlove-podcasting-plugin-for-wordpress'),
+                        'type' => 'string',
+                        'enum' => $categories_enum,
+                    ]
+                ]
             ]
         ]);
     }
@@ -76,6 +125,11 @@ class WP_REST_Podlove_Controller extends WP_REST_Controller
     {
         $podcast = Podcast::get();
 
+        $explicit = false;
+        if ($podcast->explicit != 0) {
+            $explicit = true;
+        }
+
         $res = [];
         $res['_version'] = 'v2';
         $res['title'] = $podcast->title;
@@ -86,6 +140,14 @@ class WP_REST_Podlove_Controller extends WP_REST_Controller
         $res['author_name'] = $podcast->author_name;
         $res['poster'] = $podcast->cover_art()->setWidth(500)->url();
         $res['link'] = \Podlove\get_landing_page_url();
+        $res['funding_url'] = $podcast->funding_url;
+        $res['funding_label'] = $podcast->funding_label;
+        if (!$podcast->copyright)
+            $res['copyright'] = $podcast->default_copyright_claim();
+        else
+            $res['copyright'] = $podcast->copyright;
+        $res['expicit'] = $explicit;
+        $res['category'] = self::getCategoryName($podcast->category_1);
 
         $res = apply_filters('podlove_api_podcast_response', $res);
 
@@ -115,9 +177,52 @@ class WP_REST_Podlove_Controller extends WP_REST_Controller
             $author = $request['author_name'];
             $podcast->author_name = $author;
         }
+        if (isset($request['funding_url'])) {
+            $funding_url = $request['funding_url'];
+            $podcast->funding_url = $funding_url;
+        }
+        if (isset($request['funding_label'])) {
+            $funding_label = $request['funding_label'];
+            $podcast->funding_label = $funding_label;
+        }
+        if (isset($request['copyright'])) {
+            $copyright = $request['copyright'];
+            $podcast->copyright = $copyright;
+        }
+        if (isset($request['explicit'])) {
+            $explicit = $request['explicit'];
+            $explicit_lowercase = strtolower($explicit);
+            if ($explicit_lowercase == 'false') {
+                $podcast->explicit = 0;
+            } elseif ($explicit_lowercase == 'true') {
+                $podcast->explicit = 1;
+            }
+        }
+        if (isset($request['category'])) {
+            $category = $request['category'];
+            $category_key = self::getCategoryKey($category);
+            $podcast->category_1 = $category_key;
+        }
+
 
         $podcast->save();
 
         return new WP_REST_Response(null, 200);
+    }
+
+    private static function getCategoryKey($category) {
+        $categories = \Podlove\Itunes\categories(false);
+        foreach($categories as $key => $val) {
+            if ($val == $category)
+                return $key;
+        }
+    }
+
+    private static function getCategoryName($category_key) {
+        $categories = \Podlove\Itunes\categories(true);
+        foreach($categories as $key => $val) {
+            if ($key == $category_key)
+                return $val;
+        }
     }
 }
