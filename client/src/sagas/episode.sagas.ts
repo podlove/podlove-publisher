@@ -9,6 +9,7 @@ import { createApi } from './api'
 import { takeFirst, waitFor } from './helper'
 
 interface EpisodeData {
+  slug: string
   number: string
   title: string
   subtitle: string
