@@ -24,23 +24,6 @@
               class="relative -m-2 p-2 flex items-center justify-around space-x-4 rounded-xl hover:bg-gray-50 focus-within:ring-2 focus-within:ring-indigo-500"
             >
               <div>
-                <h3 class="text-sm font-medium text-gray-900">Select Production</h3>
-                <!-- <p class="mt-1 text-sm text-gray-500">Select an existing Auphonic production.</p> -->
-              </div>
-            </div>
-            <div
-              class="mt-2 sm:mt-8 flex justify-center align-middle content-center items-center gap-3"
-            >
-              <div class="w-full max-w-md">
-                <SelectProduction />
-              </div>
-            </div>
-          </div>
-          <div class="flow-root sm:px-6">
-            <div
-              class="relative -m-2 p-2 flex items-center justify-around space-x-4 rounded-xl hover:bg-gray-50 focus-within:ring-2 focus-within:ring-indigo-500"
-            >
-              <div>
                 <h3 class="text-sm font-medium text-gray-900">Create New Production</h3>
                 <!-- <p class="mt-1 text-sm text-gray-500">
                   Create a new production using one of your Auphonic presets.
@@ -78,6 +61,23 @@
                 ><plus-sm-icon class="-ml-0.5 mr-2 h-4 w-4" aria-hidden="true" /> Create Multitrack
                 Production</podlove-button
               >
+            </div>
+          </div>
+          <div class="flow-root sm:px-6">
+            <div
+              class="relative -m-2 p-2 flex items-center justify-around space-x-4 rounded-xl hover:bg-gray-50 focus-within:ring-2 focus-within:ring-indigo-500"
+            >
+              <div>
+                <h3 class="text-sm font-medium text-gray-900">Select Production</h3>
+                <!-- <p class="mt-1 text-sm text-gray-500">Select an existing Auphonic production.</p> -->
+              </div>
+            </div>
+            <div
+              class="mt-2 sm:mt-8 flex justify-center align-middle content-center items-center gap-3"
+            >
+              <div class="w-full max-w-md">
+                <SelectProduction />
+              </div>
             </div>
           </div>
         </div>
