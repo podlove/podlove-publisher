@@ -486,41 +486,4 @@ export default defineComponent({
     },
   },
 })
-
-// TODO
-// - think about save/upload/start flow
-//   - there should not be an upload button
-//   - is it possible there is no "save" button, only "start"?
-//   - if there is a save button, it must be impossible to "forget" to save before starting (for example by autosave before start)
-// - maybe/somehow: connect track id to contributor
-// - hide audio tracks when status is related to "processing/done"?
-// - show spinners & deactivate buttons while waiting for blocking API responses like starting the production
-// - disable "start production" when status is "incomplete"?
-// FIXME
-// - when there is a "current file" restored from auphonic, the file selector must reflect that value (and, more importantly, a save must not override the file selection)
-// NEXT
-// - display status
-//   - query only status: https://auphonic.com/api/production/{uuid}/status.json
-//   - all status codes: https://auphonic.com/api/info/production_status.json
-// - when status is something indicating it's "processing", poll for changes (NOT IN 2, 3, 9, 10, 11)
-// - how do I get the episode title, slug (and other episode metadata)? I can fetch it via API but that may not be up to date?
-
-// === STATUS CODES ===
-// {
-//     "0": "File Upload",
-//     "1": "Waiting",
-//     "2": "Error",
-//     "3": "Done",
-//     "4": "Audio Processing",
-//     "5": "Audio Encoding",
-//     "6": "Outgoing File Transfer",
-//     "7": "Audio Mono Mixdown",
-//     "8": "Split Audio On Chapter Marks",
-//     "9": "Incomplete",
-//     "10": "Production Not Started Yet",
-//     "11": "Production Outdated",
-//     "12": "Incoming File Transfer",
-//     "13": "Stopping the Production",
-//     "14": "Speech Recognition"
-// }
 </script>
