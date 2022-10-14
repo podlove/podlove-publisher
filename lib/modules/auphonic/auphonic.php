@@ -144,22 +144,18 @@ class Auphonic extends \Podlove\Modules\Base
                 ['data' => $_POST]
             );
 
-            return;
+            exit;
         }
 
         $post_id = (int) $_REQUEST['podlove-auphonic-production'];
+        $webhook_config = \get_post_meta($post_id, 'auphonic_webhook_config', true);
 
-        $episodes_to_be_remote_published = get_option('podlove_episodes_to_be_remote_published');
+        [
+            'authkey' => $authkey,
+            'enabled' => $enabled
+        ] = $webhook_config;
 
-        if (!is_array($episodes_to_be_remote_published) || !isset($episodes_to_be_remote_published[$post_id])) {
-            return;
-        }
-
-        $episode = $episodes_to_be_remote_published[$post_id];
-        $auth_key = $episode['auth_key'];
-        $action = $episode['action'];
-
-        if ($_REQUEST['authkey'] !== $auth_key) {
+        if ($_REQUEST['authkey'] !== $authkey) {
             \Podlove\Log::get()->addWarning(
                 'Auphonic webhook failed. AuthKey mismatch.',
                 ['post_id' => $post_id]
@@ -171,24 +167,33 @@ class Auphonic extends \Podlove\Modules\Base
         // Update episode with production results
         $this->update_production_data($post_id);
 
-        if ($action == 'publish') {
-            wp_publish_post($post_id);
+        if (!$enabled) {
+            // webhook was enabled on production start but disabled during production
+            \Podlove\Log::get()->addInfo(
+                'Auphonic webhook was enabled on production start but disabled during production. Episode data was updated but not published.',
+                ['post_id' => $post_id]
+            );
+
+            return;
         }
 
-        unset($episodes_to_be_remote_published[$post_id]);
-        update_option('podlove_episodes_to_be_remote_published', $episodes_to_be_remote_published);
+        \wp_publish_post($post_id);
+        \Podlove\Log::get()->addInfo(
+            'Auphonic webhook finished. Episode published.',
+            ['post_id' => $post_id]
+        );
+        exit;
     }
 
     /**
      * Updates Episode production data after Auphonic production has finished.
-     * Basically, this is like pushing the "Get Production Results" button.
      *
      * @param mixed $post_id
      */
     public function update_production_data($post_id)
     {
         $episode = \Podlove\Model\Episode::find_or_create_by_post_id($post_id);
-        $production = json_decode($this->fetch_production($_POST['uuid']));
+        $production = json_decode($this->fetch_production($_POST['uuid']), true)['data'];
 
         $metadata = [
             'title' => get_the_title($post_id),

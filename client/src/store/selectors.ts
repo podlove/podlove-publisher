@@ -44,6 +44,7 @@ const auphonic = {
   currentFileSelection: createSelector(root.auphonic, auphonicStore.selectors.currentFileSelection),
   isSaving: createSelector(root.auphonic, auphonicStore.selectors.isSaving),
   isInitializing: createSelector(root.auphonic, auphonicStore.selectors.isInitializing),
+  publishWhenDone: createSelector(root.auphonic, auphonicStore.selectors.publishWhenDone),
 }
 
 const podcast = {
@@ -77,6 +78,7 @@ const episode = {
   mnemonic: createSelector(root.episode, episodeStore.selectors.mnemonic),
   explicit: createSelector(root.episode, episodeStore.selectors.explicit),
   auphonicProductionId: createSelector(root.episode, episodeStore.selectors.auphonicProductionId),
+  auphonicWebhookConfig: createSelector(root.episode, episodeStore.selectors.auphonicWebhookConfig),
 }
 
 const runtime = {

@@ -24,6 +24,7 @@ export type State = {
   mnemonic: string | null
   explicit: boolean | null
   auphonicProductionId: 'string' | null
+  auphonic_webhook_config: object | null
 }
 
 export const initialState: State = {
@@ -40,9 +41,10 @@ export const initialState: State = {
   mnemonic: null,
   explicit: null,
   auphonicProductionId: null,
+  auphonic_webhook_config: null,
 }
 
-export const update = createAction<{ prop: string; value: string | boolean; }>(UPDATE)
+export const update = createAction<{ prop: string; value: string | boolean }>(UPDATE)
 export const init = createAction<void>(INIT)
 export const selectPoster = createAction<void>(SELECT_POSTER)
 export const set = createAction<{
@@ -57,6 +59,7 @@ export const set = createAction<{
   mnemonic?: string
   explicit?: boolean
   auphonicProductionId?: string
+  auphonic_webhook_config?: object
 }>(SET)
 
 export const reducer = handleActions(
@@ -84,6 +87,7 @@ export const reducer = handleActions(
       mnemonic: get(action, ['payload', 'mnemonic']),
       explicit: get(action, ['payload', 'explicit']),
       auphonicProductionId: get(action, ['payload', 'auphonic_production_id']),
+      auphonic_webhook_config: get(action, ['payload', 'auphonic_webhook_config']),
     }),
   },
   initialState
@@ -103,4 +107,5 @@ export const selectors = {
   mnemonic: (state: State) => state.mnemonic,
   explicit: (state: State) => state.explicit,
   auphonicProductionId: (state: State) => state.auphonicProductionId,
+  auphonicWebhookConfig: (state: State) => state.auphonic_webhook_config,
 }

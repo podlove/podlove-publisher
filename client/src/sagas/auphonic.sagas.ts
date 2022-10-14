@@ -1,4 +1,5 @@
 import * as auphonic from '@store/auphonic.store'
+import * as episode from '@store/episode.store'
 import { takeFirst } from '../sagas/helper'
 import { delay, put, take, fork, takeEvery, select, all, call, race } from 'redux-saga/effects'
 import { createApi } from '../sagas/api'
@@ -6,6 +7,7 @@ import { createApi as createAuphonicApi } from '../sagas/auphonic.api'
 import { PodloveApiClient } from '@lib/api'
 import { AuphonicApiClient } from '@lib/auphonic.api'
 import { selectors } from '@store'
+import { v4 as uuidv4 } from 'uuid'
 
 function* auphonicSaga(): any {
   const apiClient: PodloveApiClient = yield createApi()
@@ -20,6 +22,10 @@ function* initialize(api: PodloveApiClient) {
   if (result) {
     yield put(auphonic.setToken(result))
     yield fork(initializeAuphonicApi)
+
+    yield takeEvery(auphonic.SET_PRODUCTION, initializeWebhookConfig, api)
+    yield takeEvery(auphonic.UPDATE_WEBHOOK, updateWebhookConfig, api)
+
     yield takeEvery(auphonic.SET_PRODUCTION, memorizeSelectedProduction, api)
     yield takeEvery(auphonic.DESELECT_PRODUCTION, forgetSelectedProduction, api)
   }
@@ -64,7 +70,6 @@ function* initializeAuphonicApi() {
     ])
   )
 
-  // TODO: module UI should be in loading state until restoration is done
   yield call(maybeRestoreProductionSelection)
   yield put(auphonic.initDone())
 
@@ -125,9 +130,31 @@ function* handleStartProduction(
   action: { type: string; payload: any }
 ) {
   const uuid = action.payload.uuid
+  const { authkey }: WebhookConfig = yield select(selectors.episode.auphonicWebhookConfig)
+  const isWebhookEnabled: boolean = yield select(selectors.auphonic.publishWhenDone)
+  const baseUrl: String = yield select(selectors.runtime.baseUrl)
+  const postId: Number = yield select(selectors.post.id)
+
+  const webhookUrl = baseUrl + '/?podlove-auphonic-production=' + postId + '&authkey=' + authkey
+  const productionPayload = {
+    webhook: isWebhookEnabled ? webhookUrl : '',
+  }
+
+  // update webhook config
+  const {
+    result: { data: _production },
+  } = yield auphonicApi.post(`production/${uuid}.json`, productionPayload)
+
+  // TODO: for productions with webhook enabled, should I explicitly re-fetch
+  // the episode when production is done (or poll for a bit)? Otherwise backend
+  // and frontend might be out of sync because the webhook overrides some
+  // episode data.
+
+  // start production
   const {
     result: { data: production },
   } = yield auphonicApi.post(`production/${uuid}/start.json`, {})
+
   yield put(auphonic.setProduction(production))
 }
 
@@ -267,6 +294,47 @@ function* handleFileSelection(action: {
   if (prop === 'currentServiceSelection') {
     yield put(auphonic.selectService(value))
   }
+}
+
+type WebhookConfig = {
+  authkey: String
+  enabled: boolean
+}
+
+function* updateWebhookConfig(api: PodloveApiClient) {
+  const config: WebhookConfig = yield select(selectors.episode.auphonicWebhookConfig)
+  const enabled: boolean = yield select(selectors.auphonic.publishWhenDone)
+
+  // skip if nothing changed
+  if (config.enabled == enabled) {
+    return
+  }
+
+  yield put(
+    episode.update({ prop: 'auphonic_webhook_config', value: { ...config, enabled: enabled } })
+  )
+}
+
+function* initializeWebhookConfig(api: PodloveApiClient) {
+  const config: WebhookConfig = yield select(selectors.episode.auphonicWebhookConfig)
+  const enabled: boolean = yield select(selectors.auphonic.publishWhenDone)
+
+  // skip if it already exists
+  if (config && config.authkey) {
+    return
+  }
+
+  const authkey = uuidv4()
+
+  yield put(
+    episode.update({
+      prop: 'auphonic_webhook_config',
+      value: {
+        authkey,
+        enabled: enabled || false,
+      },
+    })
+  )
 }
 
 function* memorizeSelectedProduction(api: PodloveApiClient) {
