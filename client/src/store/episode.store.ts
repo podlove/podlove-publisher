@@ -12,6 +12,7 @@ export const SELECT_POSTER = 'podlove/publisher/episode/SELECT_POSTER'
 
 export type State = {
   id: string | null
+  slug: string | null
   duration: number | null
   number: string | null
   title: string | null
@@ -27,6 +28,7 @@ export type State = {
 
 export const initialState: State = {
   id: null,
+  slug: null,
   duration: null,
   number: null,
   subtitle: null,
@@ -44,6 +46,7 @@ export const update = createAction<{ prop: string; value: string | boolean; }>(U
 export const init = createAction<void>(INIT)
 export const selectPoster = createAction<void>(SELECT_POSTER)
 export const set = createAction<{
+  slug?: string
   number?: string
   duration?: string
   title?: string
@@ -69,6 +72,7 @@ export const reducer = handleActions(
     }),
     [SET]: (state: State, action: typeof update): State => ({
       ...state,
+      slug: get(action, ['payload', 'slug']),
       number: get(action, ['payload', 'number']),
       title: get(action, ['payload', 'title_clean']),
       duration: get(action, ['payload', 'duration']),
@@ -87,6 +91,7 @@ export const reducer = handleActions(
 
 export const selectors = {
   id: (state: State) => state.id,
+  slug: (state: State) => state.slug,
   duration: (state: State) => state.duration,
   number: (state: State) => state.number,
   title: (state: State) => state.title,

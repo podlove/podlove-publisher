@@ -21,7 +21,7 @@
         </div>
       </div>
     </div>
-    <div class="mt-4 overflow-hidden rounded-lg bg-white shadow">
+    <div class="mt-4 overflow-hidden rounded-lg bg-white shadow" v-if="visibleEntries.length > 0">
       <div class="p-6">
         <div>
           <h3 class="text-lg font-medium leading-6 text-gray-900">Import Metadata</h3>
@@ -89,6 +89,7 @@ export default defineComponent({
         subtitle: selectors.episode.subtitle,
         summary: selectors.episode.summary,
         duration: selectors.episode.duration,
+        slug: selectors.episode.slug,
       }),
       dispatch: injectStore().dispatch,
     }
@@ -97,9 +98,9 @@ export default defineComponent({
   methods: {
     importMeta(key, value) {
       // FIXME: finish implementation once episode saga supports it
-      const simple = ['title', 'subtitle', 'summary', 'duration']
+      const simple = ['title', 'subtitle', 'summary', 'duration', 'slug']
       const other = ['image']
-      const todo = ['slug', 'tags', 'license', 'license url']
+      const todo = ['tags', 'license', 'license url']
 
       if (simple.includes(key)) {
         this.dispatch(updateEpisode({ prop: key, value: value }))
@@ -134,7 +135,7 @@ export default defineComponent({
         { key: 6, title: 'license url', here: 'todo', there: production.metadata.license_url },
         { key: 7, title: 'image', here: 'todo', there: production.image },
         { key: 8, title: 'duration', here: state.duration, there: production.length_timestring },
-        { key: 9, title: 'slug', here: 'todo', there: production.output_basename },
+        { key: 9, title: 'slug', here: state.slug, there: production.output_basename },
       ]
     },
     visibleEntries() {

@@ -352,6 +352,7 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
         $data = [
             '_version' => 'v2',
             'id' => $id,
+            'slug' => $episode->slug,
             'post_id' => $episode->post_id,
             'title' => get_the_title($episode->post_id),
             'title_clean' => $episode->title,
