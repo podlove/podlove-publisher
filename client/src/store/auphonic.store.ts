@@ -109,6 +109,7 @@ export type State = {
   current_file_selection: string | null
   is_saving: boolean
   is_initializing: boolean
+  publish_when_done: boolean
 }
 
 export const initialState: State = {
@@ -124,6 +125,7 @@ export const initialState: State = {
   current_file_selection: null,
   is_saving: false,
   is_initializing: true,
+  publish_when_done: false,
 }
 
 export const INIT = 'podlove/publisher/auphonic/INIT'
@@ -150,6 +152,7 @@ export const START_POLLING = 'podlove/publisher/auphonic/START_POLLING'
 export const STOP_POLLING = 'podlove/publisher/auphonic/STOP_POLLING'
 export const START_SAVING = 'podlove/publisher/auphonic/START_SAVING'
 export const STOP_SAVING = 'podlove/publisher/auphonic/STOP_SAVING'
+export const UPDATE_WEBHOOK = 'podlove/publisher/auphonic/UPDATE_WEBHOOK'
 
 export const init = createAction<void>(INIT)
 export const initDone = createAction<void>(INIT_DONE)
@@ -188,6 +191,9 @@ export const stopPolling = createAction<void>(STOP_POLLING)
 // Saving State
 export const startSaving = createAction<void>(START_SAVING)
 export const stopSaving = createAction<void>(STOP_SAVING)
+
+// Webhook
+export const updateWebhook = createAction<boolean>(UPDATE_WEBHOOK)
 
 export const reducer = handleActions(
   {
@@ -387,6 +393,10 @@ export const reducer = handleActions(
       ...state,
       is_saving: false,
     }),
+    [UPDATE_WEBHOOK]: (state: State, action: { payload: boolean }): State => ({
+      ...state,
+      publish_when_done: action.payload,
+    }),
   },
   initialState
 )
@@ -475,4 +485,5 @@ export const selectors = {
   currentFileSelection: (state: State) => state.current_file_selection,
   isSaving: (state: State) => state.is_saving,
   isInitializing: (state: State) => state.is_initializing,
+  publishWhenDone: (state: State) => state.publish_when_done,
 }

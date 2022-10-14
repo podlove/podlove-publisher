@@ -256,6 +256,22 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
                     'auphonic_production_id' => [
                         'description' => 'Auphonic Production ID',
                         'type' => 'string'
+                    ],
+                    'auphonic_webhook_config' => [
+                        'description' => 'Auphonic Webhook after Production is done',
+                        'type' => 'object',
+                        'properties' => [
+                            'authkey' => [
+                                'description' => 'Authentication key',
+                                'type' => 'string',
+                                'required' => 'true'
+                            ],
+                            'enabled' => [
+                                'description' => 'Publish episode when Production is done?',
+                                'type' => 'boolean',
+                                'required' => 'true'
+                            ]
+                        ]
                     ]
                 ],
                 'methods' => WP_REST_Server::EDITABLE,
@@ -372,7 +388,8 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
             'soundbite_start' => $episode->soundbite_start,
             'soundbite_duration' => $episode->soundbite_duration,
             'explicit' => $explicit,
-            'auphonic_production_id' => \get_post_meta($episode->post_id, 'auphonic_production_id', true)
+            'auphonic_production_id' => \get_post_meta($episode->post_id, 'auphonic_production_id', true),
+            'auphonic_webhook_config' => \get_post_meta($episode->post_id, 'auphonic_webhook_config', true),
         ];
 
         $data = $this->enrich_with_season($data, $episode);
@@ -519,6 +536,10 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
 
         if (isset($request['auphonic_production_id'])) {
             \update_post_meta($episode->post_id, 'auphonic_production_id', $request['auphonic_production_id']);
+        }
+
+        if (isset($request['auphonic_webhook_config'])) {
+            \update_post_meta($episode->post_id, 'auphonic_webhook_config', $request['auphonic_webhook_config']);
         }
 
         $episode->save();
