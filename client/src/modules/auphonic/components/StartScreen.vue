@@ -3,7 +3,14 @@
     <div class="m-12 mb-24 text-center max-w-5xl">
       <AuphonicLogo className="mx-auto h-16 w-16 text-gray-400" />
 
-      <div class="text-left">
+      <div class="w-full flex justify-center" v-if="isInitializing">
+        <div class="animate-pulse mt-4 flex space-x-4">
+          <RefreshIcon class="animate-spin h-5 w-5 mr-3" />
+          Loading...
+        </div>
+      </div>
+
+      <div :class="{ 'text-left': true, 'opacity-0': isInitializing }">
         <h2 class="text-lg font-medium text-gray-900">No production connected yet</h2>
         <p class="mt-1 text-sm text-gray-500">
           Manage your audio post production with Auphonic. Get started by selecting an existing
@@ -83,7 +90,7 @@
 import { defineComponent } from 'vue'
 import Module from '@components/module/Module.vue'
 import PodloveButton from '@components/button/Button.vue'
-import { PlusSmIcon } from '@heroicons/vue/outline'
+import { PlusSmIcon, RefreshIcon } from '@heroicons/vue/outline'
 import { selectors } from '@store'
 
 import { injectStore, mapState } from 'redux-vuex'
@@ -97,6 +104,7 @@ export default defineComponent({
     Module,
     PodloveButton,
     PlusSmIcon,
+    RefreshIcon,
     SelectProduction,
     SelectPreset,
     AuphonicLogo,
@@ -106,6 +114,7 @@ export default defineComponent({
     return {
       state: mapState({
         preset: selectors.auphonic.preset,
+        isInitializing: selectors.auphonic.isInitializing,
       }),
       dispatch: injectStore().dispatch,
     }
@@ -121,6 +130,9 @@ export default defineComponent({
   },
 
   computed: {
+    isInitializing() {
+      return this.state.isInitializing
+    },
     buttonState(): 'idle' | 'single' | 'multi' {
       if (!this.state.preset) {
         return 'idle'
