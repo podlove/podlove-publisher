@@ -21,6 +21,7 @@ function* initialize(api: PodloveApiClient) {
     yield put(auphonic.setToken(result))
     yield fork(initializeAuphonicApi)
     yield takeEvery(auphonic.SET_PRODUCTION, memorizeSelectedProduction, api)
+    yield takeEvery(auphonic.DESELECT_PRODUCTION, forgetSelectedProduction, api)
   }
 }
 
@@ -272,6 +273,12 @@ function* memorizeSelectedProduction(api: PodloveApiClient) {
   const uuid: string = yield select(selectors.auphonic.productionId)
 
   yield api.put(`episodes/${episodeId}`, { auphonic_production_id: uuid })
+}
+
+function* forgetSelectedProduction(api: PodloveApiClient) {
+  const episodeId: string = yield select(selectors.episode.id)
+
+  yield api.put(`episodes/${episodeId}`, { auphonic_production_id: '' })
 }
 
 function* maybeRestoreProductionSelection() {
