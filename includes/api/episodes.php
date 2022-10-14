@@ -256,6 +256,22 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
                     'auphonic_production_id' => [
                         'description' => 'Auphonic Production ID',
                         'type' => 'string'
+                    ],
+                    'auphonic_webhook_config' => [
+                        'description' => 'Auphonic Webhook after Production is done',
+                        'type' => 'object',
+                        'properties' => [
+                            'authkey' => [
+                                'description' => 'Authentication key',
+                                'type' => 'string',
+                                'required' => 'true'
+                            ],
+                            'enabled' => [
+                                'description' => 'Publish episode when Production is done?',
+                                'type' => 'boolean',
+                                'required' => 'true'
+                            ]
+                        ]
                     ]
                 ],
                 'methods' => WP_REST_Server::EDITABLE,
@@ -676,6 +692,10 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
         if (isset($request['license_url'])) {
             $license_url = $request['license_url'];
             $episode->license_url = $license_url;
+        }
+
+        if (isset($request['auphonic_webhook_config'])) {
+            \update_post_meta($episode->post_id, 'auphonic_webhook_config', $request['auphonic_webhook_config']);
         }
 
         $episode->save();

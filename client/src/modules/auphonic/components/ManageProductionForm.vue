@@ -216,9 +216,16 @@
     </div>
 
     <div class="pt-5">
-      <div class="flex justify-end gap-3">
-        <podlove-button variant="secondary" @click="saveProduction">Save Production</podlove-button>
-        <podlove-button variant="primary" @click="startProduction">Start Production</podlove-button>
+      <div class="flex justify-between">
+        <WebhookToggle />
+        <div class="flex justify-end gap-3">
+          <podlove-button variant="secondary" @click="saveProduction"
+            >Save Production</podlove-button
+          >
+          <podlove-button variant="primary" @click="startProduction"
+            >Start Production</podlove-button
+          >
+        </div>
       </div>
     </div>
   </form>
@@ -237,6 +244,7 @@ import * as auphonic from '@store/auphonic.store'
 import { Production, AudioTrack, FileSelection } from '@store/auphonic.store'
 import Timestamp from '@lib/timestamp'
 import DonePage from './production_form/DonePage.vue'
+import WebhookToggle from './WebhookToggle.vue'
 
 import {
   XIcon,
@@ -260,6 +268,7 @@ export default defineComponent({
     ExternalLinkIcon,
     CloudIcon,
     DonePage,
+    WebhookToggle,
   },
 
   data() {
@@ -285,6 +294,8 @@ export default defineComponent({
         podcast_author: selectors.podcast.author,
         podcast_link: selectors.podcast.link,
         chapters: selectors.chapters.list,
+        baseUrl: selectors.runtime.baseUrl,
+        postId: selectors.post.id,
       }),
       dispatch: injectStore().dispatch,
     }
