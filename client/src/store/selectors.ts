@@ -43,6 +43,7 @@ const auphonic = {
   fileSelections: createSelector(root.auphonic, auphonicStore.selectors.fileSelections),
   currentFileSelection: createSelector(root.auphonic, auphonicStore.selectors.currentFileSelection),
   isSaving: createSelector(root.auphonic, auphonicStore.selectors.isSaving),
+  isInitializing: createSelector(root.auphonic, auphonicStore.selectors.isInitializing),
 }
 
 const podcast = {

@@ -108,6 +108,7 @@ export type State = {
   file_selections: object
   current_file_selection: string | null
   is_saving: boolean
+  is_initializing: boolean
 }
 
 export const initialState: State = {
@@ -122,9 +123,11 @@ export const initialState: State = {
   file_selections: {},
   current_file_selection: null,
   is_saving: false,
+  is_initializing: true,
 }
 
 export const INIT = 'podlove/publisher/auphonic/INIT'
+export const INIT_DONE = 'podlove/publisher/auphonic/INIT_DONE'
 export const SET_TOKEN = 'podlove/publisher/auphonic/SET_TOKEN'
 export const SET_PRODUCTION = 'podlove/publisher/auphonic/SET_PRODUCTION'
 export const SET_PRODUCTIONS = 'podlove/publisher/auphonic/SET_PRODUCTIONS'
@@ -149,6 +152,7 @@ export const START_SAVING = 'podlove/publisher/auphonic/START_SAVING'
 export const STOP_SAVING = 'podlove/publisher/auphonic/STOP_SAVING'
 
 export const init = createAction<void>(INIT)
+export const initDone = createAction<void>(INIT_DONE)
 export const setToken = createAction<string>(SET_TOKEN)
 
 // Productions
@@ -187,6 +191,10 @@ export const stopSaving = createAction<void>(STOP_SAVING)
 
 export const reducer = handleActions(
   {
+    [INIT_DONE]: (state: State): State => ({
+      ...state,
+      is_initializing: false,
+    }),
     [UPDATE_FILE_SELECTION]: (
       state: State,
       action: { type: string; payload: { key: string; prop: string; value: string | null } }
@@ -466,4 +474,5 @@ export const selectors = {
   fileSelections: (state: State) => state.file_selections,
   currentFileSelection: (state: State) => state.current_file_selection,
   isSaving: (state: State) => state.is_saving,
+  isInitializing: (state: State) => state.is_initializing,
 }
