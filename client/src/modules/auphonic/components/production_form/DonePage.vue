@@ -97,9 +97,9 @@ export default defineComponent({
   methods: {
     importMeta(key, value) {
       // FIXME: finish implementation once episode saga supports it
-      const simple = ['title', 'subtitle', 'summary']
+      const simple = ['title', 'subtitle', 'summary', 'duration']
       const other = ['image']
-      const todo = ['slug', 'duration', 'tags', 'license', 'license url']
+      const todo = ['slug', 'tags', 'license', 'license url']
 
       if (simple.includes(key)) {
         this.dispatch(updateEpisode({ prop: key, value: value }))
