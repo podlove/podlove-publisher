@@ -216,7 +216,7 @@
     </div>
 
     <div class="pt-5">
-      <div class="flex justify-between">
+      <div class="flex flex-col sm:flex-row gap-4 sm:gap-2 justify-between">
         <WebhookToggle />
         <div class="flex justify-end gap-3">
           <podlove-button variant="secondary" @click="saveProduction"
