@@ -21,6 +21,23 @@
         </div>
       </div>
     </div>
+
+    <div class="rounded-md bg-yellow-50 p-4 mt-4" v-if="production.warning_message">
+      <div class="flex">
+        <div class="flex-shrink-0">
+          <ExclamationIcon class="h-5 w-5 text-yellow-400" aria-hidden="true" />
+        </div>
+        <div class="ml-3">
+          <h3 class="text-sm font-medium text-yellow-800">Warning</h3>
+          <div class="mt-2 text-sm text-yellow-700">
+            <p>
+              {{ production.warning_message }}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="mt-4 overflow-hidden rounded-lg bg-white shadow" v-if="visibleEntries.length > 0">
       <div class="p-6">
         <div>
@@ -73,12 +90,13 @@ import { selectors } from '@store'
 import { Production } from '@store/auphonic.store'
 import { update as updateEpisode } from '@store/episode.store'
 
-import { ClipboardCheckIcon, ExternalLinkIcon } from '@heroicons/vue/outline'
+import { ClipboardCheckIcon, ExternalLinkIcon, ExclamationIcon } from '@heroicons/vue/outline'
 
 export default defineComponent({
   components: {
     ClipboardCheckIcon,
     ExternalLinkIcon,
+    ExclamationIcon,
   },
 
   setup() {
