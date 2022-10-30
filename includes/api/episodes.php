@@ -264,6 +264,54 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
                 'permission_callback' => [$this, 'delete_item_permissions_check'],
             ]
         ]);
+        register_rest_route($this->namespace, '/'.$this->rest_base.'/(?P<id>[\d]+)/media', [
+            'args' => [
+                'id' => [
+                    'description' => __('Unique identifier for the episode.', 'podlove-podcasting-plugin-for-wordpress'),
+                    'type' => 'integer',
+                ],
+            ],
+            [
+                'args' => [
+                    'asset_id' => [
+                        'description' => __('Identifier of the asset.', 'podlove-podcasting-plugin-for-wordpress'),
+                        'type' => 'integer',
+                    ],
+                    'asset' => [
+                        'description' => __('Name of the asset.', 'podlove-podcasting-plugin-for-wordpress'),
+                        'type' => 'string',
+                    ],
+                    'file_url' => [
+                        'description' => __('File url for the asset', 'podlove-podcasting-plugin-for-wordpress'),
+                        'type' => 'string',
+                    ],
+                    'enable' => [
+                        'description' => __('Is the asset used?', 'podlove-podcasting-plugin-for-wordpress'),
+                        'type' => 'boolean',
+                    ],
+                ],
+                'methods' => WP_REST_Server::READABLE,
+                'callback' => [$this, 'get_item_media'],
+                'permission_callback' => [$this, 'get_item_permissions_check'],
+            ],
+            [
+                'args' => [
+                    'asset_id' => [
+                        'description' => __('Identifier of the asset.', 'podlove-podcasting-plugin-for-wordpress'),
+                        'type' => 'integer',
+                        'require' => 'true'
+                    ],
+                    'enable' => [
+                        'description' => __('Is the asset used?', 'podlove-podcasting-plugin-for-wordpress'),
+                        'type' => 'boolean',
+                        'require' => 'true'
+                    ],
+                ],
+                'methods' => WP_REST_Server::EDITABLE,
+                'callback' => [$this, 'update_item_media'],
+                'permission_callback' => [$this, 'update_item_permissions_check'],
+            ]
+        ]);
     }
 
     public function get_items_permissions_check($request)
@@ -366,12 +414,57 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
             'mnemonic' => $podcast->mnemonic.($episode->number < 100 ? '0' : '').($episode->number < 10 ? '0' : '').$episode->number,
             'soundbite_start' => $episode->soundbite_start,
             'soundbite_duration' => $episode->soundbite_duration,
+            'soundbite_title' => $episode->soundbite_title,
             'explicit' => $explicit
         ];
 
         $data = $this->enrich_with_season($data, $episode);
 
         return new \Podlove\Api\Response\OkResponse($data);
+    }
+
+    public function get_item_media($request)
+    {
+        $id = $request->get_param('id');
+        if (!$id) {
+            return;
+        }
+
+        $episode = Episode::find_by_id($id);
+
+        if (!$episode) {
+            return new \Podlove\Api\Error\NotFound();
+        }
+
+        $assets = EpisodeAsset::all();
+
+        $results = [];
+        $source = 'other';
+
+        foreach ($assets as $asset) {
+            $file = MediaFile::find_by_episode_id_and_episode_asset_id($episode->id, $asset->id);
+            if (!$file) {
+                array_push($results, [
+                    'asset_id' => $asset->id,
+                    'asset' => $asset->title,
+                    'enable' => false,
+                ]);
+            }
+            else {
+                array_push($results, [
+                    'asset_id' => $asset->id,
+                    'asset' => $asset->title,
+                    'url' => $file->get_file_url(),
+                    'size' => $file->size,
+                    'enable' => true,
+                ]);
+            }
+        }
+
+        return new \Podlove\Api\Response\OkResponse([
+            '_version' => 'v2',
+            'results' => $results,
+        ]);
     }
 
     public function create_item_permissions_check($request)
@@ -491,11 +584,6 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
             $episode->cover_art = $episode_poster;
         }
 
-        if (isset($request['duration'])) {
-            $duration = $request['duration'];
-            $episode->duration = $duration;
-        }
-
         if (isset($request['soundbite_start'])) {
             $start = $request['soundbite_start'];
             $episode->soundbite_start = $start;
@@ -526,6 +614,56 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
         return new \Podlove\Api\Response\OkResponse([
             'status' => 'ok'
         ]);
+    }
+
+    public function update_item_media($request)
+    {
+        $id = $request->get_param('id');
+        if (!$id) {
+            return;
+        }
+
+        $episode = Episode::find_by_id($id);
+        $isSlugSet = false;
+
+        if (!$episode) {
+            return new \Podlove\Api\Error\NotFound();
+        }
+
+        if (isset($request['asset_id']) && isset($request['enable'])) {
+            $asset_id = $request['asset_id'];
+            $enable = $request['enable'];
+
+            if ($enable) {
+                $file = MediaFile::find_or_create_by_episode_id_and_episode_asset_id($episode->id, $asset_id);
+                $file->determine_file_size();
+                $file->save();
+
+                if ($file->size > 0) {
+                    return new \Podlove\Api\Response\OkResponse([
+                        'status' => 'ok'
+                    ]);
+                }
+                else {
+                    return new \Podlove\Api\Response\OkResponse([
+                        'file' => 'not found',
+                        'status' => 'ko'
+                    ]);
+                }
+
+            }
+            else {
+                $file = MediaFile::find_by_episode_id_and_episode_asset_id($episode->id, $asset_id);
+                if ($file) {
+                    $file->delete();
+                }
+            }
+        }
+
+        return new \Podlove\Api\Response\OkResponse([
+            'status' => 'ok'
+        ]);
+
     }
 
     public function delete_item_permissions_check($request)
