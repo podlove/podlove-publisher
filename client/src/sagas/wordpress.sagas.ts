@@ -1,4 +1,4 @@
-import { call, fork, put, select, takeEvery } from 'redux-saga/effects'
+import { call, put, select, takeEvery } from 'redux-saga/effects'
 
 import * as lifecycleStore from '@store/lifecycle.store'
 import * as wordpressStore from '@store/wordpress.store'
@@ -28,7 +28,7 @@ function* wordpressSaga(): any {
   }
 
   if (wordpress.media) {
-    yield takeEvery(wordpressStore.SELECT_IMAGE_FROM_LIBRARY, selectImageFromLibrary)
+    yield takeEvery(wordpressStore.SELECT_IMAGE_FROM_LIBRARY as any, selectImageFromLibrary)
   }
 }
 

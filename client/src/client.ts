@@ -1,7 +1,7 @@
 import { createApp } from 'vue'
 import { provideStore } from 'redux-vuex'
-
 import { store } from '@store'
+
 import modules from './modules'
 import { init } from './store/lifecycle.store'
 import translationPlugin from './plugins/translations'
