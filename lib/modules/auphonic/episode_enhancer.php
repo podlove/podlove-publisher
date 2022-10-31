@@ -26,7 +26,6 @@ class EpisodeEnhancer
             'type' => 'callback',
             'key' => 'import_from_auphonic_form',
             'options' => [
-                'label' => __('Auphonic', 'podlove-podcasting-plugin-for-wordpress'),
                 'callback' => [$this, 'auphonic_episodes_form'],
             ],
             'position' => 500,
@@ -38,9 +37,6 @@ class EpisodeEnhancer
     public function auphonic_episodes_form()
     {
         ?>
-        <div>
-          Here Be Auphonic!
-        </div>
         <div data-client="podlove" style="margin: 15px 0;">
           <podlove-auphonic></podlove-auphonic>
         </div>

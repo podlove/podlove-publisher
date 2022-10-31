@@ -1,5 +1,5 @@
 <template>
-  <module class="font-sans" name="auphonic" title="Auphonic">
+  <module name="auphonic" title="Auphonic">
     <div v-if="!isProductionSelected">
       <StartScreen />
     </div>
@@ -19,9 +19,11 @@ import * as auphonic from '@store/auphonic.store'
 import ManageProductionForm from './components/ManageProductionForm.vue'
 import StartScreen from './components/StartScreen.vue'
 import AuphonicLogo from './components/Logo.vue'
+import Module from '@components/module/Module.vue'
 
 export default defineComponent({
   components: {
+    Module,
     ManageProductionForm,
     StartScreen,
     AuphonicLogo,
