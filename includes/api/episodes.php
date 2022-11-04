@@ -623,40 +623,38 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
             return new \Podlove\Api\Error\NotFound();
         }
 
-        if (isset($request['asset_id']) && isset($request['enable'])) {
-            $asset_id = $request['asset_id'];
-            $enable = $request['enable'];
+        if (!isset($request['asset_id']) || !isset($request['enable'])) {
+            return;
+        }
 
-            if ($enable) {
-                $file = MediaFile::find_or_create_by_episode_id_and_episode_asset_id($episode->id, $asset_id);
-                $file->determine_file_size();
-                $file->save();
+        $asset_id = $request['asset_id'];
+        $enable = $request['enable'];
 
-                if ($file->size > 0) {
-                    return new \Podlove\Api\Response\OkResponse([
-                        'status' => 'ok'
-                    ]);
-                }
-                else {
-                    return new \Podlove\Api\Response\OkResponse([
-                        'message' => 'file size cannot be determined',
-                        'status' => 'ok'
-                    ]);
-                }
-
+        if (!$enable) {
+            $file = MediaFile::find_by_episode_id_and_episode_asset_id($episode->id, $asset_id);
+            if ($file) {
+                $file->delete();
             }
-            else {
-                $file = MediaFile::find_by_episode_id_and_episode_asset_id($episode->id, $asset_id);
-                if ($file) {
-                    $file->delete();
-                }
-            }
+
+            return new \Podlove\Api\Response\OkResponse([
+                'status' => 'ok'
+            ]);
+        }
+
+        $file = MediaFile::find_or_create_by_episode_id_and_episode_asset_id($episode->id, $asset_id);
+        $file->determine_file_size();
+        $file->save();
+
+        if ($file->size == 0) {
+            return new \Podlove\Api\Response\OkResponse([
+                'message' => 'file size cannot be determined',
+                'status' => 'ok'
+            ]);
         }
 
         return new \Podlove\Api\Response\OkResponse([
             'status' => 'ok'
         ]);
-
     }
 
     public function delete_item_permissions_check($request)
