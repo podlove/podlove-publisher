@@ -438,28 +438,21 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
 
         $assets = EpisodeAsset::all();
 
-        $results = [];
-        $source = 'other';
-
-        foreach ($assets as $asset) {
+        $results = array_map(function($asset) use ($episode) {
             $file = MediaFile::find_by_episode_id_and_episode_asset_id($episode->id, $asset->id);
-            if (!$file) {
-                array_push($results, [
-                    'asset_id' => $asset->id,
-                    'asset' => $asset->title,
-                    'enable' => false,
-                ]);
-            }
-            else {
-                array_push($results, [
-                    'asset_id' => $asset->id,
-                    'asset' => $asset->title,
-                    'url' => $file->get_file_url(),
-                    'size' => $file->size,
-                    'enable' => true,
-                ]);
-            }
-        }
+
+            return !$file ? [
+                'asset_id' => $asset->id,
+                'asset' => $asset->title,
+                'enable' => false,
+            ] : [
+                'asset_id' => $asset->id,
+                'asset' => $asset->title,
+                'url' => $file->get_file_url(),
+                'size' => $file->size,
+                'enable' => true,
+            ];
+        }, $assets);
 
         return new \Podlove\Api\Response\OkResponse([
             '_version' => 'v2',
@@ -646,8 +639,8 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
                 }
                 else {
                     return new \Podlove\Api\Response\OkResponse([
-                        'file' => 'not found',
-                        'status' => 'ko'
+                        'message' => 'file size cannot be determined',
+                        'status' => 'ok'
                     ]);
                 }
 
