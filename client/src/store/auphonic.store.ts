@@ -452,9 +452,7 @@ const productionPayload = (state: State) => {
   const production = state.production
 
   return {
-    // reset_data: true,
     uuid: production?.uuid,
-    // image: production?.image,
     metadata: production?.metadata,
     input_file: production?.input_file,
     chapters: chaptersPayload(production?.chapters),
@@ -463,8 +461,6 @@ const productionPayload = (state: State) => {
     outgoing_services: production?.outgoing_services,
     algorithms: production?.algorithms,
     speech_recognition: production?.speech_recognition,
-    // TODO: do we remove this here?
-    // multi_input_files: production?.multi_input_files,
   }
 }
 

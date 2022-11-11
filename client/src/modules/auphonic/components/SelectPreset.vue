@@ -1,7 +1,7 @@
 <template>
   <Listbox as="div" @update:modelValue="setPreset" :value="currentPreset">
     <ListboxLabel class="block text-sm font-medium text-gray-600 sr-only">
-      Select Preset
+      {{ __('Select Preset') }}
     </ListboxLabel>
     <div class="mt-1 relative">
       <ListboxButton
@@ -9,7 +9,7 @@
       >
         <span class="w-full inline-flex truncate">
           <span v-if="currentPreset" class="truncate">{{ currentPreset._select.name }}</span>
-          <span v-else class="truncate">Select Preset</span>
+          <span v-else class="truncate">{{ __('Select Preset') }}</span>
         </span>
         <span class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
           <SelectorIcon class="h-5 w-5 text-gray-400" aria-hidden="true" />
@@ -45,7 +45,7 @@
                   v-if="preset._select.is_multitrack"
                   :class="[active ? 'text-indigo-200' : 'text-gray-500', 'ml-2 truncate']"
                 >
-                  Multitrack
+                  {{ __('Multitrack') }}
                 </span>
               </div>
             </li>

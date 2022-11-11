@@ -6,15 +6,18 @@
       <div class="w-full flex justify-center" v-if="isInitializing">
         <div class="animate-pulse mt-4 flex space-x-4">
           <RefreshIcon class="animate-spin h-5 w-5 mr-3" />
-          Loading...
+          {{ __('Loading...') }}
         </div>
       </div>
 
       <div :class="{ 'text-left': true, 'opacity-0': isInitializing }">
-        <h2 class="text-lg font-medium text-gray-900">No production connected yet</h2>
+        <h2 class="text-lg font-medium text-gray-900">{{ __('No production connected yet') }}</h2>
         <p class="mt-1 text-sm text-gray-500">
-          Manage your audio post production with Auphonic. Get started by selecting an existing
-          production or create a new one from an Auphonic preset.
+          {{
+            __(
+              'Manage your audio post production with Auphonic. Get started by selecting an existing production or create a new one from an Auphonic preset.'
+            )
+          }}
         </p>
         <div
           class="sm:divide-x sm:divide-gray-200 mt-6 py-6 gap-8 sm:gap-0 grid grid-cols-1 sm:grid-cols-2"
@@ -24,10 +27,7 @@
               class="relative -m-2 p-2 flex items-center justify-around space-x-4 rounded-xl hover:bg-gray-50 focus-within:ring-2 focus-within:ring-indigo-500"
             >
               <div>
-                <h3 class="text-sm font-medium text-gray-900">Create New Production</h3>
-                <!-- <p class="mt-1 text-sm text-gray-500">
-                  Create a new production using one of your Auphonic presets.
-                </p> -->
+                <h3 class="text-sm font-medium text-gray-900">{{ __('Create New Production') }}</h3>
               </div>
             </div>
             <div
@@ -44,22 +44,22 @@
                 disabled="true"
                 v-if="buttonState == 'idle'"
                 variant="primary-disabled"
-                ><plus-sm-icon class="-ml-0.5 mr-2 h-4 w-4" aria-hidden="true" /> Create
-                Production</podlove-button
+                ><plus-sm-icon class="-ml-0.5 mr-2 h-4 w-4" aria-hidden="true" />
+                {{ __('Create Production') }}</podlove-button
               >
               <podlove-button
                 v-if="buttonState == 'single'"
                 variant="primary"
                 @click="createProduction"
-                ><plus-sm-icon class="-ml-0.5 mr-2 h-4 w-4" aria-hidden="true" /> Create
-                Production</podlove-button
+                ><plus-sm-icon class="-ml-0.5 mr-2 h-4 w-4" aria-hidden="true" />
+                {{ __('Create Production') }}</podlove-button
               >
               <podlove-button
                 v-if="buttonState == 'multi'"
                 variant="primary"
                 @click="createMultitrackProduction"
-                ><plus-sm-icon class="-ml-0.5 mr-2 h-4 w-4" aria-hidden="true" /> Create Multitrack
-                Production</podlove-button
+                ><plus-sm-icon class="-ml-0.5 mr-2 h-4 w-4" aria-hidden="true" />
+                {{ __('Create Multitrack Production') }}</podlove-button
               >
             </div>
           </div>
@@ -68,8 +68,7 @@
               class="relative -m-2 p-2 flex items-center justify-around space-x-4 rounded-xl hover:bg-gray-50 focus-within:ring-2 focus-within:ring-indigo-500"
             >
               <div>
-                <h3 class="text-sm font-medium text-gray-900">Select Production</h3>
-                <!-- <p class="mt-1 text-sm text-gray-500">Select an existing Auphonic production.</p> -->
+                <h3 class="text-sm font-medium text-gray-900">{{ __('Select Production') }}</h3>
               </div>
             </div>
             <div
