@@ -11,6 +11,7 @@ import selectors from './selectors'
 import reducers from './reducers'
 
 import { State as LifecycleState } from './lifecycle.store'
+import { State as AdminState } from './admin.store'
 import { State as ChaptersState } from './chapters.store'
 import { State as episodeState } from './episode.store'
 import { State as runtimeState } from './runtime.store'
@@ -22,6 +23,7 @@ import { State as podcastState } from './podcast.store'
 import { State as auphonicState } from './auphonic.store'
 
 import lifecycleSaga from '../sagas/lifecycle.sagas'
+import adminSaga from '../sagas/admin.sagas'
 import podcastSaga from '../sagas/podcast.sagas'
 import notificationSaga from '../sagas/notification.saga'
 import chaptersSaga from '../sagas/chapters.sagas'
@@ -33,6 +35,7 @@ import auphonicSaga from '../sagas/auphonic.sagas'
 
 export interface State {
   lifecycle: LifecycleState
+  admin: AdminState
   chapters: ChaptersState
   episode: episodeState
   runtime: runtimeState
@@ -50,6 +53,7 @@ const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
 export const store: Store<State> = createStore(reducers, composeEnhancers(applyMiddleware(sagas)))
 
 sagas.run(lifecycleSaga())
+sagas.run(adminSaga())
 sagas.run(notificationSaga())
 sagas.run(chaptersSaga())
 sagas.run(transcriptsSaga())

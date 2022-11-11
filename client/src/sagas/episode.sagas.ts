@@ -2,12 +2,11 @@ import { PodloveApiClient } from '@lib/api'
 import { selectors } from '@store'
 import { get } from 'lodash'
 import { Action } from 'redux'
-import { call, fork, put, select, takeEvery, throttle } from 'redux-saga/effects'
-import * as auphonic from '../store/auphonic.store'
+import { fork, put, select, takeEvery, throttle } from 'redux-saga/effects'
 import * as episode from '../store/episode.store'
 import * as wordpress from '../store/wordpress.store'
 import { createApi } from './api'
-import { takeFirst, waitFor } from './helper'
+import { takeFirst } from './helper'
 
 interface EpisodeData {
   slug: string
@@ -25,12 +24,6 @@ function* episodeSaga(): any {
   yield throttle(3000, episode.UPDATE, save, apiClient)
   yield takeEvery(episode.SELECT_POSTER, selectImageFromLibrary)
   yield takeEvery(episode.SET_POSTER, updatePoster)
-  yield takeEvery(episode.SET, updateAuphonicWebhookConfig)
-}
-
-function* updateAuphonicWebhookConfig() {
-  const config = yield select(selectors.episode.auphonicWebhookConfig)
-  yield put(auphonic.updateWebhook(config.enabled))
 }
 
 function* initialize(api: PodloveApiClient) {

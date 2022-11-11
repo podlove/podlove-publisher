@@ -44,17 +44,17 @@ export default defineComponent({
   setup() {
     return {
       state: mapState({
-        publishWhenDone: selectors.auphonic.publishWhenDone,
+        config: selectors.admin.auphonicWebhookConfig,
       }),
       dispatch: injectStore().dispatch,
     }
   },
-  // fixme: set state initially when episode data is available; somewhere in saga/store?
   mounted() {
-    this.enabled = this.state.publishWhenDone
+    this.enabled = this.state.config.enabled
+    this.$watch('enabled', this.enabledWatcher)
   },
-  watch: {
-    enabled(newState) {
+  methods: {
+    enabledWatcher(newState) {
       this.dispatch(auphonic.updateWebhook(newState))
     },
   },

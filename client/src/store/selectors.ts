@@ -1,6 +1,7 @@
 import { createSelector } from 'reselect'
 import { State } from './index'
 import * as lifecycleStore from './lifecycle.store'
+import * as adminStore from './admin.store'
 import * as chaptersStore from './chapters.store'
 import * as episodeStore from './episode.store'
 import * as runtimeStore from './runtime.store'
@@ -13,6 +14,7 @@ import * as auphonicStore from './auphonic.store'
 
 const root = {
   lifecycle: (state: State) => state.lifecycle,
+  admin: (state: State) => state.admin,
   chapters: (state: State) => state.chapters,
   podcast: (state: State) => state.podcast,
   episode: (state: State) => state.episode,
@@ -78,7 +80,6 @@ const episode = {
   mnemonic: createSelector(root.episode, episodeStore.selectors.mnemonic),
   explicit: createSelector(root.episode, episodeStore.selectors.explicit),
   auphonicProductionId: createSelector(root.episode, episodeStore.selectors.auphonicProductionId),
-  auphonicWebhookConfig: createSelector(root.episode, episodeStore.selectors.auphonicWebhookConfig),
 }
 
 const runtime = {
@@ -117,8 +118,13 @@ const settings = {
   ),
 }
 
+const admin = {
+  auphonicWebhookConfig: createSelector(root.admin, adminStore.selectors.auphonicWebhookConfig),
+}
+
 export default {
   lifecycle,
+  admin,
   podcast,
   chapters,
   episode,

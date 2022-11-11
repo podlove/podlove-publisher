@@ -7,10 +7,6 @@ use Podlove\Model\EpisodeAsset;
 use Podlove\Model\MediaFile;
 use Podlove\Model\Podcast;
 use Podlove\Modules\Seasons;
-use WP_Error;
-use WP_REST_Controller;
-use WP_REST_Response;
-use WP_REST_Server;
 
 add_action('rest_api_init', __NAMESPACE__.'\\api_init');
 
@@ -29,7 +25,7 @@ function api_init()
     ]);
 
     register_rest_route('podlove/v1', 'episodes/(?P<id>[\d]+)', [
-        'methods' => WP_REST_Server::EDITABLE,
+        'methods' => \WP_REST_Server::EDITABLE,
         'callback' => __NAMESPACE__.'\\episodes_update_api',
         'permission_callback' => __NAMESPACE__.'\\update_episode_permission_check',
     ]);
@@ -96,7 +92,7 @@ function episodes_api($request)
 function update_episode_permission_check($request)
 {
     if (!current_user_can('edit_posts')) {
-        return new WP_Error(
+        return new \WP_Error(
             'rest_forbidden',
             esc_html__('sorry, you do not have permissions to use this REST API endpoint'),
             ['status' => 401]
@@ -140,7 +136,7 @@ function episodes_update_api($request)
 
     $episode->save();
 
-    return new WP_REST_Response(null, 200);
+    return new \WP_REST_Response(null, 200);
 }
 
 function chapters($episode = null)
@@ -157,7 +153,7 @@ add_action('rest_api_init', function () {
     $controller->register_routes();
 });
 
-class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
+class WP_REST_PodloveEpisode_Controller extends \WP_REST_Controller
 {
     public function __construct()
     {
@@ -176,12 +172,12 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
                         'enum' => ['publish', 'draft']
                     ]
                 ],
-                'methods' => WP_REST_Server::READABLE,
+                'methods' => \WP_REST_Server::READABLE,
                 'callback' => [$this, 'get_items'],
                 'permission_callback' => [$this, 'get_items_permissions_check'],
             ],
             [
-                'methods' => WP_REST_Server::CREATABLE,
+                'methods' => \WP_REST_Server::CREATABLE,
                 'callback' => [$this, 'create_item'],
                 'permission_callback' => [$this, 'create_item_permissions_check'],
             ]
@@ -194,7 +190,7 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
                 ],
             ],
             [
-                'methods' => WP_REST_Server::READABLE,
+                'methods' => \WP_REST_Server::READABLE,
                 'callback' => [$this, 'get_item'],
                 'permission_callback' => [$this, 'get_item_permissions_check'],
             ],
@@ -256,30 +252,14 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
                     'auphonic_production_id' => [
                         'description' => 'Auphonic Production ID',
                         'type' => 'string'
-                    ],
-                    'auphonic_webhook_config' => [
-                        'description' => 'Auphonic Webhook after Production is done',
-                        'type' => 'object',
-                        'properties' => [
-                            'authkey' => [
-                                'description' => 'Authentication key',
-                                'type' => 'string',
-                                'required' => 'true'
-                            ],
-                            'enabled' => [
-                                'description' => 'Publish episode when Production is done?',
-                                'type' => 'boolean',
-                                'required' => 'true'
-                            ]
-                        ]
                     ]
                 ],
-                'methods' => WP_REST_Server::EDITABLE,
+                'methods' => \WP_REST_Server::EDITABLE,
                 'callback' => [$this, 'update_item'],
                 'permission_callback' => [$this, 'update_item_permissions_check'],
             ],
             [
-                'methods' => WP_REST_Server::DELETABLE,
+                'methods' => \WP_REST_Server::DELETABLE,
                 'callback' => [$this, 'delete_item'],
                 'permission_callback' => [$this, 'delete_item_permissions_check'],
             ]
@@ -389,7 +369,6 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
             'soundbite_duration' => $episode->soundbite_duration,
             'explicit' => $explicit,
             'auphonic_production_id' => \get_post_meta($episode->post_id, 'auphonic_production_id', true),
-            'auphonic_webhook_config' => \get_post_meta($episode->post_id, 'auphonic_webhook_config', true),
         ];
 
         $data = $this->enrich_with_season($data, $episode);
@@ -432,7 +411,7 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
             return new \Podlove\Api\Response\CreateResponse($data, $headers);
         }
 
-        return new WP_REST_Response(null, 500);
+        return new \WP_REST_Response(null, 500);
     }
 
     public function update_item_permissions_check($request)
@@ -536,10 +515,6 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
 
         if (isset($request['auphonic_production_id'])) {
             \update_post_meta($episode->post_id, 'auphonic_production_id', $request['auphonic_production_id']);
-        }
-
-        if (isset($request['auphonic_webhook_config'])) {
-            \update_post_meta($episode->post_id, 'auphonic_webhook_config', $request['auphonic_webhook_config']);
         }
 
         $episode->save();
