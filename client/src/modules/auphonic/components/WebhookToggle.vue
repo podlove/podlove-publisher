@@ -17,7 +17,9 @@
         />
       </Switch>
       <SwitchLabel as="span" class="ml-3">
-        <span class="text-sm text-gray-900">Publish Episode when Production is done</span>
+        <span class="text-sm text-gray-900">{{
+          __('Publish Episode when Production is done')
+        }}</span>
       </SwitchLabel>
     </SwitchGroup>
   </div>

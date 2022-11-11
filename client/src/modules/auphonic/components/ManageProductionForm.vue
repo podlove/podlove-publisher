@@ -12,13 +12,14 @@
           <div class="mt-1 flex items-center space-x-4">
             <span v-if="isSaving" class="inline-flex items-center animate-pulse text-green-600">
               <CloudIcon class="mr-1 h-4 w-4" aria-hidden="true" />
-              Saving
+              {{ __('Saving') }}
             </span>
             <a
               :href="production?.edit_page"
               target="_blank"
               class="inline-flex items-center rounded border border-gray-300 bg-white px-2.5 py-1.5 text-xs font-medium text-gray-500 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-              >Edit in Auphonic <ExternalLinkIcon class="ml-1 -mr-0.5 h-4 w-4" aria-hidden="true"
+              >{{ __('Edit in Auphonic') }}
+              <ExternalLinkIcon class="ml-1 -mr-0.5 h-4 w-4" aria-hidden="true"
             /></a>
 
             <button
@@ -26,7 +27,7 @@
               class="bg-white rounded-md text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
               @click="deselectProduction"
             >
-              <span class="sr-only">Change Production</span>
+              <span class="sr-only">{{ __('Change Production') }}</span>
               <XIcon class="h-6 w-6" aria-hidden="true" />
             </button>
           </div>
@@ -34,7 +35,7 @@
 
         <div class="h-6"></div>
 
-        <div v-if="showUploadScreen">Uploading...</div>
+        <div v-if="showUploadScreen">{{ __('Uploading...') }}</div>
 
         <div v-if="showProcessingScreen">
           <div class="rounded-md bg-indigo-50 p-4">
@@ -45,7 +46,13 @@
               <div class="ml-3">
                 <h3 class="text-sm font-medium text-indigo-800">{{ production.status_string }}</h3>
                 <div class="mt-2 text-sm text-indigo-700">
-                  <p>Auphonic is now processing your production. Please wait for it to finish.</p>
+                  <p>
+                    {{
+                      __(
+                        'Auphonic is now processing your production. Please wait for it to finish.'
+                      )
+                    }}
+                  </p>
                 </div>
               </div>
             </div>
@@ -57,7 +64,7 @@
         </div>
 
         <div v-if="isMultitrack && showTrackEditor">
-          <h2 class="pb-4 text-base font-semibold">Audio Tracks</h2>
+          <h2 class="pb-4 text-base font-semibold">{{ __('Audio Tracks') }}</h2>
 
           <div class="bg-white shadow overflow-hidden rounded-md max-w-3xl">
             <ul role="list" class="divide-y divide-gray-200">
@@ -68,7 +75,7 @@
                       <label
                         :for="`track-id-${index}`"
                         class="block text-sm font-medium text-gray-700"
-                        >Track Identifier</label
+                        >{{ __('Track Identifier') }}</label
                       >
                       <input
                         :id="`track-id-${index}`"
@@ -88,7 +95,7 @@
                             />
                           </div>
                           <div v-if="track.input_file_name" class="mt-1 text-sm text-gray-700">
-                            Current File: {{ track.input_file_name }}
+                            {{ __('Current File:') }} {{ track.input_file_name }}
                           </div>
                         </div>
                       </div>
@@ -101,23 +108,23 @@
                         class="flex sm:mt-[26px] gap-1 items-center text-sm text-gray-700 cursor-pointer"
                       >
                         <ChevronRightIcon class="h-6 w-6 text-gray-500" />
-                        <span class="block md:hidden">Hide Algorithm Settings</span>
+                        <span class="block md:hidden">{{ __('Hide Algorithm Settings') }}</span>
                       </span>
                       <span
                         v-else
                         class="flex sm:mt-[26px] gap-1 items-center text-sm text-gray-700 cursor-pointer"
                       >
                         <ChevronDownIcon class="h-6 w-6 text-gray-500" />
-                        <span class="block md:hidden">Show Algorithm Settings</span>
+                        <span class="block md:hidden">{{ __('Show Algorithm Settings') }}</span>
                       </span>
                     </div>
                   </div>
                 </div>
-                <div role="group" class="pt-6 bg-gr" v-show="algorithmSettingsVisible(index)">
+                <div role="group" class="pt-6 bg-gr" v-if="algorithmSettingsVisible(index)">
                   <div class="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-baseline">
                     <div>
                       <div class="text-base font-medium text-gray-900 sm:text-sm sm:text-gray-700">
-                        Algorithm
+                        {{ __('Algorithm') }}
                       </div>
                     </div>
                     <div class="mt-4 sm:mt-0 sm:col-span-2">
@@ -136,7 +143,7 @@
                             <label
                               :for="`track_${index}_filtering`"
                               class="font-medium text-gray-700"
-                              >Filtering</label
+                              >{{ __('Filtering') }}</label
                             >
                           </div>
                         </div>
@@ -161,7 +168,7 @@
                               <label
                                 :for="`track_${index}_noisehum`"
                                 class="font-medium text-gray-700"
-                                >Noise and Hum Reduction</label
+                                >{{ __('Noise and Hum Reduction') }}</label
                               >
                             </div>
                           </div>
@@ -169,8 +176,10 @@
                         <div>
                           <div class="relative flex justify-start align-middle items-center gap-3">
                             <div class="text-sm">
-                              <label :for="`track_${index}_fgbg`" class="font-medium text-gray-700"
-                                >Fore/Background</label
+                              <label
+                                :for="`track_${index}_fgbg`"
+                                class="font-medium text-gray-700"
+                                >{{ __('Fore/Background') }}</label
                               >
                             </div>
 
@@ -195,19 +204,21 @@
               </li>
             </ul>
             <div class="bg-gray-50 px-4 py-4 sm:px-6">
-              <podlove-button variant="primary" @click="addTrack">Add Track</podlove-button>
+              <podlove-button variant="primary" @click="addTrack">{{
+                __('Add Track')
+              }}</podlove-button>
             </div>
           </div>
         </div>
         <div v-else-if="showTrackEditor" class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
           <fieldset class="sm:col-span-4">
-            <legend class="text-base font-medium text-gray-900">Audio Source</legend>
+            <legend class="text-base font-medium text-gray-900">{{ __('Audio Source') }}</legend>
             <div class="mt-2">
               <div class="flex flex-col sm:flex-row gap-3">
                 <FileChooser :file_key="production.uuid" />
               </div>
               <div v-if="production.input_file" class="mt-1 text-sm text-gray-700">
-                Current File: {{ production.input_file }}
+                {{ __('Current File:') }} {{ production.input_file }}
               </div>
             </div>
           </fieldset>
@@ -219,12 +230,12 @@
       <div class="flex flex-col sm:flex-row gap-4 sm:gap-2 justify-between">
         <WebhookToggle />
         <div class="flex justify-end gap-3">
-          <podlove-button variant="secondary" @click="saveProduction"
-            >Save Production</podlove-button
-          >
-          <podlove-button variant="primary" @click="startProduction"
-            >Start Production</podlove-button
-          >
+          <podlove-button variant="secondary" @click="saveProduction">{{
+            __('Save Production')
+          }}</podlove-button>
+          <podlove-button variant="primary" @click="startProduction">{{
+            __('Start Production')
+          }}</podlove-button>
         </div>
       </div>
     </div>
@@ -255,6 +266,7 @@ import {
   ExternalLinkIcon,
   CloudIcon,
 } from '@heroicons/vue/outline'
+import { get } from 'lodash'
 
 export default defineComponent({
   components: {
@@ -332,9 +344,7 @@ export default defineComponent({
       return this.algorithmSettings[index] || false
     },
     toggleAlgorithmSettingVisible(index): void {
-      this.algorithmSettings[index] = this.algorithmSettings.hasOwnProperty(index)
-        ? !this.algorithmSettings[index]
-        : true
+      this.algorithmSettings[index] = !get(this.algorithmSettings, index, false)
     },
   },
 

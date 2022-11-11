@@ -30,7 +30,7 @@
               Upload
               <span class="text-sm font-normal">{{ filenameSelectedForUpload }}</span>
             </div>
-            <div class="sm:mt-8" v-else>Upload a file</div>
+            <div class="sm:mt-8" v-else>{{ __('Upload a file') }}</div>
             <input
               :id="file_key + 'file-upload'"
               name="file-upload"
@@ -98,6 +98,7 @@ import {
   ListboxOptions,
 } from '@headlessui/vue'
 import { CheckIcon, SelectorIcon } from '@heroicons/vue/solid'
+import { get } from 'lodash'
 
 export default defineComponent({
   props: ['file_key', 'track_index'],
@@ -155,13 +156,9 @@ export default defineComponent({
       return this.state.services.find((s) => s.uuid === this.currentServiceSelection)
     },
     serviceFiles(): string[] | null {
-      return this.currentServiceSelection && this.state.serviceFiles
-        ? this.state.serviceFiles[this.currentServiceSelection]
-        : null
+      return get(this.state, ['serviceFiles', this.currentServiceSelection], null)
     },
     fileSelection(): any {
-      console.log(this.file_key, this.state.fileSelections[this.file_key])
-
       return this.state.fileSelections[this.file_key]
     },
     filenameSelectedForUpload(): any {
