@@ -110,6 +110,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 * add support for op3.dev using the "External Analytics" module
 * update OPAWG data (for download analytics / user agent detection)
+* improve PHP 8.1 compatibility
 
 = 3.8.1 =
 
