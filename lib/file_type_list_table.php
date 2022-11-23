@@ -21,15 +21,15 @@ class File_Type_List_Table extends \Podlove\List_Table
         $actions = [
             'edit' => sprintf(
                 '<a href="?page=%s&podlove_tab=%s&action=%s&file_type=%s">'.__('Edit', 'podlove-podcasting-plugin-for-wordpress').'</a>',
-                filter_input(INPUT_GET, 'page', FILTER_SANITIZE_STRING),
-                filter_input(INPUT_GET, 'podlove_tab', FILTER_SANITIZE_STRING),
+                filter_input(INPUT_GET, 'page', FILTER_SANITIZE_URL),
+                filter_input(INPUT_GET, 'podlove_tab', FILTER_SANITIZE_URL),
                 'edit',
                 $file_type->id
             ),
             'delete' => sprintf(
                 '<a href="?page=%s&podlove_tab=%s&action=%s&file_type=%s">'.__('Delete', 'podlove-podcasting-plugin-for-wordpress').'</a>',
-                filter_input(INPUT_GET, 'page', FILTER_SANITIZE_STRING),
-                filter_input(INPUT_GET, 'podlove_tab', FILTER_SANITIZE_STRING),
+                filter_input(INPUT_GET, 'page', FILTER_SANITIZE_URL),
+                filter_input(INPUT_GET, 'podlove_tab', FILTER_SANITIZE_URL),
                 'delete',
                 $file_type->id
             ),
@@ -95,7 +95,7 @@ class File_Type_List_Table extends \Podlove\List_Table
         // get total items
         $total_items = count($data);
         // extrage page for current page only
-        $data = array_slice($data, (($current_page - 1) * $per_page), $per_page);
+        $data = array_slice($data, ($current_page - 1) * $per_page, $per_page);
         // add items to table
         $this->items = $data;
 

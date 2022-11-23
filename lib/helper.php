@@ -447,7 +447,7 @@ function build_for($object, $args, $callback)
         $url = $args['action'];
     } else {
         $url = is_admin() ? 'admin.php' : '';
-        $page = filter_input(INPUT_GET, 'page', FILTER_SANITIZE_STRING);
+        $page = filter_input(INPUT_GET, 'page', FILTER_SANITIZE_URL);
         if ($page) {
             $url .= '?page='.$page;
         }
