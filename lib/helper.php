@@ -47,6 +47,10 @@ function esc_like($text)
 
 function format_bytes($size, $decimals = 2)
 {
+    if (is_null($size)) {
+        $size = 0;
+    }
+
     $units = [' B', ' KB', ' MB', ' GB', ' TB'];
     for ($i = 0; $size >= 1024 && $i < 4; ++$i) {
         $size /= 1024;
