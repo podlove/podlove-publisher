@@ -415,7 +415,9 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
             'soundbite_start' => $episode->soundbite_start,
             'soundbite_duration' => $episode->soundbite_duration,
             'soundbite_title' => $episode->soundbite_title,
-            'explicit' => $explicit
+            'explicit' => $explicit,
+            'license_name' => $episode->license_name,
+            'license_url' => $episode->license_url
         ];
 
         $data = $this->enrich_with_season($data, $episode);
@@ -590,6 +592,16 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
         if (isset($request['soundbite_title'])) {
             $title = $request['soundbite_title'];
             $episode->soundbite_title = $title;
+        }
+
+        if (isset($request['license_name'])) {
+            $license_name = $request['license_name'];
+            $episode->license_name = $license_name;
+        }
+
+        if (isset($request['license_url'])) {
+            $license_url = $request['license_url'];
+            $episode->license_url = $license_url;
         }
 
         $episode->save();
