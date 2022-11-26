@@ -2,6 +2,7 @@
 
 namespace Podlove\Modules\RelatedEpisodes;
 
+use Podlove\Api\Episodes\WP_REST_PodloveEpisodeRelated_Controller;
 use Podlove\Model;
 use Podlove\Modules\RelatedEpisodes\Model\EpisodeRelation;
 
@@ -16,6 +17,7 @@ class Related_Episodes extends \Podlove\Modules\Base
         add_action('podlove_module_was_activated_related_episodes', [$this, 'was_activated']);
         add_filter('podlove_episode_form_data', [$this, 'episode_relation_form'], 10, 2);
         add_action('save_post', [$this, 'update_episode_relations'], 10, 2);
+        add_action('rest_api_init', [$this, 'api_init']);
 
         add_action('admin_print_styles', [$this, 'admin_print_styles']);
 
@@ -67,6 +69,12 @@ class Related_Episodes extends \Podlove\Modules\Base
             $e->right_episode_id = $episode_relation;
             $e->save();
         }
+    }
+
+    public function api_init()
+    {
+        $api_episode_related = new WP_REST_PodloveEpisodeRelated_Controller();
+        $api_episode_related->register_routes();
     }
 
     public function episode_relation_form($form_data)
