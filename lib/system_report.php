@@ -55,10 +55,18 @@ class SystemReport
 
                 $db_connection->close();
 
-                return DB_CHARSET;
+                if (defined('DB_CHARSET')) {
+                    return DB_CHARSET;
+                }
+
+                return 'undefined constant DB_CHARSET';
             }],
             'db_collate' => ['title' => 'WordPress Database Collate', 'callback' => function () {
-                return DB_COLLATE;
+                if (defined('DB_COLLATE')) {
+                    return DB_COLLATE;
+                }
+
+                return 'undefined constant DB_COLLATE';
             }],
             'podlove_version' => ['title' => 'Publisher Version', 'callback' => function () {
                 return \Podlove\get_plugin_header('Version');
