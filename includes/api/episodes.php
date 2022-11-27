@@ -170,8 +170,8 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
         register_rest_route($this->namespace, '/'.$this->rest_base, [
             [
                 'args' => [
-                    'filter' => [
-                        'description' => __('The filter parameter is used to filter the collection of episodes', 'podlove-podcasting-plugin-for-wordpress'),
+                    'status' => [
+                        'description' => __('The status parameter is used to filter the collection of episodes', 'podlove-podcasting-plugin-for-wordpress'),
                         'type' => 'string',
                         'enum' => ['publish', 'draft']
                     ]
@@ -312,11 +312,45 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
                 'permission_callback' => [$this, 'update_item_permissions_check'],
             ]
         ]);
+        register_rest_route($this->namespace, '/'.$this->rest_base.'/(?P<id>[\d]+)/tags', [
+            'args' => [
+                'id' => [
+                    'description' => __('Unique identifier for the episode.', 'podlove-podcasting-plugin-for-wordpress'),
+                    'type' => 'integer',
+                ],
+            ],
+            [
+                'args' => [
+                    'term_id' => [
+                        'description' => __('Identifier of the term', 'podlove-podcasting-plugin-for-wordpress'),
+                        'type' => 'integer',
+                    ],
+                    'name' => [
+                        'description' => __('Name of the term', 'podlove-podcasting-plugin-for-wordpress'),
+                        'type' => 'string',
+                    ]
+                ],
+                'methods' => WP_REST_Server::READABLE,
+                'callback' => [$this, 'get_item_tags'],
+                'permission_callback' => [$this, 'get_item_permissions_check'],
+            ],
+            [
+                'methods' => WP_REST_Server::EDITABLE,
+                'callback' => [$this, 'update_item_tags'],
+                'permission_callback' => [$this, 'update_item_permissions_check'],
+            ],
+            [
+                'methods' => WP_REST_Server::DELETABLE,
+                'callback' => [$this, 'delete_item_tags'],
+                'permission_callback' => [$this, 'delete_item_permissions_check'],
+            ]
+
+        ]);
     }
 
     public function get_items_permissions_check($request)
     {
-        $filter = $request->get_param('filter');
+        $filter = $request->get_param('status');
         if ($filter) {
             if ($filter == 'draft') {
                 if (!current_user_can('edit_posts')) {
@@ -334,7 +368,7 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
 
     public function get_items($request)
     {
-        $filter = $request->get_param('filter');
+        $filter = $request->get_param('status');
         if (!$filter || $filter != 'draft') {
             $filter = 'publish';
         }
@@ -459,6 +493,41 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
         return new \Podlove\Api\Response\OkResponse([
             '_version' => 'v2',
             'results' => $results,
+        ]);
+    }
+
+    public function get_item_tags($request)
+    {
+        $id = $request->get_param('id');
+        if (!$id) {
+            return;
+        }
+
+        $episode = Episode::find_by_id($id);
+        if (!$episode) {
+            return new \Podlove\Api\Error\NotFound();
+        }
+
+        $post_id = $episode->post_id;
+
+        $post_tag_terms = wp_get_object_terms($post_id, 'post_tag');
+        if (!empty($post_tag_terms) && !is_wp_error($post_tag_terms)) {
+            $results = array_map(function($tags) {
+                return [
+                    'term_id' => $tags->term_id,
+                    'name' => $tags->name
+                ];
+            }, $post_tag_terms);
+
+            return new \Podlove\Api\Response\OkResponse([
+                '_version' => 'v2',
+                'tags' => $results
+            ]);
+        }
+
+        return new \Podlove\Api\Response\OkResponse([
+            'status' => 'ok',
+            'tags' => []
         ]);
     }
 
@@ -669,6 +738,41 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
         ]);
     }
 
+    public function update_item_tags($request)
+    {
+        $id = $request->get_param('id');
+        if (!$id) {
+            return;
+        }
+
+        $episode = Episode::find_by_id($id);
+        if (!$episode) {
+            return new \Podlove\Api\Error\NotFound();
+        }
+
+        $post_id = $episode->post_id;
+
+        if (isset($request['term_id'])) {
+            $terms = $request['term_id'];
+            if (is_array(($terms))) {
+                $term_ids = array_map(function($term) {
+                    return intval($term);
+                }, $terms);
+            }
+            else {
+                $term_ids = intval($terms);
+            }
+            $val = wp_set_object_terms($post_id, $term_ids, 'post_tag', true);
+            if (is_wp_error($val)) {
+                return new \Podlove\Api\Error\InternalServerError(500, $val->message);
+            }
+        }
+
+        return new \Podlove\Api\Response\OkResponse([
+            'status' => 'ok'
+        ]);
+    }
+
     public function delete_item_permissions_check($request)
     {
         if (!current_user_can('edit_posts')) {
@@ -689,7 +793,33 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
         if (!$episode) {
             return new \Podlove\Api\Error\NotFound();
         }
+
         wp_trash_post($episode->post_id);
+
+        return new \Podlove\Api\Response\OkResponse([
+            'status' => 'ok'
+        ]);
+    }
+
+    public function delete_item_tags($request)
+    {
+        $id = $request->get_param('id');
+        if (!$id) {
+            return;
+        }
+
+        $episode = Episode::find_by_id($id);
+        if (!$episode) {
+            return new \Podlove\Api\Error\NotFound();
+        }
+
+        $post_id = $episode->post_id;
+
+        $val = wp_set_object_terms($post_id, [], 'post_tag', false);
+
+        if (is_wp_error($val)) {
+            return new \Podlove\Api\Error\InternalServerError();
+        }
 
         return new \Podlove\Api\Response\OkResponse([
             'status' => 'ok'

@@ -50,7 +50,7 @@ class WP_REST_PodloveEpisodeRelated_Controller extends WP_REST_Controller
         }
 
         $isFilter = true;
-        $filter = $request->get_param('filter');
+        $filter = $request->get_param('status');
         if (!$filter || $filter != 'draft') {
             $isFilter = false;
         }
@@ -80,7 +80,7 @@ class WP_REST_PodloveEpisodeRelated_Controller extends WP_REST_Controller
 
     public function get_item_permissions_check($request)
     {
-        $filter = $request->get_param('filter');
+        $filter = $request->get_param('status');
         if ($filter) {
             if ($filter == 'draft') {
                 if (!current_user_can('edit_posts')) {
