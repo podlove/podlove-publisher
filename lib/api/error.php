@@ -35,7 +35,7 @@ class NotFound extends WP_Error
     public function __construct($code = '', $message = '')
     {
         if (strlen($code) == 0) {
-            $code = 'not_found';
+            $code = 'rest_not_found';
         }
         if (strlen($message) == 0) {
             $message = esc_html__('sorry, we do not found the requested resource');
@@ -43,6 +43,22 @@ class NotFound extends WP_Error
         parent::__construct($code, $message, ['status' => 404]);
     }
 }
+
+class NotFoundEpisode extends WP_Error
+{
+    /**
+     * Constructor.
+     *
+     * @param $code
+     * @param $message
+     */
+    public function __construct($episode_id)
+    {
+        $message = 'sorry, we do not found the episode with ID '.$episode_id;
+        parent::__construct('not_found', esc_html__($message), ['status' => 404]);
+    }
+}
+
 
 class NotSupported extends WP_Error
 {
@@ -55,7 +71,7 @@ class NotSupported extends WP_Error
     public function __construct($code = '', $message = '')
     {
         if (strlen($code) == 0) {
-            $code = 'not_supported';
+            $code = 'rest_not_supported';
         }
         if (strlen($message) == 0) {
             $message = esc_html__('sorry, we do not support your request');
@@ -75,7 +91,7 @@ class InternalServerError extends WP_Error
     public function __construct($code = '', $message = '')
     {
         if (strlen($code) == 0) {
-            $code = 'internal_server_error';
+            $code = 'rest_internal_server_error';
         }
         if (strlen($message) == 0) {
             $message = esc_html__('sorry, we have an internal error');
