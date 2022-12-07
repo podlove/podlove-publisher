@@ -37,7 +37,7 @@ class Contributor_List_Table extends \Podlove\List_Table
             '<strong>%1$s</strong><br /><em>%2$s %3$s</em><br />%4$s',
             Settings\GenericEntitySettings::get_action_link('contributor', $contributor->id, $contributor->getName()),
             $contributor->realname,
-            ($contributor->nickname == '' ? '' : ' ('.$contributor->nickname.')'),
+            $contributor->nickname == '' ? '' : ' ('.$contributor->nickname.')',
             $this->row_actions($actions)
         ).'<input type="hidden" class="contributor_id" value="'.$contributor->id.'">';
     }
@@ -59,9 +59,9 @@ class Contributor_List_Table extends \Podlove\List_Table
     public function column_affiliation($contributor)
     {
         $affiliation = '';
-        ($contributor->organisation == '' ? '' : $affiliation = $affiliation.'<strong>'.$contributor->organisation.'</strong><br />');
-        ($contributor->department == '' ? '' : $affiliation = $affiliation.$contributor->department.'<br />');
-        ($contributor->jobtitle == '' ? '' : $affiliation = $affiliation.'<em>'.$contributor->jobtitle.'</em><br />');
+        $contributor->organisation == '' ? '' : $affiliation = $affiliation.'<strong>'.$contributor->organisation.'</strong><br />';
+        $contributor->department == '' ? '' : $affiliation = $affiliation.$contributor->department.'<br />';
+        $contributor->jobtitle == '' ? '' : $affiliation = $affiliation.'<em>'.$contributor->jobtitle.'</em><br />';
 
         return $affiliation;
     }
@@ -177,7 +177,7 @@ class Contributor_List_Table extends \Podlove\List_Table
         }
 
         // look how to sort
-        if (strtolower(filter_input(INPUT_GET, 'order')) === 'asc') {
+        if (strtolower((string) filter_input(INPUT_GET, 'order')) === 'asc') {
             $order = 'ASC';
         } else {
             $order = 'DESC';
@@ -207,7 +207,7 @@ class Contributor_List_Table extends \Podlove\List_Table
         // get total items
         $total_items = count($data);
         // extrage page for current page only
-        $data = array_slice($data, (($current_page - 1) * $per_page), $per_page);
+        $data = array_slice($data, ($current_page - 1) * $per_page, $per_page);
         // add items to table
         $this->items = $data;
 
@@ -224,7 +224,7 @@ class Contributor_List_Table extends \Podlove\List_Table
 
     public function no_items()
     {
-        $url = sprintf('?page=%s&action=%s&podlove_tab=contributors', filter_input(INPUT_GET, 'page', FILTER_SANITIZE_STRING), 'new'); ?>
+        $url = sprintf('?page=%s&action=%s&podlove_tab=contributors', filter_input(INPUT_GET, 'page', FILTER_SANITIZE_URL), 'new'); ?>
 		<div style="margin: 20px 10px 10px 5px">
 	 		<span class="add-new-h2" style="background: transparent">
 			<?php _e('No items found.'); ?>

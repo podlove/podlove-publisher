@@ -55,7 +55,7 @@ class Tab
 
     public function get_url()
     {
-        return sprintf('?page=%s&podlove_tab=%s', filter_var($_REQUEST['page'], FILTER_SANITIZE_STRING), $this->get_slug());
+        return sprintf('?page=%s&podlove_tab=%s', filter_var($_REQUEST['page'], FILTER_SANITIZE_URL), $this->get_slug());
     }
 
     public function page()
@@ -69,7 +69,7 @@ class Tab
 
 				<?php settings_fields($screen_base); ?>
 				<?php do_settings_sections($screen_base); ?>
-				
+
 				<?php submit_button(__('Save Changes'), 'button-primary', 'submit', true); ?>
 			</form>
 			<?php

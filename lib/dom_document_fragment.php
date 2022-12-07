@@ -14,7 +14,7 @@ namespace Podlove;
  */
 class DomDocumentFragment extends \DOMDocument
 {
-    public function __construct($version = '1.0', $encoding = null)
+    public function __construct($version = '1.0', $encoding = '')
     {
         return parent::__construct($version, $encoding);
     }

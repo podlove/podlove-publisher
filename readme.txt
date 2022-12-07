@@ -3,9 +3,9 @@ Contributors: eteubert
 Donate link: https://opencollective.com/podlove
 Tags: podlove, podcast, publishing, rss, feed, audio, mp3, m4a, player, webplayer, iTunes, radio
 Requires at least: 4.9.6
-Tested up to: 5.9.2
+Tested up to: 6.1.1
 Requires PHP: 7.0
-Stable tag: 3.8.1
+Stable tag: 3.8.2
 License: MIT
 
 The one and only next generation podcast publishing system. Seriously. It's magical and sparkles a lot.
@@ -105,6 +105,12 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 6. Includes the Podlove Web Player. One more thing: you can manage and present all contributors easily.
 
 == Changelog ==
+
+= 3.8.2 =
+
+* add support for op3.dev using the "External Analytics" module
+* update OPAWG data (for download analytics / user agent detection)
+* improve PHP 8.1 compatibility
 
 = 3.8.1 =
 

@@ -27,8 +27,8 @@ class List_Table extends \WP_List_Table
 
     public function no_items_content()
     {
-        $podlove_tab = filter_input(INPUT_GET, 'podlove_tab', FILTER_SANITIZE_STRING);
-        $page = filter_input(INPUT_GET, 'page', FILTER_SANITIZE_STRING);
+        $podlove_tab = filter_input(INPUT_GET, 'podlove_tab', FILTER_SANITIZE_URL);
+        $page = filter_input(INPUT_GET, 'page', FILTER_SANITIZE_URL);
 
         $url = sprintf('?page=%s&action=%s', $page, 'new');
         $url .= !empty($podlove_tab) ? '&amp;podlove_tab='.$podlove_tab : ''; ?>
