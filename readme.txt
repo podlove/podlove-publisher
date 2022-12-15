@@ -106,6 +106,19 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2022-12-15 =
+
+API Updates:
+
+- add endpoints for related episode management
+  - `/podlove/v2/episodes/<id>/related`
+  - `/podlove/v2/episodes/related`
+  - `/podlove/v2/episodes/related/<id>`
+- add endpoints for episode tag management
+  - `/podlove/v2/episodes/<id>/tags`
+- rename "filter" parameter to "status", following WordPress API naming
+- include "license_name" and "license_url" in episode
+
 = 2022-09-04 =
 
 - feat: New UI module for episode description related information
