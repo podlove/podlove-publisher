@@ -8,6 +8,9 @@ import { PodloveApiClient } from '@lib/api'
 import { AuphonicApiClient } from '@lib/auphonic.api'
 import { selectors } from '@store'
 import { v4 as uuidv4 } from 'uuid'
+import { State } from '../store'
+import { get } from 'lodash'
+import Timestamp from '@lib/timestamp'
 
 function* auphonicSaga(): any {
   const apiClient: PodloveApiClient = yield createApi()
@@ -187,6 +190,167 @@ function* handleSaveTrack(auphonicApi: AuphonicApiClient, uuid: String, trackWra
   }
 }
 
+type PreparedFileSelection = {
+  service?: string | null
+  value?: string | null
+}
+
+const prepareFile = (selection: auphonic.FileSelection): PreparedFileSelection => {
+  if (!selection) {
+    return {}
+  }
+
+  switch (selection.currentServiceSelection) {
+    case 'url':
+      return { service: 'url', value: selection.urlValue }
+    case 'file':
+      return { service: 'file', value: selection.fileValue }
+    default:
+      return { service: selection.currentServiceSelection, value: selection.fileSelection }
+  }
+}
+
+function getFileSelectionsForSingleTrack(state: State): PreparedFileSelection {
+  const selections = get(state, ['auphonic', 'file_selections'])
+
+  return prepareFile(get(selections, 'production_uuid'))
+}
+
+function getFileSelectionsForMultiTrack(state: State): PreparedFileSelection[] {
+  const selections = get(state, ['auphonic', 'file_selections'])
+  const production_uuid = get(state, ['auphonic', 'production', 'uuid'], '')
+  const tracks = get(state, ['auphonic', 'tracks'], [])
+
+  return tracks.reduce((agg, _track, index) => {
+    agg.push(prepareFile(get(selections, `${production_uuid}_t${index}`)))
+    return agg
+  }, [])
+}
+
+function getTracksPayload(state: State): any {
+  const isMultitrack = get(state, ['auphonic', 'production', 'is_multitrack'], false)
+  const tracks = get(state, ['auphonic', 'tracks'], [])
+
+  if (!isMultitrack) {
+    return []
+  }
+
+  const fileSelections = getFileSelectionsForMultiTrack(state)
+
+  return tracks
+    .map((track, index) => {
+      const state = track.save_state
+
+      if (state == 'unchanged') {
+        return {}
+      }
+
+      let upload = {}
+
+      // FIXME: currently service is always url when selecting an existing production
+      let fileReference = {}
+      if (fileSelections[index].service == 'url') {
+        fileReference = {
+          input_file: fileSelections[index].value,
+        }
+      } else if (fileSelections[index].service == 'file') {
+        upload = {
+          track_id: track.identifier_new,
+          file: fileSelections[index].value,
+        }
+      } else {
+        fileReference = {
+          service: fileSelections[index].service,
+          input_file: fileSelections[index].value,
+        }
+      }
+
+      return {
+        state,
+        upload,
+        payload: {
+          type: 'multitrack',
+          id: track.identifier,
+          id_new: track.identifier_new,
+          ...fileReference,
+          algorithms: {
+            denoise: track.noise_and_hum_reduction,
+            hipfilter: track.filtering,
+            backforeground: track.fore_background,
+          },
+        },
+      }
+    })
+    .filter((t) => Object.keys(t).length > 0)
+}
+
+function isLocalDevelopment(): boolean {
+  // @ts-ignore
+  return import.meta.env.MODE == 'development'
+}
+
+function getProductionPayload(state: State): object {
+  let payload = get(state, ['auphonic', 'productionPayload'], {})
+
+  // remove output_files from payload, because it doubles them
+  const { output_files, ...newPayload } = payload
+  const episode_poster = state.episode.poster || state.podcast.poster
+
+  return {
+    ...newPayload,
+    // TODO: rewrite image logic to use file upload instead of url, then we
+    // do not need this isLocalDevelopment switch any more
+    image: isLocalDevelopment() ? '' : episode_poster,
+    metadata: {
+      ...newPayload.metadata,
+      title: state.episode.title,
+      subtitle: state.episode.subtitle,
+      summary: state.episode.summary,
+      artist: state.podcast.author_name,
+      album: state.podcast.title,
+      url: state.podcast.link,
+      track: state.episode.number,
+    },
+    chapters: state.chapters.chapters.map((chapter) => {
+      return {
+        title: chapter.title,
+        url: chapter.href,
+        start: new Timestamp(chapter.start).pretty,
+      }
+    }),
+  }
+}
+
+function getSaveProductionPayload(state: State): object {
+  const isMultitrack = get(state, ['auphonic', 'production', 'is_multitrack'], false)
+  const productionPayload = getProductionPayload(state)
+
+  let fileReference = {}
+  // for single track, add file selection to payload
+  if (!isMultitrack) {
+    const fileSelections = getFileSelectionsForSingleTrack(state)
+    if (fileSelections.service == 'url') {
+      fileReference = {
+        input_file: fileSelections.value,
+      }
+    } else if (fileSelections.service == 'file') {
+      fileReference = {
+        input_file: fileSelections.value,
+      }
+    } else {
+      fileReference = {
+        service: fileSelections.service,
+        input_file: fileSelections.value,
+      }
+    }
+  }
+
+  return {
+    ...productionPayload,
+    ...fileReference,
+  }
+}
+
 function* handleSaveProduction(
   auphonicApi: AuphonicApiClient,
   action: { type: string; payload: any }
@@ -194,8 +358,8 @@ function* handleSaveProduction(
   yield put(auphonic.startSaving())
 
   const uuid = action.payload.uuid
-  const productionPayload = action.payload.productionPayload
-  const tracksPayload = action.payload.tracksPayload
+  const productionPayload = yield select(getSaveProductionPayload)
+  const tracksPayload = yield select(getTracksPayload)
 
   // delete all existing chapters, otherwise we append them
   yield auphonicApi.delete(`production/${uuid}/chapters.json`)
