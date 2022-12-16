@@ -253,7 +253,7 @@ import { selectors } from '@store'
 import { injectStore, mapState } from 'redux-vuex'
 import * as auphonic from '@store/auphonic.store'
 import { Production, AudioTrack, FileSelection } from '@store/auphonic.store'
-import Timestamp from '@lib/timestamp'
+
 import DonePage from './production_form/DonePage.vue'
 import WebhookToggle from './WebhookToggle.vue'
 
@@ -294,20 +294,7 @@ export default defineComponent({
       state: mapState({
         production: selectors.auphonic.production,
         tracks: selectors.auphonic.tracks,
-        fileSelections: selectors.auphonic.fileSelections,
-        productionPayload: selectors.auphonic.productionPayload,
         isSaving: selectors.auphonic.isSaving,
-        episode_title: selectors.episode.title,
-        episode_subtitle: selectors.episode.subtitle,
-        episode_summary: selectors.episode.summary,
-        episode_number: selectors.episode.number,
-        episode_poster: selectors.episode.poster || selectors.podcast.poster,
-        podcast_title: selectors.podcast.title,
-        podcast_author: selectors.podcast.author,
-        podcast_link: selectors.podcast.link,
-        chapters: selectors.chapters.list,
-        baseUrl: selectors.runtime.baseUrl,
-        postId: selectors.post.id,
       }),
       dispatch: injectStore().dispatch,
     }
@@ -318,8 +305,6 @@ export default defineComponent({
       this.dispatch(
         auphonic.saveProduction({
           uuid: this.production.uuid,
-          productionPayload: this.payload,
-          tracksPayload: this.tracksPayload,
         })
       )
     },
@@ -369,141 +354,6 @@ export default defineComponent({
     },
     isMultitrack(): boolean {
       return this.state.production && this.state.production.is_multitrack
-    },
-    isLocalDevelopment(): boolean {
-      // @ts-ignore
-      return import.meta.env.MODE == 'development'
-    },
-    productionPayload(): object {
-      let payload = this.state.productionPayload
-
-      // remove output_files from payload, because it doubles them
-      const { output_files, ...newPayload } = payload
-
-      return {
-        ...newPayload,
-        // TODO: rewrite image logic to use file upload instead of url, then we
-        // do not need this isLocalDevelopment switch any more
-        image: this.isLocalDevelopment ? '' : this.state.episode_poster,
-        metadata: {
-          ...newPayload.metadata,
-          title: this.state.episode_title,
-          subtitle: this.state.episode_subtitle,
-          summary: this.state.episode_summary,
-          artist: this.state.podcast_author,
-          album: this.state.podcast_title,
-          url: this.state.podcast_link,
-          track: this.state.episode_number,
-        },
-        chapters: this.state.chapters.map((chapter) => {
-          return {
-            title: chapter.title,
-            url: chapter.href,
-            start: new Timestamp(chapter.start).pretty,
-          }
-        }),
-      }
-    },
-    fileSelections(): any {
-      const prepareFile = (selection: FileSelection) => {
-        if (!selection) {
-          return {}
-        }
-
-        switch (selection.currentServiceSelection) {
-          case 'url':
-            return { service: 'url', value: selection.urlValue }
-          case 'file':
-            return { service: 'file', value: selection.fileValue }
-          default:
-            return { service: selection.currentServiceSelection, value: selection.fileSelection }
-        }
-      }
-
-      return this.isMultitrack
-        ? this.tracks.reduce((agg, _track, index) => {
-            agg.push(prepareFile(this.state.fileSelections[`${this.production.uuid}_t${index}`]))
-            return agg
-          }, [])
-        : prepareFile(this.state.fileSelections[this.production.uuid])
-    },
-    tracksPayload() {
-      if (!this.isMultitrack) {
-        return []
-      }
-
-      return this.tracks
-        .map((track, index) => {
-          const state = track.save_state
-
-          if (state == 'unchanged') {
-            return {}
-          }
-
-          let upload = {}
-
-          // FIXME: currently service is always url when selecting an existing production
-          let fileReference = {}
-          if (this.fileSelections[index].service == 'url') {
-            fileReference = {
-              input_file: this.fileSelections[index].value,
-            }
-          } else if (this.fileSelections[index].service == 'file') {
-            upload = {
-              track_id: track.identifier_new,
-              file: this.fileSelections[index].value,
-            }
-          } else {
-            fileReference = {
-              service: this.fileSelections[index].service,
-              input_file: this.fileSelections[index].value,
-            }
-          }
-
-          return {
-            state,
-            upload,
-            payload: {
-              type: 'multitrack',
-              id: track.identifier,
-              id_new: track.identifier_new,
-              ...fileReference,
-              algorithms: {
-                denoise: track.noise_and_hum_reduction,
-                hipfilter: track.filtering,
-                backforeground: track.fore_background,
-              },
-            },
-          }
-        })
-        .filter((t) => Object.keys(t).length > 0)
-    },
-    payload(): object {
-      let fileReference = {}
-      let upload = {}
-
-      // for single track, add file selection to payload
-      if (!this.isMultitrack) {
-        if (this.fileSelections.service == 'url') {
-          fileReference = {
-            input_file: this.fileSelections.value,
-          }
-        } else if (this.fileSelections.service == 'file') {
-          fileReference = {
-            input_file: this.fileSelections.value,
-          }
-        } else {
-          fileReference = {
-            service: this.fileSelections.service,
-            input_file: this.fileSelections.value,
-          }
-        }
-      }
-
-      return {
-        ...this.productionPayload,
-        ...fileReference,
-      }
     },
   },
 })
