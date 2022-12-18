@@ -252,7 +252,7 @@ import { selectors } from '@store'
 
 import { injectStore, mapState } from 'redux-vuex'
 import * as auphonic from '@store/auphonic.store'
-import { Production, AudioTrack, FileSelection } from '@store/auphonic.store'
+import { Production, AudioTrack } from '@store/auphonic.store'
 
 import DonePage from './production_form/DonePage.vue'
 import WebhookToggle from './WebhookToggle.vue'
