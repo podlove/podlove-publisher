@@ -2,6 +2,8 @@ import { curry } from 'lodash'
 import axios from 'axios'
 import { addQuery, responseParser, ApiOptions } from './api'
 
+// TODO: replace fetch with axios
+
 const defaultHeaders = (
   { bearer }: { bearer?: string },
   headers: { [key: string]: string } = {}
@@ -129,7 +131,6 @@ export const auphonic = curry(
     upload: uploadApi({
       bearer,
       errorHandler,
-      method: 'POST',
       urlProcessor: (endpoint) => `${base}/${endpoint}`,
     }),
   })
