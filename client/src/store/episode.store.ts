@@ -69,10 +69,24 @@ export const reducer = handleActions(
       id: get(action, ['payload', 'episode', 'id'], null),
       duration: Timestamp.fromString(get(action, ['payload', 'episode', 'duration'], null)).totalMs,
     }),
-    [UPDATE]: (state: State, action: typeof update): State => ({
-      ...state,
-      [get(action, ['payload', 'prop'])]: get(action, ['payload', 'value'], null),
-    }),
+    [UPDATE]: (state: State, action: typeof update): State => {
+      const prop = get(action, ['payload', 'prop'])
+      const value = get(action, ['payload', 'value'], null)
+
+      // FIXME: finish implementation once episode saga supports it
+      const simple = ['title', 'subtitle', 'summary', 'duration', 'slug']
+      const other = ['image']
+      const todo = ['tags', 'license', 'license url']
+
+      if (simple.includes(prop)) {
+        return { ...state, [prop]: value }
+      } else if (prop == 'image') {
+        return { ...state, ['episode_poster']: value }
+      } else {
+        console.debug('todo', prop)
+        return { ...state }
+      }
+    },
     [SET]: (state: State, action: typeof update): State => ({
       ...state,
       slug: get(action, ['payload', 'slug']),

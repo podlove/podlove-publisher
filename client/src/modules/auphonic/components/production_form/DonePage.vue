@@ -118,19 +118,8 @@ export default defineComponent({
   },
 
   methods: {
-    importMeta(key, value) {
-      // FIXME: finish implementation once episode saga supports it
-      const simple = ['title', 'subtitle', 'summary', 'duration', 'slug']
-      const other = ['image']
-      const todo = ['tags', 'license', 'license url']
-
-      if (simple.includes(key)) {
-        this.dispatch(updateEpisode({ prop: key, value: value }))
-      } else if (key == 'image') {
-        this.dispatch(updateEpisode({ prop: 'episode_poster', value: value }))
-      } else {
-        console.debug('todo', key)
-      }
+    importMeta(prop, value) {
+      this.dispatch(updateEpisode({ prop, value }))
     },
     importAllMeta() {
       this.visibleEntries.forEach((entry) => {
