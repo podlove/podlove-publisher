@@ -41,25 +41,15 @@
               class="mt-10 flex flex-col justify-center align-middle content-center items-center gap-3"
             >
               <podlove-button
-                disabled="true"
-                v-if="buttonState == 'idle'"
-                variant="primary-disabled"
+                :disabled="buttonState == 'idle'"
+                :variant="buttonState == 'idle' ? 'primary-disabled' : 'primary'"
+                @click="handleCreateProduction"
                 ><plus-sm-icon class="-ml-0.5 mr-2 h-4 w-4" aria-hidden="true" />
-                {{ __('Create Production') }}</podlove-button
-              >
-              <podlove-button
-                v-if="buttonState == 'single'"
-                variant="primary"
-                @click="createProduction"
-                ><plus-sm-icon class="-ml-0.5 mr-2 h-4 w-4" aria-hidden="true" />
-                {{ __('Create Production') }}</podlove-button
-              >
-              <podlove-button
-                v-if="buttonState == 'multi'"
-                variant="primary"
-                @click="createMultitrackProduction"
-                ><plus-sm-icon class="-ml-0.5 mr-2 h-4 w-4" aria-hidden="true" />
-                {{ __('Create Multitrack Production') }}</podlove-button
+                {{
+                  buttonState == 'multi'
+                    ? __('Create Multitrack Production')
+                    : __('Create Production')
+                }}</podlove-button
               >
             </div>
           </div>
@@ -120,6 +110,22 @@ export default defineComponent({
   },
 
   methods: {
+    handleCreateProduction() {
+      switch (this.buttonState) {
+        case 'single':
+          this.createProduction()
+          break
+
+        case 'multi':
+          this.createMultitrackProduction()
+          break
+
+        case 'idle':
+        // do nothing
+        default:
+          break
+      }
+    },
     createProduction() {
       this.dispatch(auphonic.createProduction())
     },
