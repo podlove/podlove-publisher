@@ -24,7 +24,7 @@ function get_description()
         $description = $title;
     }
 
-    return apply_filters('podlove_feed_item_description', $description);
+    return apply_filters('podlove_feed_item_description', html_entity_decode($description));
 }
 
 function override_feed_title($feed)
@@ -398,7 +398,7 @@ function override_feed_entry($hook, $podcast, $feed, $format)
             $type = sprintf('<itunes:episodeType>%s</itunes:episodeType>', $type);
             $xml .= $tag_prefix.apply_filters('podlove_feed_itunes_type_xml', $type);
 
-            $summary = apply_filters('podlove_feed_content', \Podlove\PHP\escape_shortcodes($episode->summary));
+            $summary = apply_filters('podlove_feed_content', \Podlove\PHP\escape_shortcodes(html_entity_decode($episode->summary)));
             if (strlen($summary)) {
                 $summary = get_xml_cdata_node('itunes:summary', $summary);
             }
