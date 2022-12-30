@@ -106,6 +106,23 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2022-12-30 =
+
+All-New Auphonic Module
+
+As you may know we're in the middle of upgrading all the sections in the episode
+screen. One of the more involved projects was(!) the Auphonic module. Feature
+requests for Multitrack support appeared since the feature was introduced by
+Auphonic, but the thought of adapting the module always felt daunting.
+
+Now we took the chance to rethink the workflow from the ground up, hopefully
+making everything a little easier; and of course there's multitrack support now.
+
+I just checked, Auphonic released their Multitrack feature in 2014
+(https://auphonic.com/blog/2014/10/21/auphonic-multitrack-algorithms-release/).
+So we're lagging a little behind, but we caught up! You can now create
+multitrack productions directly from inside Podlove Publisher.
+
 = 2022-12-15 =
 
 API Updates:
