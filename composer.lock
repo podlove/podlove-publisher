@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b69cf707692e1b2a16886acb5ecdf7d6",
+    "content-hash": "ce568eb730d3f20ed5da01f9360ab46d",
     "packages": [
         {
             "name": "composer/ca-bundle",
@@ -808,16 +808,16 @@
         },
         {
             "name": "podlove/webvtt-parser",
-            "version": "v1.1.5",
+            "version": "v1.1.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/podlove/webvtt-parser.git",
-                "reference": "540fdabf70b65c47d8d415bdf86dd8d77d78a25c"
+                "reference": "04e78495dfee483d9ec646cac00bfd807328b011"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/podlove/webvtt-parser/zipball/540fdabf70b65c47d8d415bdf86dd8d77d78a25c",
-                "reference": "540fdabf70b65c47d8d415bdf86dd8d77d78a25c",
+                "url": "https://api.github.com/repos/podlove/webvtt-parser/zipball/04e78495dfee483d9ec646cac00bfd807328b011",
+                "reference": "04e78495dfee483d9ec646cac00bfd807328b011",
                 "shasum": ""
             },
             "require": {
@@ -853,9 +853,9 @@
             ],
             "support": {
                 "issues": "https://github.com/podlove/webvtt-parser/issues",
-                "source": "https://github.com/podlove/webvtt-parser/tree/v1.1.5"
+                "source": "https://github.com/podlove/webvtt-parser/tree/v1.1.6"
             },
-            "time": "2021-04-07T19:56:44+00:00"
+            "time": "2022-07-25T17:45:59+00:00"
         },
         {
             "name": "psr/log",
@@ -2986,5 +2986,5 @@
     "platform-overrides": {
         "php": "7.0.33"
     },
-    "plugin-api-version": "2.2.0"
+    "plugin-api-version": "2.3.0"
 }
