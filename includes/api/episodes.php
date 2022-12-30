@@ -7,10 +7,6 @@ use Podlove\Model\EpisodeAsset;
 use Podlove\Model\MediaFile;
 use Podlove\Model\Podcast;
 use Podlove\Modules\Seasons;
-use WP_Error;
-use WP_REST_Controller;
-use WP_REST_Response;
-use WP_REST_Server;
 
 add_action('rest_api_init', __NAMESPACE__.'\\api_init');
 
@@ -29,7 +25,7 @@ function api_init()
     ]);
 
     register_rest_route('podlove/v1', 'episodes/(?P<id>[\d]+)', [
-        'methods' => WP_REST_Server::EDITABLE,
+        'methods' => \WP_REST_Server::EDITABLE,
         'callback' => __NAMESPACE__.'\\episodes_update_api',
         'permission_callback' => __NAMESPACE__.'\\update_episode_permission_check',
     ]);
@@ -96,7 +92,7 @@ function episodes_api($request)
 function update_episode_permission_check($request)
 {
     if (!current_user_can('edit_posts')) {
-        return new WP_Error(
+        return new \WP_Error(
             'rest_forbidden',
             esc_html__('sorry, you do not have permissions to use this REST API endpoint'),
             ['status' => 401]
@@ -140,7 +136,7 @@ function episodes_update_api($request)
 
     $episode->save();
 
-    return new WP_REST_Response(null, 200);
+    return new \WP_REST_Response(null, 200);
 }
 
 function chapters($episode = null)
@@ -157,7 +153,7 @@ add_action('rest_api_init', function () {
     $controller->register_routes();
 });
 
-class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
+class WP_REST_PodloveEpisode_Controller extends \WP_REST_Controller
 {
     public function __construct()
     {
@@ -176,12 +172,12 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
                         'enum' => ['publish', 'draft']
                     ]
                 ],
-                'methods' => WP_REST_Server::READABLE,
+                'methods' => \WP_REST_Server::READABLE,
                 'callback' => [$this, 'get_items'],
                 'permission_callback' => [$this, 'get_items_permissions_check'],
             ],
             [
-                'methods' => WP_REST_Server::CREATABLE,
+                'methods' => \WP_REST_Server::CREATABLE,
                 'callback' => [$this, 'create_item'],
                 'permission_callback' => [$this, 'create_item_permissions_check'],
             ]
@@ -194,7 +190,7 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
                 ],
             ],
             [
-                'methods' => WP_REST_Server::READABLE,
+                'methods' => \WP_REST_Server::READABLE,
                 'callback' => [$this, 'get_item'],
                 'permission_callback' => [$this, 'get_item_permissions_check'],
             ],
@@ -274,12 +270,12 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
                         ]
                     ]
                 ],
-                'methods' => WP_REST_Server::EDITABLE,
+                'methods' => \WP_REST_Server::EDITABLE,
                 'callback' => [$this, 'update_item'],
                 'permission_callback' => [$this, 'update_item_permissions_check'],
             ],
             [
-                'methods' => WP_REST_Server::DELETABLE,
+                'methods' => \WP_REST_Server::DELETABLE,
                 'callback' => [$this, 'delete_item'],
                 'permission_callback' => [$this, 'delete_item_permissions_check'],
             ]
@@ -310,7 +306,7 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
                         'type' => 'boolean',
                     ],
                 ],
-                'methods' => WP_REST_Server::READABLE,
+                'methods' => \WP_REST_Server::READABLE,
                 'callback' => [$this, 'get_item_media'],
                 'permission_callback' => [$this, 'get_item_permissions_check'],
             ],
@@ -327,7 +323,7 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
                         'require' => 'true'
                     ],
                 ],
-                'methods' => WP_REST_Server::EDITABLE,
+                'methods' => \WP_REST_Server::EDITABLE,
                 'callback' => [$this, 'update_item_media'],
                 'permission_callback' => [$this, 'update_item_permissions_check'],
             ]
@@ -350,21 +346,20 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
                         'type' => 'string',
                     ]
                 ],
-                'methods' => WP_REST_Server::READABLE,
+                'methods' => \WP_REST_Server::READABLE,
                 'callback' => [$this, 'get_item_tags'],
                 'permission_callback' => [$this, 'get_item_permissions_check'],
             ],
             [
-                'methods' => WP_REST_Server::EDITABLE,
+                'methods' => \WP_REST_Server::EDITABLE,
                 'callback' => [$this, 'update_item_tags'],
                 'permission_callback' => [$this, 'update_item_permissions_check'],
             ],
             [
-                'methods' => WP_REST_Server::DELETABLE,
+                'methods' => \WP_REST_Server::DELETABLE,
                 'callback' => [$this, 'delete_item_tags'],
                 'permission_callback' => [$this, 'delete_item_permissions_check'],
             ]
-
         ]);
     }
 
@@ -472,7 +467,8 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
             'soundbite_title' => $episode->soundbite_title,
             'explicit' => $explicit,
             'license_name' => $episode->license_name,
-            'license_url' => $episode->license_url
+            'license_url' => $episode->license_url,
+            'auphonic_production_id' => get_post_meta($episode->post_id, 'auphonic_production_id', true)
         ];
 
         $data = $this->enrich_with_season($data, $episode);
@@ -495,7 +491,7 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
 
         $assets = EpisodeAsset::all();
 
-        $results = array_map(function($asset) use ($episode) {
+        $results = array_map(function ($asset) use ($episode) {
             $file = MediaFile::find_by_episode_id_and_episode_asset_id($episode->id, $asset->id);
 
             return !$file ? [
@@ -533,7 +529,7 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
 
         $post_tag_terms = wp_get_object_terms($post_id, 'post_tag');
         if (!empty($post_tag_terms) && !is_wp_error($post_tag_terms)) {
-            $results = array_map(function($tags) {
+            $results = array_map(function ($tags) {
                 return [
                     'term_id' => $tags->term_id,
                     'name' => $tags->name
@@ -587,7 +583,7 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
             return new \Podlove\Api\Response\CreateResponse($data, $headers);
         }
 
-        return new WP_REST_Response(null, 500);
+        return new \WP_REST_Response(null, 500);
     }
 
     public function update_item_permissions_check($request)
@@ -694,8 +690,8 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
             $episode->license_url = $license_url;
         }
 
-        if (isset($request['auphonic_webhook_config'])) {
-            \update_post_meta($episode->post_id, 'auphonic_webhook_config', $request['auphonic_webhook_config']);
+        if (isset($request['auphonic_production_id'])) {
+            update_post_meta($episode->post_id, 'auphonic_production_id', $request['auphonic_production_id']);
         }
 
         $episode->save();
@@ -779,12 +775,11 @@ class WP_REST_PodloveEpisode_Controller extends WP_REST_Controller
 
         if (isset($request['term_id'])) {
             $terms = $request['term_id'];
-            if (is_array(($terms))) {
-                $term_ids = array_map(function($term) {
+            if (is_array($terms)) {
+                $term_ids = array_map(function ($term) {
                     return intval($term);
                 }, $terms);
-            }
-            else {
+            } else {
                 $term_ids = intval($terms);
             }
             $val = wp_set_object_terms($post_id, $term_ids, 'post_tag', true);
