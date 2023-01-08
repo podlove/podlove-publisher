@@ -23,6 +23,9 @@ export type State = {
   poster: string | null
   mnemonic: string | null
   explicit: boolean | null
+  soundbite_start: number | null
+  soundbite_duration: number | null
+  soundbite_title: string | null
   auphonicProductionId: 'string' | null
   auphonic_webhook_config: object | null
 }
@@ -40,6 +43,9 @@ export const initialState: State = {
   poster: null,
   mnemonic: null,
   explicit: null,
+  soundbite_start: null,
+  soundbite_duration: null,
+  soundbite_title: null,
   auphonicProductionId: null,
   auphonic_webhook_config: null,
 }
@@ -58,6 +64,9 @@ export const set = createAction<{
   poster?: string
   mnemonic?: string
   explicit?: boolean
+  soundbite_start?: string
+  soundbite_duration?: string
+  soundbite_title?: string
   auphonicProductionId?: string
   auphonic_webhook_config?: object
 }>(SET)
@@ -74,7 +83,7 @@ export const reducer = handleActions(
       const value = get(action, ['payload', 'value'], null)
 
       // FIXME: finish implementation once episode saga supports it
-      const simple = ['title', 'subtitle', 'summary', 'duration', 'slug']
+      const simple = ['title', 'subtitle', 'summary', 'duration', 'slug', 'soundbite_start', 'soundbite_duration', 'soundbite_title']
       const other = ['image']
       const todo = ['tags', 'license', 'license url']
 
@@ -100,6 +109,9 @@ export const reducer = handleActions(
       poster: get(action, ['payload', 'poster']),
       mnemonic: get(action, ['payload', 'mnemonic']),
       explicit: get(action, ['payload', 'explicit']),
+      soundbite_start: get(action, ['payload', 'soundbite_start']),
+      soundbite_duration: get(action, ['payload', 'soundbite_duration']),
+      soundbite_title: get(action, ['payload', 'soundbite_title']),
       auphonicProductionId: get(action, ['payload', 'auphonic_production_id']),
       auphonic_webhook_config: get(action, ['payload', 'auphonic_webhook_config']),
     }),
@@ -120,6 +132,9 @@ export const selectors = {
   episodePoster: (state: State) => state.episode_poster,
   mnemonic: (state: State) => state.mnemonic,
   explicit: (state: State) => state.explicit,
+  soundbite_start: (state: State) => state.soundbite_start,
+  soundbite_duration: (state: State) => state.soundbite_duration,
+  soundbite_title: (state: State) => state.soundbite_title,
   auphonicProductionId: (state: State) => state.auphonicProductionId,
   auphonicWebhookConfig: (state: State) => state.auphonic_webhook_config,
 }

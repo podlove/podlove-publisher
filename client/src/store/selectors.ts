@@ -77,6 +77,9 @@ const episode = {
   episodePoster: createSelector(root.episode, episodeStore.selectors.episodePoster),
   mnemonic: createSelector(root.episode, episodeStore.selectors.mnemonic),
   explicit: createSelector(root.episode, episodeStore.selectors.explicit),
+  soundbite_start: createSelector(root.episode, episodeStore.selectors.soundbite_start),
+  soundbite_duration: createSelector(root.episode, episodeStore.selectors.soundbite_duration),
+  soundbite_title: createSelector(root.episode, episodeStore.selectors.soundbite_title),
   auphonicProductionId: createSelector(root.episode, episodeStore.selectors.auphonicProductionId),
   auphonicWebhookConfig: createSelector(root.episode, episodeStore.selectors.auphonicWebhookConfig),
 }
