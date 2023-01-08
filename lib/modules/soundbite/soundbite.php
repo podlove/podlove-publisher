@@ -33,7 +33,9 @@ class Soundbite extends \Podlove\Modules\Base
     public function soundbite_form()
     {
         ?>
-            <div id="podlove-soundbite-app"><soundbite></soundbite></div>
+            <div data-client="podlove" style="margin: 15px 0;">
+                <podlove-soundbite></podlove-soundbite>
+            </div>
         <?php
     }
 
