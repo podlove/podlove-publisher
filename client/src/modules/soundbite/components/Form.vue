@@ -9,7 +9,7 @@
           class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
           placeholder="00:00:00"
           :value="state.soundbite_start"
-          @input="updateSoundbiteStart($event)"
+          @change="updateSoundbiteStart($event)"
         />
       </div>
     </div>
@@ -24,7 +24,7 @@
           class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
           placeholder="00:00:00"
           :value=soundbite_end
-          @input="updateSoundbiteEnd($event)"
+          @change="updateSoundbiteEnd($event)"
         />
       </div>
     </div>
@@ -39,7 +39,7 @@
           class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
           placeholder="00:00:00"
           :value="state.soundbite_duration"
-          @input="updateSoundbiteDuration($event)"
+          @change="updateSoundbiteDuration($event)"
         />
       </div>
     </div>
@@ -53,7 +53,7 @@
           type="text"
           class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
           :value="state.soundbite_title"
-          @input="updateSoundbiteTitle($event)"
+          @change="updateSoundbiteTitle($event)"
         />
       </div>
     </div>
