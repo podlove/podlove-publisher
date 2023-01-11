@@ -106,6 +106,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 3.8.3 =
+
+* fix XSS vulnerability
+
 = 3.8.2 =
 
 * add support for op3.dev using the "External Analytics" module
