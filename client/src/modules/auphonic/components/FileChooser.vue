@@ -127,7 +127,7 @@ export default defineComponent({
   },
 
   methods: {
-    set(prop, value) {
+    set(prop: string, value: string | null) {
       this.dispatch(
         auphonic.updateFileSelection({
           key: this.file_key,
@@ -153,7 +153,7 @@ export default defineComponent({
       return this.state.services
     },
     currentService(): Service {
-      return this.state.services.find((s) => s.uuid === this.currentServiceSelection)
+      return this.state.services.find((s: Service) => s.uuid === this.currentServiceSelection)
     },
     serviceFiles(): string[] | null {
       return get(this.state, ['serviceFiles', this.currentServiceSelection], null)

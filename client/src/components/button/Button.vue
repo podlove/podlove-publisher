@@ -1,15 +1,7 @@
 <template>
   <button
     type="button"
-    class="
-      inline-flex
-      items-center
-      focus:outline-none focus:ring-2
-      border border-transparent
-      shadow-sm
-      whitespace-nowrap
-      disabled:opacity-75
-    "
+    class="inline-flex items-center focus:outline-none focus:ring-2 border border-transparent shadow-sm whitespace-nowrap disabled:opacity-75"
     :disabled="disabled"
     :class="[variantClass, sizeClass]"
   >
@@ -20,7 +12,13 @@
 <script lang="ts">
 import { defineComponent, PropType } from '@vue/runtime-core'
 
-export type ButtonType = 'primary' | 'secondary' | 'submit' | 'danger' | 'default'
+export type ButtonType =
+  | 'primary'
+  | 'primary-disabled'
+  | 'secondary'
+  | 'submit'
+  | 'danger'
+  | 'default'
 export type ButtonSize = 'small' | 'medium' | 'large'
 
 export default defineComponent({

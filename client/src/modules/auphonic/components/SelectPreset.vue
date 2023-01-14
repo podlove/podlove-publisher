@@ -95,15 +95,14 @@ export default defineComponent({
   },
 
   methods: {
-    setPreset(preset) {
+    setPreset(preset: auphonic.Preset) {
       this.dispatch(auphonic.setPreset(preset))
-      this.selectedPreset = ref(preset)
     },
   },
 
   computed: {
-    presets(): object[] {
-      return this.state.presets.map((preset) => {
+    presets(): auphonic.Preset[] {
+      return this.state.presets.map((preset: auphonic.Preset) => {
         const date = preset.creation_time.split('T')[0]
         const name = preset.preset_name
         const is_multitrack = preset.is_multitrack

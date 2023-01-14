@@ -221,6 +221,7 @@ function getFileSelectionsForMultiTrack(state: State): PreparedFileSelection[] {
   const production_uuid = get(state, ['auphonic', 'production', 'uuid'], '')
   const tracks = get(state, ['auphonic', 'tracks'], [])
 
+  //@ts-ignore
   return tracks.reduce((agg, _track, index) => {
     agg.push(prepareFile(get(selections, `${production_uuid}_t${index}`)))
     return agg
@@ -358,10 +359,13 @@ function* handleSaveProduction(
   yield put(auphonic.startSaving())
 
   const uuid = action.payload.uuid
+  //@ts-ignore
   const productionPayload = yield select(getSaveProductionPayload)
+  //@ts-ignore
   const tracksPayload = yield select(getTracksPayload)
 
   // delete all existing chapters, otherwise we append them
+  //@ts-ignore
   yield auphonicApi.delete(`production/${uuid}/chapters.json`)
 
   // save multi_input_files by saving/updating each track individually
@@ -435,6 +439,7 @@ function* handleServiceFilesAvailable(action: {
   payload: { uuid: string; files: string[] }
 }) {
   const currentKey: string = yield select(selectors.auphonic.currentFileSelection)
+  //@ts-ignore
   const selection: any = yield select(selectors.auphonic.fileSelections)
 
   // set default, but only if necessary
@@ -460,7 +465,7 @@ function* handleFileSelection(action: {
   }
 }
 
-type WebhookConfig = {
+export type WebhookConfig = {
   authkey: String
   enabled: boolean
 }

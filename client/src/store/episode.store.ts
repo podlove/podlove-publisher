@@ -44,7 +44,7 @@ export const initialState: State = {
   auphonic_webhook_config: null,
 }
 
-export const update = createAction<{ prop: string; value: string | boolean }>(UPDATE)
+export const update = createAction<{ prop: string; value: any }>(UPDATE)
 export const init = createAction<void>(INIT)
 export const selectPoster = createAction<void>(SELECT_POSTER)
 export const set = createAction<{

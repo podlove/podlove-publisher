@@ -7,6 +7,7 @@ import * as auphonic from '../store/auphonic.store'
 import * as episode from '../store/episode.store'
 import * as wordpress from '../store/wordpress.store'
 import { createApi } from './api'
+import { WebhookConfig } from './auphonic.sagas'
 import { takeFirst, waitFor } from './helper'
 
 interface EpisodeData {
@@ -29,7 +30,7 @@ function* episodeSaga(): any {
 }
 
 function* updateAuphonicWebhookConfig() {
-  const config = yield select(selectors.episode.auphonicWebhookConfig)
+  const config: WebhookConfig = yield select(selectors.episode.auphonicWebhookConfig)
   yield put(auphonic.updateWebhook(config.enabled))
 }
 
