@@ -143,6 +143,38 @@ function get_xml_podcast_funding_node($url, $label)
     return $doc->saveXML($node);
 }
 
+function add_itunes_category ($category_html, $categories, $category_id) {
+    $category_id = apply_filters('podlove_feed_itunes_category_id', $category_id);
+
+    if ($category_id) {
+        list($cat, $subcat) = explode('-', $category_id);
+
+        if ($subcat == '00') {
+            $category_html .= sprintf(
+                '<itunes:category text="%s" />%s',
+                htmlspecialchars($categories[$category_id]),
+                PHP_EOL
+            );
+        } else {
+            if ($categories[$category_id]) {
+                $category_html .= sprintf(
+                    '<itunes:category text="%s"><itunes:category text="%s"></itunes:category></itunes:category>%s',
+                    htmlspecialchars($categories[$cat.'-00']),
+                    htmlspecialchars($categories[$category_id]),
+                    PHP_EOL
+                );
+            } else {
+                $category_html .= sprintf(
+                    '<itunes:category text="%s" />%s',
+                    htmlspecialchars($categories[$cat.'-00']),
+                    PHP_EOL
+                );
+            }
+        }
+    }
+    return $category_html;
+}
+
 function override_feed_head($hook, $podcast, $feed, $format)
 {
     add_filter('podlove_feed_content', '\Podlove\Feeds\prepare_for_feed');
@@ -222,33 +254,12 @@ function override_feed_head($hook, $podcast, $feed, $format)
         echo PHP_EOL;
 
         $categories = \Podlove\Itunes\categories(false);
-        $category_html = '';
-        $category_id = $podcast->category_1;
-        $category_id = apply_filters('podlove_feed_itunes_category_id', $category_id);
 
-        if ($category_id) {
-            list($cat, $subcat) = explode('-', $category_id);
+        $category_html='';
+        $category_html = add_itunes_category($category_html,$categories,$podcast->category_1);
+        $category_html = add_itunes_category($category_html,$categories,$podcast->category_2);
+        $category_html = add_itunes_category($category_html,$categories,$podcast->category_3);
 
-            if ($subcat == '00') {
-                $category_html .= sprintf(
-                    '<itunes:category text="%s" />',
-                    htmlspecialchars($categories[$category_id])
-                );
-            } else {
-                if ($categories[$category_id]) {
-                    $category_html .= sprintf(
-                        '<itunes:category text="%s"><itunes:category text="%s"></itunes:category></itunes:category>',
-                        htmlspecialchars($categories[$cat.'-00']),
-                        htmlspecialchars($categories[$category_id])
-                    );
-                } else {
-                    $category_html .= sprintf(
-                        '<itunes:category text="%s" />',
-                        htmlspecialchars($categories[$cat.'-00'])
-                    );
-                }
-            }
-        }
         echo apply_filters('podlove_feed_itunes_categories', $category_html);
         echo PHP_EOL;
 
