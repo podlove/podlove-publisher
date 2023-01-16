@@ -72,6 +72,15 @@ import {
   ListboxOptions,
 } from '@headlessui/vue'
 import { CheckIcon, SelectorIcon } from '@heroicons/vue/solid'
+import { Preset } from '@store/auphonic.store'
+
+type PresetWithSelectionData = Preset & {
+  _select: {
+    name: string
+    date: string
+    is_multitrack: boolean
+  }
+}
 
 export default defineComponent({
   components: {
@@ -95,14 +104,14 @@ export default defineComponent({
   },
 
   methods: {
-    setPreset(preset: auphonic.Preset) {
+    setPreset(preset: Preset) {
       this.dispatch(auphonic.setPreset(preset))
     },
   },
 
   computed: {
-    presets(): auphonic.Preset[] {
-      return this.state.presets.map((preset: auphonic.Preset) => {
+    presets(): PresetWithSelectionData[] {
+      return this.state.presets.map((preset: Preset) => {
         const date = preset.creation_time.split('T')[0]
         const name = preset.preset_name
         const is_multitrack = preset.is_multitrack
@@ -110,7 +119,7 @@ export default defineComponent({
         return { ...preset, _select: { name, date, is_multitrack } }
       })
     },
-    currentPreset() {
+    currentPreset(): PresetWithSelectionData | null {
       return this.state.currentPreset
     },
   },

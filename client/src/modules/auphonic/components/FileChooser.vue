@@ -5,7 +5,7 @@
       <div>
         <label class="block text-sm font-medium text-gray-700">Upload Method</label>
         <select
-          @change="set('currentServiceSelection', $event.target.value)"
+          @change="handleServiceSelection"
           class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
         >
           <option
@@ -36,7 +36,7 @@
               name="file-upload"
               type="file"
               class="sr-only"
-              @input="set('fileValue', $event.target.files[0])"
+              @input="handleFileUploadSelection"
             />
           </label>
         </div>
@@ -54,7 +54,7 @@
               class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
               placeholder="https://example.com/audio.flac"
               :value="urlFieldValue"
-              @input="set('urlValue', $event.target.value)"
+              @input="handleUrlUpdate"
             />
           </div>
         </div>
@@ -68,7 +68,7 @@
               :id="file_key + 'external_file'"
               class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
               :value="externalFileFieldValue"
-              @change="set('fileSelection', $event.target.value)"
+              @change="handleFileSelection"
             >
               <option v-for="file in serviceFiles" :key="file" :value="file" d>
                 {{ file }}
@@ -127,7 +127,7 @@ export default defineComponent({
   },
 
   methods: {
-    set(prop: string, value: string | null) {
+    set(prop: string, value: string | File | null) {
       this.dispatch(
         auphonic.updateFileSelection({
           key: this.file_key,
@@ -145,6 +145,23 @@ export default defineComponent({
           })
         )
       }
+    },
+    handleFileSelection(event: Event): void {
+      this.set('fileSelection', (event.target as HTMLSelectElement).value)
+    },
+    handleUrlUpdate(event: Event): void {
+      this.set('urlValue', (event.target as HTMLInputElement).value)
+    },
+    handleFileUploadSelection(event: Event): void {
+      const files = (event.target as HTMLInputElement).files
+      if (files) {
+        this.set('fileValue', files[0])
+      } else {
+        this.set('fileValue', null)
+      }
+    },
+    handleServiceSelection(event: Event): void {
+      this.set('currentServiceSelection', (event.target as HTMLSelectElement).value)
     },
   },
 

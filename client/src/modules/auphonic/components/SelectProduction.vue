@@ -62,6 +62,7 @@ import { selectors } from '@store'
 import { injectStore, mapState } from 'redux-vuex'
 
 import * as auphonic from '@store/auphonic.store'
+import { Production } from '@store/auphonic.store'
 
 import {
   Listbox,
@@ -71,6 +72,13 @@ import {
   ListboxOptions,
 } from '@headlessui/vue'
 import { CheckIcon, SelectorIcon } from '@heroicons/vue/solid'
+
+type ProductionWithSelectionData = Production & {
+  _select: {
+    name: string
+    date: string
+  }
+}
 
 export default defineComponent({
   components: {
@@ -94,21 +102,21 @@ export default defineComponent({
   },
 
   methods: {
-    setProduction(production) {
+    setProduction(production: Production) {
       this.dispatch(auphonic.setProduction(production))
     },
   },
 
   computed: {
-    productions(): object[] {
-      return this.state.productions.map((production) => {
+    productions(): ProductionWithSelectionData[] {
+      return this.state.productions.map((production: Production) => {
         const date = production.creation_time.split('T')[0]
         const name = production.metadata.title
 
         return { ...production, _select: { name, date } }
       })
     },
-    currentProduction() {
+    currentProduction(): Production | null {
       return this.state.production
     },
   },

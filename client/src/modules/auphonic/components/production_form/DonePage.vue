@@ -96,6 +96,13 @@ import { update as updateEpisode } from '@store/episode.store'
 
 import { ClipboardCheckIcon, ExternalLinkIcon, ExclamationIcon } from '@heroicons/vue/outline'
 
+type Entry = {
+  key: number
+  title: string
+  here: any
+  there: any
+}
+
 export default defineComponent({
   components: {
     ClipboardCheckIcon,
@@ -118,11 +125,11 @@ export default defineComponent({
   },
 
   methods: {
-    importMeta(prop, value) {
+    importMeta(prop: string, value: any) {
       this.dispatch(updateEpisode({ prop, value }))
     },
     importAllMeta() {
-      this.visibleEntries.forEach((entry) => {
+      this.visibleEntries.forEach((entry: Entry) => {
         this.importMeta(entry.title, entry.there)
       })
     },
@@ -132,7 +139,7 @@ export default defineComponent({
     production(): Production {
       return this.state.production || {}
     },
-    entries() {
+    entries(): any {
       const production = this.state.production
       const state = this.state
 
@@ -149,8 +156,8 @@ export default defineComponent({
         { key: 9, title: 'slug', here: state.slug, there: production.output_basename },
       ]
     },
-    visibleEntries() {
-      return this.entries.filter((e) => e.there && e.there != e.here)
+    visibleEntries(): Entry[] {
+      return this.entries.filter((e: Entry) => e.there && e.there != e.here)
     },
   },
 })
