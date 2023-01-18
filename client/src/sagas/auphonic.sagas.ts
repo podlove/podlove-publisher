@@ -133,14 +133,15 @@ function* handleStartProduction(
   action: { type: string; payload: any }
 ) {
   const uuid = action.payload.uuid
-  const { authkey }: WebhookConfig = yield select(selectors.episode.auphonicWebhookConfig)
+  const webhookConfig: WebhookConfig | null = yield select(selectors.episode.auphonicWebhookConfig)
   const isWebhookEnabled: boolean = yield select(selectors.auphonic.publishWhenDone)
   const baseUrl: String = yield select(selectors.runtime.baseUrl)
   const postId: Number = yield select(selectors.post.id)
 
-  const webhookUrl = baseUrl + '/?podlove-auphonic-production=' + postId + '&authkey=' + authkey
+  const webhookUrl =
+    baseUrl + '/?podlove-auphonic-production=' + postId + '&authkey=' + webhookConfig?.authkey
   const productionPayload = {
-    webhook: isWebhookEnabled ? webhookUrl : '',
+    webhook: webhookConfig && isWebhookEnabled ? webhookUrl : '',
   }
 
   // update webhook config
@@ -471,11 +472,11 @@ export type WebhookConfig = {
 }
 
 function* updateWebhookConfig(api: PodloveApiClient) {
-  const config: WebhookConfig = yield select(selectors.episode.auphonicWebhookConfig)
+  const config: WebhookConfig | null = yield select(selectors.episode.auphonicWebhookConfig)
   const enabled: boolean = yield select(selectors.auphonic.publishWhenDone)
 
   // skip if nothing changed
-  if (config.enabled == enabled) {
+  if (!config || config.enabled == enabled) {
     return
   }
 
@@ -485,7 +486,7 @@ function* updateWebhookConfig(api: PodloveApiClient) {
 }
 
 function* initializeWebhookConfig(api: PodloveApiClient) {
-  const config: WebhookConfig = yield select(selectors.episode.auphonicWebhookConfig)
+  const config: WebhookConfig | null = yield select(selectors.episode.auphonicWebhookConfig)
   const enabled: boolean = yield select(selectors.auphonic.publishWhenDone)
 
   // skip if it already exists

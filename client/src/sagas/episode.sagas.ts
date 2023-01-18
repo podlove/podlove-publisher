@@ -30,8 +30,10 @@ function* episodeSaga(): any {
 }
 
 function* updateAuphonicWebhookConfig() {
-  const config: WebhookConfig = yield select(selectors.episode.auphonicWebhookConfig)
-  yield put(auphonic.updateWebhook(config.enabled))
+  const config: WebhookConfig | null = yield select(selectors.episode.auphonicWebhookConfig)
+  if (config) {
+    yield put(auphonic.updateWebhook(config.enabled))
+  }
 }
 
 function* initialize(api: PodloveApiClient) {

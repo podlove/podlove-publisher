@@ -74,7 +74,7 @@ export const reducer = handleActions(
       const value = get(action, ['payload', 'value'], null)
 
       // FIXME: finish implementation once episode saga supports it
-      const simple = ['title', 'subtitle', 'summary', 'duration', 'slug']
+      const simple = ['title', 'subtitle', 'summary', 'duration', 'slug', 'auphonic_webhook_config']
       const other = ['image']
       const todo = ['tags', 'license', 'license url']
 
@@ -83,7 +83,7 @@ export const reducer = handleActions(
       } else if (prop == 'image') {
         return { ...state, ['episode_poster']: value }
       } else {
-        console.debug('todo', prop)
+        console.debug('todo', prop, value)
         return { ...state }
       }
     },
