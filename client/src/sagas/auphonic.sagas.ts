@@ -213,8 +213,9 @@ const prepareFile = (selection: auphonic.FileSelection): PreparedFileSelection =
 
 function getFileSelectionsForSingleTrack(state: State): PreparedFileSelection {
   const selections = get(state, ['auphonic', 'file_selections'])
+  const production_uuid = get(state, ['auphonic', 'production', 'uuid'], '')
 
-  return prepareFile(get(selections, 'production_uuid'))
+  return prepareFile(get(selections, production_uuid))
 }
 
 function getFileSelectionsForMultiTrack(state: State): PreparedFileSelection[] {
