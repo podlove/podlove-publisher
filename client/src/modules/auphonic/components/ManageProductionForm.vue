@@ -224,9 +224,11 @@
       <div class="flex flex-col sm:flex-row gap-4 sm:gap-2 justify-between">
         <WebhookToggle />
         <div class="flex justify-end gap-3">
-          <podlove-button variant="secondary" @click="saveProduction">{{
-            __('Save Production')
-          }}</podlove-button>
+          <podlove-button
+            :variant="isSaving ? 'secondary-disabled' : 'secondary'"
+            @click="saveProduction"
+            >{{ __('Save Production') }}</podlove-button
+          >
           <podlove-button variant="primary" @click="startProduction">{{
             __('Start Production')
           }}</podlove-button>

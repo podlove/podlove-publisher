@@ -16,6 +16,7 @@ export type ButtonType =
   | 'primary'
   | 'primary-disabled'
   | 'secondary'
+  | 'secondary-disabled'
   | 'submit'
   | 'danger'
   | 'default'
@@ -48,6 +49,8 @@ export default defineComponent({
           return `focus:ring-offset-2 text-white focus:ring-indigo-500 bg-indigo-600 opacity-50 cursor-not-allowed`
         case 'secondary':
           return `focus:ring-offset-2 text-indigo-700 focus:ring-indigo-500 bg-indigo-100 hover:bg-indigo-200 disabled:bg-indigo-50`
+        case 'secondary-disabled':
+          return `focus:ring-offset-2 text-indigo-700 focus:ring-indigo-500 bg-indigo-100 disabled:bg-indigo-50 opacity-50 cursor-not-allowed`
         case 'danger':
           return `bg-red-600 text-white hover:bg-red-700 focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:bg-red-300`
       }
