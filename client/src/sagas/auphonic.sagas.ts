@@ -287,11 +287,6 @@ function getTracksPayload(state: State): any {
     .filter((t) => Object.keys(t).length > 0)
 }
 
-function isLocalDevelopment(): boolean {
-  // @ts-ignore
-  return import.meta.env.MODE == 'development'
-}
-
 function getProductionPayload(state: State): object {
   let payload = get(state, ['auphonic', 'productionPayload'], {})
 
@@ -301,9 +296,11 @@ function getProductionPayload(state: State): object {
 
   return {
     ...newPayload,
-    // TODO: rewrite image logic to use file upload instead of url, then we
-    // do not need this isLocalDevelopment switch any more
-    image: isLocalDevelopment() ? '' : episode_poster,
+    // NOTE: image is not actually sent; it's sent as a separate upload and
+    // removed from the payload before saving metadata. reason: Auphonic may not
+    // have access to the URL here (for example in local development), so
+    // sending the file as upload is more reliable.
+    image: episode_poster,
     metadata: {
       ...newPayload.metadata,
       title: state.episode.title,
@@ -384,6 +381,23 @@ function* handleSaveProduction(
     })
     delete productionPayload.input_file
   }
+
+  // upload cover image
+  const poster_file = productionPayload.image
+
+  fetch(poster_file)
+    .then((res) => res.blob())
+    .then((blob) => {
+      const ext = blob.type.includes('png') ? 'png' : 'jpg'
+      const filename = 'image.' + ext
+      const image_file = new File([blob], filename, { type: blob.type })
+
+      let r = auphonicApi.upload(`production/${uuid}/upload.json`, {
+        image: image_file,
+      })
+    })
+
+  delete productionPayload.image
 
   // after the tracks, update all other metadata
   const {

@@ -89,10 +89,17 @@ const uploadApi =
   (url: string, data: any, { query }: ApiOptions = {}) => {
     const formData = new FormData()
 
-    // track id for multitrack, 'input_file' for single track
-    const id = data.track_id || 'input_file'
+    // audio file upload
+    if (data.file) {
+      // track id for multitrack, 'input_file' for single track
+      const id = data.track_id || 'input_file'
+      formData.append(id, data.file)
+    }
 
-    formData.append(id, data.file)
+    // cover poster upload
+    if (data.image) {
+      formData.append('image', data.image)
+    }
 
     return axios.post(addQuery(urlProcessor ? urlProcessor(url) : url, query), formData, {
       headers: {
