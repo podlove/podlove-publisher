@@ -1,9 +1,9 @@
 <template>
-    <podlove-button variant="secondary" size="small" @click="clearSoundbite()">Clear</podlove-button>
+    <podlove-button variant="secondary" size="small" @click="clearSoundbite()">{{ __('Clear') }}</podlove-button>
 </template>
 
 <script lang="ts">
-import { injectStore, mapState } from 'redux-vuex'
+import { injectStore } from 'redux-vuex'
 import { defineComponent } from '@vue/runtime-core'
 
 import { update as updateEpisode } from '@store/episode.store'
@@ -11,13 +11,7 @@ import { update as updateEpisode } from '@store/episode.store'
 import PodloveButton from '@components/button/Button.vue'
 
 export default defineComponent({
-  components: {
-    PodloveButton,
-  },
-
-  data() {
-      return {}
-  },
+  components: { PodloveButton },
 
   setup() {
     return {

@@ -1,7 +1,7 @@
 <template>
   <div class="grid md:grid-cols-4 sm:grid-rows-4 p-3">
     <div class="mb-5 ml-5">
-      <label for="soundbite-start" class="block text-sm font-medium text-gray-700">Start</label>
+      <label for="soundbite-start" class="block text-sm font-medium text-gray-700">{{ __('Start') }}</label>
       <div class="mt-1">
         <input
           name="soundbite-start"
@@ -14,8 +14,7 @@
       </div>
     </div>
     <div class="mb-5 ml-5">
-      <label for="soundbite-end" class="block text-sm font-medium text-gray-700"
-        >End</label
+      <label for="soundbite-end" class="block text-sm font-medium text-gray-700">{{ __('End') }}</label
       >
       <div class="mt-1">
         <input
@@ -29,9 +28,7 @@
       </div>
     </div>
     <div class="mb-5 ml-5">
-      <label for="soundbite-duration" class="block text-sm font-medium text-gray-700"
-        >Duration</label
-      >
+      <label for="soundbite-duration" class="block text-sm font-medium text-gray-700">{{ __('Duration') }}</label>
       <div class="mt-1">
         <input
           name="soundbite-duration"
@@ -44,8 +41,8 @@
       </div>
     </div>
     <div class="mb-5 ml-5 md:mr-5">
-      <label for="soundbite-title" class="block text-sm font-medium text-gray-700"
-        >Soundbite title <span class="text-xs">(optional)</span></label
+      <label for="soundbite-title" class="block text-sm font-medium text-gray-700">{{ __('Soundbite title') }}
+        <span class="text-xs">{{ __('(optional)') }}</span></label
       >
       <div class="mt-1">
         <input
@@ -82,10 +79,12 @@ export default defineComponent({
 
     computed: {
       soundbite_end(): string {
-        let start = Timestamp.fromString(this.state.soundbite_start).totalMs
-        let duration = Timestamp.fromString(this.state.soundbite_duration).totalMs
-        let end = start + duration
-        return new Timestamp(end).pretty
+        if (this.state.soundbite_start != null && this.state.soundbite_duration != null) {
+          let start = Timestamp.fromString(this.state.soundbite_start).totalMs
+          let duration = Timestamp.fromString(this.state.soundbite_duration).totalMs
+          let end = start + duration
+          return new Timestamp(end).pretty
+        }
       }
     },
 
