@@ -106,6 +106,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2023-01-20 =
+
+various Auphonic module fixes
+
 = 2023-01-16 =
 
 Fixes. Maybe a working beta?
