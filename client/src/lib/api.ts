@@ -36,6 +36,7 @@ export interface ApiOptions {
   query?: { [key: string]: string }
   limit?: number
   minimal_data?: boolean
+  onUploadProgress?: (e: ProgressEvent) => void
 }
 
 const defaultHeaders = (

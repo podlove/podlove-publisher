@@ -11,6 +11,7 @@ import { v4 as uuidv4 } from 'uuid'
 import { State } from '../store'
 import { get } from 'lodash'
 import Timestamp from '@lib/timestamp'
+import { eventChannel } from 'redux-saga'
 
 function* auphonicSaga(): any {
   const apiClient: PodloveApiClient = yield createApi()
@@ -173,11 +174,25 @@ function* handleSaveTrack(auphonicApi: AuphonicApiClient, uuid: String, trackWra
   delete payload.id_new
   payload.id = id_new
 
+  function onUploadProgress(e: ProgressEvent) {
+    if (!e.total) {
+      return
+    }
+
+    const progress = (100 * e.loaded) / e.total
+    console.log('upload progress:', progress, '%', trackWrapper.upload.track_id)
+    // TODO: send event with progress and track id, then I can persist and render it
+    put(auphonic.setUploadProgress({ id: trackWrapper.upload.track_id, value: progress }))
+    // FIXME: doesn't work, I think I need a channel/emitter?
+  }
+
   switch (trackWrapper.state) {
     case 'edited':
       yield auphonicApi.post(`production/${uuid}/multi_input_files/${id_old}.json`, payload)
       if (needs_upload) {
-        yield auphonicApi.upload(`production/${uuid}/upload.json`, trackWrapper.upload)
+        yield auphonicApi.upload(`production/${uuid}/upload.json`, trackWrapper.upload, {
+          onUploadProgress,
+        })
       }
       break
     case 'new':
@@ -185,7 +200,9 @@ function* handleSaveTrack(auphonicApi: AuphonicApiClient, uuid: String, trackWra
         multi_input_files: [trackWrapper.payload],
       })
       if (needs_upload) {
-        yield auphonicApi.upload(`production/${uuid}/upload.json`, trackWrapper.upload)
+        yield auphonicApi.upload(`production/${uuid}/upload.json`, trackWrapper.upload, {
+          onUploadProgress,
+        })
       }
       break
   }
@@ -372,13 +389,28 @@ function* handleSaveProduction(
     tracksPayload.map((trackWrapper: any) => call(handleSaveTrack, auphonicApi, uuid, trackWrapper))
   )
 
+  const onUploadProgress = (e: ProgressEvent) => {
+    if (!e.total) {
+      return
+    }
+
+    const progress = (100 * e.loaded) / e.total
+    console.log('upload progress:', progress, '%')
+  }
+
   // handle single track if input_file is set
   // FIXME: only upload when changed, see multitrack logic
   const input_file = productionPayload.input_file
   if (typeof input_file == 'object') {
-    yield auphonicApi.upload(`production/${uuid}/upload.json`, {
-      file: input_file,
-    })
+    yield auphonicApi.upload(
+      `production/${uuid}/upload.json`,
+      {
+        file: input_file,
+      },
+      {
+        onUploadProgress,
+      }
+    )
     delete productionPayload.input_file
   }
 

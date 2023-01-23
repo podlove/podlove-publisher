@@ -86,7 +86,7 @@ const uploadApi =
     bearer?: string
     urlProcessor?: (url: string) => string
   }) =>
-  (url: string, data: any, { query }: ApiOptions = {}) => {
+  (url: string, data: any, { query, onUploadProgress }: ApiOptions = {}) => {
     const formData = new FormData()
 
     // audio file upload
@@ -105,7 +105,7 @@ const uploadApi =
       headers: {
         ...authHeaders({ bearer }),
       },
-      onUploadProgress: (e) => console.log('progress', e),
+      onUploadProgress,
     })
   }
 

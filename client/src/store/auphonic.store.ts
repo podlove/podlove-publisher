@@ -128,6 +128,7 @@ export type State = {
   is_saving: boolean
   is_initializing: boolean
   publish_when_done: boolean
+  upload_progress: { [key: string]: number }
 }
 
 export const initialState: State = {
@@ -144,6 +145,7 @@ export const initialState: State = {
   is_saving: false,
   is_initializing: true,
   publish_when_done: false,
+  upload_progress: {},
 }
 
 export const INIT = 'podlove/publisher/auphonic/INIT'
@@ -171,6 +173,7 @@ export const STOP_POLLING = 'podlove/publisher/auphonic/STOP_POLLING'
 export const START_SAVING = 'podlove/publisher/auphonic/START_SAVING'
 export const STOP_SAVING = 'podlove/publisher/auphonic/STOP_SAVING'
 export const UPDATE_WEBHOOK = 'podlove/publisher/auphonic/UPDATE_WEBHOOK'
+export const SET_UPLOAD_PROGRESS = 'podlove/publisher/auphonic/SET_UPLOAD_PROGRESS'
 
 export const init = createAction<void>(INIT)
 export const initDone = createAction<void>(INIT_DONE)
@@ -213,11 +216,21 @@ export const stopSaving = createAction<void>(STOP_SAVING)
 // Webhook
 export const updateWebhook = createAction<boolean>(UPDATE_WEBHOOK)
 
+// Upload Progress
+export const setUploadProgress = createAction<{ id: string; value: number }>(SET_UPLOAD_PROGRESS)
+
 export const reducer = handleActions(
   {
     [INIT_DONE]: (state: State): State => ({
       ...state,
       is_initializing: false,
+    }),
+    [SET_UPLOAD_PROGRESS]: (state: State, action: { id: string; value: number }): State => ({
+      ...state,
+      upload_progress: {
+        ...state.upload_progress,
+        [action.id]: action.value,
+      },
     }),
     [UPDATE_FILE_SELECTION]: (
       state: State,
