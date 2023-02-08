@@ -9,6 +9,7 @@ class Settings
     use \Podlove\HasPageDocumentationTrait;
 
     const MENU_SLUG = 'podlove_shows_settings';
+    private static $nonce = 'update_shows';
 
     public function __construct($handle)
     {
@@ -57,6 +58,14 @@ class Settings
 
         $action = (isset($_REQUEST['action'])) ? $_REQUEST['action'] : null;
 
+        if (!in_array($action, ['save', 'create', 'delete'])) {
+            return;
+        }
+
+        if (!wp_verify_nonce($_REQUEST['_podlove_nonce'], self::$nonce)) {
+            return;
+        }
+
         if ($action === 'save') {
             $this->save();
         } elseif ($action === 'create') {
@@ -74,7 +83,7 @@ class Settings
 
 			<?php
 if (isset($_GET['action']) && $_GET['action'] == 'confirm_delete') {
-            $show = Show::find_by_id($_REQUEST['show']); ?>
+    $show = Show::find_by_id($_REQUEST['show']); ?>
 					<div class="updated">
 						<p>
 							<strong>
@@ -87,7 +96,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'confirm_delete') {
 						</p>
 					</div>
 					<?php
-        }
+}
 
         $action = isset($_REQUEST['action']) ? $_REQUEST['action'] : null;
         switch ($action) {
@@ -239,7 +248,7 @@ $this->form_template($show, 'create', __('Add New Show', 'podlove-podcasting-plu
 		.wp-list-table.shows .column-episodes { width: 90px; }
 		</style>
 		<?php
-$this->table->prepare_items();
+        $this->table->prepare_items();
         $this->table->display();
     }
 
@@ -259,11 +268,11 @@ $this->table->prepare_items();
                 submit_button(__('Save Changes and Continue Editing', 'podlove-podcasting-plugin-for-wordpress'), 'secondary', 'submit_and_stay', false);
                 echo '</p>';
             },
+            'nonce' => self::$nonce
         ];
 
         \Podlove\Form\build_for($show, $form_args, function ($form) {
             $wrapper = new \Podlove\Form\Input\TableWrapper($form);
-            $show = $form->object;
             $generic_feed = \Podlove\Model\Feed::first();
 
             $podcast = \Podlove\Model\Podcast::get();
@@ -337,10 +346,11 @@ $this->table->prepare_items();
     private static function get_action_link($show, $title, $action = 'edit', $class = 'link')
     {
         return sprintf(
-            '<a href="?page=%s&amp;action=%s&amp;show=%s" class="%s">'.$title.'</a>',
+            '<a href="?page=%s&amp;action=%s&amp;show=%s&amp;_podlove_nonce=%s" class="%s">'.$title.'</a>',
             self::MENU_SLUG,
             $action,
             $show->id,
+            wp_create_nonce('update_shows'),
             $class
         );
     }

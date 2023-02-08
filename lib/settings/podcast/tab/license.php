@@ -6,6 +6,8 @@ use Podlove\Settings\Podcast\Tab;
 
 class License extends Tab
 {
+    private static $nonce = 'update_podcast_settings_license';
+
     public function init()
     {
         add_action($this->page_hook, [$this, 'register_page']);
@@ -15,6 +17,10 @@ class License extends Tab
     public function process_form()
     {
         if (!isset($_POST['podlove_podcast']) || !$this->is_active()) {
+            return;
+        }
+
+        if (!wp_verify_nonce($_REQUEST['_podlove_nonce'], self::$nonce)) {
             return;
         }
 
@@ -38,13 +44,11 @@ class License extends Tab
         $form_attributes = [
             'context' => 'podlove_podcast',
             'action' => $this->get_url(),
+            'nonce' => self::$nonce
         ];
 
         \Podlove\Form\build_for($podcast, $form_attributes, function ($form) {
             $wrapper = new \Podlove\Form\Input\TableWrapper($form);
-            $podcast = $form->object;
-
-            $podcast = \Podlove\Model\Podcast::get();
 
             $wrapper->string('license_name', [
                 'label' => __('License Name', 'podlove-podcasting-plugin-for-wordpress'),
@@ -56,7 +60,7 @@ class License extends Tab
                 'html' => ['class' => 'regular-text podlove-check-input', 'data-podlove-input-type' => 'url'],
                 'description' => __('Example: http://creativecommons.org/licenses/by/3.0/', 'podlove-podcasting-plugin-for-wordpress'),
             ]); ?>
-				
+
 				<tr class="row_podlove_cc_license_selector_toggle">
 					<th></th>
 					<td>
@@ -100,7 +104,7 @@ class License extends Tab
 								<?php
                                     foreach (\Podlove\License\locales_cc() as $locale_key => $locale_description) {
                                         echo "<option value='".$locale_key."' ".($locale_key == 'international' ? "selected='selected'" : '').'>'.$locale_description."</option>\n";
-                                    } ?>			
+                                    } ?>
 							</select>
 						</div>
 					</td>
@@ -113,7 +117,7 @@ class License extends Tab
 						<p class="podlove_podcast_license_image"></p>
 						<div class="podlove_license">
 							<p>
-								<?php _e('This work is licensed under the', 'podlove-podcasting-plugin-for-wordpress'); ?> 
+								<?php _e('This work is licensed under the', 'podlove-podcasting-plugin-for-wordpress'); ?>
 								<a class="podlove-license-link" rel="license" href=""></a>.
 							</p>
 						</div>

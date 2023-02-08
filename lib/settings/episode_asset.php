@@ -10,6 +10,7 @@ class EpisodeAsset
     const MENU_SLUG = 'podlove_episode_assets_settings_handle';
 
     public static $pagehook;
+    private static $nonce = 'update_assets';
 
     public function __construct($handle)
     {
@@ -82,6 +83,14 @@ class EpisodeAsset
 
         $action = (isset($_REQUEST['action'])) ? $_REQUEST['action'] : null;
 
+        if (!in_array($action, ['save', 'create', 'delete', 'batch_enable'])) {
+            return;
+        }
+
+        if (!wp_verify_nonce($_REQUEST['_podlove_nonce'], self::$nonce)) {
+            return;
+        }
+
         if ($action === 'save') {
             $this->save();
         } elseif ($action === 'create') {
@@ -130,7 +139,7 @@ class EpisodeAsset
 								</li>
 							<?php } ?>
 						</ul>
-						<a href="?page=<?php echo self::MENU_SLUG; ?>&amp;action=delete&amp;episode_asset=<?php echo $asset->id; ?>&amp;force=1">
+						<a href="?page=<?php echo self::MENU_SLUG; ?>&amp;action=delete&amp;episode_asset=<?php echo $asset->id; ?>&amp;force=1&amp;_podlove_nonce=<?php echo wp_create_nonce('update_assets'); ?>">
 							<?php _e('delete anyway', 'podlove-podcasting-plugin-for-wordpress'); ?>
 						</a>
 					</p>
@@ -141,22 +150,22 @@ class EpisodeAsset
 		<div class="wrap">
 			<h2><?php _e('Episode Assets', 'podlove-podcasting-plugin-for-wordpress'); ?> <a href="?page=<?php echo self::MENU_SLUG; ?>&amp;action=new" class="add-new-h2"><?php _e('Add New', 'podlove-podcasting-plugin-for-wordpress'); ?></a></h2>
 			<?php
-            $action = isset($_REQUEST['action']) ? $_REQUEST['action'] : null;
+        $action = isset($_REQUEST['action']) ? $_REQUEST['action'] : null;
         switch ($action) {
-                case 'new':   $this->new_template();
+            case 'new':   $this->new_template();
 
-break;
-                case 'edit':  $this->edit_template();
+                break;
+            case 'edit':  $this->edit_template();
 
-break;
-                case 'index': $this->view_template();
+                break;
+            case 'index': $this->view_template();
 
-break;
+                break;
 
-                default:      $this->view_template();
+            default:      $this->view_template();
 
-break;
-            } ?>
+                break;
+        } ?>
 		</div>
 		<?php
     }
@@ -185,8 +194,6 @@ break;
      */
     private function create()
     {
-        global $wpdb;
-
         $episode_asset = new \Podlove\Model\EpisodeAsset();
         $episode_asset->update_attributes($_POST['podlove_episode_asset']);
 
@@ -206,7 +213,6 @@ break;
             return;
         }
 
-        $podcast = Model\Podcast::get();
         $asset = Model\EpisodeAsset::find_by_id($_REQUEST['episode_asset']);
 
         if (isset($_REQUEST['force']) && $_REQUEST['force'] || $asset->is_deletable()) {
@@ -259,6 +265,7 @@ break;
         $form_attributes = [
             'context' => 'podlove_asset_assignment',
             'form' => false,
+            'nonce' => self::$nonce
         ];
 
         \Podlove\Form\build_for($asset_assignment, $form_attributes, function ($form) {
@@ -341,6 +348,7 @@ break;
                 submit_button(__('Save Changes and Continue Editing', 'podlove-podcasting-plugin-for-wordpress'), 'secondary', 'submit_and_stay', false);
                 echo '</p>';
             },
+            'nonce' => self::$nonce
         ];
 
         \Podlove\Form\build_for($episode_asset, $form_args, function ($form) use ($format_optionlist) {

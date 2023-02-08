@@ -11,6 +11,7 @@ class GlobalFeedSettings
 {
     private $module;
     private $api;
+    private static $nonce = 'update_feed_settings';
 
     public function __construct($module, $api)
     {
@@ -31,6 +32,10 @@ class GlobalFeedSettings
 
     public function save_global_plus_feed_setting()
     {
+        if (!wp_verify_nonce($_REQUEST['_podlove_nonce'], self::$nonce)) {
+            return;
+        }
+
         $podcast_settings = get_option('podlove_podcast', []);
 
         if (isset($_REQUEST['podlove_podcast'])) {
@@ -90,11 +95,11 @@ class GlobalFeedSettings
         $form_attributes = [
             'context' => 'podlove_podcast',
             'form' => false,
+            'nonce' => self::$nonce
         ];
 
         \Podlove\Form\build_for($podcast, $form_attributes, function ($form) {
             $wrapper = new \Podlove\Form\Input\TableWrapper($form);
-            $podcast = $form->object;
 
             $wrapper->subheader(__('Feed Proxy | Publisher Plus', 'podlove-podcasting-plugin-for-wordpress'));
 

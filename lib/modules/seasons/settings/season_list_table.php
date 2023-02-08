@@ -19,10 +19,11 @@ class SeasonListTable extends \Podlove\List_Table
     {
         $link = function ($title, $action = 'edit') use ($season) {
             return sprintf(
-                '<a href="?page=%s&action=%s&season=%s">'.$title.'</a>',
+                '<a href="?page=%s&action=%s&season=%s&_podlove_nonce=%s">'.$title.'</a>',
                 Settings::MENU_SLUG,
                 $action,
-                $season->id
+                $season->id,
+                wp_create_nonce('update_seasons')
             );
         };
 
@@ -113,7 +114,7 @@ class SeasonListTable extends \Podlove\List_Table
         // get total items
         $total_items = count($data);
         // extrage page for current page only
-        $data = array_slice($data, (($current_page - 1) * $per_page), $per_page);
+        $data = array_slice($data, ($current_page - 1) * $per_page, $per_page);
         // add items to table
         $this->items = $data;
 

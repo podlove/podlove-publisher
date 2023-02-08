@@ -7,6 +7,8 @@ use Podlove\Settings\Podcast\Tab;
 
 class Player extends Tab
 {
+    private static $nonce = 'update_podcast_settings_player';
+
     public function init()
     {
         add_action($this->page_hook, [$this, 'register_page']);
@@ -16,6 +18,10 @@ class Player extends Tab
     public function process_form()
     {
         if (!isset($_POST['podlove_webplayer_settings']) || !$this->is_active()) {
+            return;
+        }
+
+        if (!wp_verify_nonce($_REQUEST['_podlove_nonce'], self::$nonce)) {
             return;
         }
 
@@ -77,6 +83,7 @@ class Player extends Tab
         $form_attributes = [
             'context' => 'podlove_webplayer_settings',
             'action' => $this->get_url(),
+            'nonce' => self::$nonce
         ];
 
         $form_data = self::get_form_data();
