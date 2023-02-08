@@ -9,6 +9,7 @@ class PodcastLists
 {
     const MENU_SLUG = 'podlove_settings_list_handle';
     public static $pagehook;
+    private static $nonce = 'update_podcast_list';
 
     public function __construct($handle)
     {
@@ -33,6 +34,10 @@ class PodcastLists
     public function process_form()
     {
         if (!isset($_REQUEST['list'])) {
+            return;
+        }
+
+        if (!wp_verify_nonce($_REQUEST['_podlove_nonce'], self::$nonce)) {
             return;
         }
 
@@ -86,19 +91,19 @@ class PodcastLists
                     switch ($_GET['action']) {
                         case 'new':   $this->new_template();
 
-break;
+                            break;
                         case 'edit':  $this->edit_template();
 
-break;
+                            break;
 
                         default:      $this->view_template();
 
-break;
+                            break;
                     }
                 } else {
                     $this->view_template();
                 } ?>
-		</div>	
+		</div>
 		<?php
     }
 
@@ -215,6 +220,7 @@ break;
             'hidden' => [
                 'list' => $list->id,
                 'action' => $action,
+                'nonce' => self::$nonce
             ],
         ];
 
@@ -365,7 +371,7 @@ break;
 										template_id = "#podcast-select-type-" + o.entry.type;
 										template = $( template_id ).html();
 										row_as_object = $(o.row)
-										
+
 										row_as_object.find(".podlove-podcast-value").html( template );
 										row_as_object.find('select.podlove-podcast-dropdown option[value="' + o.entry.type + '"]').attr('selected', 'selected');
 
@@ -382,7 +388,7 @@ break;
 									onRowAdd: function(o) {
 										o.row = o.row.replace(/\{\{id\}\}/g, i);
 
-										
+
 										row = $(".podcasts_table_body tr:last .podlove-podcast-dropdown").focus();
 
 										podcast_dropdown_handler();
@@ -390,7 +396,7 @@ break;
 										row.change();
 									},
 									onRowDelete: function(tr) {
-										
+
 									}
 								});
 							});

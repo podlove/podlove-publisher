@@ -7,6 +7,8 @@ namespace Podlove;
  */
 class Podcast_Post_Meta_Box
 {
+    private static $nonce = 'update_episode_meta';
+
     public function __construct()
     {
         add_action('save_post', [$this, 'save_postdata']);
@@ -47,7 +49,7 @@ class Podcast_Post_Meta_Box
         $podcast = Model\Podcast::get();
         $episode = Model\Episode::find_or_create_by_post_id($post_id);
 
-        wp_nonce_field(\Podlove\PLUGIN_FILE, 'podlove_noncename'); ?>
+        ?>
 
 		<?php do_action('podlove_episode_meta_box_start'); ?>
 
@@ -59,13 +61,13 @@ class Podcast_Post_Meta_Box
                 'submit_button' => false,
                 'form' => false,
                 'is_table' => false,
+                'nonce' => self::$nonce
             ];
 
         $form_data = self::get_form_data($episode);
 
         \Podlove\Form\build_for($episode, $form_args, function ($form) use ($form_data) {
             $wrapper = new \Podlove\Form\Input\DivWrapper($form);
-            $episode = $form->object;
 
             foreach ($form_data as $entry) {
                 $wrapper->{$entry['type']}($entry['key'], $entry['options']);
@@ -211,13 +213,7 @@ class Podcast_Post_Meta_Box
      */
     public function save_postdata($post_id)
     {
-        global $wpdb;
-
         if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
-            return;
-        }
-
-        if (empty($_POST['podlove_noncename']) || !wp_verify_nonce($_POST['podlove_noncename'], \Podlove\PLUGIN_FILE)) {
             return;
         }
 
@@ -227,6 +223,10 @@ class Podcast_Post_Meta_Box
         }
 
         if (!isset($_POST['_podlove_meta']) || !is_array($_POST['_podlove_meta'])) {
+            return;
+        }
+
+        if (!wp_verify_nonce($_REQUEST['_podlove_nonce'], self::$nonce)) {
             return;
         }
 

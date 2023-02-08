@@ -18,6 +18,8 @@ class GenericEntitySettings
     private $is_tab = false;
     private $tab_slug = '';
 
+    private static $nonce = 'update_podcast_generic_settings';
+
     public function __construct($entity_slug, $entity_class)
     {
         $this->entity_slug = $entity_slug;
@@ -146,6 +148,10 @@ class GenericEntitySettings
             return;
         }
 
+        if (!wp_verify_nonce($_REQUEST['_podlove_nonce'], self::$nonce)) {
+            return;
+        }
+
         $class = $this->get_entity_class();
 
         $entity = $class::find_by_id($_REQUEST[$slug]);
@@ -170,8 +176,6 @@ class GenericEntitySettings
      */
     protected function create()
     {
-        global $wpdb;
-
         $class = $this->get_entity_class();
 
         $entity = new $class();
@@ -273,6 +277,7 @@ class GenericEntitySettings
                 submit_button(__('Save Changes and Continue Editing', 'podlove-podcasting-plugin-for-wordpress'), 'secondary', 'submit_and_stay', false);
                 echo '</p>';
             },
+            'nonce' => self::$nonce
         ];
 
         $form_args['hidden'][$this->get_entity_slug()] = $entity->id;

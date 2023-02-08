@@ -7,6 +7,8 @@ use Podlove\Settings\Podcast\Tab;
 
 class PodcastContributorsSettingsTab extends Tab
 {
+    private static $nonce = 'update_podcast_contributors_team';
+
     public function init()
     {
         add_action($this->page_hook, [$this, 'register_page']);
@@ -16,6 +18,10 @@ class PodcastContributorsSettingsTab extends Tab
     public function process_form()
     {
         if (!isset($_POST['podlove_podcast']) || !$this->is_active()) {
+            return;
+        }
+
+        if (!wp_verify_nonce($_REQUEST['_podlove_nonce'], self::$nonce)) {
             return;
         }
 
@@ -37,6 +43,7 @@ class PodcastContributorsSettingsTab extends Tab
             'context' => 'podlove_podcast',
             'action' => $this->get_url(),
             'is_table' => false,
+            'nonce' => self::$nonce
         ]; ?>
 		<p>
 			<?php echo sprintf(
@@ -46,15 +53,15 @@ class PodcastContributorsSettingsTab extends Tab
 		</p>
 		<?php
 
-        \Podlove\Form\build_for($podcast, $form_attributes, function ($form) {
-            $wrapper = new \Podlove\Form\Input\DivWrapper($form);
-            $podcast = $form->object;
+			\Podlove\Form\build_for($podcast, $form_attributes, function ($form) {
+			    $wrapper = new \Podlove\Form\Input\DivWrapper($form);
+			    $podcast = $form->object;
 
-            $wrapper->callback('contributors', [
-                // 'label'    => __( 'Contributors', 'podlove-podcasting-plugin-for-wordpress' ),
-                'callback' => [__CLASS__, 'podcast_form_extension_form'],
-            ]);
-        });
+			    $wrapper->callback('contributors', [
+			        // 'label'    => __( 'Contributors', 'podlove-podcasting-plugin-for-wordpress' ),
+			        'callback' => [__CLASS__, 'podcast_form_extension_form'],
+			    ]);
+			});
     }
 
     public static function podcast_form_extension_form()

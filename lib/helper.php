@@ -475,6 +475,16 @@ function build_for($object, $args, $callback)
 		<form action="<?php echo esc_url($url); ?>" method="<?php echo esc_attr($method); ?>" <?php echo $attributes_html; ?>>
 	<?php } ?>
 
+    <?php
+    $nonce_action = isset($args['nonce']) ? $args['nonce'] : 'podlove_generic_form_action';
+    $nonce_name = '_podlove_nonce';
+    wp_nonce_field($nonce_action, $nonce_name);
+    // verify in form processor:
+    // if (!wp_verify_nonce($_REQUEST['_podlove_nonce'], 'podlove_generic_form_action')) {
+    //     return;
+    // }
+    ?>
+
 	<?php if (isset($args['hidden']) && $args['hidden']) { ?>
 		<?php foreach ($args['hidden'] as $name => $value) { ?>
 			<input type="hidden" name="<?php echo esc_attr($name); ?>" value="<?php echo esc_attr($value); ?>" />

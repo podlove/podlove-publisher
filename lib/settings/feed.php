@@ -13,6 +13,10 @@ class Feed
 
     public static $pagehook;
 
+    private $table;
+
+    private static $nonce = 'update_feeds';
+
     public function __construct($handle)
     {
         self::$pagehook = add_submenu_page(
@@ -53,10 +57,11 @@ class Feed
     public static function get_action_link($feed, $title, $action = 'edit', $class = 'link')
     {
         return sprintf(
-            '<a href="?page=%s&action=%s&feed=%s" class="%s">'.$title.'</a>',
+            '<a href="?page=%s&action=%s&feed=%s&_podlove_nonce=%s" class="%s">'.$title.'</a>',
             self::MENU_SLUG,
             $action,
             $feed->id,
+            wp_create_nonce('update_feeds'),
             $class
         );
     }
@@ -67,9 +72,17 @@ class Feed
             return;
         }
 
-        do_action('podlove_feed_process', $_REQUEST['feed'], $_REQUEST['action']);
-
         $action = (isset($_REQUEST['action'])) ? $_REQUEST['action'] : null;
+
+        if (!in_array($action, ['save', 'create', 'delete'])) {
+            return;
+        }
+
+        if (!wp_verify_nonce($_REQUEST['_podlove_nonce'], self::$nonce)) {
+            return;
+        }
+
+        do_action('podlove_feed_process', $_REQUEST['feed'], $_REQUEST['action']);
 
         set_transient('podlove_needs_to_flush_rewrite_rules', true);
 
@@ -111,19 +124,19 @@ class Feed
             switch ($action) {
                 case 'new':   $this->new_template();
 
-break;
+                    break;
                 case 'edit':  $this->edit_template();
 
-break;
+                    break;
                 case 'index': $this->view_template();
 
-break;
+                    break;
 
                 default:      $this->view_template();
 
-break;
+                    break;
             } ?>
-		</div>	
+		</div>
 		<?php
     }
 
@@ -304,11 +317,11 @@ break;
         $form_attributes = [
             'context' => 'podlove_podcast',
             'form' => false,
+            'nonce' => self::$nonce
         ];
 
         \Podlove\Form\build_for($podcast, $form_attributes, function ($form) {
             $wrapper = new \Podlove\Form\Input\TableWrapper($form);
-            $podcast = $form->object;
 
             $wrapper->subheader(__('Feed Global Defaults', 'podlove-podcasting-plugin-for-wordpress'));
 
@@ -371,6 +384,7 @@ break;
                 submit_button(__('Save Changes and Continue Editing', 'podlove-podcasting-plugin-for-wordpress'), 'secondary', 'submit_and_stay', false);
                 echo '</p>';
             },
+            'nonce' => self::$nonce
         ];
 
         \Podlove\Form\build_for($feed, $form_args, function ($form) {

@@ -27,11 +27,12 @@ class File_Type_List_Table extends \Podlove\List_Table
                 $file_type->id
             ),
             'delete' => sprintf(
-                '<a href="?page=%s&podlove_tab=%s&action=%s&file_type=%s">'.__('Delete', 'podlove-podcasting-plugin-for-wordpress').'</a>',
+                '<a href="?page=%s&podlove_tab=%s&action=%s&file_type=%s&_podlove_nonce=%s">'.__('Delete', 'podlove-podcasting-plugin-for-wordpress').'</a>',
                 filter_input(INPUT_GET, 'page', FILTER_SANITIZE_URL),
                 filter_input(INPUT_GET, 'podlove_tab', FILTER_SANITIZE_URL),
                 'delete',
-                $file_type->id
+                $file_type->id,
+                wp_create_nonce('update_file_type')
             ),
         ];
 

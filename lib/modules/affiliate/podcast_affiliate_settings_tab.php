@@ -6,6 +6,8 @@ use Podlove\Settings\Podcast\Tab;
 
 class PodcastAffiliateSettingsTab extends Tab
 {
+    private static $nonce = 'update_podcast_settings_affiliate';
+
     public function init()
     {
         add_action($this->page_hook, [$this, 'register_page']);
@@ -15,6 +17,10 @@ class PodcastAffiliateSettingsTab extends Tab
     public function process_form()
     {
         if (!isset($_POST['podlove_affiliate']) || !$this->is_active()) {
+            return;
+        }
+
+        if (!wp_verify_nonce($_REQUEST['_podlove_nonce'], self::$nonce)) {
             return;
         }
 
@@ -31,11 +37,10 @@ class PodcastAffiliateSettingsTab extends Tab
 
     public function register_page()
     {
-        $podcast = \Podlove\Model\Podcast::get();
-
         $form_attributes = [
             'context' => 'podlove_affiliate',
             'action' => $this->get_url(),
+            'nonce' => self::$nonce
         ]; ?>
     <p>
       <?php echo __('Register your Affiliate IDs', 'podlove-podcasting-plugin-for-wordpress'); ?>
@@ -44,7 +49,6 @@ class PodcastAffiliateSettingsTab extends Tab
 
     \Podlove\Form\build_for((object) self::get_setting(), $form_attributes, function ($form) {
         $wrapper = new \Podlove\Form\Input\TableWrapper($form);
-        $podcast = $form->object;
 
         $wrapper->string('amazon_de', [
             'label' => __('amazon.de', 'podlove-podcasting-plugin-for-wordpress'),

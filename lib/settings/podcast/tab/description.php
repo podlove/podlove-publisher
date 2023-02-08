@@ -6,6 +6,8 @@ use Podlove\Settings\Podcast\Tab;
 
 class Description extends Tab
 {
+    private static $nonce = 'update_podcast_settings_description';
+
     public function init()
     {
         add_action($this->page_hook, [$this, 'register_page']);
@@ -19,6 +21,10 @@ class Description extends Tab
         }
 
         if (!isset($_POST['podlove_podcast']) || !$this->is_active()) {
+            return;
+        }
+
+        if (!wp_verify_nonce($_REQUEST['_podlove_nonce'], self::$nonce)) {
             return;
         }
 
@@ -39,6 +45,7 @@ class Description extends Tab
         $form_attributes = [
             'context' => 'podlove_podcast',
             'action' => $this->get_url(),
+            'nonce' => self::$nonce
         ]; ?>
 		<p>
 			<?php _e('These are the three most important fields describing your podcast.
