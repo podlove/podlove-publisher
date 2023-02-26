@@ -11,6 +11,7 @@ import * as settingsStore from './settings.store'
 import * as podcastStore from './podcast.store'
 import * as auphonicStore from './auphonic.store'
 import * as mediafilesStore from './mediafiles.store'
+import * as relatedEpisodesStore from './relatedEpisodes.store'
 
 const root = {
   lifecycle: (state: State) => state.lifecycle,
@@ -24,6 +25,7 @@ const root = {
   auphonic: (state: State) => state.auphonic,
   mediafiles: (state: State) => state.mediafiles,
   settings: (state: State) => state.settings,
+  relatedEpisodes: (state: State) => state.relatedEpisodes,
 }
 
 const lifecycle = {
@@ -87,14 +89,20 @@ const episode = {
   explicit: createSelector(root.episode, episodeStore.selectors.explicit),
   auphonicProductionId: createSelector(root.episode, episodeStore.selectors.auphonicProductionId),
   auphonicWebhookConfig: createSelector(root.episode, episodeStore.selectors.auphonicWebhookConfig),
-  contributions: createSelector(createSelector(root.episode, episodeStore.selectors.contributions), contributors.contributors, (contributions, list) => {
-    const result = contributions.map(contribution => ({
-      ...contribution,
-      ...contribution.contributor_id ? list.find(({ id }) => id.toString() === contribution.contributor_id.toString()) : {}
-    }))
+  contributions: createSelector(
+    createSelector(root.episode, episodeStore.selectors.contributions),
+    contributors.contributors,
+    (contributions, list) => {
+      const result = contributions.map((contribution) => ({
+        ...contribution,
+        ...(contribution.contributor_id
+          ? list.find(({ id }) => id.toString() === contribution.contributor_id.toString())
+          : {}),
+      }))
 
-    return result
-})
+      return result
+    }
+  ),
 }
 
 const mediafiles = {
@@ -136,6 +144,14 @@ const settings = {
   modules: createSelector(root.settings, settingsStore.selectors.modules),
 }
 
+const relatedEpisodes = {
+  episodeList: createSelector(root.relatedEpisodes, relatedEpisodesStore.selectors.episodeList),
+  selectEpisode: createSelector(
+    root.relatedEpisodes,
+    relatedEpisodesStore.selectors.selectEpisodes
+  ),
+}
+
 export default {
   lifecycle,
   podcast,
@@ -148,4 +164,5 @@ export default {
   settings,
   auphonic,
   mediafiles,
+  relatedEpisodes,
 }
