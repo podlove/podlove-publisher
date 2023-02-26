@@ -21,6 +21,7 @@ import { State as settingsState } from './settings.store'
 import { State as podcastState } from './podcast.store'
 import { State as auphonicState } from './auphonic.store'
 import { State as mediafilesState } from './mediafiles.store'
+import { State as relatedEpisodesState } from './relatedEpisodes.store'
 
 import lifecycleSaga from '../sagas/lifecycle.sagas'
 import podcastSaga from '../sagas/podcast.sagas'
@@ -32,6 +33,7 @@ import wordpressSaga from '../sagas/wordpress.sagas'
 import episodeSaga from '../sagas/episode.sagas'
 import auphonicSaga from '../sagas/auphonic.sagas'
 import mediafilesSaga from '../sagas/mediafiles.sagas'
+import relatedEpisodesSaga from '../sagas/relatedEpisodes.sagas'
 
 export interface State {
   lifecycle: LifecycleState
@@ -45,6 +47,7 @@ export interface State {
   podcast: podcastState
   auphonic: auphonicState
   mediafiles: mediafilesState
+  relatedEpisodes: relatedEpisodesState
 }
 
 const sagas = createSagaMiddleware()
@@ -62,5 +65,6 @@ sagas.run(episodeSaga())
 sagas.run(podcastSaga())
 sagas.run(auphonicSaga())
 sagas.run(mediafilesSaga())
+sagas.run(relatedEpisodesSaga())
 
 export { selectors, sagas }

@@ -10,6 +10,7 @@ import * as settingsStore from './settings.store'
 import * as podcastStore from './podcast.store'
 import * as auphonicStore from './auphonic.store'
 import * as mediafilesStore from './mediafiles.store'
+import * as relatedEpisodesStore from './relatedEpisodes.store'
 
 export default combineReducers({
   lifecycle: lifecycleStore.reducer,
@@ -23,4 +24,5 @@ export default combineReducers({
   podcast: podcastStore.reducer,
   auphonic: auphonicStore.reducer,
   mediafiles: mediafilesStore.reducer,
+  relatedEpisodes: relatedEpisodesStore.reducer,
 })

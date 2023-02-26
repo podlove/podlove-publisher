@@ -25,7 +25,7 @@
   },
   "dependencies": {
     "@babel/types": "^7.18.7",
-    "@headlessui/vue": "1.5.0",
+    "@headlessui/vue": "1.7.10",
     "@heroicons/vue": "1.0.6",
     "@podlove/utils": "5.7.4",
     "@podlove/web-player": "5.7.4",

@@ -4,6 +4,7 @@ import PodloveTranscripts from './transcripts'
 import PodloveAuphonic from './auphonic'
 import PodloveContributors from './contributors'
 import PodloveMediaFiles from './mediafiles'
+import PodloveRelatedEpisodes from './related'
 
 export default {
   PodloveDescription,
@@ -12,4 +13,5 @@ export default {
   PodloveAuphonic,
   PodloveContributors,
   PodloveMediaFiles,
+  PodloveRelatedEpisodes,
 }
