@@ -169,7 +169,7 @@ class WP_REST_PodloveEpisode_Controller extends \WP_REST_Controller
                     'status' => [
                         'description' => __('The status parameter is used to filter the collection of episodes', 'podlove-podcasting-plugin-for-wordpress'),
                         'type' => 'string',
-                        'enum' => ['publish', 'draft']
+                        'enum' => ['publish', 'draft',  'all']
                     ]
                 ],
                 'methods' => \WP_REST_Server::READABLE,
@@ -404,16 +404,8 @@ class WP_REST_PodloveEpisode_Controller extends \WP_REST_Controller
     public function get_items_permissions_check($request)
     {
         $filter = $request->get_param('status');
-        if ($filter) {
-            if ($filter == 'draft') {
-                if (!current_user_can('edit_posts')) {
-                    return new \Podlove\Api\Error\ForbiddenAccess();
-                }
-
-                return true;
-            }
-
-            return true;
+        if ($filter && ($filter == 'draft' || $filter == 'all') && (!current_user_can('edit_posts'))) {
+            return new \Podlove\Api\Error\ForbiddenAccess();
         }
 
         return true;
@@ -422,13 +414,18 @@ class WP_REST_PodloveEpisode_Controller extends \WP_REST_Controller
     public function get_items($request)
     {
         $filter = $request->get_param('status');
-        if (!$filter || $filter != 'draft') {
+        if (!$filter || ($filter != 'draft' && $filter != 'all')) {
             $filter = 'publish';
         }
 
-        $episodes = Episode::find_all_by_time([
-            'post_status' => $filter,
-        ]);
+        if ($filter == 'all') {
+            $episodes = Episode::find_all_by_time();
+        }
+        else {
+            $episodes = Episode::find_all_by_time([
+                'post_status' => $filter,
+            ]);
+        }
 
         $results = [];
 
