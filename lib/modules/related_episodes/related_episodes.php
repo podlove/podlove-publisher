@@ -83,8 +83,13 @@ class Related_Episodes extends \Podlove\Modules\Base
             'type' => 'callback',
             'key' => 'episode_relation_form_table',
             'options' => [
-                'label' => __('Related Episodes', 'podlove-podcasting-plugin-for-wordpress'),
-                'callback' => [$this, 'episode_relation_form_callback'],
+                'callback' => function () {
+                    ?>
+                        <div data-client="podlove" style="margin: 15px 0;">
+                            <podlove-related-episodes></podlove-related-episodes>
+                        </div>
+                    <?php
+                }
             ],
             'position' => 870,
         ];
