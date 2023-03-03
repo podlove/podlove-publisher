@@ -11,12 +11,12 @@ class Podcast_Post_Meta_Box
 
     public function __construct()
     {
-        add_action('save_post', [$this, 'save_postdata']);
-        add_action('save_post_podcast', function ($post_id, $post, $_) {
+        add_action('save_post_podcast', [$this, 'save_episode_postdata']);
+        add_action('save_post_podcast', function ($post_id) {
             if ($episode = Model\Episode::find_one_by_where('post_id = '.intval($post_id))) {
                 do_action('podlove_episode_content_has_changed', $episode->id);
             }
-        }, 10, 3);
+        });
     }
 
     public static function add_meta_box()
@@ -211,14 +211,14 @@ class Podcast_Post_Meta_Box
      *
      * @param int $post_id
      */
-    public function save_postdata($post_id)
+    public function save_episode_postdata($post_id)
     {
         if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
             return;
         }
 
         // Check permissions
-        if ('podcast' !== $_POST['post_type'] || !current_user_can('edit_post', $post_id)) {
+        if (!current_user_can('edit_post', $post_id)) {
             return;
         }
 
