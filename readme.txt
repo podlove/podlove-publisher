@@ -5,7 +5,7 @@ Tags: podlove, podcast, publishing, rss, feed, audio, mp3, m4a, player, webplaye
 Requires at least: 4.9.6
 Tested up to: 6.1.1
 Requires PHP: 7.0
-Stable tag: 3.8.4
+Stable tag: 3.8.5
 License: MIT
 
 The one and only next generation podcast publishing system. Seriously. It's magical and sparkles a lot.
@@ -105,6 +105,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 6. Includes the Podlove Web Player. One more thing: you can manage and present all contributors easily.
 
 == Changelog ==
+
+= 3.8.5 =
+
+* fix PHP notice on episode screen
 
 = 3.8.4 =
 
