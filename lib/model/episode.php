@@ -301,7 +301,12 @@ class Episode extends Base implements Licensable
             }
 
             if ($asset_assignment->image == 'manual') {
+                if ($this->cover_art == null) {
+                    return false;
+                }
+
                 $cover_art = trim($this->cover_art);
+
                 if (empty($cover_art)) {
                     return false;
                 }
