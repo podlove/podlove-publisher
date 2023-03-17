@@ -8,6 +8,8 @@
 
 <body class="bg-gray-100 p-2">
   <div data-client="podlove">
+    <media-files></media-files>
+    <div class="h-5"></div>
     <podlove-auphonic></podlove-auphonic>
     <div class="h-5"></div>
     <podlove-description></podlove-description>
@@ -21,7 +23,7 @@
 
   <script>
     const user = 'admin' // the user name NOT the token name
-    const applicationPassword = `7O84 w2MJ u4ep RSvS pkb8 pQBu`
+    const applicationPassword = `UQcc xftF vlu7 o2Xa dPWv SqpD`
 
     window.addEventListener('load', () => {
       fetch('http://localhost:3000/wp-json/podlove/v2/episodes')

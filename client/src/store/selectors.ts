@@ -10,6 +10,7 @@ import * as contributorsStore from './contributors.store'
 import * as settingsStore from './settings.store'
 import * as podcastStore from './podcast.store'
 import * as auphonicStore from './auphonic.store'
+import * as mediafilesStore from './mediafiles.store'
 
 const root = {
   lifecycle: (state: State) => state.lifecycle,
@@ -21,6 +22,7 @@ const root = {
   transcripts: (state: State) => state.transcripts,
   contributors: (state: State) => state.contributors,
   auphonic: (state: State) => state.auphonic,
+  mediafiles: (state: State) => state.mediafiles,
   settings: (state: State) => state.settings,
 }
 
@@ -81,6 +83,10 @@ const episode = {
   auphonicWebhookConfig: createSelector(root.episode, episodeStore.selectors.auphonicWebhookConfig),
 }
 
+const mediafiles = {
+  isInitializing: createSelector(root.mediafiles, mediafilesStore.selectors.isInitializing),
+}
+
 const runtime = {
   baseUrl: createSelector(root.runtime, runtimeStore.selectors.baseUrl),
   nonce: createSelector(root.runtime, runtimeStore.selectors.nonce),
@@ -128,4 +134,5 @@ export default {
   contributors,
   settings,
   auphonic,
+  mediafiles,
 }
