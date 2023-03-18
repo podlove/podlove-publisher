@@ -1,10 +1,11 @@
 import { createAction, handleActions } from 'redux-actions'
 
 export type MediaFile = {
-  enabled: boolean
-  asset_name: string
+  asset_id: number
+  asset: string
   url: string
   size: number
+  enable: boolean
 }
 
 export type State = {
@@ -19,9 +20,11 @@ export const initialState: State = {
 
 export const INIT = 'podlove/publisher/mediafiles/INIT'
 export const INIT_DONE = 'podlove/publisher/mediafiles/INIT_DONE'
+export const SET = 'podlove/publisher/mediafiles/SET'
 
 export const init = createAction<void>(INIT)
 export const initDone = createAction<void>(INIT_DONE)
+export const set = createAction<MediaFile[]>(SET)
 
 export const reducer = handleActions(
   {
@@ -29,10 +32,15 @@ export const reducer = handleActions(
       ...state,
       is_initializing: false,
     }),
+    [SET]: (state: State, action: { type: string; payload: MediaFile[] }): State => ({
+      ...state,
+      files: action.payload,
+    }),
   },
   initialState
 )
 
 export const selectors = {
   isInitializing: (state: State) => state.is_initializing,
+  files: (state: State) => state.files,
 }

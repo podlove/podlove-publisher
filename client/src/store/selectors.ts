@@ -85,6 +85,7 @@ const episode = {
 
 const mediafiles = {
   isInitializing: createSelector(root.mediafiles, mediafilesStore.selectors.isInitializing),
+  files: createSelector(root.mediafiles, mediafilesStore.selectors.files),
 }
 
 const runtime = {
