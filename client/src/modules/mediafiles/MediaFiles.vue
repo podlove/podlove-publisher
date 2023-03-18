@@ -36,6 +36,7 @@
                   class="absolute left-4 top-1/2 -mt-2 h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
                   :value="file.asset_id"
                   :checked="file.enable"
+                  @click="handleToggle"
                 />
               </td>
               <td>
@@ -124,6 +125,20 @@ export default defineComponent({
       }),
       dispatch: injectStore().dispatch,
     }
+  },
+
+  methods: {
+    handleToggle(event: Event): void {
+      const input = event.target as HTMLInputElement
+      const enable = input.checked
+      const asset_id = parseInt(input.value)
+
+      if (enable) {
+        this.dispatch(mediafiles.enable(asset_id))
+      } else {
+        this.dispatch(mediafiles.disable(asset_id))
+      }
+    },
   },
 
   computed: {
