@@ -11,7 +11,9 @@
         <table class="min-w-full table-fixed divide-y divide-gray-300">
           <thead>
             <tr>
-              <th scope="col" class="relative px-7 sm:w-12 sm:px-6"></th>
+              <th scope="col" class="py-3.5 pl-3 text-left text-sm font-semibold text-gray-900">
+                Enable
+              </th>
               <th scope="col" class="py-3.5 pr-3 text-left text-sm font-semibold text-gray-900">
                 Asset
               </th>
@@ -59,7 +61,10 @@
                       :class="{ 'text-gray-400': !file.enable, 'text-red-400': file.enable }"
                       aria-hidden="true"
                     />
-
+                    <!-- fixme: on load, when an asset is disabled, it shows always "file not found"
+(because Publisher does not know about disabled files). Only on "verify" do we
+get the actual state. => at least show nothing unless we're sure it's "file not
+found" -->
                     <span
                       v-if="!file.size"
                       :class="{ 'text-gray-400': !file.enable, 'text-red-400': file.enable }"
