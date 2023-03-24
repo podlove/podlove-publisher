@@ -24,12 +24,14 @@ export const INIT_DONE = 'podlove/publisher/mediafiles/INIT_DONE'
 export const SET = 'podlove/publisher/mediafiles/SET'
 export const ENABLE = 'podlove/publisher/mediafiles/ENABLE'
 export const DISABLE = 'podlove/publisher/mediafiles/DISABLE'
+export const VERIFY = 'podlove/publisher/mediafiles/VERIFY'
 
 export const init = createAction<void>(INIT)
 export const initDone = createAction<void>(INIT_DONE)
 export const set = createAction<MediaFile[]>(SET)
 export const enable = createAction<number>(ENABLE)
 export const disable = createAction<number>(DISABLE)
+export const verify = createAction<number>(VERIFY)
 
 // TODO: enable revalidates I think?
 export const reducer = handleActions(
