@@ -25,7 +25,7 @@
             </tr>
           </thead>
           <tbody class="divide-y divide-gray-200 bg-white">
-            <tr v-for="file in files" :key="file.asset_id">
+            <tr v-for="file in files" :key="file.asset_id" :class="{ 'opacity-50': !file.enable }">
               <td class="relative px-7 sm:w-12 sm:px-6">
                 <!-- <div
                   class="absolute inset-y-0 left-0 w-0.5"
@@ -55,11 +55,16 @@
                     />
                     <XCircleIcon
                       v-else
-                      class="mr-1.5 h-5 w-5 flex-shrink-0 text-red-400"
+                      class="mr-1.5 h-5 w-5 flex-shrink-0"
+                      :class="{ 'text-gray-400': !file.enable, 'text-red-400': file.enable }"
                       aria-hidden="true"
                     />
 
-                    <span v-if="!file.size" class="text-red-400">File not found</span>
+                    <span
+                      v-if="!file.size"
+                      :class="{ 'text-gray-400': !file.enable, 'text-red-400': file.enable }"
+                      >File not found</span
+                    >
                     <span v-else>{{ (file.size / 1024 / 1024).toFixed(2) }} MB</span>
                   </span>
                 </div>
@@ -90,24 +95,7 @@ import Module from '@components/module/Module.vue'
 
 import { RefreshIcon } from '@heroicons/vue/outline'
 
-import {
-  ArrowLongLeftIcon,
-  ArrowLongRightIcon,
-  BriefcaseIcon,
-  CalendarIcon,
-  CheckCircleIcon,
-  XCircleIcon,
-  CheckIcon,
-  ChevronDownIcon,
-  ChevronRightIcon,
-  CurrencyDollarIcon,
-  EnvelopeIcon,
-  LinkIcon,
-  MagnifyingGlassIcon,
-  MapPinIcon,
-  PencilIcon,
-} from '@heroicons/vue/solid'
-import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/vue/24/outline'
+import { CheckCircleIcon, XCircleIcon } from '@heroicons/vue/solid'
 
 export default defineComponent({
   components: {
