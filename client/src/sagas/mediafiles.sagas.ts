@@ -23,6 +23,7 @@ function* initialize(api: PodloveApiClient) {
 
   yield takeEvery(mediafiles.ENABLE, handleEnable, api)
   yield takeEvery(mediafiles.DISABLE, handleDisable, api)
+  yield takeEvery(mediafiles.VERIFY, handleVerify, api)
 
   yield put(mediafiles.initDone())
 }
@@ -31,20 +32,23 @@ function* handleEnable(api: PodloveApiClient, action: { type: string; payload: n
   const episodeId: string = yield select(selectors.episode.id)
   const asset_id = action.payload
 
-  yield api.put(`episodes/${episodeId}/media`, {
-    asset_id: asset_id,
-    enable: true,
-  })
+  yield api.put(`episodes/${episodeId}/media/${asset_id}/enable`, {})
+  // TODO: update file size & url from response
 }
 
 function* handleDisable(api: PodloveApiClient, action: { type: string; payload: number }) {
   const episodeId: string = yield select(selectors.episode.id)
   const asset_id = action.payload
 
-  yield api.put(`episodes/${episodeId}/media`, {
-    asset_id: asset_id,
-    enable: false,
-  })
+  yield api.put(`episodes/${episodeId}/media/${asset_id}/disable`, {})
+}
+
+function* handleVerify(api: PodloveApiClient, action: { type: string; payload: number }) {
+  const episodeId: string = yield select(selectors.episode.id)
+  const asset_id = action.payload
+
+  yield api.put(`episodes/${episodeId}/media/${asset_id}/verify`, {})
+  // TODO: update file size & url from response
 }
 
 export default function () {

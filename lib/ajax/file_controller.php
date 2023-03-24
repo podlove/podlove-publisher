@@ -6,6 +6,7 @@ use Podlove\Model\MediaFile;
 
 class FileController
 {
+  // TODO: delete this file
     public static function init()
     {
         $actions = [
@@ -73,6 +74,7 @@ class FileController
         ]);
     }
 
+    // NOTE: we don't need that any more because any slug changes auto-save
     private static function simulate_temporary_episode_slug($slug)
     {
         add_filter('podlove_file_url_template', function ($template) use ($slug) {
