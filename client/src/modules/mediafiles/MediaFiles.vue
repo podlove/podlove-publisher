@@ -73,6 +73,7 @@
                 <button
                   type="button"
                   class="inline-flex items-center rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:bg-white"
+                  @click="() => handleVerify(file.asset_id)"
                 >
                   Verify
                 </button>
@@ -126,6 +127,9 @@ export default defineComponent({
       } else {
         this.dispatch(mediafiles.disable(asset_id))
       }
+    },
+    handleVerify(asset_id: number): void {
+      this.dispatch(mediafiles.verify(asset_id))
     },
   },
 
