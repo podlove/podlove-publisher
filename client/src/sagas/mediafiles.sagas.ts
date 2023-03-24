@@ -32,8 +32,15 @@ function* handleEnable(api: PodloveApiClient, action: { type: string; payload: n
   const episodeId: string = yield select(selectors.episode.id)
   const asset_id = action.payload
 
-  yield api.put(`episodes/${episodeId}/media/${asset_id}/enable`, {})
-  // TODO: update file size & url from response
+  const { result } = yield api.put(`episodes/${episodeId}/media/${asset_id}/enable`, {})
+
+  const fileUpdate: Partial<MediaFile> = {
+    asset_id: asset_id,
+    url: result.file_url,
+    size: result.file_size,
+  }
+
+  yield put(mediafiles.update(fileUpdate))
 }
 
 function* handleDisable(api: PodloveApiClient, action: { type: string; payload: number }) {
@@ -47,8 +54,15 @@ function* handleVerify(api: PodloveApiClient, action: { type: string; payload: n
   const episodeId: string = yield select(selectors.episode.id)
   const asset_id = action.payload
 
-  yield api.put(`episodes/${episodeId}/media/${asset_id}/verify`, {})
-  // TODO: update file size & url from response
+  const { result } = yield api.put(`episodes/${episodeId}/media/${asset_id}/verify`, {})
+
+  const fileUpdate: Partial<MediaFile> = {
+    asset_id: asset_id,
+    url: result.file_url,
+    size: result.file_size,
+  }
+
+  yield put(mediafiles.update(fileUpdate))
 }
 
 export default function () {
