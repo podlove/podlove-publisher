@@ -52,6 +52,9 @@ install_php_scoper:
 	composer bin php-scoper require --dev humbug/php-scoper:0.15.0
 
 build:
+	npm install
+	npm run production
+
 	mkdir -p vendor-prefixed
 	composer install --no-progress --prefer-dist --optimize-autoloader --no-dev
 	composer prefix-dependencies
