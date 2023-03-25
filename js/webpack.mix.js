@@ -27,7 +27,6 @@ mix.js('src/app.js', 'dist/').vue()
       "src/admin/dashboard_asset_validation.js",
       "src/admin/dashboard_feed_validation.js",
       "src/admin/episode_asset_settings.js",
-      "src/admin/episode_duration.js",
       "src/admin/license.js",
       "src/admin/media.js",
       "src/admin/protected_feed.js",
