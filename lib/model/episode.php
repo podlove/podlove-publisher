@@ -23,6 +23,8 @@ class Episode extends Base implements Licensable
 
         $defaults = [
             'post_status' => ['private', 'draft', 'publish', 'pending', 'future'],
+            'sort_by' => 'post_date',
+            'order_by' => 'DESC',
         ];
         $args = wp_parse_args($args, $defaults);
 
@@ -43,7 +45,7 @@ class Episode extends Base implements Licensable
 				AND
 				p.post_type = "podcast"
 			ORDER BY
-				p.post_date DESC';
+			    p.'.$args['sort_by'].' '.$args['order_by'];
 
         return Episode::find_all_by_sql($sql);
     }
