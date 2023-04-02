@@ -128,7 +128,7 @@ class WP_REST_PodloveEpisodeRelated_Controller extends WP_REST_Controller
             $related_id = $relation->right_episode_id;
             $related_episode = Episode::find_by_id($related_id);
             if ($related_episode) {
-                $related_episode_title = $related_episode->title;
+                $related_episode_title = $related_episode->title();
                 $post = $related_episode->post();
                 if ( ($filter == 'publish' && $related_episode->is_published()) ||
                      ($post &&  $filter == 'draft' && $post->post_status == 'draft') ||
@@ -184,6 +184,7 @@ class WP_REST_PodloveEpisodeRelated_Controller extends WP_REST_Controller
                 '_version' => 'v2',
                 'episode_id' => $left_episode->id,
                 'related_episode_id' => $right_episode->id,
+                'related_episode_title' => $right_episode->title()
             ]);
         }
         

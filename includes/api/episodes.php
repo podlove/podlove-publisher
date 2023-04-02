@@ -170,6 +170,16 @@ class WP_REST_PodloveEpisode_Controller extends \WP_REST_Controller
                         'description' => __('The status parameter is used to filter the collection of episodes', 'podlove-podcasting-plugin-for-wordpress'),
                         'type' => 'string',
                         'enum' => ['publish', 'draft',  'all']
+                    ],
+                    'sort_by' => [
+                        'description' => __('Sort the list of episodes'),
+                        'type' => 'string',
+                        'enum' => ['post_id', 'post_date']
+                    ],
+                    'order_by' => [
+                        'description' => __('Ascending or descending order for sorting of the list of episodes'),
+                        'type' => 'string',
+                        'enum' => ['asc', 'desc', 'ASC', 'DESC']
                     ]
                 ],
                 'methods' => \WP_REST_Server::READABLE,
@@ -418,14 +428,26 @@ class WP_REST_PodloveEpisode_Controller extends \WP_REST_Controller
             $filter = 'publish';
         }
 
-        if ($filter == 'all') {
-            $episodes = Episode::find_all_by_time();
+        $order_by = $request->get_param('order_by');
+        $sort_by = $request->get_param('sort_by');
+
+        $args = [];
+        if ($order_by)
+            $args['order_by'] = $order_by;
+
+        if ($sort_by) {
+            if ($sort_by == 'post_id') {
+                $args['sort_by'] = 'ID';
+            } else {
+                $args['sort_by'] = $sort_by;
+            }
         }
-        else {
-            $episodes = Episode::find_all_by_time([
-                'post_status' => $filter,
-            ]);
+
+        if ($filter != 'all') {
+            $args['post_status'] = $filter;
         }
+
+        $episodes = Episode::find_all_by_time($args);
 
         $results = [];
 
@@ -647,6 +669,11 @@ class WP_REST_PodloveEpisode_Controller extends \WP_REST_Controller
         if (isset($request['title'])) {
             $title = $request['title'];
             $episode->title = $title;
+            $post_update = array(
+                'ID'         => $episode->post_id,
+                'post_title' => $title
+            );
+            wp_update_post( $post_update );
         }
 
         if (isset($request['subtitle'])) {
