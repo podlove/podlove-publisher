@@ -2,9 +2,9 @@
   <module name="relatedEpisodes" :title="__('Related episodes')">
     <PodloveListbox
       placeholder="Select episode"
-      :options="state.episodeList"
-      v-model="state.selectEpisodes"
-      @update:model-value = "updateRelEpisodes"
+      :options="fullEpisodeList"
+      :selectValues="state.selectEpisodes"
+      @update = "updateRelEpisodes($event)"
       multiple
     >
     </PodloveListbox>
@@ -18,7 +18,7 @@ import { mapState, injectStore } from 'redux-vuex'
 import { selectors } from '@store'
 
 import Module from '@components/module/Module.vue'
-import PodloveListbox from '@components/listbox/Listbox.vue'
+import PodloveListbox from '@components/combobox/Combobox.vue'
 import * as related from '@store/relatedEpisodes.store'
 
 export default defineComponent({
@@ -38,9 +38,33 @@ export default defineComponent({
   created() {
     this.dispatch(related.init())
   },
-
+  computed: {
+    fullEpisodeList() {
+      if (this.state.selectEpisodes.length == 0) {
+        const selectAllEpisodes = { id: 0, title: "Select all episodes"}
+        return [selectAllEpisodes, ...this.state.episodeList]
+      }
+      else {
+        const selectAllEpisodes = { id: -1, title: "Deselect all episodes"}
+        return [selectAllEpisodes, ...this.state.episodeList]
+      }
+    },
+  },
   methods: {
-    updateRelEpisodes() {
+    updateRelEpisodes(newSelectedItems: Array<Number>) {
+      if (newSelectedItems.includes(0)) {
+        // Select all
+        this.state.selectEpisodes = this.state.episodeList.map(function(item:any) {
+          return item.id
+        })
+      }
+      else if (newSelectedItems.includes(-1)) {
+        // deselect all
+        this.state.selectEpisodes = []
+      }
+      else {
+        this.state.selectEpisodes = newSelectedItems
+      }
       this.dispatch(related.setSelectedEpisodes(this.state.selectEpisodes))
     }
   }

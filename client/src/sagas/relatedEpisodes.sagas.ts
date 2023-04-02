@@ -23,7 +23,7 @@ function* initialize(api: PodloveApiClient) {
     { result: PodloveEpisodeList[] }
   ] = yield Promise.all([
     api.get(`episodes/${episodeId}/related?status=all`),
-    api.get('episodes?status=all')
+    api.get('episodes?status=all&sort_by=post_id&order_by=asc')
   ])
 
   const related = get(relatedEpisodes, ['result', 'relatedEpisodes'], [])
