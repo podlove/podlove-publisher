@@ -220,7 +220,7 @@ export default defineComponent({
       this.$emit('update', newSelectedItems)
     },
     onChange(event: Event) {
-      this.query = event?.target?.value
+      this.query = (event.target as HTMLInputElement).value
     },
     resetQuery() {
       console.log("Reset query by click")

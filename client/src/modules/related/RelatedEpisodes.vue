@@ -18,7 +18,7 @@ import { mapState, injectStore } from 'redux-vuex'
 import { selectors } from '@store'
 
 import Module from '@components/module/Module.vue'
-import PodloveListbox from '@components/combobox/Combobox.vue'
+import PodloveListbox, { OptionObject } from '@components/combobox/Combobox.vue'
 import * as related from '@store/relatedEpisodes.store'
 
 export default defineComponent({
@@ -39,7 +39,7 @@ export default defineComponent({
     this.dispatch(related.init())
   },
   computed: {
-    fullEpisodeList() {
+    fullEpisodeList() : Array<OptionObject> {
       if (this.state.selectEpisodes.length == 0) {
         const selectAllEpisodes = { id: 0, title: "Select all episodes"}
         return [selectAllEpisodes, ...this.state.episodeList]
