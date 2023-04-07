@@ -9,7 +9,12 @@ export default defineConfig({
   plugins: [vue()],
   server: {
     proxy: {
-      '/wp-json': process.env.WORDPRESS_URL || 'http://podlove.local'
+      '/wp-json': {
+        target: process.env.WORDPRESS_URL || 'http://podlove.local',
+        changeOrigin: true,
+        secure: false,
+
+      }
     }
   },
   root: path.resolve(__dirname),

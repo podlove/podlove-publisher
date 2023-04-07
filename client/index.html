@@ -8,20 +8,21 @@
 
 <body class="bg-gray-100 p-2">
   <div data-client="podlove">
-    <podlove-auphonic></podlove-auphonic>
+    <podlove-contributors></podlove-contributors>
+    <!-- <podlove-auphonic></podlove-auphonic>
     <div class="h-5"></div>
     <podlove-description></podlove-description>
     <div class="h-5"></div>
     <podlove-chapters></podlove-chapters>
     <div class="h-5"></div>
-    <podlove-transcripts></podlove-transcripts>
+    <podlove-transcripts></podlove-transcripts> -->
   </div>
 
   <script type="module" src="./src/client.ts"></script>
 
   <script>
     const user = 'admin' // the user name NOT the token name
-    const applicationPassword = `7O84 w2MJ u4ep RSvS pkb8 pQBu`
+    const applicationPassword = `kAz1 IVtS reHU T3I1 Bxoi NfNC`
 
     window.addEventListener('load', () => {
       fetch('http://localhost:3000/wp-json/podlove/v2/episodes')

@@ -74,7 +74,7 @@ export default defineComponent({
     return {
       state: mapState({
         transcripts: selectors.transcripts.list,
-        contributors: selectors.contributors.list,
+        contributors: selectors.contributors.contributors,
         voices: selectors.transcripts.voices,
       }),
     }

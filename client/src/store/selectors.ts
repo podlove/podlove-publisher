@@ -10,6 +10,7 @@ import * as contributorsStore from './contributors.store'
 import * as settingsStore from './settings.store'
 import * as podcastStore from './podcast.store'
 import * as auphonicStore from './auphonic.store'
+import { identity } from 'lodash'
 
 const root = {
   lifecycle: (state: State) => state.lifecycle,
@@ -64,6 +65,12 @@ const chapters = {
   selectedIndex: createSelector(root.chapters, chaptersStore.selectors.selectedIndex),
 }
 
+const contributors = {
+  contributors: createSelector(root.contributors, contributorsStore.selectors.contributors),
+  roles: createSelector(root.contributors, contributorsStore.selectors.roles),
+  groups: createSelector(root.contributors, contributorsStore.selectors.groups),
+}
+
 const episode = {
   id: createSelector(root.episode, episodeStore.selectors.id),
   slug: createSelector(root.episode, episodeStore.selectors.slug),
@@ -79,6 +86,14 @@ const episode = {
   explicit: createSelector(root.episode, episodeStore.selectors.explicit),
   auphonicProductionId: createSelector(root.episode, episodeStore.selectors.auphonicProductionId),
   auphonicWebhookConfig: createSelector(root.episode, episodeStore.selectors.auphonicWebhookConfig),
+  contributions: createSelector(createSelector(root.episode, episodeStore.selectors.contributions), contributors.contributors, (contributions, list) => {
+    const result = contributions.map(contribution => ({
+      ...contribution,
+      ...contribution.contributor_id ? list.find(({ id }) => id.toString() === contribution.contributor_id.toString()) : {}
+    }))
+
+    return result
+})
 }
 
 const runtime = {
@@ -97,10 +112,6 @@ const post = {
 const transcripts = {
   list: createSelector(root.transcripts, transcriptsStore.selectors.transcripts),
   voices: createSelector(root.transcripts, transcriptsStore.selectors.voices),
-}
-
-const contributors = {
-  list: createSelector(root.contributors, contributorsStore.selectors.list),
 }
 
 const settings = {
