@@ -191,7 +191,7 @@ class WP_REST_PodloveEpisodeContributions_Controller extends WP_REST_Controller
         ]);        
     }
 
-    public function create_item_permission_check($request)
+    public function create_item_permissions_check($request)
     {
         if (!current_user_can('edit_posts')) {
             return new \Podlove\Api\Error\ForbiddenAccess();
@@ -211,6 +211,11 @@ class WP_REST_PodloveEpisodeContributions_Controller extends WP_REST_Controller
 
         if (!$episode) {
             return new \Podlove\Api\Error\NotFound();
+        }
+
+        $contributors = EpisodeContribution::find_all_by_episode_id($id);
+        foreach ($contributors as $contributor) {
+            $contributor->delete();
         }
 
         if (isset($request['contributors']) && is_array($request['contributors'])) {
