@@ -4,63 +4,47 @@
     :multiple="multiple"
     @update:model-value="selectItem($event)"
     >
-    <div class="relative mt-1">
+    <div class="
+      relative
+      mt-1
+      focus-visible:border-indigo-500
+      focus:ring-indigo-500
+      ">
+      <ComboboxButton
+        class="
+          w-full
+          flex 
+          items-center 
+        "
+        @click="resetQuery"
+      >
       <ComboboxInput
         @change="onChange"
         class="
           relative
           py-2
-          pr-10
           pl-3
           w-full
-          text-left
           bg-white
           rounded-lg
           shadow-md
           cursor-default
-          focus-visible:border-indigo-500
-          focus:ring-indigo-500
           sm:text-sm
           border-gray-300
         "
       >
-        <span class="
-          flex 
-          absolute 
-          inset-y-0 
-          right-0 
-          items-center 
-          pr-2 
-          pointer-events-none
-        ">
-          <SelectorIcon 
-            aria-hidden="true" 
-            class="
-              w-5 
-              h-5 
-              text-gray-400
-            " 
-          />
-        </span>
       </ComboboxInput>
-      <ComboboxButton
-        class="
-          absolute 
-          inset-y-0 
-          right-0 
-          flex 
-          items-center 
-          pr-2
-        "
-        @click="resetQuery"
-      >
       <div class="
           shadow-sm
-          focus:ring-indigo-500 focus:border-indigo-500
-          block
-          w-full
+          flex
           sm:text-sm
           rounded-md
+          absolute
+          inset-y-0
+          right-10
+          items-center
+          pr-2
+          pointer-events-none
         "
         >
         {{ label }}
