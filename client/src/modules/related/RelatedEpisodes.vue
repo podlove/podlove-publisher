@@ -1,13 +1,17 @@
 <template>
   <module name="relatedEpisodes" :title="__('Related episodes')">
-    <PodloveListbox
-      placeholder="Select episode"
-      :options="fullEpisodeList"
-      :selectValues="state.selectEpisodes"
-      @update = "updateRelEpisodes($event)"
-      multiple
-    >
-    </PodloveListbox>
+    <div class="p-3">
+      <div>
+        <PodloveListbox
+          placeholder="Select episode"
+          :options="fullEpisodeList"
+          :selectValues="state.selectEpisodes"
+          @update = "updateRelEpisodes($event)"
+          multiple
+        />
+      </div>
+      <p class="mt-2 text-sm text-gray-500">{{ __('Select related episodes to this episode.') }}</p>
+    </div>
   </module>
 </template>
 
@@ -40,6 +44,8 @@ export default defineComponent({
   },
   computed: {
     fullEpisodeList() : Array<OptionObject> {
+      if (this.state.episodeList.length == 0)
+        return this.state.episodeList
       if (this.state.selectEpisodes.length == 0) {
         const selectAllEpisodes = { id: 0, title: "Select all episodes"}
         return [selectAllEpisodes, ...this.state.episodeList]
