@@ -12,6 +12,14 @@
       </div>
       <p class="mt-2 text-sm text-gray-500">{{ __('Select related episodes to this episode.') }}</p>
     </div>
+    <div class="pl-3 pb-3">
+      <Tag v-for="name in selectEpisodeNames" 
+        :value="name.title" 
+        :id="Number(name.id)"
+        @removeTag = "removeTag($event)"
+        >
+      </Tag>
+    </div>
   </module>
 </template>
 
@@ -23,12 +31,14 @@ import { selectors } from '@store'
 
 import Module from '@components/module/Module.vue'
 import PodloveListbox, { OptionObject } from '@components/combobox/Combobox.vue'
+import Tag from '@components/tag/Tag.vue';
 import * as related from '@store/relatedEpisodes.store'
 
 export default defineComponent({
   components: {
     Module,
     PodloveListbox,
+    Tag,
   },
   setup() {
     return {
@@ -55,6 +65,11 @@ export default defineComponent({
         return [selectAllEpisodes, ...this.state.episodeList]
       }
     },
+    selectEpisodeNames() : Array<OptionObject> | null {
+      return this.state.episodeList?.filter( (episode: OptionObject) => {
+        return this.state.selectEpisodes.includes( episode.id )
+      })
+    }
   },
   methods: {
     updateRelEpisodes(newSelectedItems: Array<Number>) {
@@ -72,6 +87,12 @@ export default defineComponent({
         this.state.selectEpisodes = newSelectedItems
       }
       this.dispatch(related.setSelectedEpisodes(this.state.selectEpisodes))
+    },
+    removeTag(removeId: Number) {
+      const idx = this.state.selectEpisodes.findIndex( (elem: Number) => {
+        return elem == removeId;
+      })
+      this.state.selectEpisodes.splice(idx, 1);
     }
   }
 })

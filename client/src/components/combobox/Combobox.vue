@@ -73,6 +73,7 @@
       >
         <ComboboxOptions
           class="
+            -top-2 transform -translate-y-full
             overflow-auto 
             absolute 
             z-10 
@@ -207,7 +208,6 @@ export default defineComponent({
       this.query = (event.target as HTMLInputElement).value
     },
     resetQuery() {
-      console.log("Reset query by click")
       this.query = ''
     }
   }
