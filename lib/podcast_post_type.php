@@ -68,7 +68,7 @@ class Podcast_Post_Type
         add_filter('post_class', [$this, 'add_post_class']);
         add_filter('close_comments_for_post_types', [$this, 'compatibility_with_auto_comment_closing']);
 
-        add_filter('get_the_excerpt', [$this, 'default_excerpt_to_episode_summary']);
+        add_filter('get_the_excerpt', [$this, 'default_excerpt_to_episode_summary'], 10, 2);
     }
 
     /**
@@ -129,11 +129,10 @@ class Podcast_Post_Type
         }
     }
 
-    public function default_excerpt_to_episode_summary($excerpt)
+    public function default_excerpt_to_episode_summary($excerpt, $post)
     {
-        global $post;
 
-        if (get_post_type() !== 'podcast') {
+        if (get_post_type($post) !== 'podcast') {
             return $excerpt;
         }
 
