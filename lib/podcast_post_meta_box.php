@@ -211,15 +211,6 @@ class Podcast_Post_Meta_Box
                 ],
                 'position' => 510,
             ], [
-                'type' => 'string',
-                'key' => 'duration',
-                'options' => [
-                    'label' => __('Duration', 'podlove-podcasting-plugin-for-wordpress'),
-                    'description' => '',
-                    'html' => ['class' => 'regular-text podlove-check-input'],
-                ],
-                'position' => 400,
-            ], [
               'type' => 'callback',
               'key' => 'episode_assets',
               'options' => [
