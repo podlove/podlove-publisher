@@ -198,7 +198,7 @@ export default defineComponent({
       return this.state.slug
     },
     assetPrefix(): string {
-      return this.state.baseUri.replace(/https?:\/\//i, '')
+      return this.state.baseUri?.replace(/https?:\/\//i, '')
     },
   },
 
