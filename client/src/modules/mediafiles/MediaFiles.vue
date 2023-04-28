@@ -104,7 +104,7 @@ found" -->
                               }"
                               >File not found</span
                             >
-                            <span v-else>{{ (file.size / 1024 / 1024).toFixed(2) }} MB</span>
+                            <span v-else>{{ fileSize(file) }}</span>
                           </span>
                         </div>
                       </td>
@@ -185,6 +185,22 @@ export default defineComponent({
     },
     handleVerify(asset_id: number): void {
       this.dispatch(mediafiles.verify(asset_id))
+    },
+    fileSize(file: mediafiles.MediaFile): string {
+      const bytes = file.size
+
+      if (!bytes || bytes < 1) {
+        return '???'
+      }
+
+      var kilobytes = bytes / 1024
+
+      if (kilobytes < 500) {
+        return kilobytes.toFixed(2) + ' kB'
+      }
+
+      var megabytes = kilobytes / 1024
+      return megabytes.toFixed(2) + ' MB'
     },
   },
 
