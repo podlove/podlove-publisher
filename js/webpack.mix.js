@@ -23,7 +23,6 @@ mix.js('src/app.js', 'dist/').vue()
       "src/admin/podlove_data_table.js",
       "src/admin/episode.js",
       "src/admin/jobs.js",
-      "src/admin/audio_duration_loader.js",
       "src/admin/dashboard_asset_validation.js",
       "src/admin/dashboard_feed_validation.js",
       "src/admin/episode_asset_settings.js",

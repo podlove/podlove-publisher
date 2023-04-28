@@ -87,6 +87,9 @@ found" -->
           </tbody>
         </table>
       </div>
+      <div class="m-3">
+        <span class="text-sm text-gray-700">Episode Duration: {{ duration }}</span>
+      </div>
     </div>
   </module>
 </template>
@@ -116,6 +119,7 @@ export default defineComponent({
       state: mapState({
         isInitializing: selectors.mediafiles.isInitializing,
         files: selectors.mediafiles.files,
+        duration: selectors.episode.duration,
       }),
       dispatch: injectStore().dispatch,
     }
@@ -144,6 +148,9 @@ export default defineComponent({
     },
     files(): mediafiles.MediaFile[] {
       return this.state.files
+    },
+    duration(): string {
+      return this.state.duration
     },
   },
 

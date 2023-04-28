@@ -1,7 +1,8 @@
 import { PodloveApiClient } from '@lib/api'
 import { selectors } from '@store'
-import { fork, put, select, takeEvery } from 'redux-saga/effects'
+import { fork, put, select, takeEvery, throttle } from 'redux-saga/effects'
 import * as mediafiles from '@store/mediafiles.store'
+import * as episode from '@store/episode.store'
 import { MediaFile } from '@store/mediafiles.store'
 import { takeFirst } from './helper'
 import { createApi } from './api'
@@ -24,8 +25,28 @@ function* initialize(api: PodloveApiClient) {
   yield takeEvery(mediafiles.ENABLE, handleEnable, api)
   yield takeEvery(mediafiles.DISABLE, handleDisable, api)
   yield takeEvery(mediafiles.VERIFY, handleVerify, api)
+  yield throttle(
+    2000,
+    [mediafiles.ENABLE, mediafiles.DISABLE, mediafiles.UPDATE],
+    maybeUpdateDuration,
+    api
+  )
 
   yield put(mediafiles.initDone())
+}
+
+function* maybeUpdateDuration(api: PodloveApiClient) {
+  const files: MediaFile[] = yield select(selectors.mediafiles.files)
+  const enabledFiles = files.filter((file) => file.enable && file.size && file.url)
+  const audioFiles = enabledFiles.filter((file) => file.url.match(/\.(mp3|mp4|m4a|ogg|oga|opus)$/))
+
+  if (audioFiles.length === 0) {
+    yield put(episode.update({ prop: 'duration', value: '0' }))
+  } else {
+    const url = audioFiles[0].url
+    const result: number = yield fetchDuration(url)
+    yield put(episode.update({ prop: 'duration', value: result.toString() }))
+  }
 }
 
 function* handleEnable(api: PodloveApiClient, action: { type: string; payload: number }) {
@@ -63,6 +84,22 @@ function* handleVerify(api: PodloveApiClient, action: { type: string; payload: n
   }
 
   yield put(mediafiles.update(fileUpdate))
+}
+
+async function loadMeta(audio: HTMLAudioElement) {
+  return new Promise<void>((resolve) => (audio.onloadedmetadata = () => resolve()))
+}
+
+async function fetchDuration(src: string) {
+  var audio = new Audio()
+
+  audio.setAttribute('preload', 'metadata')
+  audio.setAttribute('src', src)
+  audio.load()
+
+  await loadMeta(audio)
+
+  return audio.duration
 }
 
 export default function () {
