@@ -36,6 +36,7 @@ export default defineComponent({
     return {
       state: mapState({
         slug: selectors.episode.slug,
+        baseUri: selectors.settings.mediaFileBaseUri,
       }),
       dispatch: injectStore().dispatch,
     }
@@ -46,6 +47,12 @@ export default defineComponent({
       this.dispatch(
         updateEpisode({ prop: 'slug', value: (event.target as HTMLInputElement).value })
       )
+    },
+  },
+
+  computed: {
+    assetPrefix(): string {
+      return this.state.baseUri?.replace(/https?:\/\//i, '')
     },
   },
 })

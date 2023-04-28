@@ -165,7 +165,6 @@ export default defineComponent({
         isInitializing: selectors.mediafiles.isInitializing,
         files: selectors.mediafiles.files,
         duration: selectors.episode.duration,
-        baseUri: selectors.settings.mediaFileBaseUri,
       }),
       dispatch: injectStore().dispatch,
     }
@@ -217,9 +216,6 @@ export default defineComponent({
       }
 
       return Timestamp.fromString(this.state.duration).pretty
-    },
-    assetPrefix(): string {
-      return this.state.baseUri?.replace(/https?:\/\//i, '')
     },
   },
 
