@@ -1,6 +1,6 @@
 import { PodloveApiClient } from '@lib/api'
 import { selectors } from '@store'
-import { fork, put, select, takeEvery, throttle } from 'redux-saga/effects'
+import { all, call, delay, fork, put, select, takeEvery, throttle } from 'redux-saga/effects'
 import * as mediafiles from '@store/mediafiles.store'
 import * as episode from '@store/episode.store'
 import { MediaFile } from '@store/mediafiles.store'
@@ -25,6 +25,7 @@ function* initialize(api: PodloveApiClient) {
   yield takeEvery(mediafiles.ENABLE, handleEnable, api)
   yield takeEvery(mediafiles.DISABLE, handleDisable, api)
   yield takeEvery(mediafiles.VERIFY, handleVerify, api)
+  yield takeEvery(episode.UPDATE, maybeReverify, api)
   yield throttle(
     2000,
     [mediafiles.ENABLE, mediafiles.DISABLE, mediafiles.UPDATE],
@@ -71,19 +72,42 @@ function* handleDisable(api: PodloveApiClient, action: { type: string; payload: 
   yield api.put(`episodes/${episodeId}/media/${asset_id}/disable`, {})
 }
 
-function* handleVerify(api: PodloveApiClient, action: { type: string; payload: number }) {
-  const episodeId: string = yield select(selectors.episode.id)
-  const asset_id = action.payload
+// FIXME: I must only reverify after saving is done because the slug needs to be persisted
+function* maybeReverify(
+  api: PodloveApiClient,
+  action: { type: string; payload: { prop: string; value: any } }
+) {
+  const episodeId: number = yield select(selectors.episode.id)
+  const mediaFiles: MediaFile[] = yield select(selectors.mediafiles.files)
 
-  const { result } = yield api.put(`episodes/${episodeId}/media/${asset_id}/verify`, {})
+  if (action.payload.prop != 'slug') {
+    return
+  }
+
+  // Workaround to the slug dependency, because saving happens after up to 3 seconds
+  yield delay(3500)
+
+  // verify all
+  yield all(mediaFiles.map((file) => call(verifyEpisodeAsset, api, episodeId, file.asset_id)))
+}
+
+function* verifyEpisodeAsset(api: PodloveApiClient, episodeId: number, assetId: number) {
+  const { result } = yield api.put(`episodes/${episodeId}/media/${assetId}/verify`, {})
 
   const fileUpdate: Partial<MediaFile> = {
-    asset_id: asset_id,
+    asset_id: assetId,
     url: result.file_url,
     size: result.file_size,
   }
 
   yield put(mediafiles.update(fileUpdate))
+}
+
+function* handleVerify(api: PodloveApiClient, action: { type: string; payload: number }) {
+  const episodeId: number = yield select(selectors.episode.id)
+  const assetId = action.payload
+
+  yield verifyEpisodeAsset(api, episodeId, assetId)
 }
 
 async function loadMeta(audio: HTMLAudioElement) {

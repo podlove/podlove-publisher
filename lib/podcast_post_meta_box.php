@@ -202,15 +202,6 @@ class Podcast_Post_Meta_Box
     {
         $form_data = [
           [
-                'type' => 'string',
-                'key' => 'slug',
-                'options' => [
-                    'label' => __('Episode Media File Slug', 'podlove-podcasting-plugin-for-wordpress'),
-                    'description' => '',
-                    'html' => ['class' => 'regular-text podlove-check-input'],
-                ],
-                'position' => 510,
-            ], [
               'type' => 'callback',
               'key' => 'episode_assets',
               'options' => [

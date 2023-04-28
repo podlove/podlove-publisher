@@ -19,7 +19,7 @@ interface EpisodeData {
   poster: string
 }
 
-let EPISODE_UPDATE: { [key: string]: any } = {};
+let EPISODE_UPDATE: { [key: string]: any } = {}
 
 function* episodeSaga(): any {
   const apiClient: PodloveApiClient = yield createApi()
@@ -56,19 +56,19 @@ function collectEpisodeUpdate(action: Action) {
     return
   }
 
-  EPISODE_UPDATE[prop] = value;
+  EPISODE_UPDATE[prop] = value
 }
 
 function* save(api: PodloveApiClient, action: Action) {
   const episodeId: string = yield select(selectors.episode.id)
 
   if (isEmpty(EPISODE_UPDATE)) {
-    return;
+    return
   }
 
   yield api.put(`episodes/${episodeId}`, EPISODE_UPDATE)
 
-  EPISODE_UPDATE = {};
+  EPISODE_UPDATE = {}
 }
 
 function* selectImageFromLibrary() {
