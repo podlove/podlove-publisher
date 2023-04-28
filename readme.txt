@@ -106,6 +106,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= unreleased =
+
+* fix subtle `get_the_excerpt` bug (uses post parameter now instead of the global post object)
+
 = 3.8.6 =
 
 * fix incompatibilities with matomo plugin ([#1308](https://github.com/podlove/podlove-publisher/pull/1308))
