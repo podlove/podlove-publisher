@@ -156,6 +156,7 @@ export default defineComponent({
         files: selectors.mediafiles.files,
         duration: selectors.episode.duration,
         slug: selectors.episode.slug,
+        baseUri: selectors.settings.mediaFileBaseUri,
       }),
       dispatch: injectStore().dispatch,
     }
@@ -197,7 +198,7 @@ export default defineComponent({
       return this.state.slug
     },
     assetPrefix(): string {
-      return 'https://files.podlovers.org/'
+      return this.state.baseUri.replace(/https?:\/\//i, '')
     },
   },
 

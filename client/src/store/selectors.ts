@@ -117,6 +117,7 @@ const settings = {
   ),
   blogTitleTemplate: createSelector(root.settings, settingsStore.selectors.blogTitleTemplate),
   episodeNumberPadding: createSelector(root.settings, settingsStore.selectors.episodeNumberPadding),
+  mediaFileBaseUri: createSelector(root.settings, settingsStore.selectors.mediaFileBaseUri),
   imageAsset: createSelector(root.settings, settingsStore.selectors.imageAsset),
   enableEpisodeExplicit: createSelector(
     root.settings,
