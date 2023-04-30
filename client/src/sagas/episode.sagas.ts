@@ -1,14 +1,14 @@
 import { PodloveApiClient } from '@lib/api'
 import { selectors } from '@store'
-import { get } from 'lodash'
+import { get, isEmpty } from 'lodash'
 import { Action } from 'redux'
-import { call, fork, put, select, takeEvery, throttle } from 'redux-saga/effects'
+import { debounce, fork, put, select, takeEvery, throttle } from 'redux-saga/effects'
 import * as auphonic from '../store/auphonic.store'
 import * as episode from '../store/episode.store'
 import * as wordpress from '../store/wordpress.store'
 import { createApi } from './api'
 import { WebhookConfig } from './auphonic.sagas'
-import { takeFirst, waitFor } from './helper'
+import { takeFirst } from './helper'
 
 interface EpisodeData {
   slug: string
@@ -19,11 +19,14 @@ interface EpisodeData {
   poster: string
 }
 
+let EPISODE_UPDATE: { [key: string]: any } = {};
+
 function* episodeSaga(): any {
   const apiClient: PodloveApiClient = yield createApi()
   yield fork(initialize, apiClient)
 
-  yield throttle(3000, episode.UPDATE, save, apiClient)
+  yield takeEvery(episode.UPDATE, collectEpisodeUpdate)
+  yield debounce(3000, episode.UPDATE, save, apiClient)
   yield takeEvery(episode.SELECT_POSTER, selectImageFromLibrary)
   yield takeEvery(episode.SET_POSTER, updatePoster)
   yield takeEvery(episode.SET, updateAuphonicWebhookConfig)
@@ -45,8 +48,7 @@ function* initialize(api: PodloveApiClient) {
   }
 }
 
-function* save(api: PodloveApiClient, action: Action) {
-  const episodeId: string = yield select(selectors.episode.id)
+function collectEpisodeUpdate(action: Action) {
   const prop = get(action, ['payload', 'prop'])
   const value = get(action, ['payload', 'value'], null)
 
@@ -54,7 +56,19 @@ function* save(api: PodloveApiClient, action: Action) {
     return
   }
 
-  yield api.put(`episodes/${episodeId}`, { [prop]: value })
+  EPISODE_UPDATE[prop] = value;
+}
+
+function* save(api: PodloveApiClient, action: Action) {
+  const episodeId: string = yield select(selectors.episode.id)
+
+  if (isEmpty(EPISODE_UPDATE)) {
+    return;
+  }
+
+  yield api.put(`episodes/${episodeId}`, EPISODE_UPDATE)
+
+  EPISODE_UPDATE = {};
 }
 
 function* selectImageFromLibrary() {
