@@ -198,7 +198,7 @@ export default defineComponent({
     },
     updateGroup(event: Event) {
       const group_id = get(event, ['target', 'value'])
-
+      console.log(group_id)
       this.dispatch(
         episode.updateContribution({
           ...(this.data as PodloveEpisodeContribution),

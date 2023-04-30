@@ -1,6 +1,5 @@
 import { fork, put, select, takeEvery, throttle } from 'redux-saga/effects'
 import { get, toInteger } from 'lodash'
-import { pick } from 'lodash/fp'
 
 import * as contributors from '@store/contributors.store'
 import * as episode from '../store/episode.store'
@@ -11,7 +10,6 @@ import { takeFirst } from './helper'
 import { createApi } from './api'
 import { selectors } from '@store'
 import { PodloveEpisode, PodloveEpisodeContribution } from '@types/episode.types'
-import { PodloveContributor } from '@types/contributors.types'
 import { Action } from 'redux'
 import { __ } from '../plugins/translations'
 
