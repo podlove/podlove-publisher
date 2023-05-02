@@ -25,7 +25,7 @@ function* initialize(api: PodloveApiClient) {
   yield takeEvery(mediafiles.ENABLE, handleEnable, api)
   yield takeEvery(mediafiles.DISABLE, handleDisable, api)
   yield takeEvery(mediafiles.VERIFY, handleVerify, api)
-  yield takeEvery(episode.UPDATE, maybeReverify, api)
+  yield takeEvery(episode.SAVED, maybeReverify, api)
   yield throttle(
     2000,
     [mediafiles.ENABLE, mediafiles.DISABLE, mediafiles.UPDATE],
@@ -72,20 +72,13 @@ function* handleDisable(api: PodloveApiClient, action: { type: string; payload: 
   yield api.put(`episodes/${episodeId}/media/${asset_id}/disable`, {})
 }
 
-// FIXME: I must only reverify after saving is done because the slug needs to be persisted
-function* maybeReverify(
-  api: PodloveApiClient,
-  action: { type: string; payload: { prop: string; value: any } }
-) {
+function* maybeReverify(api: PodloveApiClient, action: { type: string; payload: object }) {
   const episodeId: number = yield select(selectors.episode.id)
   const mediaFiles: MediaFile[] = yield select(selectors.mediafiles.files)
 
-  if (action.payload.prop != 'slug') {
+  if (!Object.keys(action.payload).includes('slug')) {
     return
   }
-
-  // Workaround to the slug dependency, because saving happens after up to 3 seconds
-  yield delay(3500)
 
   // verify all
   yield all(mediaFiles.map((file) => call(verifyEpisodeAsset, api, episodeId, file.asset_id)))

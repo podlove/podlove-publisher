@@ -6,6 +6,7 @@ import * as lifecycle from './lifecycle.store'
 
 export const INIT = 'podlove/publisher/episode/INIT'
 export const UPDATE = 'podlove/publisher/episode/UPDATE'
+export const SAVED = 'podlove/publisher/episode/SAVED'
 export const SET = 'podlove/publisher/episode/SET'
 export const SET_POSTER = 'podlove/publisher/episode/SET_POSTER'
 export const SELECT_POSTER = 'podlove/publisher/episode/SELECT_POSTER'
@@ -61,6 +62,7 @@ export const set = createAction<{
   auphonicProductionId?: string
   auphonic_webhook_config?: object
 }>(SET)
+export const saved = createAction<object>(SAVED)
 
 export const reducer = handleActions(
   {

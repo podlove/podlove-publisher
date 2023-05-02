@@ -67,6 +67,7 @@ function* save(api: PodloveApiClient, action: Action) {
   }
 
   yield api.put(`episodes/${episodeId}`, EPISODE_UPDATE)
+  yield put(episode.saved(EPISODE_UPDATE))
 
   EPISODE_UPDATE = {}
 }
