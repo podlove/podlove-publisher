@@ -1,20 +1,20 @@
 <template>
-  <label for="assets" class="block text-sm font-medium leading-6 text-gray-900 sm:pt-1.5"
-    >Assets</label
-  >
+  <label for="assets" class="block text-sm font-medium leading-6 text-gray-900 sm:pt-1.5">{{
+    __('Assets')
+  }}</label>
   <div class="mt-2 sm:col-span-2 sm:mt-0">
     <div v-if="hasFiles">
       <table class="min-w-full table-fixed divide-y divide-gray-300">
         <thead>
           <tr>
             <th scope="col" class="py-3.5 pl-3 text-left text-sm font-semibold text-gray-900">
-              Enable
+              {{ __('Enable') }}
             </th>
             <th scope="col" class="py-3.5 pr-3 text-left text-sm font-semibold text-gray-900">
-              Asset
+              {{ __('Asset') }}
             </th>
             <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-              File
+              {{ __('File') }}
             </th>
             <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"></th>
           </tr>
@@ -67,7 +67,7 @@ found" -->
                       'text-gray-400': !file.enable,
                       'text-red-400': file.enable,
                     }"
-                    >File not found</span
+                    >{{ __('File not found') }}</span
                   >
                   <span v-else>{{ fileSize(file) }}</span>
                 </span>
@@ -79,13 +79,15 @@ found" -->
                 class="inline-flex items-center rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:bg-white"
                 @click="() => handleVerify(file.asset_id)"
               >
-                Verify
+                {{ __('Verify') }}
               </button>
             </td>
           </tr>
         </tbody>
       </table>
-      <p class="mt-3 text-sm leading-6 text-gray-600">Episode Duration: {{ duration }}</p>
+      <p class="mt-3 text-sm leading-6 text-gray-600">
+        {{ __('Episode Duration:') }} {{ duration }}
+      </p>
     </div>
     <AssetsEmptyState v-else />
   </div>
