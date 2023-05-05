@@ -1,7 +1,7 @@
 <template>
-  <label for="filename_slug" class="block text-sm font-medium leading-6 text-gray-900 sm:pt-1.5"
-    >Filename / Slug</label
-  >
+  <label for="filename_slug" class="block text-sm font-medium leading-6 text-gray-900 sm:pt-1.5">{{
+    __('Filename / Slug')
+  }}</label>
   <div class="mt-2 sm:col-span-2 sm:mt-0">
     <div
       class="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md"
