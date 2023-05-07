@@ -9,6 +9,7 @@
       <button
         type="button"
         class="relative block w-full rounded-lg border-2 border-dashed border-gray-300 p-12 text-center hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+        @click="uploadIntent"
       >
         <svg
           fill="none"
@@ -35,7 +36,7 @@ import { defineComponent } from 'vue'
 import { mapState, injectStore } from 'redux-vuex'
 
 import { selectors } from '@store'
-import { update as updateEpisode } from '@store/episode.store'
+import { uploadIntent } from '@store/mediafiles.store'
 
 export default defineComponent({
   setup() {
@@ -45,7 +46,11 @@ export default defineComponent({
     }
   },
 
-  methods: {},
+  methods: {
+    uploadIntent() {
+      this.dispatch(uploadIntent())
+    },
+  },
 
   computed: {},
 })

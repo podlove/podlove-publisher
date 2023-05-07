@@ -3,9 +3,12 @@ import { selectors } from '@store'
 import { all, call, delay, fork, put, select, takeEvery, throttle } from 'redux-saga/effects'
 import * as mediafiles from '@store/mediafiles.store'
 import * as episode from '@store/episode.store'
+import * as wordpress from '@store/wordpress.store'
 import { MediaFile } from '@store/mediafiles.store'
 import { takeFirst } from './helper'
 import { createApi } from './api'
+import { Action } from 'redux'
+import { get } from 'lodash'
 
 function* mediafilesSaga(): any {
   const apiClient: PodloveApiClient = yield createApi()
@@ -32,8 +35,20 @@ function* initialize(api: PodloveApiClient) {
     maybeUpdateDuration,
     api
   )
+  yield takeEvery(mediafiles.UPLOAD_INTENT, selectMediaFromLibrary)
+  yield takeEvery(mediafiles.SET_UPLOAD_URL, setUploadMedia)
 
   yield put(mediafiles.initDone())
+}
+
+function* selectMediaFromLibrary() {
+  yield put(wordpress.selectImageFromLibrary({ onSuccess: { type: mediafiles.SET_UPLOAD_URL } }))
+}
+
+function* setUploadMedia(action: Action) {
+  const url = get(action, ['payload'])
+
+  console.log('setUploadMedia', url)
 }
 
 function* maybeUpdateDuration(api: PodloveApiClient) {

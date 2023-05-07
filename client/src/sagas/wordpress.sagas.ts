@@ -75,6 +75,7 @@ function* updatePostTitle() {
     .replace('%episode_title%', title || '')
 }
 
+// TODO: refactor/rename as it's not only used for images
 function* selectImageFromLibrary(action: { payload: { onSuccess: Action } }) {
   const successAction = get(action, ['payload', 'onSuccess'])
 

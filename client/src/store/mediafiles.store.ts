@@ -26,6 +26,9 @@ export const UPDATE = 'podlove/publisher/mediafiles/UPDATE'
 export const ENABLE = 'podlove/publisher/mediafiles/ENABLE'
 export const DISABLE = 'podlove/publisher/mediafiles/DISABLE'
 export const VERIFY = 'podlove/publisher/mediafiles/VERIFY'
+// TODO: rename? because it's "select or upload"
+export const UPLOAD_INTENT = 'podlove/publisher/mediafiles/UPLOAD_INTENT'
+export const SET_UPLOAD_URL = 'podlove/publisher/mediafiles/SET_UPLOAD_URL'
 
 export const init = createAction<void>(INIT)
 export const initDone = createAction<void>(INIT_DONE)
@@ -34,6 +37,8 @@ export const update = createAction<Partial<MediaFile>>(UPDATE)
 export const enable = createAction<number>(ENABLE)
 export const disable = createAction<number>(DISABLE)
 export const verify = createAction<number>(VERIFY)
+export const uploadIntent = createAction<void>(UPLOAD_INTENT)
+export const setUploadUrl = createAction<string>(SET_UPLOAD_URL)
 
 // TODO: enable revalidates I think?
 export const reducer = handleActions(
