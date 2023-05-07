@@ -7,7 +7,7 @@ class Wordpress_File_Upload extends \Podlove\Modules\Base
     const DEFAULT_DIR = '/podlove-media';
 
     protected $module_name = 'WordPress File Upload';
-    protected $module_description = 'If you want to upload you media files to WordPress, this module adds a button to the episode form to do that.';
+    protected $module_description = 'If you want to upload your media files to WordPress, this module adds a button to the episode form to do that.';
     protected $module_group = 'system';
 
     public function load()
