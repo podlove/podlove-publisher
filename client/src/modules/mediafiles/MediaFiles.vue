@@ -16,6 +16,11 @@
               <MediaSlug />
             </div>
 
+            <!-- TODO: only if upload module is active -->
+            <div class="sm:grid sm:grid-cols-[175px_auto_auto] sm:items-start sm:gap-4 sm:py-6">
+              <MediaUpload />
+            </div>
+
             <div class="sm:grid sm:grid-cols-[175px_auto_auto] sm:items-start sm:gap-4 sm:py-6">
               <AssetsTable />
             </div>
@@ -37,6 +42,7 @@ import Module from '@components/module/Module.vue'
 import { RefreshIcon } from '@heroicons/vue/outline'
 
 import MediaSlug from './components/MediaSlug.vue'
+import MediaUpload from './components/MediaUpload.vue'
 import AssetsTable from './components/AssetsTable.vue'
 
 export default defineComponent({
@@ -44,6 +50,7 @@ export default defineComponent({
     Module,
     RefreshIcon,
     MediaSlug,
+    MediaUpload,
     AssetsTable,
   },
 
