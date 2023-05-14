@@ -4,6 +4,8 @@ namespace Podlove\Api\Episodes;
 
 use Podlove\Model\Episode;
 use Podlove\Modules\Contributors\Model\Contributor;
+use Podlove\Modules\Contributors\Model\ContributorGroup;
+use Podlove\Modules\Contributors\Model\ContributorRole;
 use Podlove\Modules\Contributors\Model\DefaultContribution;
 use Podlove\Modules\Contributors\Model\EpisodeContribution;
 use WP_REST_Controller;
@@ -118,13 +120,26 @@ class WP_REST_PodloveEpisodeContributions_Controller extends WP_REST_Controller
                 }
             }    
 
+            $comment = $contributor->comment;
+            if ($comment == null) {
+                $comment = '';
+            }
+            $group_id = $contributor->group_id;
+            if ($group_id == null) {
+                $group_id = 0;
+            }
+            $role_id = $contributor->role_id;
+            if ($role_id == null) {
+                $role_id = 0;
+            }
+        
             return [
                 'id' => $contributor->id,
                 'contributor_id' => $contributor->contributor_id,
-                'role_id' => $contributor->role_id,
-                'group_id' => $contributor->group_id,
+                'role_id' => $role_id,
+                'group_id' => $group_id,
                 'position' => $contributor->position,
-                'comment' => $contributor->comment,
+                'comment' => $comment,
                 'default_contributor' => self::isContributorDefault($contributor->contributor_id),
             ];
         }, EpisodeContribution::find_all_by_episode_id($id));
@@ -151,14 +166,27 @@ class WP_REST_PodloveEpisodeContributions_Controller extends WP_REST_Controller
                 return new \Podlove\Api\Error\ForbiddenAccess();
             }
         }
-    
+
+        $comment = $contribution->comment;
+        if ($comment == null) {
+            $comment = '';
+        }
+        $group_id = $contribution->group_id;
+        if ($group_id == null) {
+            $group_id = 0;
+        }
+        $role_id = $contribution->role_id;
+        if ($role_id == null) {
+            $role_id = 0;
+        }
+        
         return new \Podlove\Api\Response\OkResponse([
             'id' => $contribution->id,
             'contributor_id' => $contribution->contributor_id,
-            'role_id' => $contribution->role_id,
-            'group_id' => $contribution->group_id,
+            'role_id' => $role_id,
+            'group_id' => $group_id,
             'position' => $contribution->position,
-            'comment' => $contribution->comment,
+            'comment' => $comment,
             'default_contributor' => self::isContributorDefault($contribution->contributor_id),
         ]);
     }
@@ -218,6 +246,7 @@ class WP_REST_PodloveEpisodeContributions_Controller extends WP_REST_Controller
             $contributor->delete();
         }
 
+        $warning = [];
         if (isset($request['contributors']) && is_array($request['contributors'])) {
             for ($i = 0; $i < count($request['contributors']); ++$i) {
                 $contrib = new EpisodeContribution();
@@ -226,10 +255,28 @@ class WP_REST_PodloveEpisodeContributions_Controller extends WP_REST_Controller
                     $contrib->contributor_id = $request['contributors'][$i]['contributor_id'];
                 }
                 if (isset($request['contributors'][$i]['group_id'])) {
-                    $contrib->group = $request['contributors'][$i]['group_id'];
+                    $group_id = $request['contributors'][$i]['group_id'];
+                    $group = ContributorGroup::find_by_id($group_id);
+                    if ($group) {
+                        $contrib->group_id = $group_id;
+                    }
+                    else {
+                        if ($group_id > 0) {
+                            array_push($warning, 'group_id '.$group_id.' not exist!');
+                        }
+                    }
                 }
                 if (isset($request['contributors'][$i]['role_id'])) {
-                    $contrib->role = $request['contributors'][$i]['role_id'];
+                    $role_id = $request['contributors'][$i]['role_id'];
+                    $role = ContributorRole::find_by_id($role_id);
+                    if ($role) {
+                        $contrib->role_id = $role_id;
+                    }
+                    else {
+                        if ($role_id) {
+                            array_push($warning, 'role_id '.$role_id.' not exist!');
+                        }
+                    }
                 }
                 if (isset($request['contributors'][$i]['comment'])) {
                     $contrib->comment = $request['contributors'][$i]['comment'];
@@ -241,9 +288,17 @@ class WP_REST_PodloveEpisodeContributions_Controller extends WP_REST_Controller
             }
         }
 
-        return new \Podlove\Api\Response\OkResponse([
-            'status' => 'ok'
-        ]);
+        if (empty($warning)) {
+            return new \Podlove\Api\Response\OkResponse([
+                'status' => 'ok'
+            ]);
+        }
+        else {
+            return new \Podlove\Api\Response\OkResponse([
+                'status' => 'ok',
+                'warning' => $warning
+            ]);
+        }
     }
 
     public function update_contribution($request)
@@ -255,14 +310,33 @@ class WP_REST_PodloveEpisodeContributions_Controller extends WP_REST_Controller
             return new \Podlove\Api\Error\NotFound();
         }
 
+        $warning = [];
         if (isset($request['contributor_id'])) {
             $contribution->contributor_id = $request['contributor_id'];
         }
         if (isset($request['group_id'])) {
-            $contribution->group = $request['group_id'];
+            $group_id = $request['group_id'];
+            $group = ContributorGroup::find_by_id($group_id);
+            if ($group) {
+                $contribution->group_id = $group_id;
+            }
+            else {
+                if ($group_id > 0) {
+                    array_push($warning, 'group_id '.$group_id.' not exist!');
+                }
+            }
         }
         if (isset($request['role_id'])) {
-            $contribution->role = $request['role_id'];
+            $role_id = $request['role_id'];
+            $role = ContributorRole::find_by_id($role_id);
+            if ($role) {
+                $contribution->role_id = $role_id;
+            }
+            else {
+                if ($role_id > 0) {
+                    array_push($warning, 'role_id '.$role_id.' not exist!');
+                }
+            }
         }
         if (isset($request['comment'])) {
             $contribution->comment = $request['comment'];
@@ -272,9 +346,17 @@ class WP_REST_PodloveEpisodeContributions_Controller extends WP_REST_Controller
         }
         $contribution->save();
 
-        return new \Podlove\Api\Response\OkResponse([
-            'status' => 'ok',
-        ]);
+        if (empty($warning)) {
+            return new \Podlove\Api\Response\OkResponse([
+                'status' => 'ok'
+            ]);
+        }
+        else {
+            return new \Podlove\Api\Response\OkResponse([
+                'status' => 'ok',
+                'warning' => $warning
+            ]);
+        }
     }
 
     public function update_item_permissions_check($request)
