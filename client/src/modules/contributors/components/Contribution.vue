@@ -100,6 +100,9 @@
           >
             <arrow-down-icon class="w-5 h-5" />
           </button>
+          <a :href="editLink" target="_blank" class="text-gray-400">
+            <pencil-icon class="w-5 h-5" />
+          </a>
           <button class="text-red-600" @click="deleteContribution()">
             <x-icon class="w-5 h-5" />
           </button>
@@ -117,7 +120,7 @@ import * as episode from '@store/episode.store'
 import { PodloveRole, PodloveGroup } from '@types/contributors.types'
 import { PodloveEpisodeContribution } from '@types/episode.types'
 
-import { ArrowUpIcon, ArrowDownIcon, XIcon, UserCircleIcon } from '@heroicons/vue/outline'
+import { ArrowUpIcon, ArrowDownIcon, XIcon, UserCircleIcon, PencilIcon } from '@heroicons/vue/outline'
 
 import { get } from 'lodash'
 
@@ -127,6 +130,7 @@ export default defineComponent({
     ArrowDownIcon,
     XIcon,
     UserCircleIcon,
+    PencilIcon
   },
   props: {
     data: {
@@ -165,6 +169,7 @@ export default defineComponent({
     state: {
       roles: PodloveRole[]
       groups: PodloveGroup[]
+      baseUrl: string
     }
   } {
     return {
@@ -172,7 +177,14 @@ export default defineComponent({
       state: mapState({
         roles: selectors.contributors.roles,
         groups: selectors.contributors.groups,
+        baseUrl: selectors.runtime.baseUrl
       }),
+    }
+  },
+
+  computed: {
+    editLink() {
+      return `${this.state.baseUrl}/wp-admin/admin.php?page=podlove_contributor_settings&action=edit&contributor=${this.data.contributor_id}`;
     }
   },
 
