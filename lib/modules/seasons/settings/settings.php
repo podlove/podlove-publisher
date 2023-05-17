@@ -12,6 +12,8 @@ class Settings
 
     const MENU_SLUG = 'podlove_seasons_settings';
 
+    private static $nonce = 'update_seasons';
+
     public function __construct($handle)
     {
         $pagehook = add_submenu_page(
@@ -52,6 +54,10 @@ class Settings
             return;
         }
 
+        if (!wp_verify_nonce($_REQUEST['_podlove_nonce'], self::$nonce)) {
+            return;
+        }
+
         $action = (isset($_REQUEST['action'])) ? $_REQUEST['action'] : null;
 
         if ($action === 'save') {
@@ -71,21 +77,21 @@ class Settings
 			<?php
             $action = isset($_REQUEST['action']) ? $_REQUEST['action'] : null;
         switch ($action) {
-                case 'new':   $this->new_template();
+            case 'new':   $this->new_template();
 
-break;
-                case 'edit':  $this->edit_template();
+                break;
+            case 'edit':  $this->edit_template();
 
-break;
-                case 'index': $this->view_template();
+                break;
+            case 'index': $this->view_template();
 
-break;
+                break;
 
-                default:      $this->view_template();
+            default:      $this->view_template();
 
-break;
-            } ?>
-		</div>	
+                break;
+        } ?>
+		</div>
 		<?php
     }
 
@@ -210,11 +216,11 @@ break;
                 submit_button(__('Save Changes and Continue Editing', 'podlove-podcasting-plugin-for-wordpress'), 'secondary', 'submit_and_stay', false);
                 echo '</p>';
             },
+            'nonce' => self::$nonce
         ];
 
         \Podlove\Form\build_for($season, $form_args, function ($form) {
             $wrapper = new \Podlove\Form\Input\TableWrapper($form);
-            $season = $form->object;
             $podcast = Podcast::get();
 
             $wrapper->string('title', [

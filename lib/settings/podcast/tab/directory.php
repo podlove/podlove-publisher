@@ -6,6 +6,8 @@ use Podlove\Settings\Podcast\Tab;
 
 class Directory extends Tab
 {
+    private static $nonce = 'update_podcast_settings_directory';
+
     public function init()
     {
         add_action($this->page_hook, [$this, 'register_page']);
@@ -15,6 +17,10 @@ class Directory extends Tab
     public function process_form()
     {
         if (!isset($_POST['podlove_podcast']) || !$this->is_active()) {
+            return;
+        }
+
+        if (!wp_verify_nonce($_REQUEST['_podlove_nonce'], self::$nonce)) {
             return;
         }
 
@@ -52,6 +58,7 @@ class Directory extends Tab
         $form_attributes = [
             'context' => 'podlove_podcast',
             'action' => $this->get_url(),
+            'nonce' => self::$nonce
         ]; ?>
 		<p>
 			<?php _e('You may provide additional information about your podcast that may or may not be used by podcast directories like iTunes.', 'podlove-podcasting-plugin-for-wordpress'); ?>
@@ -127,7 +134,7 @@ class Directory extends Tab
             $wrapper->string('copyright', [
                 'label' => __('Copyright', 'podlove-podcasting-plugin-for-wordpress'),
                 'description' => __('Copyright notice for content in the channel. If you leave this blank, a default copyright notice will appear in the feed because it is required by the Apple Podcasts Connect.', 'podlove-podcasting-plugin-for-wordpress'),
-                'html' => ['class' => 'regular-text', 'placeholder' => $podcast->default_copyright_claim()],
+                'html' => ['class' => 'regular-text', 'placeholder' => \esc_attr($podcast->default_copyright_claim())],
             ]);
         });
     }

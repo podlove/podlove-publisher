@@ -205,22 +205,8 @@ class Contributors extends Tab
             $contributor = \Podlove\Modules\Contributors\Model\Contributor::find_by_id($_REQUEST['contributor']);
         }
 
-        switch ($_GET['action']) {
-            case 'new':   $action = 'create';
-
-break;
-            case 'edit':  $action = 'save';
-
-break;
-
-            default:      $action = 'delete';
-
-break;
-        }
-
         \Podlove\Form\build_for($contributor, $form_args, function ($form) use ($form_sections) {
             $wrapper = new \Podlove\Form\Input\TableWrapper($form);
-            $contributor = $form->object;
 
             foreach ($form_sections as $form_section) {
                 $wrapper->subheader($form_section['title']);

@@ -9,7 +9,7 @@ name: Beta Release
 jobs:
   build:
     name: Upload Release Asset
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
     steps:
       - name: Setup PHP with PECL extension
         uses: shivammathur/setup-php@v2

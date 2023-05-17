@@ -106,6 +106,13 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2023-04-25 =
+
+Bring security fixes from main branch to beta:
+
+* fix XSS vulnerability
+* fix CSRF vulnerabilities by adding nonces to forms
+
 = 2023-01-20 =
 
 various Auphonic module fixes

@@ -648,9 +648,9 @@ class Contributors extends \Podlove\Modules\Base
             } else {
                 foreach ($show_contributions as $show_contribution) {
                     $role_data = \Podlove\Modules\Contributors\Model\ContributorRole::find_one_by_id($show_contribution->role_id);
-                    ($role_data == '' ? $role = '' : $role = $role_data->id);
+                    $role_data == '' ? $role = '' : $role = $role_data->id;
                     $group_data = \Podlove\Modules\Contributors\Model\ContributorGroup::find_one_by_id($show_contribution->group_id);
-                    ($group_data == '' ? $group = '' : $group = $group_data->id);
+                    $group_data == '' ? $group = '' : $group = $group_data->id;
                     $cjson[$contributor->id] = [
                         'id' => $contributor->id,
                         'slug' => $contributor->identifier,
@@ -757,7 +757,7 @@ class Contributors extends \Podlove\Modules\Base
 
                 echo substr($contributor_list, 0, -2);
 
-            break;
+                break;
         }
     }
 
@@ -802,6 +802,10 @@ class Contributors extends \Podlove\Modules\Base
 
     public function feed_settings($wrapper)
     {
+        if (!isset($_REQUEST['feed'])) {
+            return;
+        }
+
         $contributors_roles = \Podlove\Modules\Contributors\Model\ContributorRole::all();
         $contributors_groups = \Podlove\Modules\Contributors\Model\ContributorGroup::all();
         $option_name = 'podlove_feed_'.$_REQUEST['feed'].'_contributor_filter';

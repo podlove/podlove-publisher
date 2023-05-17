@@ -6,6 +6,8 @@ class FileType
 {
     use \Podlove\HasPageDocumentationTrait;
 
+    private static $nonce = 'update_file_type';
+
     public function __construct($handle)
     {
         add_action('admin_init', [$this, 'process_form']);
@@ -14,6 +16,14 @@ class FileType
     public function process_form()
     {
         $action = (isset($_REQUEST['action'])) ? $_REQUEST['action'] : null;
+
+        if (!in_array($action, ['save', 'create', 'delete'])) {
+            return;
+        }
+
+        if (!wp_verify_nonce($_REQUEST['_podlove_nonce'], self::$nonce)) {
+            return;
+        }
 
         if ($action === 'save') {
             $this->save();
@@ -84,8 +94,6 @@ class FileType
      */
     private function create()
     {
-        global $wpdb;
-
         $format = new \Podlove\Model\FileType();
 
         if (!isset($_POST['podlove_file_type']) || !is_array($_POST['podlove_file_type'])) {
@@ -174,6 +182,7 @@ class FileType
                 submit_button(__('Save Changes and Continue Editing', 'podlove-podcasting-plugin-for-wordpress'), 'secondary', 'submit_and_stay', false);
                 echo '</p>';
             },
+            'nonce' => self::$nonce
         ];
 
         \Podlove\Form\build_for($format, $form_args, function ($form) {
