@@ -455,7 +455,7 @@ class WP_REST_PodloveContributors_Controller extends WP_REST_Controller
                 }
             } else {
                 if ($filter == 'all') {
-                    array_push($result, $this->get_contributor_data($entries[$i]));
+                    array_push($result, $this->get_contributor_data_full($entries[$i]));
                 }
             }
         }
@@ -583,7 +583,10 @@ class WP_REST_PodloveContributors_Controller extends WP_REST_Controller
             }
         }
 
-        $result = $this->get_contributor_data($contributor);
+        if ($filter == 'all')
+            $result = $this->get_contributor_data_full($contributor);
+        else
+            $result = $this->get_contributor_data($contributor);
 
         return new \Podlove\Api\Response\OkResponse([
             '_version' => 'v2',
@@ -612,7 +615,7 @@ class WP_REST_PodloveContributors_Controller extends WP_REST_Controller
     public function create_item($request)
     {
         $contributor = new Contributor();
-        $contributor->visibilty = 0;
+        $contributor->visibility = 0;
         $contributor->contributioncount = 0;
         $contributor->save();
 
@@ -722,12 +725,12 @@ class WP_REST_PodloveContributors_Controller extends WP_REST_Controller
             $contributor->avatar = $avatar;
         }
 
-        if (isset($request['visibilty'])) {
-            $visibilty = $request['visibilty'];
-            if ($visibilty == 'no') {
+        if (isset($request['visibility'])) {
+            $visibility = $request['visibility'];
+            if ($visibility == 'no') {
                 $contributor->visibility = 0;
             }
-            if ($visibilty == 'yes') {
+            if ($visibility == 'yes') {
                 $contributor->visibility = 1;
             }
         }
@@ -951,4 +954,24 @@ class WP_REST_PodloveContributors_Controller extends WP_REST_Controller
             'count' => $contributor->contributioncount,
         ];
     }
+
+    private function get_contributor_data_full($contributor)
+    {
+        return [
+            'id' => $contributor->id,
+            'identifier' => $contributor->identifier,
+            'visibility' => $contributor->visibility,
+            'avatar' => $contributor->avatar,
+            'publicname' => $contributor->publicname,
+            'nickname' => $contributor->nickname,
+            'realname' => $contributor->realname,
+            'mail' => $contributor->publicemail,
+            'department' => $contributor->department,
+            'organisation' => $contributor->organisation,
+            'jobtitle' => $contributor->jobtitle,
+            'gender' => $contributor->gender,
+            'count' => $contributor->contributioncount,
+        ];
+    }
+
 }
