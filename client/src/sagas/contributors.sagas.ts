@@ -9,7 +9,7 @@ import { PodloveApiClient } from '@lib/api'
 import { takeFirst } from './helper'
 import { createApi } from './api'
 import { selectors } from '@store'
-import { PodloveEpisode, PodloveEpisodeContribution } from '@types/episode.types'
+import { PodloveEpisode, PodloveEpisodeContribution } from '../types/episode.types'
 import { Action } from 'redux'
 import { __ } from '../plugins/translations'
 
@@ -72,7 +72,7 @@ function* updateEpisodeContributions(api: PodloveApiClient) {
 }
 
 function* fetchContributors(api: PodloveApiClient) {
-  const { result } = yield api.get('contributors')
+  const { result } = yield api.get('contributors', { query: { filter: 'all' } })
 
   if (!result) {
     return
@@ -112,14 +112,14 @@ function* createEpisodeContribution(api: PodloveApiClient, action: Action) {
   }
 
   const contributorId = createContributorResult?.id
-  const name: string = get(action, ['payload'])
-  const { error: updateContributorError } = yield api.put(`contributors/${contributorId}`, { name })
+  const realname: string = get(action, ['payload'])
+  const { error: updateContributorError } = yield api.put(`contributors/${contributorId}`, { realname })
 
   if (updateContributorError) {
     return
   }
 
-  const contributor = { id: contributorId, name }
+  const contributor = { id: contributorId, realname }
 
   yield put(contributors.addContributor(contributor))
   yield put(episode.addContribution(contributor))

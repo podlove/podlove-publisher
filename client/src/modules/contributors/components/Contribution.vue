@@ -18,7 +18,7 @@
         <div class="min-w-0 flex-1 px-4 md:grid md:gap-4">
           <div class="flex-shrink-0">
             <p class="truncate text-sm font-medium text-gray-900">
-              {{ data.name }}
+              {{ data.realname }}
             </p>
             <p class="mt-2 flex items-center text-sm text-gray-500">
               <span class="truncate">{{ data.nickname }}</span>
@@ -117,8 +117,8 @@ import { injectStore, mapState } from 'redux-vuex'
 import { defineComponent } from 'vue'
 import { selectors } from '@store'
 import * as episode from '@store/episode.store'
-import { PodloveRole, PodloveGroup } from '@types/contributors.types'
-import { PodloveEpisodeContribution } from '@types/episode.types'
+import { PodloveRole, PodloveGroup } from '../../../types/contributors.types'
+import { PodloveEpisodeContribution } from '../../../types/episode.types'
 
 import { ArrowUpIcon, ArrowDownIcon, XIcon, UserCircleIcon, PencilIcon } from '@heroicons/vue/outline'
 

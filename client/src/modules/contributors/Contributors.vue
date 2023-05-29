@@ -39,8 +39,8 @@ import { PlusSmIcon } from '@heroicons/vue/outline'
 import { selectors } from '@store'
 import * as contributors from '@store/contributors.store'
 import * as episode from '@store/episode.store'
-import { PodloveEpisodeContribution } from '@types/episode.types'
-import { PodloveContributor, PodloveRole, PodloveGroup } from '@types/contributors.types'
+import { PodloveEpisodeContribution } from '../../types/episode.types'
+import { PodloveContributor, PodloveRole, PodloveGroup } from '../../types/contributors.types'
 
 export default defineComponent({
   components: {

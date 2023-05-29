@@ -2,7 +2,7 @@
   <div class="block hover:bg-gray-50">
     <div class="flex items-center px-4 py-4 sm:px-6">
       <div class="flex min-w-0 flex-1 items-center">
-        <div class="min-w-0 flex-1 px-4 md:grid md:grid-cols-2 md:gap-4">
+        <div class="min-w-0 flex-1 px-4 md:grid md:grid-cols-2 md:gap-4" v-if="data">
           <Combobox as="div" v-model="data">
             <ComboboxLabel class="block text-sm font-medium leading-6 text-gray-900">{{
               __('Select Contributor')
@@ -27,7 +27,7 @@
               >
                 <ComboboxOption
                   v-for="contributor in filteredContributors"
-                  :key="contributor.id"
+                  :key="contributor.id || 'create'"
                   :value="contributor"
                   as="template"
                   v-slot="{ active, selected }"
@@ -51,7 +51,7 @@
                         class="h-6 w-6 flex-shrink-0 rounded-full text-gray-500"
                       />
                       <span :class="['ml-3 truncate', selected && 'font-semibold']">
-                        {{ contributor.name }}
+                        {{ contributor.realname }}
                       </span>
                     </div>
 
@@ -98,8 +98,8 @@ import {
 import { injectStore, mapState } from 'redux-vuex'
 
 import { selectors } from '@store'
-import { PodloveContributor } from '@types/contributors.types'
-import { PodloveEpisodeContribution } from '@types/episode.types'
+import { PodloveContributor } from '../../../types/contributors.types'
+import { PodloveEpisodeContribution } from '../../../types/episode.types'
 import { usePopper } from '@lib/popper'
 
 export default defineComponent({
@@ -156,7 +156,7 @@ export default defineComponent({
               {
                 id: null,
                 avatar: null,
-                name: `${this.__('Create: ')}${this.query}`,
+                realname: `${this.__('Create: ')}${this.query}`,
               },
             ]
           : []),
@@ -171,7 +171,7 @@ export default defineComponent({
           )
           .filter(
             (contributor) =>
-              !this.query || contributor.name.toUpperCase().includes(this.query.toUpperCase())
+              !this.query || (contributor?.realname || '').toUpperCase().includes(this.query.toUpperCase())
           ),
       ]
     },

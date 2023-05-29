@@ -92,7 +92,7 @@ export default defineComponent({
             ...result,
             [voice]: {
               id: contributor.id,
-              name: contributor.name,
+              name: contributor.realname,
               avatar: contributor.avatar,
             },
           }
