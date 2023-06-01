@@ -2,7 +2,7 @@
   <div class="block hover:bg-gray-50">
     <div class="flex items-center px-4 py-4 sm:px-6">
       <div class="flex min-w-0 flex-1 items-center">
-        <div class="min-w-0 flex-1 px-4 md:grid md:grid-cols-2 md:gap-4" v-if="data">
+        <div class="min-w-0 flex-1 px-4 md:grid md:grid-cols-2 md:gap-4">
           <Combobox as="div" v-model="data">
             <ComboboxLabel class="block text-sm font-medium leading-6 text-gray-900">{{
               __('Select Contributor')
@@ -106,7 +106,7 @@ export default defineComponent({
   data() {
     return {
       query: '',
-      data: null,
+      data: '',
     }
   },
   emits: ['addContributor', 'createContributor', 'close'],
