@@ -19,7 +19,7 @@ function podlove_init_js_adapter()
     $data = apply_filters('podlove_data_js', []); ?>
 
     <script>
-      window.PODLOVE_DATA = window.PODLOVE_DATA || {};
+      window.PODLOVE_DATA = window.PODLOVE_DATA || { baseUrl: '<?php echo home_url(); ?>' };
       <?php foreach ($data as $key => $value) { ?>
           window.PODLOVE_DATA['<?php echo $key; ?>'] = <?php echo json_encode($value); ?>;
       <?php } ?>
