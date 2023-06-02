@@ -133,6 +133,7 @@ const settings = {
     root.settings,
     settingsStore.selectors.enableEpisodeExplicit
   ),
+  modules: createSelector(root.settings, settingsStore.selectors.modules),
 }
 
 export default {

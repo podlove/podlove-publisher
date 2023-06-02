@@ -38,6 +38,7 @@ export interface State {
   media: {
     base_uri: null | string
   }
+  modules: string[]
 }
 
 export const initialState: State = {
@@ -73,6 +74,7 @@ export const initialState: State = {
   media: {
     base_uri: null,
   },
+  modules: [],
 }
 
 const normalizeAssignmentImage = (
@@ -184,6 +186,7 @@ export const reducer = handleActions(
         ),
         transcript: get(action, ['payload', 'assignments', 'transcript'], null),
       },
+      modules: get(action, ['payload', 'modules']),
     }),
   },
   initialState
@@ -196,4 +199,5 @@ export const selectors = {
   imageAsset: (state: State) => state.assets.image,
   enableEpisodeExplicit: (state: State) => state.metadata.enable_episode_explicit,
   mediaFileBaseUri: (state: State) => state.media.base_uri,
+  modules: (state: State) => state.modules,
 }

@@ -16,8 +16,10 @@
               <MediaSlug />
             </div>
 
-            <!-- TODO: only if upload module is active -->
-            <div class="sm:grid sm:grid-cols-[175px_auto_auto] sm:items-start sm:gap-4 sm:py-6">
+            <div
+              v-if="isMediaUploadEnabled"
+              class="sm:grid sm:grid-cols-[175px_auto_auto] sm:items-start sm:gap-4 sm:py-6"
+            >
               <MediaUpload />
             </div>
 
@@ -58,6 +60,7 @@ export default defineComponent({
     return {
       state: mapState({
         isInitializing: selectors.mediafiles.isInitializing,
+        modules: selectors.settings.modules,
       }),
       dispatch: injectStore().dispatch,
     }
@@ -66,6 +69,9 @@ export default defineComponent({
   computed: {
     isInitializing(): boolean {
       return this.state.isInitializing
+    },
+    isMediaUploadEnabled(): boolean {
+      return this.state.modules.includes('wordpress_file_upload')
     },
   },
 

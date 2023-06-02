@@ -51,6 +51,7 @@ function podlove_js_adapter_inject_settings($data)
     }, []);
 
     $data['media'] = ['base_uri' => $podcast->get_media_file_base_uri()];
+    $data['modules'] = \Podlove\Modules\Base::get_active_module_names();
 
     return $data;
 }
