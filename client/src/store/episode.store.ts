@@ -9,6 +9,7 @@ import { arrayMove } from '@lib/array'
 
 export const INIT = 'podlove/publisher/episode/INIT'
 export const UPDATE = 'podlove/publisher/episode/UPDATE'
+export const QUICKSAVE = 'podlove/publisher/episode/QUICKSAVE'
 export const SAVED = 'podlove/publisher/episode/SAVED'
 export const SET = 'podlove/publisher/episode/SET'
 export const SET_POSTER = 'podlove/publisher/episode/SET_POSTER'
@@ -57,6 +58,7 @@ export const initialState: State = {
 }
 
 export const update = createAction<{ prop: string; value: any }>(UPDATE)
+export const quicksave = createAction<void>(QUICKSAVE)
 export const init = createAction<void>(INIT)
 export const selectPoster = createAction<void>(SELECT_POSTER)
 export const set = createAction<{
