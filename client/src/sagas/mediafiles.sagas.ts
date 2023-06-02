@@ -50,7 +50,6 @@ function* setUploadMedia(action: Action) {
   const slug = url.split('\\').pop().split('/').pop().split('.').shift()
 
   yield put(episode.update({ prop: 'slug', value: slug }))
-  // TODO: can we get away with hiding the slug UI? it's filled automatically anyway!
   // TODO: add indicator that assets are refreshing after slug change (any, not just here)
   // FIXME: enable asset that was just uploaded once it's green
 }
