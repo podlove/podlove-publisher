@@ -51,8 +51,6 @@ class Wordpress_File_Upload extends \Podlove\Modules\Base
     public function register_hooks()
     {
         add_filter('upload_dir', [$this, 'custom_media_upload_dir']);
-        add_filter('podlove_episode_form_data', [$this, 'add_upload_button_to_form']);
-        add_action('podlove_episode_meta_box_end', [$this, 'add_upload_button_styles_and_scripts']);
         add_filter('podlove_media_file_base_uri_form', [$this, 'set_form_placeholder']);
         add_filter('podlove_media_file_base_uri', [$this, 'set_media_file_base_uri']);
     }
@@ -79,24 +77,6 @@ class Wordpress_File_Upload extends \Podlove\Modules\Base
         return $config;
     }
 
-    public function add_upload_button_to_form($form_data)
-    {
-        $form_data[] = [
-            'type' => 'upload',
-            'key' => 'file_upload',
-            'options' => [
-                'label' => __('File Upload', 'podlove-podcasting-plugin-for-wordpress'),
-                'media_title' => __('Media File', 'podlove-podcasting-plugin-for-wordpress'),
-                'media_button_text' => __('Use Media File', 'podlove-podcasting-plugin-for-wordpress'),
-                'form_button_text' => __('Upload Media File', 'podlove-podcasting-plugin-for-wordpress'),
-                'allow_multi_upload' => false
-            ],
-            'position' => 512,
-        ];
-
-        return $form_data;
-    }
-
     /**
      * Override upload_dir so it ignores date subdirectories etc.
      *
@@ -118,32 +98,6 @@ class Wordpress_File_Upload extends \Podlove\Modules\Base
         $upload['url'] = $upload['baseurl'].$upload['subdir'];
 
         return $upload;
-    }
-
-    public function add_upload_button_styles_and_scripts()
-    {
-        ?>
-        <style>
-        #_podlove_meta_file_upload,
-        .podlove-media-upload-wrap .podlove_preview_pic,
-        .podlove-media-upload-wrap p
-        {
-        display: none !important;
-        }
-        </style>
-        <script>
-        const uploadUrlInput = document.getElementById('_podlove_meta_file_upload')
-        const slugInput = document.getElementById('_podlove_meta_slug');
-
-        uploadUrlInput.addEventListener('change', function (e) {
-            const value = e.target.value;
-            const slug = value.split('\\').pop().split('/').pop().split('.').shift()
-
-            slugInput.value = slug;
-            slugInput.dispatchEvent(new Event('slugHasChanged', { 'bubbles': true }))
-        });
-        </script>
-    <?php
     }
 
     private function get_subdir()
