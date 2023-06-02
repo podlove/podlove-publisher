@@ -47,8 +47,9 @@ function* selectMediaFromLibrary() {
 
 function* setUploadMedia(action: Action) {
   const url = get(action, ['payload'])
+  const slug = url.split('\\').pop().split('/').pop().split('.').shift()
 
-  console.log('setUploadMedia', url)
+  yield put(episode.update({ prop: 'slug', value: slug }))
 }
 
 function* maybeUpdateDuration(api: PodloveApiClient) {
