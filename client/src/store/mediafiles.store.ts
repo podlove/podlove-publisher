@@ -7,6 +7,7 @@ export type MediaFile = {
   url: string
   size: number
   enable: boolean
+  is_verifying: boolean
 }
 
 export type State = {
@@ -54,7 +55,7 @@ export const reducer = handleActions(
     [UPDATE]: (state: State, action: { type: string; payload: Partial<MediaFile> }): State => ({
       ...state,
       files: state.files.reduce(
-        (result: MediaFiles[], file) => [
+        (result: MediaFile[], file) => [
           ...result,
           file.asset_id == action.payload.asset_id ? { ...file, ...action.payload } : file,
         ],
@@ -64,7 +65,7 @@ export const reducer = handleActions(
     [ENABLE]: (state: State, action: { type: string; payload: number }): State => ({
       ...state,
       files: state.files.reduce(
-        (result: MediaFiles[], file) => [
+        (result: MediaFile[], file) => [
           ...result,
           file.asset_id == action.payload ? { ...file, enable: true } : file,
         ],
@@ -74,7 +75,7 @@ export const reducer = handleActions(
     [DISABLE]: (state: State, action: { type: string; payload: number }): State => ({
       ...state,
       files: state.files.reduce(
-        (result: MediaFiles[], file) => [
+        (result: MediaFile[], file) => [
           ...result,
           file.asset_id == action.payload ? { ...file, enable: false } : file,
         ],

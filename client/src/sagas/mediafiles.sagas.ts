@@ -104,12 +104,20 @@ function* maybeReverify(api: PodloveApiClient, action: { type: string; payload: 
 }
 
 function* verifyEpisodeAsset(api: PodloveApiClient, episodeId: number, assetId: number) {
+  yield put(
+    mediafiles.update({
+      asset_id: assetId,
+      is_verifying: true,
+    })
+  )
+
   const { result } = yield api.put(`episodes/${episodeId}/media/${assetId}/verify`, {})
 
   const fileUpdate: Partial<MediaFile> = {
     asset_id: assetId,
     url: result.file_url,
     size: result.file_size,
+    is_verifying: false,
   }
 
   yield put(mediafiles.update(fileUpdate))
