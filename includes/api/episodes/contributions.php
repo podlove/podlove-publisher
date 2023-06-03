@@ -424,11 +424,7 @@ class WP_REST_PodloveEpisodeContributions_Controller extends WP_REST_Controller
 
     private function isContributorDefault($id) 
     {
-        $defaultContributor = DefaultContribution::find_all_by_property('contributor_id', $id);
-        if ($defaultContributor)
-            return true;
-
-        return false;
+        return (bool) DefaultContribution::find_all_by_property('contributor_id', $id);
     }
 
     private function isContributorVisible($id)
