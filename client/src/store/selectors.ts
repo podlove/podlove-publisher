@@ -10,7 +10,7 @@ import * as contributorsStore from './contributors.store'
 import * as settingsStore from './settings.store'
 import * as podcastStore from './podcast.store'
 import * as auphonicStore from './auphonic.store'
-import { identity } from 'lodash'
+import * as mediafilesStore from './mediafiles.store'
 
 const root = {
   lifecycle: (state: State) => state.lifecycle,
@@ -22,6 +22,7 @@ const root = {
   transcripts: (state: State) => state.transcripts,
   contributors: (state: State) => state.contributors,
   auphonic: (state: State) => state.auphonic,
+  mediafiles: (state: State) => state.mediafiles,
   settings: (state: State) => state.settings,
 }
 
@@ -96,6 +97,11 @@ const episode = {
 })
 }
 
+const mediafiles = {
+  isInitializing: createSelector(root.mediafiles, mediafilesStore.selectors.isInitializing),
+  files: createSelector(root.mediafiles, mediafilesStore.selectors.files),
+}
+
 const runtime = {
   baseUrl: createSelector(root.runtime, runtimeStore.selectors.baseUrl),
   nonce: createSelector(root.runtime, runtimeStore.selectors.nonce),
@@ -121,6 +127,7 @@ const settings = {
   ),
   blogTitleTemplate: createSelector(root.settings, settingsStore.selectors.blogTitleTemplate),
   episodeNumberPadding: createSelector(root.settings, settingsStore.selectors.episodeNumberPadding),
+  mediaFileBaseUri: createSelector(root.settings, settingsStore.selectors.mediaFileBaseUri),
   imageAsset: createSelector(root.settings, settingsStore.selectors.imageAsset),
   enableEpisodeExplicit: createSelector(
     root.settings,
@@ -139,4 +146,5 @@ export default {
   contributors,
   settings,
   auphonic,
+  mediafiles,
 }

@@ -36,6 +36,7 @@ function podlove_init_js_adapter()
 function podlove_js_adapter_inject_settings($data)
 {
     $defaults = \Podlove\get_setting_defaults();
+    $podcast = \Podlove\Model\Podcast::get();
 
     $settings_tab_names = ['website', 'metadata', 'tracking'];
 
@@ -48,6 +49,8 @@ function podlove_js_adapter_inject_settings($data)
 
         return $tabs;
     }, []);
+
+    $data['media'] = ['base_uri' => $podcast->get_media_file_base_uri()];
 
     return $data;
 }

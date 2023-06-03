@@ -9,6 +9,7 @@ import { arrayMove } from '@lib/array'
 
 export const INIT = 'podlove/publisher/episode/INIT'
 export const UPDATE = 'podlove/publisher/episode/UPDATE'
+export const SAVED = 'podlove/publisher/episode/SAVED'
 export const SET = 'podlove/publisher/episode/SET'
 export const SET_POSTER = 'podlove/publisher/episode/SET_POSTER'
 export const SELECT_POSTER = 'podlove/publisher/episode/SELECT_POSTER'
@@ -79,6 +80,7 @@ export const deleteContribution = createAction<PodloveEpisodeContribution>(DELET
 export const updateContribution = createAction<PodloveEpisodeContribution>(UPDATE_CONTRIBUTION);
 export const addContribution = createAction<Partial<PodloveContributor>>(ADD_CONTRIBUTION);
 export const createContribution = createAction<string>(CREATE_CONTRIBUTION);
+export const saved = createAction<object>(SAVED)
 
 export const reducer = handleActions(
   {
