@@ -2,22 +2,14 @@ import { PodloveApiClient } from '@lib/api'
 import { selectors } from '@store'
 import { get, isEmpty } from 'lodash'
 import { Action } from 'redux'
-import { debounce, fork, put, select, takeEvery, throttle } from 'redux-saga/effects'
+import { debounce, fork, put, select, takeEvery } from 'redux-saga/effects'
+import { PodloveEpisode } from '../types/episode.types'
 import * as auphonic from '../store/auphonic.store'
 import * as episode from '../store/episode.store'
 import * as wordpress from '../store/wordpress.store'
 import { createApi } from './api'
 import { WebhookConfig } from './auphonic.sagas'
 import { takeFirst } from './helper'
-
-interface EpisodeData {
-  slug: string
-  number: string
-  title: string
-  subtitle: string
-  summary: string
-  poster: string
-}
 
 let EPISODE_UPDATE: { [key: string]: any } = {}
 
@@ -41,10 +33,10 @@ function* updateAuphonicWebhookConfig() {
 
 function* initialize(api: PodloveApiClient) {
   const episodeId: string = yield select(selectors.episode.id)
-  const { result }: { result: EpisodeData } = yield api.get(`episodes/${episodeId}`)
+  const { result: episodesResult }: { result: PodloveEpisode } = yield api.get(`episodes/${episodeId}`)
 
-  if (result) {
-    yield put(episode.set(result))
+  if (episodesResult) {
+    yield put(episode.set(episodesResult))
   }
 }
 

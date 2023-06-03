@@ -66,7 +66,7 @@ export default defineComponent({
   setup() {
     return {
       state: mapState({
-        contributors: selectors.contributors.list,
+        contributors: selectors.contributors.contributors,
         voices: selectors.transcripts.voices,
       }),
       dispatch: injectStore().dispatch,
