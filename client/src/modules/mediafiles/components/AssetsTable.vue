@@ -22,10 +22,6 @@
         <tbody class="divide-y divide-gray-200 bg-white">
           <tr v-for="file in files" :key="file.asset_id" :class="{ 'opacity-50': !file.enable }">
             <td class="relative px-7 sm:w-12 sm:px-6">
-              <!-- <div
-                  class="absolute inset-y-0 left-0 w-0.5"
-                  :class="{ 'bg-green-400': file.size > 0, 'bg-red-400': !file.size }"
-                ></div> -->
               <input
                 type="checkbox"
                 class="absolute left-4 top-1/2 -mt-2 h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
