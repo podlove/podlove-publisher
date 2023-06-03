@@ -434,12 +434,7 @@ class WP_REST_PodloveEpisodeContributions_Controller extends WP_REST_Controller
     private function isContributorVisible($id)
     {
         $contributor = Contributor::find_by_id($id);
-        if ($contributor) {
-            if ($contributor->visibility > 0)
-                return true;
-        }
-
-        return false;
+        return $contributor && $contributor->visibility > 0;
     }
 
     private function isEmpty($var)
