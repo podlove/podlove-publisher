@@ -1,5 +1,4 @@
 import { createAction, handleActions } from 'redux-actions'
-import MediaFiles from 'src/modules/mediafiles'
 
 export type MediaFile = {
   asset_id: number
