@@ -66,7 +66,7 @@ function* save(api: PodloveApiClient, action: Action) {
 }
 
 function* selectImageFromLibrary() {
-  yield put(wordpress.selectImageFromLibrary({ onSuccess: { type: episode.SET_POSTER } }))
+  yield put(wordpress.selectMediaFromLibrary({ onSuccess: { type: episode.SET_POSTER } }))
 }
 
 function* updatePoster(action: Action) {

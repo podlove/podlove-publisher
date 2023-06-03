@@ -158,7 +158,7 @@ function* handleImport(action: { type: string; payload: string }) {
     parseMp4Chapters,
     parseAudacityChapters,
     parseHindeburgChapters,
-    parsePodloveChapters
+    parsePodloveChapters,
   ]
 
   let parsedChapters: PodloveChapter[] | null = []
@@ -221,7 +221,7 @@ function* handleKeydown(input: {
 }
 
 function* selectImageFromLibrary() {
-  yield put(wordpress.selectImageFromLibrary({ onSuccess: { type: chapters.SELECT_IMAGE } }))
+  yield put(wordpress.selectMediaFromLibrary({ onSuccess: { type: chapters.SELECT_IMAGE } }))
 }
 
 export default function () {

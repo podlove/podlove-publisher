@@ -42,7 +42,7 @@ function* initialize(api: PodloveApiClient) {
 }
 
 function* selectMediaFromLibrary() {
-  yield put(wordpress.selectImageFromLibrary({ onSuccess: { type: mediafiles.SET_UPLOAD_URL } }))
+  yield put(wordpress.selectMediaFromLibrary({ onSuccess: { type: mediafiles.SET_UPLOAD_URL } }))
 }
 
 function* setUploadMedia(action: Action) {

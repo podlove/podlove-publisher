@@ -28,7 +28,7 @@ function* wordpressSaga(): any {
   }
 
   if (wordpress.media) {
-    yield takeEvery(wordpressStore.SELECT_IMAGE_FROM_LIBRARY as any, selectImageFromLibrary)
+    yield takeEvery(wordpressStore.SELECT_IMAGE_FROM_LIBRARY as any, selectMediaFromLibrary)
   }
 }
 
@@ -75,8 +75,7 @@ function* updatePostTitle() {
     .replace('%episode_title%', title || '')
 }
 
-// TODO: refactor/rename as it's not only used for images
-function* selectImageFromLibrary(action: { payload: { onSuccess: Action } }) {
+function* selectMediaFromLibrary(action: { payload: { onSuccess: Action } }) {
   const successAction = get(action, ['payload', 'onSuccess'])
 
   if (!successAction) {
