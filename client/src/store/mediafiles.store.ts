@@ -26,7 +26,6 @@ export const UPDATE = 'podlove/publisher/mediafiles/UPDATE'
 export const ENABLE = 'podlove/publisher/mediafiles/ENABLE'
 export const DISABLE = 'podlove/publisher/mediafiles/DISABLE'
 export const VERIFY = 'podlove/publisher/mediafiles/VERIFY'
-// TODO: rename? because it's "select or upload"
 export const UPLOAD_INTENT = 'podlove/publisher/mediafiles/UPLOAD_INTENT'
 export const SET_UPLOAD_URL = 'podlove/publisher/mediafiles/SET_UPLOAD_URL'
 
