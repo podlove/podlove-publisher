@@ -104,6 +104,9 @@ function* maybeReverify(api: PodloveApiClient, action: { type: string; payload: 
 }
 
 function* verifyEpisodeAsset(api: PodloveApiClient, episodeId: number, assetId: number) {
+  const mediaFiles: MediaFile[] = yield select(selectors.mediafiles.files)
+  const prevMediaFile: MediaFile | undefined = mediaFiles.find((mf) => mf.asset_id == assetId)
+
   yield put(
     mediafiles.update({
       asset_id: assetId,
@@ -113,10 +116,14 @@ function* verifyEpisodeAsset(api: PodloveApiClient, episodeId: number, assetId: 
 
   const { result } = yield api.put(`episodes/${episodeId}/media/${assetId}/verify`, {})
 
+  // auto-enable if file size changed from zero to non-zero
+  const enable = (!prevMediaFile?.size && result.file_size) || prevMediaFile?.enable
+
   const fileUpdate: Partial<MediaFile> = {
     asset_id: assetId,
     url: result.file_url,
     size: result.file_size,
+    enable: enable,
     is_verifying: false,
   }
 
