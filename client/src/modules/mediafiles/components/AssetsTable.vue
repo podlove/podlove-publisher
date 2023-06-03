@@ -22,6 +22,12 @@
         <tbody class="divide-y divide-gray-200 bg-white">
           <tr v-for="file in files" :key="file.asset_id" :class="{ 'opacity-50': !file.enable }">
             <td class="relative px-7 sm:w-12 sm:px-6">
+              <div
+                v-if="file.is_verifying"
+                class="inline-flex items-center animate-pulse text-green-600 absolute left-[-14px] top-1/2 -mt-2.5"
+              >
+                <CloudIcon class="h-5 w-5" aria-hidden="true" />
+              </div>
               <input
                 type="checkbox"
                 class="absolute left-4 top-1/2 -mt-2 h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
@@ -75,8 +81,6 @@ found" -->
                 class="inline-flex items-center rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:bg-white"
                 @click="() => handleVerify(file.asset_id)"
               >
-                <!-- NEXT UP: display a pretty spinner instead, maybe around the checkbox -->
-                <div v-if="file.is_verifying">XXX</div>
                 {{ __('Verify') }}
               </button>
             </td>
@@ -100,6 +104,8 @@ import * as mediafiles from '@store/mediafiles.store'
 
 import { CheckCircleIcon, XCircleIcon } from '@heroicons/vue/solid'
 
+import { CloudIcon } from '@heroicons/vue/outline'
+
 import Timestamp from '@lib/timestamp'
 import AssetsEmptyState from './AssetsEmptyState.vue'
 
@@ -107,6 +113,7 @@ export default defineComponent({
   components: {
     CheckCircleIcon,
     XCircleIcon,
+    CloudIcon,
     AssetsEmptyState,
   },
 
