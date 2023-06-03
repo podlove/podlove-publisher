@@ -241,9 +241,9 @@ class WP_REST_PodloveEpisodeContributions_Controller extends WP_REST_Controller
             return new \Podlove\Api\Error\NotFound();
         }
 
-        $contributors = EpisodeContribution::find_all_by_episode_id($id);
-        foreach ($contributors as $contributor) {
-            $contributor->delete();
+        $contributions = EpisodeContribution::find_all_by_episode_id($id);
+        foreach ($contributions as $contribution) {
+            $contribution->delete();
         }
 
         $warning = [];
