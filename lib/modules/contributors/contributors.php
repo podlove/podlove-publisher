@@ -568,6 +568,110 @@ class Contributors extends \Podlove\Modules\Base
         }
     }
 
+    public static function contributors_form_table($current_contributions = [], $form_base_name = 'episode_contributor')
+    {
+        $contributors_roles = \Podlove\Modules\Contributors\Model\ContributorRole::selectOptions();
+        $contributors_groups = \Podlove\Modules\Contributors\Model\ContributorGroup::selectOptions();
+        $cjson = [];
+
+        // only valid contributions
+        $current_contributions = array_filter($current_contributions, function ($c) {
+            return $c->contributor_id > 0;
+        });
+
+        $has_roles = count($contributors_roles) > 0;
+        $has_groups = count($contributors_groups) > 0;
+        $can_be_commented = $form_base_name == 'podlove_contributor_defaults[contributor]' ? 0 : 1;
+
+        foreach (\Podlove\Modules\Contributors\Model\Contributor::all() as $contributor) {
+            $show_contributions = \Podlove\Modules\Contributors\Model\ShowContribution::all('WHERE `contributor_id` = '.$contributor->id);
+            if (empty($show_contributions)) {
+                $cjson[$contributor->id] = [
+                    'id' => $contributor->id,
+                    'slug' => $contributor->identifier,
+                    'role' => '',
+                    'group' => '',
+                    'realname' => $contributor->realname,
+                    'avatar' => $contributor->avatar()->setWidth(45)->image(),
+                ];
+            } else {
+                foreach ($show_contributions as $show_contribution) {
+                    $role_data = \Podlove\Modules\Contributors\Model\ContributorRole::find_one_by_id($show_contribution->role_id);
+                    $role_data == '' ? $role = '' : $role = $role_data->id;
+                    $group_data = \Podlove\Modules\Contributors\Model\ContributorGroup::find_one_by_id($show_contribution->group_id);
+                    $group_data == '' ? $group = '' : $group = $group_data->id;
+                    $cjson[$contributor->id] = [
+                        'id' => $contributor->id,
+                        'slug' => $contributor->identifier,
+                        'role' => $role,
+                        'group' => $group,
+                        'realname' => $contributor->realname,
+                        'avatar' => $contributor->avatar()->setWidth(45)->image(),
+                    ];
+                }
+            }
+        }
+
+        // override contributor roles and groups with scoped roles
+        foreach ($current_contributions as $contribution_key => $current_contribution) {
+            if ($role = $current_contribution->getRole()) {
+                $cjson[$current_contribution->contributor_id]['role'] = $role->slug;
+            }
+            if ($group = $current_contribution->getGroup()) {
+                $cjson[$current_contribution->contributor_id]['group'] = $group->slug;
+            }
+        }
+
+        $contributors = \Podlove\Modules\Contributors\Model\Contributor::all();
+
+        $existing_contributions = array_filter(array_map(function ($c) {
+            // Set default role
+            $role_data = \Podlove\Modules\Contributors\Model\ContributorRole::find_by_id($c->role_id);
+            if (isset($role_data)) {
+                $role = $role_data->slug;
+            } else {
+                if (empty($c->role)) {
+                    $role = '';
+                } else {
+                    $role = $c->role->slug;
+                }
+            }
+
+            // Set default group
+            $group_data = \Podlove\Modules\Contributors\Model\ContributorGroup::find_by_id($c->group_id);
+            if (isset($group_data)) {
+                $group = $group_data->slug;
+            } else {
+                if (empty($c->group)) {
+                    $group = '';
+                } else {
+                    $group = $c->group->slug;
+                }
+            }
+
+            if (is_object(\Podlove\Modules\Contributors\Model\Contributor::find_by_id($c->contributor_id))) {
+                return ['id' => $c->contributor_id, 'role' => $role, 'group' => $group, 'comment' => $c->comment];
+            }
+
+            return '';
+        }, $current_contributions));
+
+        \Podlove\load_template(
+            'lib/modules/contributors/views/form_table',
+            compact(
+                'has_groups',
+                'has_roles',
+                'can_be_commented',
+                'form_base_name',
+                'existing_contributions',
+                'cjson',
+                'contributors',
+                'contributors_groups',
+                'contributors_roles'
+            )
+        );
+    }
+
     public function add_new_podcast_columns($columns)
     {
         $keys = array_keys($columns);
