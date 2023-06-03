@@ -51,8 +51,6 @@ function* setUploadMedia(action: Action) {
 
   yield put(episode.update({ prop: 'slug', value: slug }))
   yield put(episode.quicksave())
-  // TODO: add indicator that assets are refreshing after slug change (any, not just here)
-  // FIXME: enable asset that was just uploaded once it's green
 }
 
 function* maybeUpdateDuration(api: PodloveApiClient) {
