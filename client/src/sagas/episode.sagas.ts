@@ -18,7 +18,7 @@ function* episodeSaga(): any {
   yield fork(initialize, apiClient)
 
   yield takeEvery(episode.UPDATE, collectEpisodeUpdate)
-  yield debounce(3000, episode.UPDATE, save, apiClient)
+  yield debounce(1000, episode.UPDATE, save, apiClient)
   yield debounce(50, episode.QUICKSAVE, save, apiClient)
   yield takeEvery(episode.SELECT_POSTER, selectImageFromLibrary)
   yield takeEvery(episode.SET_POSTER, updatePoster)
