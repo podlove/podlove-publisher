@@ -78,7 +78,7 @@ export default defineComponent({
     },
 
     computed: {
-      soundbite_end(): string {
+      soundbite_end(): string | undefined {
         if (this.state.soundbite_start != null && this.state.soundbite_duration != null) {
           let start = Timestamp.fromString(this.state.soundbite_start).totalMs
           let duration = Timestamp.fromString(this.state.soundbite_duration).totalMs
