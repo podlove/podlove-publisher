@@ -28,7 +28,7 @@ function* wordpressSaga(): any {
   }
 
   if (wordpress.media) {
-    yield takeEvery(wordpressStore.SELECT_IMAGE_FROM_LIBRARY as any, selectMediaFromLibrary)
+    yield takeEvery(wordpressStore.SELECT_MEDIA_FROM_LIBRARY as any, selectMediaFromLibrary)
   }
 }
 

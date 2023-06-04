@@ -16,7 +16,7 @@
 
     <h3 class="mt-2 text-sm font-semibold text-gray-900">{{ __('No Assets') }}</h3>
     <p class="mt-1 text-sm text-gray-500">
-      {{ _('Please go to Podlove &rarr; Episode Assets and define at least one audio asset.') }}
+      {{ __('Please go to Podlove &rarr; Episode Assets and define at least one audio asset.') }}
     </p>
   </div>
 </template>
