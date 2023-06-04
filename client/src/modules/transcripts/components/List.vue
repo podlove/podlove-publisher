@@ -74,7 +74,7 @@ export default defineComponent({
     return {
       state: mapState({
         transcripts: selectors.transcripts.list,
-        contributors: selectors.contributors.list,
+        contributors: selectors.contributors.contributors,
         voices: selectors.transcripts.voices,
       }),
     }
@@ -92,7 +92,7 @@ export default defineComponent({
             ...result,
             [voice]: {
               id: contributor.id,
-              name: contributor.name,
+              name: contributor.realname,
               avatar: contributor.avatar,
             },
           }

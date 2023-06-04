@@ -81,7 +81,7 @@
                         :id="`track-id-${index}`"
                         type="text"
                         :value="track.identifier_new"
-                        @input="updateTrack('identifier_new', $event.target.value, index)"
+                        @input="handleUpdateIdentifier($event, index)"
                         class="mt-1 max-w-lg block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:max-w-xs sm:text-sm border-gray-300 rounded-md"
                       />
                     </div>
@@ -136,7 +136,7 @@
                               type="checkbox"
                               class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded"
                               :checked="track.filtering"
-                              @input="updateTrack('filtering', $event.target.checked, index)"
+                              @input="handleToggleFiltering($event, index)"
                             />
                           </div>
                           <div class="ml-3 text-sm">
@@ -155,13 +155,7 @@
                                 type="checkbox"
                                 class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded"
                                 :checked="track.noise_and_hum_reduction"
-                                @input="
-                                  updateTrack(
-                                    'noise_and_hum_reduction',
-                                    $event.target.checked,
-                                    index
-                                  )
-                                "
+                                @input="handleToggleNoiseHum($event, index)"
                               />
                             </div>
                             <div class="ml-3 text-sm">
@@ -185,7 +179,7 @@
 
                             <select
                               :value="track.fore_background"
-                              @input="updateTrack('fore_background', $event.target.value, index)"
+                              @input="handleSelectForeBackground($event, index)"
                               :id="`track_${index}_fgbg`"
                               class="mt-1 block w-[168px] pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
                             >
@@ -230,9 +224,11 @@
       <div class="flex flex-col sm:flex-row gap-4 sm:gap-2 justify-between">
         <WebhookToggle />
         <div class="flex justify-end gap-3">
-          <podlove-button variant="secondary" @click="saveProduction">{{
-            __('Save Production')
-          }}</podlove-button>
+          <podlove-button
+            :variant="isSaving ? 'secondary-disabled' : 'secondary'"
+            @click="saveProduction"
+            >{{ __('Save Production') }}</podlove-button
+          >
           <podlove-button variant="primary" @click="startProduction">{{
             __('Start Production')
           }}</podlove-button>
@@ -268,6 +264,8 @@ import {
 } from '@heroicons/vue/outline'
 import { get } from 'lodash'
 
+type AlgorithmType = { [key in number]?: any }
+
 export default defineComponent({
   components: {
     PodloveButton,
@@ -285,7 +283,7 @@ export default defineComponent({
 
   data() {
     return {
-      algorithmSettings: {},
+      algorithmSettings: {} as AlgorithmType,
     }
   },
 
@@ -325,11 +323,23 @@ export default defineComponent({
         })
       )
     },
-    algorithmSettingsVisible(index): boolean {
+    algorithmSettingsVisible(index: number): boolean {
       return this.algorithmSettings[index] || false
     },
-    toggleAlgorithmSettingVisible(index): void {
+    toggleAlgorithmSettingVisible(index: number): void {
       this.algorithmSettings[index] = !get(this.algorithmSettings, index, false)
+    },
+    handleSelectForeBackground(event: Event, index: number): void {
+      this.updateTrack('fore_background', (event.target as HTMLSelectElement).value, index)
+    },
+    handleToggleNoiseHum(event: Event, index: number): void {
+      this.updateTrack('noise_and_hum_reduction', (event.target as HTMLInputElement).checked, index)
+    },
+    handleToggleFiltering(event: Event, index: number): void {
+      this.updateTrack('filtering', (event.target as HTMLInputElement).checked, index)
+    },
+    handleUpdateIdentifier(event: Event, index: number): void {
+      this.updateTrack('identifier_new', (event.target as HTMLInputElement).value, index)
     },
   },
 
@@ -340,13 +350,13 @@ export default defineComponent({
     isSaving(): boolean {
       return this.state.isSaving
     },
-    showProcessingScreen() {
+    showProcessingScreen(): boolean {
       return [1, 4, 5, 6, 7, 8, 12, 13, 14].includes(this.production.status)
     },
-    showUploadScreen() {
+    showUploadScreen(): boolean {
       return this.production.status === 0
     },
-    showTrackEditor() {
+    showTrackEditor(): boolean {
       return [9, 10, 11].includes(this.production.status)
     },
     tracks(): AudioTrack[] {

@@ -19,10 +19,11 @@ class ShowListTable extends \Podlove\List_Table
     {
         $link = function ($title, $action = 'edit') use ($show) {
             return sprintf(
-                '<a href="?page=%s&action=%s&show=%s">'.$title.'</a>',
+                '<a href="?page=%s&action=%s&show=%s&_podlove_nonce=%s">'.$title.'</a>',
                 Settings::MENU_SLUG,
                 $action,
-                $show->id
+                $show->id,
+                wp_create_nonce('update_shows')
             );
         };
 
@@ -58,11 +59,11 @@ class ShowListTable extends \Podlove\List_Table
     {
         ?> <ul> <?php
 foreach (\Podlove\Model\Feed::find_all_by_discoverable(1) as $feed) {
-            printf(
-                '<li><a href="%1$s">%1$s</a></li>',
-                $feed->get_subscribe_url('shows', $show->id)
-            );
-        } ?> </ul> <?php
+    printf(
+        '<li><a href="%1$s">%1$s</a></li>',
+        $feed->get_subscribe_url('shows', $show->id)
+    );
+} ?> </ul> <?php
     }
 
     public function get_columns()
@@ -97,7 +98,7 @@ foreach (\Podlove\Model\Feed::find_all_by_discoverable(1) as $feed) {
         // get total items
         $total_items = count($data);
         // extrage page for current page only
-        $data = array_slice($data, (($current_page - 1) * $per_page), $per_page);
+        $data = array_slice($data, ($current_page - 1) * $per_page, $per_page);
         // add items to table
         $this->items = $data;
 

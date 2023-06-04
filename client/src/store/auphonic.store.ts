@@ -26,6 +26,13 @@ export type Metadata = {
   year: string
 }
 
+export type AuphonicChapter = {
+  start: string
+  title: string
+  image?: string
+  url?: string
+}
+
 export type Production = {
   uuid: string
   status: number
@@ -43,9 +50,9 @@ export type Production = {
   is_multitrack: boolean
   multi_input_files: AuphonicInputFile[]
   input_file: string
-  chapters: object[]
+  chapters: AuphonicChapter[]
   output_basename: string
-  output_files: object[]
+  output_files?: AuphonicOutputFile[]
   outgoing_services: object[]
   algorithms: object
   speech_recognition: object
@@ -64,6 +71,17 @@ export type AuphonicInputFile = {
   input_bitrate: number
   input_samplerate: number
   algorithms: AuphonicTrackAlgorithms
+}
+
+export type AuphonicOutputFile = {
+  format: string
+  bitrate: string
+  suffix: string
+  ending: string
+  filename: string
+  mono_mixdown: boolean
+  split_on_chapters: boolean
+  outgoing_services: string[]
 }
 
 export type AuphonicTrackAlgorithms = {
@@ -160,16 +178,16 @@ export const setToken = createAction<string>(SET_TOKEN)
 
 // Productions
 export const setProduction = createAction<Production>(SET_PRODUCTION)
-export const deselectProduction = createAction<Production>(DESELECT_PRODUCTION)
+export const deselectProduction = createAction<void>(DESELECT_PRODUCTION)
 export const setProductions = createAction<Production[]>(SET_PRODUCTIONS)
-export const createProduction = createAction<string>(CREATE_PRODUCTION)
-export const createMultitrackProduction = createAction<string>(CREATE_MULTITRACK_PRODUCTION)
-export const saveProduction = createAction<Production>(SAVE_PRODUCTION)
-export const startProduction = createAction<Production>(START_PRODUCTION)
+export const createProduction = createAction<void>(CREATE_PRODUCTION)
+export const createMultitrackProduction = createAction<void>(CREATE_MULTITRACK_PRODUCTION)
+export const saveProduction = createAction<Partial<Production>>(SAVE_PRODUCTION)
+export const startProduction = createAction<Partial<Production>>(START_PRODUCTION)
 
 // Presets
 export const setPresets = createAction<Preset[]>(SET_PRESETS)
-export const setPreset = createAction<Preset[]>(SET_PRESET)
+export const setPreset = createAction<Preset>(SET_PRESET)
 
 // Files & File Services
 export const setServices = createAction<Service[]>(SET_SERVICES)
@@ -177,12 +195,12 @@ export const setServiceFiles =
   createAction<{ uuid: string; files: string[] | null }>(SET_SERVICE_FILES)
 export const selectService = createAction<string>(SELECT_SERVICE)
 export const updateFileSelection =
-  createAction<{ key: string; prop: string; value: string | null }>(UPDATE_FILE_SELECTION)
+  createAction<{ key: string; prop: string; value: string | File | null }>(UPDATE_FILE_SELECTION)
 
 // Tracks
 export const selectTracks = createAction<string>(SELECT_TRACKS)
 export const addTrack = createAction<void>(ADD_TRACK)
-export const updateTrack = createAction<{ track: AudioTrack; index: number }>(UPDATE_TRACK)
+export const updateTrack = createAction<{ track: Partial<AudioTrack>; index: number }>(UPDATE_TRACK)
 
 // Polling
 export const startPolling = createAction<void>(START_POLLING)
@@ -212,13 +230,14 @@ export const reducer = handleActions(
         file_selections: {
           ...state.file_selections,
           [action.payload.key]: {
+            //@ts-ignore
             ...state.file_selections[action.payload.key],
             [action.payload.prop]: action.payload.value,
           },
         },
       }
     },
-    [ADD_TRACK]: (state: State, action): State => {
+    [ADD_TRACK]: (state: State, action: any): State => {
       const id = `Track ${state.tracks.length + 1}`
 
       return {
@@ -401,7 +420,7 @@ export const reducer = handleActions(
   initialState
 )
 
-const chaptersPayload = (chapters) => {
+const chaptersPayload = (chapters: AuphonicChapter[] | undefined) => {
   if (!chapters) {
     return []
   }
@@ -429,7 +448,7 @@ const chaptersPayload = (chapters) => {
   })
 }
 
-const outputFilesPayload = (output_files) => {
+const outputFilesPayload = (output_files: AuphonicOutputFile[] | undefined) => {
   if (!output_files) {
     return []
   }

@@ -7,6 +7,8 @@ namespace Podlove;
  */
 class Podcast_Post_Meta_Box
 {
+    private static $nonce = 'update_episode_meta';
+
     public function __construct()
     {
         add_action('save_post', [$this, 'save_postdata']);
@@ -47,7 +49,7 @@ class Podcast_Post_Meta_Box
         $podcast = Model\Podcast::get();
         $episode = Model\Episode::find_or_create_by_post_id($post_id);
 
-        wp_nonce_field(\Podlove\PLUGIN_FILE, 'podlove_noncename'); ?>
+        ?>
 
 		<?php do_action('podlove_episode_meta_box_start'); ?>
 
@@ -59,13 +61,13 @@ class Podcast_Post_Meta_Box
                 'submit_button' => false,
                 'form' => false,
                 'is_table' => false,
+                'nonce' => self::$nonce
             ];
 
         $form_data = self::get_form_data($episode);
 
         \Podlove\Form\build_for($episode, $form_args, function ($form) use ($form_data) {
             $wrapper = new \Podlove\Form\Input\DivWrapper($form);
-            $episode = $form->object;
 
             foreach ($form_data as $entry) {
                 $wrapper->{$entry['type']}($entry['key'], $entry['options']);
@@ -91,133 +93,13 @@ class Podcast_Post_Meta_Box
     }
 
     /**
-     * Fetch form data for EpisodeAssets multiselect.
-     *
-     * @param \Podlove\Model\Episode $episode
-     *
-     * @return array
-     */
-    public static function episode_assets_form($episode)
-    {
-        $episode_assets = Model\EpisodeAsset::all();
-
-        // field to generate option list
-        $asset_options = [];
-        // values for option list
-        $asset_values = [];
-
-        foreach ($episode_assets as $asset) {
-            if (!$file_type = $asset->file_type()) {
-                continue;
-            }
-
-            // get formats configured for this show
-            $asset_options[$asset->id] = $asset->title;
-            // find out which formats are active
-            $asset_values[$asset->id] = null !== Model\MediaFile::find_by_episode_id_and_episode_asset_id($episode->id, $asset->id);
-        }
-
-        // FIXME: empty checkbox -> no file id
-        // solution: when one checks the box, an AJAX request has to create and validate the file
-        $episode_assets_form = [
-            'label' => __('Media Files', 'podlove-podcasting-plugin-for-wordpress'),
-            'description' => '',
-            'options' => $asset_options,
-            'default' => true,
-            'multi_values' => $asset_values,
-            'before' => function () {
-                ?>
-				<table class="media_file_table" border="0" cellspacing="0">
-					<tr>
-						<th><?php echo __('Enable', 'podlove-podcasting-plugin-for-wordpress'); ?></th>
-						<th><?php echo __('Asset', 'podlove-podcasting-plugin-for-wordpress'); ?></th>
-						<th><?php echo __('File URL', 'podlove-podcasting-plugin-for-wordpress'); ?></th>
-						<th><?php echo __('Filesize', 'podlove-podcasting-plugin-for-wordpress'); ?></th>
-						<th><?php echo __('Status', 'podlove-podcasting-plugin-for-wordpress'); ?></th>
-						<th class="verify_all">
-							<a href="#" id="update_all_media_files" class="button">verify all</a>
-						</th>
-					</tr>
-				<?php
-            },
-            'after' => function () {
-                ?>
-				</table>
-				<?php
-            },
-            'around_each' => function ($callback) {
-                ?>
-				<tr class="media_file_row">
-					<td class="enable">
-					</td>
-					<td class="asset">
-						<?php call_user_func($callback); ?>
-					</td>
-					<td class="url"></td>
-					<td class="size"></td>
-					<td class="status"></td>
-					<td class="update"></td>
-				</tr>
-				<?php
-            },
-            'multiselect_callback' => function ($asset_id) use ($episode) {
-                $asset = \Podlove\Model\EpisodeAsset::find_by_id($asset_id);
-                $format = $asset->file_type();
-                $file = \Podlove\Model\MediaFile::find_by_episode_id_and_episode_asset_id($episode->id, $asset->id);
-                $size = is_object($file) ? (int) $file->size : 0;
-
-                $attributes = [
-                    'data-template' => \Podlove\Model\Podcast::get()->get_url_template(),
-                    'data-size' => $size === 1 ? 'unknown' : number_format_i18n($size),
-                    'data-episode-asset-id' => $asset->id,
-                    'data-episode-id' => $episode->id,
-                    'data-file-url' => (is_object($file)) ? $file->get_file_url() : '',
-                ];
-
-                if ($file) {
-                    $attributes['data-id'] = $file->id;
-                }
-
-                $out = '';
-                foreach ($attributes as $key => $value) {
-                    $out .= sprintf('%s="%s" ', $key, $value);
-                }
-
-                return $out;
-            },
-        ];
-
-        if (empty($asset_options)) {
-            $episode_assets_form['description'] =
-                sprintf(
-                    '<span style="color: red">%s</span>',
-                    __('You need to configure assets for this show. No assets, no fun.', 'podlove-podcasting-plugin-for-wordpress')
-                )
-                .' '
-                .sprintf(
-                    '<a href="%s">%s</a>',
-                    admin_url('admin.php?page=podlove_episode_assets_settings_handle'),
-                    __('Configure Assets', 'podlove-podcasting-plugin-for-wordpress')
-                );
-        }
-
-        return $episode_assets_form;
-    }
-
-    /**
      * Save post data on WordPress callback.
      *
      * @param int $post_id
      */
     public function save_postdata($post_id)
     {
-        global $wpdb;
-
         if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
-            return;
-        }
-
-        if (empty($_POST['podlove_noncename']) || !wp_verify_nonce($_POST['podlove_noncename'], \Podlove\PLUGIN_FILE)) {
             return;
         }
 
@@ -227,6 +109,10 @@ class Podcast_Post_Meta_Box
         }
 
         if (!isset($_POST['_podlove_meta']) || !is_array($_POST['_podlove_meta'])) {
+            return;
+        }
+
+        if (!wp_verify_nonce($_REQUEST['_podlove_nonce'], self::$nonce)) {
             return;
         }
 
@@ -316,29 +202,19 @@ class Podcast_Post_Meta_Box
     {
         $form_data = [
           [
-                'type' => 'string',
-                'key' => 'slug',
-                'options' => [
-                    'label' => __('Episode Media File Slug', 'podlove-podcasting-plugin-for-wordpress'),
-                    'description' => '',
-                    'html' => ['class' => 'regular-text podlove-check-input'],
-                ],
-                'position' => 510,
-            ], [
-                'type' => 'string',
-                'key' => 'duration',
-                'options' => [
-                    'label' => __('Duration', 'podlove-podcasting-plugin-for-wordpress'),
-                    'description' => '',
-                    'html' => ['class' => 'regular-text podlove-check-input'],
-                ],
-                'position' => 400,
-            ], [
-                'type' => 'multiselect',
-                'key' => 'episode_assets',
-                'options' => Podcast_Post_Meta_Box::episode_assets_form($episode),
-                'position' => 300,
-            ], [
+              'type' => 'callback',
+              'key' => 'episode_assets',
+              'options' => [
+                  'callback' => function () {
+                  ?>
+                    <div data-client="podlove" style="margin: 15px 0;">
+                      <podlove-media-files></podlove-media-files>
+                    </div>
+                  <?php
+                  }
+              ],
+              'position' => 300,
+          ], [
               'type' => 'callback',
               'key' => 'descriptions',
               'options' => [

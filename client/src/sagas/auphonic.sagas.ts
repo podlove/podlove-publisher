@@ -133,14 +133,15 @@ function* handleStartProduction(
   action: { type: string; payload: any }
 ) {
   const uuid = action.payload.uuid
-  const { authkey }: WebhookConfig = yield select(selectors.episode.auphonicWebhookConfig)
+  const webhookConfig: WebhookConfig | null = yield select(selectors.episode.auphonicWebhookConfig)
   const isWebhookEnabled: boolean = yield select(selectors.auphonic.publishWhenDone)
   const baseUrl: String = yield select(selectors.runtime.baseUrl)
   const postId: Number = yield select(selectors.post.id)
 
-  const webhookUrl = baseUrl + '/?podlove-auphonic-production=' + postId + '&authkey=' + authkey
+  const webhookUrl =
+    baseUrl + '/?podlove-auphonic-production=' + postId + '&authkey=' + webhookConfig?.authkey
   const productionPayload = {
-    webhook: isWebhookEnabled ? webhookUrl : '',
+    webhook: webhookConfig && isWebhookEnabled ? webhookUrl : '',
   }
 
   // update webhook config
@@ -212,8 +213,9 @@ const prepareFile = (selection: auphonic.FileSelection): PreparedFileSelection =
 
 function getFileSelectionsForSingleTrack(state: State): PreparedFileSelection {
   const selections = get(state, ['auphonic', 'file_selections'])
+  const production_uuid = get(state, ['auphonic', 'production', 'uuid'], '')
 
-  return prepareFile(get(selections, 'production_uuid'))
+  return prepareFile(get(selections, production_uuid))
 }
 
 function getFileSelectionsForMultiTrack(state: State): PreparedFileSelection[] {
@@ -221,6 +223,7 @@ function getFileSelectionsForMultiTrack(state: State): PreparedFileSelection[] {
   const production_uuid = get(state, ['auphonic', 'production', 'uuid'], '')
   const tracks = get(state, ['auphonic', 'tracks'], [])
 
+  //@ts-ignore
   return tracks.reduce((agg, _track, index) => {
     agg.push(prepareFile(get(selections, `${production_uuid}_t${index}`)))
     return agg
@@ -284,11 +287,6 @@ function getTracksPayload(state: State): any {
     .filter((t) => Object.keys(t).length > 0)
 }
 
-function isLocalDevelopment(): boolean {
-  // @ts-ignore
-  return import.meta.env.MODE == 'development'
-}
-
 function getProductionPayload(state: State): object {
   let payload = get(state, ['auphonic', 'productionPayload'], {})
 
@@ -298,9 +296,11 @@ function getProductionPayload(state: State): object {
 
   return {
     ...newPayload,
-    // TODO: rewrite image logic to use file upload instead of url, then we
-    // do not need this isLocalDevelopment switch any more
-    image: isLocalDevelopment() ? '' : episode_poster,
+    // NOTE: image is not actually sent; it's sent as a separate upload and
+    // removed from the payload before saving metadata. reason: Auphonic may not
+    // have access to the URL here (for example in local development), so
+    // sending the file as upload is more reliable.
+    image: episode_poster,
     metadata: {
       ...newPayload.metadata,
       title: state.episode.title,
@@ -358,10 +358,13 @@ function* handleSaveProduction(
   yield put(auphonic.startSaving())
 
   const uuid = action.payload.uuid
+  //@ts-ignore
   const productionPayload = yield select(getSaveProductionPayload)
+  //@ts-ignore
   const tracksPayload = yield select(getTracksPayload)
 
   // delete all existing chapters, otherwise we append them
+  //@ts-ignore
   yield auphonicApi.delete(`production/${uuid}/chapters.json`)
 
   // save multi_input_files by saving/updating each track individually
@@ -378,6 +381,23 @@ function* handleSaveProduction(
     })
     delete productionPayload.input_file
   }
+
+  // upload cover image
+  const poster_file = productionPayload.image
+
+  fetch(poster_file)
+    .then((res) => res.blob())
+    .then((blob) => {
+      const ext = blob.type.includes('png') ? 'png' : 'jpg'
+      const filename = 'image.' + ext
+      const image_file = new File([blob], filename, { type: blob.type })
+
+      let r = auphonicApi.upload(`production/${uuid}/upload.json`, {
+        image: image_file,
+      })
+    })
+
+  delete productionPayload.image
 
   // after the tracks, update all other metadata
   const {
@@ -435,6 +455,7 @@ function* handleServiceFilesAvailable(action: {
   payload: { uuid: string; files: string[] }
 }) {
   const currentKey: string = yield select(selectors.auphonic.currentFileSelection)
+  //@ts-ignore
   const selection: any = yield select(selectors.auphonic.fileSelections)
 
   // set default, but only if necessary
@@ -460,17 +481,17 @@ function* handleFileSelection(action: {
   }
 }
 
-type WebhookConfig = {
+export type WebhookConfig = {
   authkey: String
   enabled: boolean
 }
 
 function* updateWebhookConfig(api: PodloveApiClient) {
-  const config: WebhookConfig = yield select(selectors.episode.auphonicWebhookConfig)
+  const config: WebhookConfig | null = yield select(selectors.episode.auphonicWebhookConfig)
   const enabled: boolean = yield select(selectors.auphonic.publishWhenDone)
 
   // skip if nothing changed
-  if (config.enabled == enabled) {
+  if (!config || config.enabled == enabled) {
     return
   }
 
@@ -480,7 +501,7 @@ function* updateWebhookConfig(api: PodloveApiClient) {
 }
 
 function* initializeWebhookConfig(api: PodloveApiClient) {
-  const config: WebhookConfig = yield select(selectors.episode.auphonicWebhookConfig)
+  const config: WebhookConfig | null = yield select(selectors.episode.auphonicWebhookConfig)
   const enabled: boolean = yield select(selectors.auphonic.publishWhenDone)
 
   // skip if it already exists

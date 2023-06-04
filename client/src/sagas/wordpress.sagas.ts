@@ -28,7 +28,7 @@ function* wordpressSaga(): any {
   }
 
   if (wordpress.media) {
-    yield takeEvery(wordpressStore.SELECT_IMAGE_FROM_LIBRARY as any, selectImageFromLibrary)
+    yield takeEvery(wordpressStore.SELECT_IMAGE_FROM_LIBRARY as any, selectMediaFromLibrary)
   }
 }
 
@@ -75,7 +75,7 @@ function* updatePostTitle() {
     .replace('%episode_title%', title || '')
 }
 
-function* selectImageFromLibrary(action: { payload: { onSuccess: Action } }) {
+function* selectMediaFromLibrary(action: { payload: { onSuccess: Action } }) {
   const successAction = get(action, ['payload', 'onSuccess'])
 
   if (!successAction) {

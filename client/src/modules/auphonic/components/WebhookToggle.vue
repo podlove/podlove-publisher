@@ -45,7 +45,7 @@ export default defineComponent({
     }
   },
   methods: {
-    handleUpdate(newValue) {
+    handleUpdate(newValue: boolean) {
       this.enabled = newValue
       this.dispatch(auphonic.updateWebhook(newValue))
     },

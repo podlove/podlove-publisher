@@ -7,6 +7,16 @@ use Podlove\Model\Image;
 
 class Show
 {
+    public $id;
+    public $title;
+    public $subtitle;
+    public $slug;
+    public $summary;
+    public $image;
+    public $language;
+    public $category;
+    public $auphonic_preset;
+
     /**
      * A show object consists of the following properties:
      *     - Title/Name

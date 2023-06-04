@@ -106,6 +106,21 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2023-04-25 =
+
+Bring security fixes from main branch to beta:
+
+* fix XSS vulnerability
+* fix CSRF vulnerabilities by adding nonces to forms
+
+= 2023-01-20 =
+
+various Auphonic module fixes
+
+= 2023-01-16 =
+
+Fixes. Maybe a working beta?
+
 = 2022-12-30 =
 
 All-New Auphonic Module
@@ -122,6 +137,8 @@ I just checked, Auphonic released their Multitrack feature in 2014
 (https://auphonic.com/blog/2014/10/21/auphonic-multitrack-algorithms-release/).
 So we're lagging a little behind, but we caught up! You can now create
 multitrack productions directly from inside Podlove Publisher.
+
+Please give the new interface a try, and send any feedback you have our way.
 
 = 2022-12-15 =
 

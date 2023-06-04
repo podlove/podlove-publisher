@@ -1,7 +1,7 @@
-import { select } from 'redux-saga/effects'
-import { auphonic } from '../lib/auphonic.api'
 import { selectors, store } from '@store'
 import { notify } from '@store/notification.store'
+import { select } from 'redux-saga/effects'
+import { auphonic } from '../lib/auphonic.api'
 
 export function* createApi() {
   const base: string = 'https://auphonic.com/api'

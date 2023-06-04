@@ -8,11 +8,12 @@ import { PodloveApiClient } from '@lib/api'
 import { notify } from '@store/notification.store'
 import * as chapters from '@store/chapters.store'
 import * as wordpress from '@store/wordpress.store'
+import { parseAudacityChapters, parseMp4Chapters, parseHindeburgChapters, parsePodloveChapters } from '@lib/chapters'
 
 import { PodloveChapter } from '../types/chapters.types'
 import { channel, takeFirst } from './helper'
+import { __ } from '../plugins/translations'
 import { createApi } from './api'
-import { parseAudacityChapters, parseMp4Chapters, parseHindeburgChapters, parsePodloveChapters } from '@lib/chapters'
 
 function* chaptersSaga(): any {
   const apiClient: PodloveApiClient = yield createApi()
@@ -157,7 +158,7 @@ function* handleImport(action: { type: string; payload: string }) {
     parseMp4Chapters,
     parseAudacityChapters,
     parseHindeburgChapters,
-    parsePodloveChapters
+    parsePodloveChapters,
   ]
 
   let parsedChapters: PodloveChapter[] | null = []
@@ -175,7 +176,7 @@ function* handleImport(action: { type: string; payload: string }) {
   })
 
   if (parsedChapters === null) {
-    yield put(notify({ type: 'error', message: 'Unable to parse PSC chapters.' }))
+    yield put(notify({ type: 'error', message: __('Unable to parse PSC chapters.') }))
     return
   }
 
@@ -220,7 +221,7 @@ function* handleKeydown(input: {
 }
 
 function* selectImageFromLibrary() {
-  yield put(wordpress.selectImageFromLibrary({ onSuccess: { type: chapters.SELECT_IMAGE } }))
+  yield put(wordpress.selectMediaFromLibrary({ onSuccess: { type: chapters.SELECT_IMAGE } }))
 }
 
 export default function () {

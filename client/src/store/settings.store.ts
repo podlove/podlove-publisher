@@ -35,6 +35,10 @@ export interface State {
     chapter: null | 'none' | 'manual'
     transcript: null | 'manual'
   }
+  media: {
+    base_uri: null | string
+  }
+  modules: string[]
 }
 
 export const initialState: State = {
@@ -67,6 +71,10 @@ export const initialState: State = {
     chapter: null,
     transcript: null,
   },
+  media: {
+    base_uri: null,
+  },
+  modules: [],
 }
 
 const normalizeAssignmentImage = (
@@ -123,6 +131,9 @@ export const reducer = handleActions(
         mode: get(action, ['payload', 'expert_settings', 'tracking', 'mode'], null),
         window: get(action, ['payload', 'expert_settings', 'tracking', 'mode'], null),
       },
+      media: {
+        base_uri: get(action, ['payload', 'media', 'base_uri'], null),
+      },
       website: {
         blog_title_template: get(
           action,
@@ -170,9 +181,12 @@ export const reducer = handleActions(
       },
       assets: {
         image: normalizeAssignmentImage(get(action, ['payload', 'assignments', 'image'], null)),
-        chapter: normalizeAssignmentChapter(get(action, ['payload', 'assignments', 'chapter'], null)),
+        chapter: normalizeAssignmentChapter(
+          get(action, ['payload', 'assignments', 'chapter'], null)
+        ),
         transcript: get(action, ['payload', 'assignments', 'transcript'], null),
       },
+      modules: get(action, ['payload', 'modules']),
     }),
   },
   initialState
@@ -183,5 +197,7 @@ export const selectors = {
   blogTitleTemplate: (state: State) => state.website.blog_title_template,
   episodeNumberPadding: (state: State) => state.website.episode_number_padding,
   imageAsset: (state: State) => state.assets.image,
-  enableEpisodeExplicit: (state: State) => state.metadata.enable_episode_explicit
+  enableEpisodeExplicit: (state: State) => state.metadata.enable_episode_explicit,
+  mediaFileBaseUri: (state: State) => state.media.base_uri,
+  modules: (state: State) => state.modules,
 }

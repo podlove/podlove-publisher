@@ -6,6 +6,8 @@ use Podlove\Settings\Podcast\Tab;
 
 class Media extends Tab
 {
+    private static $nonce = 'update_podcast_settings_media';
+
     public function init()
     {
         add_action($this->page_hook, [$this, 'register_page']);
@@ -15,6 +17,10 @@ class Media extends Tab
     public function process_form()
     {
         if (!isset($_POST['podlove_podcast']) || !$this->is_active()) {
+            return;
+        }
+
+        if (!wp_verify_nonce($_REQUEST['_podlove_nonce'], self::$nonce)) {
             return;
         }
 
@@ -35,6 +41,7 @@ class Media extends Tab
         $form_attributes = [
             'context' => 'podlove_podcast',
             'action' => $this->get_url(),
+            'nonce' => self::$nonce
         ]; ?>
 		<p>
 			<?php _e('The Podlove Publisher expects all your media files to be in the same <strong>Upload Location</strong>.

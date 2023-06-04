@@ -98,7 +98,9 @@ export default defineComponent({
     SelectPreset,
     AuphonicLogo,
   },
-
+  data() {
+    return {}
+  },
   setup() {
     return {
       state: mapState({
@@ -135,7 +137,7 @@ export default defineComponent({
   },
 
   computed: {
-    isInitializing() {
+    isInitializing(): boolean {
       return this.state.isInitializing
     },
     buttonState(): 'idle' | 'single' | 'multi' {

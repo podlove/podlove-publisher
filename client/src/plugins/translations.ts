@@ -9,6 +9,8 @@ declare module '@vue/runtime-core' {
 
 const translate = get(window, ['wp', 'i18n', '__'], (translation: string) => translation)
 
+export const __ = translate;
+
 export default {
   install(app: App, options: { domain: string }) {
     app.config.globalProperties['__'] = (translation: string, domain?: string) => translate(translation, domain || options.domain)

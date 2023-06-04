@@ -34,6 +34,8 @@ export const responseParser =
 export interface ApiOptions {
   headers?: { [key: string]: string }
   query?: { [key: string]: string }
+  limit?: number
+  minimal_data?: boolean
 }
 
 const defaultHeaders = (

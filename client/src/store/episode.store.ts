@@ -1,14 +1,25 @@
-import { get } from 'lodash'
+import { get, pick } from 'lodash'
 import { handleActions } from 'redux-actions'
 import { createAction } from 'redux-actions'
 import Timestamp from '@lib/timestamp'
 import * as lifecycle from './lifecycle.store'
+import { PodloveEpisodeContribution } from '../types/episode.types'
+import { PodloveContributor } from '../types/contributors.types'
+import { arrayMove } from '@lib/array'
 
 export const INIT = 'podlove/publisher/episode/INIT'
 export const UPDATE = 'podlove/publisher/episode/UPDATE'
+export const QUICKSAVE = 'podlove/publisher/episode/QUICKSAVE'
+export const SAVED = 'podlove/publisher/episode/SAVED'
 export const SET = 'podlove/publisher/episode/SET'
 export const SET_POSTER = 'podlove/publisher/episode/SET_POSTER'
 export const SELECT_POSTER = 'podlove/publisher/episode/SELECT_POSTER'
+export const MOVE_CONTRIBUTION_UP = 'podlove/publisher/episode/MOVE_CONTRIBUTION_UP'
+export const MOVE_CONTRIBUTION_DOWN = 'podlove/publisher/episode/MOVE_CONTRIBUTION_DOWN'
+export const DELETE_CONTRIBUTION = 'podlove/publisher/episode/DELETE_CONTRIBUTION'
+export const UPDATE_CONTRIBUTION = 'podlove/publisher/episode/UPDATE_CONTRIBUTION'
+export const ADD_CONTRIBUTION = 'podlove/publisher/episode/ADD_CONTRIBUTION'
+export const CREATE_CONTRIBUTION = 'podlove/publisher/episode/CREATE_CONTRIBUTION'
 
 export type State = {
   id: string | null
@@ -26,8 +37,9 @@ export type State = {
   soundbite_start: number | null
   soundbite_duration: number | null
   soundbite_title: string | null
-  auphonicProductionId: 'string' | null
+  auphonic_production_id: 'string' | null
   auphonic_webhook_config: object | null
+  contributions: PodloveEpisodeContribution[]
 }
 
 export const initialState: State = {
@@ -46,11 +58,13 @@ export const initialState: State = {
   soundbite_start: null,
   soundbite_duration: null,
   soundbite_title: null,
-  auphonicProductionId: null,
+  auphonic_production_id: null,
   auphonic_webhook_config: null,
+  contributions: []
 }
 
-export const update = createAction<{ prop: string; value: string | boolean }>(UPDATE)
+export const update = createAction<{ prop: string; value: any }>(UPDATE)
+export const quicksave = createAction<void>(QUICKSAVE)
 export const init = createAction<void>(INIT)
 export const selectPoster = createAction<void>(SELECT_POSTER)
 export const set = createAction<{
@@ -67,9 +81,17 @@ export const set = createAction<{
   soundbite_start?: string
   soundbite_duration?: string
   soundbite_title?: string
-  auphonicProductionId?: string
+  auphonic_production_id?: string
+  contributions?: object
   auphonic_webhook_config?: object
 }>(SET)
+export const moveContributionUp = createAction<PodloveEpisodeContribution>(MOVE_CONTRIBUTION_UP);
+export const moveContributionDown = createAction<PodloveEpisodeContribution>(MOVE_CONTRIBUTION_DOWN);
+export const deleteContribution = createAction<PodloveEpisodeContribution>(DELETE_CONTRIBUTION);
+export const updateContribution = createAction<PodloveEpisodeContribution>(UPDATE_CONTRIBUTION);
+export const addContribution = createAction<Partial<PodloveContributor>>(ADD_CONTRIBUTION);
+export const createContribution = createAction<string>(CREATE_CONTRIBUTION);
+export const saved = createAction<object>(SAVED)
 
 export const reducer = handleActions(
   {
@@ -83,7 +105,7 @@ export const reducer = handleActions(
       const value = get(action, ['payload', 'value'], null)
 
       // FIXME: finish implementation once episode saga supports it
-      const simple = ['title', 'subtitle', 'summary', 'duration', 'slug', 'soundbite_start', 'soundbite_duration', 'soundbite_title']
+      const simple = ['title', 'subtitle', 'summary', 'duration', 'slug', 'auphonic_webhook_config', 'soundbite_start', 'soundbite_duration', 'soundbite_title']
       const other = ['image']
       const todo = ['tags', 'license', 'license url']
 
@@ -92,29 +114,84 @@ export const reducer = handleActions(
       } else if (prop == 'image') {
         return { ...state, ['episode_poster']: value }
       } else {
-        console.debug('todo', prop)
+        console.debug('todo', prop, value)
         return { ...state }
       }
     },
     [SET]: (state: State, action: typeof update): State => ({
       ...state,
-      slug: get(action, ['payload', 'slug']),
-      number: get(action, ['payload', 'number']),
-      title: get(action, ['payload', 'title_clean']),
-      duration: get(action, ['payload', 'duration']),
-      subtitle: get(action, ['payload', 'subtitle']),
-      summary: get(action, ['payload', 'summary']),
-      type: get(action, ['payload', 'type']),
-      episode_poster: get(action, ['payload', 'episode_poster']),
-      poster: get(action, ['payload', 'poster']),
-      mnemonic: get(action, ['payload', 'mnemonic']),
-      explicit: get(action, ['payload', 'explicit']),
-      soundbite_start: get(action, ['payload', 'soundbite_start']),
-      soundbite_duration: get(action, ['payload', 'soundbite_duration']),
-      soundbite_title: get(action, ['payload', 'soundbite_title']),
-      auphonicProductionId: get(action, ['payload', 'auphonic_production_id']),
-      auphonic_webhook_config: get(action, ['payload', 'auphonic_webhook_config']),
+      ...pick(get(action, ['payload'], {}), [
+        'slug',
+        'number',
+        'title_clean',
+        'duration',
+        'subtitle',
+        'summary',
+        'type',
+        'episode_poster',
+        'poster',
+        'mnemonic',
+        'explicit',
+        'auphonic_production_id',
+        'auphonic_webhook_config',
+        'contributions',
+        'soundbite_start',
+        'soundbite_duration',
+        'soundbite_title'
+      ]),
     }),
+    [MOVE_CONTRIBUTION_UP]: (state: State, action: typeof moveContributionUp): State => {
+      const index = state.contributions.findIndex(contribution => contribution.position === get(action, ['payload', 'position']))
+
+      if (index < 1) {
+        return state
+      }
+
+      return {
+        ...state,
+        contributions: arrayMove(state.contributions, index, index - 1).map((contribution, position) => ({...contribution, position}))
+      }
+    },
+    [MOVE_CONTRIBUTION_DOWN]: (state: State, action: typeof moveContributionDown): State => {
+      const index = state.contributions.findIndex(contribution => contribution.position === get(action, ['payload', 'position']))
+
+      if (index > state.contributions.length) {
+        return state
+      }
+
+      return {
+        ...state,
+        contributions: arrayMove(state.contributions, index, index + 1).map((contribution, position) => ({...contribution, position}))
+      }
+    },
+    [DELETE_CONTRIBUTION]: (state: State, action: typeof deleteContribution): State => ({
+        ...state,
+        contributions: state.contributions.filter(({ position }) => get(action, ['payload', 'position']) !== position).map((contribution, position) => ({...contribution, position}))
+    }),
+    [UPDATE_CONTRIBUTION]: (state: State, action: typeof updateContribution): State => ({
+      ...state,
+      contributions: state.contributions.map(contribution => {
+        if (contribution.contributor_id !== get(action, ['payload', 'contributor_id'])) {
+          return contribution
+        }
+
+        return pick(get(action, ['payload'], {}), ['id', 'contributor_id', 'role_id', 'group_id', 'position', 'comment']);
+      })
+    }),
+    [ADD_CONTRIBUTION]: (state: State, action: typeof addContribution) => ({
+      ...state,
+      contributions: [
+        ...state.contributions,
+        {
+          id: null,
+          contributor_id: get(action, ['payload', 'id'], null),
+          role_id: null,
+          group_id: null,
+          position: state.contributions.length,
+          comment: null
+        }
+      ]
+    })
   },
   initialState
 )
@@ -135,6 +212,7 @@ export const selectors = {
   soundbite_start: (state: State) => state.soundbite_start,
   soundbite_duration: (state: State) => state.soundbite_duration,
   soundbite_title: (state: State) => state.soundbite_title,
-  auphonicProductionId: (state: State) => state.auphonicProductionId,
+  auphonicProductionId: (state: State) => state.auphonic_production_id,
   auphonicWebhookConfig: (state: State) => state.auphonic_webhook_config,
+  contributions: (state: State) => state.contributions,
 }
