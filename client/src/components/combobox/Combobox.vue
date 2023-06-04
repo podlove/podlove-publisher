@@ -189,7 +189,7 @@ export default defineComponent({
       if (this.query === '')
         return this.options
       return this.options?.filter(option => {
-        return option.title.includes(this.query)
+        return option.title.toLowerCase().includes(this.query.toLowerCase())
       })
     }
   },
