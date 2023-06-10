@@ -4,7 +4,7 @@ Donate link: https://opencollective.com/podlove
 Tags: podlove, podcast, publishing, rss, feed, audio, mp3, m4a, player, webplayer, iTunes, radio
 Requires at least: 4.9.6
 Tested up to: 5.9
-Requires PHP: 7.0
+Requires PHP: 7.4
 Stable tag: 3.8.0
 License: MIT
 
@@ -107,6 +107,8 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 == Changelog ==
 
 = 2023-06-10 =
+
+* BREAKING: increase minimum PHP version from 7.0 to 7.4
 
 Updated UI Components on Episode page:
 
