@@ -124,6 +124,7 @@ class Podcast_Post_Meta_Box
         ]);
         $episode_data = $episode_data['_podlove_meta'];
 
+        // TODO: is any of this even used any more?
         $episode_data_filter = [
             'slug' => FILTER_SANITIZE_STRING,
             'duration' => FILTER_SANITIZE_STRING,
