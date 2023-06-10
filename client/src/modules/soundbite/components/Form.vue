@@ -85,6 +85,7 @@ export default defineComponent({
           let end = start + duration
           return new Timestamp(end).pretty
         }
+        return ""
       }
     },
 
