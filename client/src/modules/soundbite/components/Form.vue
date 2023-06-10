@@ -1,5 +1,5 @@
 <template>
-  <div class="grid md:grid-cols-4 sm:grid-rows-4 p-3">
+  <div class="grid md:grid-cols-4 md:grid-rows-1 sm:grid-rows-4 p-3">
     <div class="mb-5 ml-5">
       <label for="soundbite-start" class="block text-sm font-medium text-gray-700">{{ __('Start') }}</label>
       <div class="mt-1">
