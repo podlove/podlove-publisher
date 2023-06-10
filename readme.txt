@@ -2,9 +2,7 @@
 Contributors: eteubert
 Donate link: https://opencollective.com/podlove
 Tags: podlove, podcast, publishing, rss, feed, audio, mp3, m4a, player, webplayer, iTunes, radio
-Requires at least: 4.9.6
 Tested up to: 5.9
-Requires PHP: 7.4
 Stable tag: 3.8.0
 License: MIT
 
