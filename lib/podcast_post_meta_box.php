@@ -11,7 +11,7 @@ class Podcast_Post_Meta_Box
 
     public function __construct()
     {
-        add_action('save_post', [$this, 'save_postdata']);
+        add_action('save_post', [$this, 'save_postdata'], 10, 2);
         add_action('save_post_podcast', function ($post_id, $post, $_) {
             if ($episode = Model\Episode::find_one_by_where('post_id = '.intval($post_id))) {
                 do_action('podlove_episode_content_has_changed', $episode->id);
@@ -97,14 +97,14 @@ class Podcast_Post_Meta_Box
      *
      * @param int $post_id
      */
-    public function save_postdata($post_id)
+    public function save_postdata($post_id, $post)
     {
         if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
             return;
         }
 
         // Check permissions
-        if ('podcast' !== $_POST['post_type'] || !current_user_can('edit_post', $post_id)) {
+        if ('podcast' !== $post->post_type || !current_user_can('edit_post', $post_id)) {
             return;
         }
 
