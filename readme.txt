@@ -106,6 +106,15 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2023-06-10 =
+
+Updated UI Components on Episode page:
+
+- Soundbite
+- Related Episodes
+- Media Files / Asssets
+- Contributors
+
 = 2023-04-25 =
 
 Bring security fixes from main branch to beta:
