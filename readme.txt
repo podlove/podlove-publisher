@@ -104,6 +104,8 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+* BREAKING: increase minimum PHP version from to 8.0 (Mastodon has spoken)
+
 = 2023-06-12 =
 
 * fix: slug getting lost when manually saving or scheduling an episode

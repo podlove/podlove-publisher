@@ -3,7 +3,7 @@
   "description": "Podcast Publishing Plugin for WordPress",
   "license": "MIT",
   "require": {
-    "php": "^7.0",
+    "php": "^8.0",
     "podlove/podlove-timeline": "1.*",
     "monolog/monolog": "1.*",
     "symfony/yaml": "3.4.*",

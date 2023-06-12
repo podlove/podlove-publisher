@@ -5,7 +5,7 @@
  * Description: The one and only next generation podcast publishing system. Seriously. It's magical and sparkles a lot.
  * Version: 4.0.0-beta3
  * Requires at least: 4.9.6
- * Requires PHP: 7.4
+ * Requires PHP: 8.0
  * Author:      Podlove
  * Author URI:  http://podlove.org
  * License:     MIT
@@ -49,7 +49,7 @@ function podlove_admin_error_ancient_php()
 			<strong>Podlove Podcast Publisher could not be activated</strong>
 		</p>
 		<p>
-			Podlove Podcasting Plugin requires <code>PHP 7.4</code> or higher.<br>
+			Podlove Podcasting Plugin requires <code>PHP 8.0</code> or higher.<br>
 			You are running <code>PHP <?php echo phpversion(); ?></code>.<br>
 			Please ask your hoster how to upgrade to an up-to-date PHP version.
 		</p>
@@ -69,7 +69,7 @@ function podlove_deactivate_plugin()
     });
 }
 
-$correct_php_version = version_compare(phpversion(), '7.4', '>=');
+$correct_php_version = version_compare(phpversion(), '8.0', '>=');
 
 if (!$correct_php_version) {
     // Let the plugin update/setup succeed and constantly show the error
