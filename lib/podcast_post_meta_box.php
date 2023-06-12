@@ -124,33 +124,19 @@ class Podcast_Post_Meta_Box
         ]);
         $episode_data = $episode_data['_podlove_meta'];
 
-        // TODO: is any of this even used any more?
+        // TODO: when we migrate the guid component we can remove most of this
+        // (including the _podlove_meta stuff above)
+        // BUT we should keep the hooks for compatibility.
         $episode_data_filter = [
-            'slug' => FILTER_SANITIZE_STRING,
-            'duration' => FILTER_SANITIZE_STRING,
-            'episode_assets' => ['flags' => FILTER_REQUIRE_ARRAY, 'filter' => FILTER_SANITIZE_STRING],
             'guid' => FILTER_SANITIZE_STRING,
         ];
         $episode_data_filter = apply_filters('podlove_episode_data_filter', $episode_data_filter);
-
         $episode_data = filter_var_array($episode_data, $episode_data_filter);
-
         $episode_data = apply_filters('podlove_episode_data_before_save', $episode_data);
 
         // save changes
         $episode = \Podlove\Model\Episode::find_or_create_by_post_id($post_id);
-        $episode_slug_has_changed = isset($episode_data['slug']) && $episode_data['slug'] != $episode->slug;
         $episode->update_attributes($episode_data);
-
-        if ($episode_slug_has_changed) {
-            $episode->refetch_files();
-        }
-
-        if (isset($episode_data['episode_assets'])) {
-            $this->save_episode_assets($episode, $episode_data['episode_assets']);
-        } else {
-            $this->save_episode_assets($episode, []);
-        }
     }
 
     /**
