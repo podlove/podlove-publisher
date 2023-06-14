@@ -4,8 +4,6 @@ namespace Podlove\Template;
 
 use Podlove\Model;
 use PodlovePublisher_Vendor\Twig;
-use PodlovePublisher_Vendor\Twig_Extensions_Extension_Date;
-use PodlovePublisher_Vendor\Twig_Extensions_Extension_I18n;
 
 /**
  * Apply Twig functionality and podcast/episode accessors to strings/templates.
@@ -135,8 +133,7 @@ class TwigFilter
     private static function getTwigEnv()
     {
         $twig = new Twig\Environment(self::getTwigLoader(), ['autoescape' => false]);
-        $twig->addExtension(new Twig_Extensions_Extension_I18n());
-        $twig->addExtension(new Twig_Extensions_Extension_Date());
+        $twig->addExtension(new DateExtension());
 
         $formatBytesFilter = new Twig\TwigFilter('formatBytes', function ($string) {
             return \Podlove\format_bytes($string, 0);

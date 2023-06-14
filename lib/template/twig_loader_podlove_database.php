@@ -13,18 +13,16 @@ class TwigLoaderPodloveDatabase implements Twig\Loader\LoaderInterface
      * @param string $name The template logical name
      *
      * @throws Twig\Error\LoaderError When $name is not found
-     *
-     * @return Twig\Source
      */
-    public function getSourceContext($name)
+    public function getSourceContext(string $name): Twig\Source
     {
         if ($template = Model\Template::find_one_by_title_with_fallback($name)) {
             if ($template->content) {
-                return new Twig\Source($template->content, $name, '');
+                return new Twig\Source($template->content, $name);
             }
         }
 
-        throw new \PodlovePublisher_Vendor\Twig\Error\LoaderError(\sprintf('Unable to find the following template: "%s".', $name));
+        throw new Twig\Error\LoaderError(\sprintf('Unable to find the following template: "%s".', $name));
     }
 
     public function exists($name)
@@ -43,7 +41,7 @@ class TwigLoaderPodloveDatabase implements Twig\Loader\LoaderInterface
      *
      * @return string The cache key
      */
-    public function getCacheKey($name)
+    public function getCacheKey(string $name): string
     {
         return $name;
     }
@@ -54,7 +52,7 @@ class TwigLoaderPodloveDatabase implements Twig\Loader\LoaderInterface
      * @param string    $name The template name
      * @param timestamp $time The last modification time of the cached template
      */
-    public function isFresh($name, $time)
+    public function isFresh(string $name, int $time): bool
     {
         return false;
     }
