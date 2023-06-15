@@ -34,7 +34,7 @@ composer_with_prefixing:
 	mkdir -p vendor-prefixed
 	composer install --no-progress --prefer-dist --optimize-autoloader --no-dev
 	composer prefix-dependencies
-	rm -rf vendor/piwik
+	rm -rf vendor/matomo
 	rm -rf vendor/twig
 	rm -rf vendor/monolog
 	rm -rf vendor/psr

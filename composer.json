@@ -10,7 +10,7 @@
     "symfony/polyfill-mbstring": "1.27.*",
     "twig/twig": "3.6.1",
     "geoip2/geoip2": "~2.0",
-    "piwik/device-detector": "~3.12",
+    "matomo/device-detector": "6.1.*",
     "phpunit/php-timer": "5.0.*",
     "podlove/webvtt-parser": "^1.1.6",
     "geertw/ip-anonymizer": "^1.1",
@@ -45,15 +45,15 @@
   "scripts": {
     "prefix-dependencies": [
       "composer prefix-twig",
-      "composer prefix-piwik",
+      "composer prefix-matomo",
       "composer prefix-monolog",
       "composer prefix-psr"
     ],
     "prefix-twig": [
       "@php ./vendor-bin/php-scoper/vendor/humbug/php-scoper/bin/php-scoper add-prefix --prefix=PodlovePublisher_Vendor --output-dir=./vendor-prefixed/twig --config=config/php-scoper/twig.inc.php --force"
     ],
-    "prefix-piwik": [
-      "@php ./vendor-bin/php-scoper/vendor/humbug/php-scoper/bin/php-scoper add-prefix --prefix=PodlovePublisher_Vendor --output-dir=./vendor-prefixed/piwik --config=config/php-scoper/piwik.inc.php --force"
+    "prefix-matomo": [
+      "@php ./vendor-bin/php-scoper/vendor/humbug/php-scoper/bin/php-scoper add-prefix --prefix=PodlovePublisher_Vendor --output-dir=./vendor-prefixed/matomo --config=config/php-scoper/matomo.inc.php --force"
     ],
     "prefix-monolog": [
       "@php ./vendor-bin/php-scoper/vendor/humbug/php-scoper/bin/php-scoper add-prefix --prefix=PodlovePublisher_Vendor --output-dir=./vendor-prefixed/monolog --config=config/php-scoper/monolog.inc.php --force"

@@ -6,7 +6,7 @@ use Isolated\Symfony\Component\Finder\Finder;
 
 return [
     'finders' => [
-        Finder::create()->files()->in('vendor/piwik/*')->name(['*.php', '*.yml', 'LICENSE', 'composer.json']),
+        Finder::create()->files()->in('vendor/matomo/*')->name(['*.php', '*.yml', 'LICENSE', 'composer.json']),
         Finder::create()->files()->in('vendor/mustangostang/*')->name(['*.php', 'LICENSE', 'composer.json']),
     ],
     'patchers' => [
@@ -22,6 +22,11 @@ return [
                 '$className = \''.$prefix.'\\\\DeviceDetector',
                 $content
             );
+
+            // hack: remove faulty escaping in regex; not sure why php-scoper even touch this line
+            if (stristr($filePath, 'AbstractParser.php') || stristr($filePath, 'DeviceDetector.php') || stristr($filePath, 'ShellTv.php') || stristr($filePath, 'HbbTV.php') || stristr($filePath, 'Version.php')) {
+                $content = str_replace('\\\\', '\\', $content);
+            }
 
             return $content.'';
         }
