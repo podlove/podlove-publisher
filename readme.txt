@@ -104,7 +104,12 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2023-06-15 =
+
 * BREAKING: increase minimum PHP version from to 8.0 (Mastodon has spoken)
+* update all third party PHP libraries, notably:
+  * Twig (2.12.5 to 3.6.1)
+  * piwik/device-detector 3.12 to matomo/device-detector 6.1
 
 = 2023-06-12 =
 
