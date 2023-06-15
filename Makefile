@@ -36,6 +36,8 @@ composer_with_prefixing:
 	composer prefix-dependencies
 	rm -rf vendor/piwik
 	rm -rf vendor/twig
+	rm -rf vendor/monolog
+	rm -rf vendor/psr
 	composer dump-autoload --classmap-authoritative
 	# composer install --no-progress --prefer-dist --optimize-autoloader --no-dev
 
@@ -44,7 +46,7 @@ install_php_scoper:
 	composer require --dev bamarni/composer-bin-plugin:1.4.1
 	composer bin php-scoper config minimum-stability dev
 	composer bin php-scoper config prefer-stable true
-	composer bin php-scoper require --dev humbug/php-scoper:0.15.0
+	composer bin php-scoper require --dev --with-all-dependencies humbug/php-scoper:0.17.5
 
 client_legacy:
 	cd js && npm install

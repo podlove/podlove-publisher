@@ -2,9 +2,9 @@
 
 namespace Podlove\Modules\Logging;
 
-use Monolog\Handler\MailHandler;
-use Monolog\Logger;
 use Podlove\Model;
+use PodlovePublisher_Vendor\Monolog\Handler\MailHandler;
+use PodlovePublisher_Vendor\Monolog\Logger;
 
 /**
  * WPMailHandler uses the wp_mail() function to send the emails.
@@ -32,9 +32,6 @@ class WPMailHandler extends MailHandler
         $this->subject = $subject;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function send($content, array $records)
     {
         $record = $records[0];
