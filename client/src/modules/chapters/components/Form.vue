@@ -97,7 +97,7 @@
         </div>
       </div>
     </div>
-    <div class="m-3">
+    <div class="mt-5 ml-5 pb-5">
       <podlove-button variant="primary" @click="addChapter()">
         <plus-sm-icon class="-ml-0.5 mr-2 h-4 w-4" aria-hidden="true" /> {{ __('Add Chapter') }}
       </podlove-button>
