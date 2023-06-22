@@ -12,8 +12,8 @@ jobs:
     - name: Setup PHP with PECL extension
       uses: shivammathur/setup-php@v2
       with:
-        php-version: '7.4'
-    - uses: actions/checkout@master
+        php-version: '8.0'
+    - uses: actions/checkout@v3
     - name: Build
       run: |
           make install_php_scoper
