@@ -104,6 +104,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2023-06-22 =
+
+* fix: episode title not visible in form
+
 = 2023-06-15 =
 
 * BREAKING: increase minimum PHP version from to 8.0 (Mastodon has spoken)
