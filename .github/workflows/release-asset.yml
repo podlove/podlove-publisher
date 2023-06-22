@@ -14,9 +14,9 @@ jobs:
       - name: Setup PHP with PECL extension
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '7.4'
+          php-version: '8.0'
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Build project
         env:
           TAG_NAME: ${{ github.ref }}
@@ -27,7 +27,7 @@ jobs:
           zip -r podlove-podcasting-plugin-for-wordpress.zip podlove-podcasting-plugin-for-wordpress
       - name: Create Release
         id: create_release
-        uses: actions/create-release@v1
+        uses: elgohr/Github-Release-Action@v4
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
