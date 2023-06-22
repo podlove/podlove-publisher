@@ -93,6 +93,9 @@ build:
 	rm -f dist/phpunit.xml
 	rm -f dist/Rakefile
 	rm -f dist/README.md
+	rm -f dist/*.code-workspace
+	rm -f dist/.prettierrc
+	rm -f dist/.editorconfig
 	find dist -name "*composer.json" | xargs rm -rf
 	find dist -name "*composer.lock" | xargs rm -rf
 	find dist -name "*.swp" | xargs rm -rf
