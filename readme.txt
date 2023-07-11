@@ -104,6 +104,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2023-07-11 =
+
+* fix: invisible contributors selection
+
 = 2023-06-22 =
 
 * fix: episode title not visible in form
