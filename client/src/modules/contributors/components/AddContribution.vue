@@ -122,7 +122,21 @@ export default defineComponent({
     let [trigger, container] = usePopper({
       placement: 'bottom-end',
       strategy: 'fixed',
-      modifiers: [{ name: 'offset', options: { offset: [0, 10] } }],
+      modifiers: [
+        {
+          name: 'offset',
+          options: { offset: [0, 10] },
+        },
+        {
+          name: 'sameWidth',
+          enabled: true,
+          fn: ({ state }) => {
+            state.styles.popper.width = `${state.rects.reference.width}px`
+          },
+          phase: 'beforeWrite',
+          requires: ['computeStyles'],
+        },
+      ],
     })
 
     return {
@@ -171,7 +185,8 @@ export default defineComponent({
           )
           .filter(
             (contributor) =>
-              !this.query || (contributor?.realname || '').toUpperCase().includes(this.query.toUpperCase())
+              !this.query ||
+              (contributor?.realname || '').toUpperCase().includes(this.query.toUpperCase())
           ),
       ]
     },
