@@ -131,9 +131,7 @@ export default defineComponent({
           name: 'sameWidth',
           enabled: true,
           fn: ({ state }) => {
-            const width = get(trigger, ['value', 'width'], 0)
-
-            state.styles.popper.width = `${width}px`
+            state.styles.popper.width = `${state.rects.reference.width}px`
           },
           phase: 'beforeWrite',
           requires: ['computeStyles'],
