@@ -20,10 +20,7 @@ class Soundbite extends \Podlove\Modules\Base
         $form_data[] = [
             'type' => 'callback',
             'key' => 'soundbite',
-            'options' => [
-                'label' => __('Soundbite', 'podlove-podcasting-plugin-for-wordpress'),
-                'callback' => [$this, 'soundbite_form'],
-            ],
+            'options' => ['callback' => [$this, 'soundbite_form']],
             'position' => 456,
         ];
 
