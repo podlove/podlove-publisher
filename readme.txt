@@ -104,6 +104,12 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2023-07-14 =
+
+* fix: Auphonic metadata import
+* fix: Auphonic module bottom spacing
+* fix: Soundbite double label
+
 = 2023-07-11 =
 
 * fix: invisible contributors selection
