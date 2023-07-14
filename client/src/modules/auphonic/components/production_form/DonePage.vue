@@ -150,7 +150,7 @@ export default defineComponent({
         { key: 1, title: 'title', here: state.title, there: production.metadata.title },
         { key: 2, title: 'subtitle', here: state.subtitle, there: production.metadata.subtitle },
         { key: 3, title: 'summary', here: state.summary, there: production.metadata.summary },
-        { key: 4, title: 'tags', here: 'todo', there: production.metadata.tags.join(' , ') },
+        // { key: 4, title: 'tags', here: 'todo', there: production.metadata.tags.join(' , ') },
         {
           key: 5,
           title: 'license_name',
