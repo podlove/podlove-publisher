@@ -1,5 +1,5 @@
 <template>
-  <form class="space-y-8 divide-y divide-gray-200">
+  <form class="pb-5 space-y-8 divide-y divide-gray-200">
     <div class="space-y-8 divide-y divide-gray-200">
       <div>
         <div class="flex justify-between items-start">
