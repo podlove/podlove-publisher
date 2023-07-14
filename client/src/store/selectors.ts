@@ -92,6 +92,8 @@ const episode = {
   soundbite_title: createSelector(root.episode, episodeStore.selectors.soundbite_title),
   auphonicProductionId: createSelector(root.episode, episodeStore.selectors.auphonicProductionId),
   auphonicWebhookConfig: createSelector(root.episode, episodeStore.selectors.auphonicWebhookConfig),
+  license_name: createSelector(root.episode, episodeStore.selectors.license_name),
+  license_url: createSelector(root.episode, episodeStore.selectors.license_url),
   contributions: createSelector(
     createSelector(root.episode, episodeStore.selectors.contributions),
     contributors.contributors,

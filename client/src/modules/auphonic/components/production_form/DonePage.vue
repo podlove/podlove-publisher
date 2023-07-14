@@ -63,7 +63,7 @@
                   <button
                     @click.prevent="importMeta(entry.title, entry.there)"
                     class="inline-flex items-center rounded-full border border-gray-300 bg-white px-2.5 py-0.5 text-sm font-medium leading-5 text-gray-700 shadow-sm hover:bg-gray-50"
-                    aria-label="import from Auphonic"
+                    aria-label="Import from Auphonic"
                   >
                     <!-- TODO: needs better translation support, see https://github.com/podlove/podlove-publisher/issues/1337 -->
                     {{ __('Import')
@@ -119,6 +119,8 @@ export default defineComponent({
         summary: selectors.episode.summary,
         duration: selectors.episode.duration,
         slug: selectors.episode.slug,
+        license_name: selectors.episode.license_name,
+        license_url: selectors.episode.license_url,
       }),
       dispatch: injectStore().dispatch,
     }
@@ -149,8 +151,18 @@ export default defineComponent({
         { key: 2, title: 'subtitle', here: state.subtitle, there: production.metadata.subtitle },
         { key: 3, title: 'summary', here: state.summary, there: production.metadata.summary },
         { key: 4, title: 'tags', here: 'todo', there: production.metadata.tags.join(' , ') },
-        { key: 5, title: 'license', here: 'todo', there: production.metadata.license },
-        { key: 6, title: 'license url', here: 'todo', there: production.metadata.license_url },
+        {
+          key: 5,
+          title: 'license_name',
+          here: state.license_name,
+          there: production.metadata.license,
+        },
+        {
+          key: 6,
+          title: 'license_url',
+          here: state.license_url,
+          there: production.metadata.license_url,
+        },
         // { key: 7, title: 'image', here: 'todo', there: production.image },
         // { key: 8, title: 'duration', here: state.duration, there: production.length_timestring },
         { key: 9, title: 'slug', here: state.slug, there: production.output_basename },

@@ -39,6 +39,8 @@ export type State = {
   soundbite_start: number | null
   soundbite_duration: number | null
   soundbite_title: string | null
+  license_name: string | null
+  license_url: string | null
   contributions: PodloveEpisodeContribution[]
 }
 
@@ -61,6 +63,8 @@ export const initialState: State = {
   soundbite_duration: null,
   soundbite_title: null,
   contributions: [],
+  license_name: null,
+  license_url: null,
 }
 
 export const update = createAction<{ prop: string; value: any }>(UPDATE)
@@ -84,6 +88,8 @@ export const set = createAction<{
   soundbite_start?: string
   soundbite_duration?: string
   soundbite_title?: string
+  license_name?: string
+  license_url?: string
 }>(SET)
 export const moveContributionUp = createAction<PodloveEpisodeContribution>(MOVE_CONTRIBUTION_UP)
 export const moveContributionDown = createAction<PodloveEpisodeContribution>(MOVE_CONTRIBUTION_DOWN)
@@ -115,9 +121,11 @@ export const reducer = handleActions(
         'soundbite_start',
         'soundbite_duration',
         'soundbite_title',
+        'license_name',
+        'license_url',
       ]
       const other = ['image']
-      const todo = ['tags', 'license', 'license url']
+      const todo = ['tags']
 
       if (simple.includes(prop)) {
         return { ...state, [prop]: value }
@@ -141,11 +149,21 @@ export const reducer = handleActions(
       poster: get(action, ['payload', 'poster'], state.poster),
       mnemonic: get(action, ['payload', 'mnemonic'], state.mnemonic),
       explicit: get(action, ['payload', 'explicit'], state.explicit),
-      auphonic_production_id: get(action, ['payload', 'auphonic_production_id'], state.auphonic_production_id),
-      auphonic_webhook_config: get(action, ['payload', 'auphonic_webhook_config'], state.auphonic_webhook_config),
+      auphonic_production_id: get(
+        action,
+        ['payload', 'auphonic_production_id'],
+        state.auphonic_production_id
+      ),
+      auphonic_webhook_config: get(
+        action,
+        ['payload', 'auphonic_webhook_config'],
+        state.auphonic_webhook_config
+      ),
       soundbite_start: get(action, ['payload', 'soundbite_start'], state.soundbite_start),
       soundbite_duration: get(action, ['payload', 'soundbite_duration'], state.soundbite_duration),
       soundbite_title: get(action, ['payload', 'soundbite_title'], state.soundbite_title),
+      license_name: get(action, ['payload', 'license_name'], state.license_name),
+      license_url: get(action, ['payload', 'license_url'], state.license_url),
       contributions: get(action, ['payload', 'contributions'], state.contributions),
     }),
     [MOVE_CONTRIBUTION_UP]: (state: State, action: typeof moveContributionUp): State => {
@@ -239,5 +257,7 @@ export const selectors = {
   soundbite_start: (state: State) => state.soundbite_start,
   soundbite_duration: (state: State) => state.soundbite_duration,
   soundbite_title: (state: State) => state.soundbite_title,
+  license_name: (state: State) => state.license_name,
+  license_url: (state: State) => state.license_url,
   contributions: (state: State) => state.contributions,
 }
