@@ -151,8 +151,8 @@ export default defineComponent({
         { key: 4, title: 'tags', here: 'todo', there: production.metadata.tags.join(' , ') },
         { key: 5, title: 'license', here: 'todo', there: production.metadata.license },
         { key: 6, title: 'license url', here: 'todo', there: production.metadata.license_url },
-        { key: 7, title: 'image', here: 'todo', there: production.image },
-        { key: 8, title: 'duration', here: state.duration, there: production.length_timestring },
+        // { key: 7, title: 'image', here: 'todo', there: production.image },
+        // { key: 8, title: 'duration', here: state.duration, there: production.length_timestring },
         { key: 9, title: 'slug', here: state.slug, there: production.output_basename },
       ]
     },
