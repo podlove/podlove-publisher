@@ -14,6 +14,7 @@ class Shows extends \Podlove\Modules\Base
     public function load()
     {
         add_action('init', [$this, 'register_show_taxonomy']);
+        add_action('rest_api_init', [$this, 'api_init']);
         add_action('add_meta_boxes', [$this, 'add_meta_box']);
 
         add_action('podlove_register_settings_pages', function ($handle) {
@@ -184,6 +185,12 @@ class Shows extends \Podlove\Modules\Base
                 'show_admin_column' => false,
             ]
         );
+    }
+
+    public function api_init()
+    {
+        $api = new REST_API();
+        $api->register_routes();
     }
 
     public function override_feed_title($title)
