@@ -98,7 +98,7 @@ add_filter('podlove_episode_form_data', function ($form_data, $episode) {
 <?php
             }
         ],
-        'position' => 450,
+        'position' => 800,
     ];
 
     return $form_data;

@@ -200,7 +200,7 @@ class Podcast_Post_Meta_Box
                   <?php
                   }
               ],
-              'position' => 300,
+              'position' => 600,
           ], [
               'type' => 'callback',
               'key' => 'descriptions',
