@@ -124,7 +124,7 @@ class Transcripts extends \Podlove\Modules\Base
 <?php
                 }
             ],
-            'position' => 425,
+            'position' => 480,
         ];
 
         return $form_data;

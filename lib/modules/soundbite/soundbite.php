@@ -21,7 +21,7 @@ class Soundbite extends \Podlove\Modules\Base
             'type' => 'callback',
             'key' => 'soundbite',
             'options' => ['callback' => [$this, 'soundbite_form']],
-            'position' => 456,
+            'position' => 470,
         ];
 
         return $form_data;

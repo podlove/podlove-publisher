@@ -502,7 +502,7 @@ class Contributors extends \Podlove\Modules\Base
   <?php
               }
             ],
-            'position' => 850,
+            'position' => 500,
         ];
 
         return $form_data;

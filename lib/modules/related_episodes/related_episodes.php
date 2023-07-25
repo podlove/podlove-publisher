@@ -91,7 +91,7 @@ class Related_Episodes extends \Podlove\Modules\Base
                     <?php
                 }
             ],
-            'position' => 870,
+            'position' => 460,
         ];
 
         return $form_data;

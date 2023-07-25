@@ -28,7 +28,7 @@ class EpisodeEnhancer
             'options' => [
                 'callback' => [$this, 'auphonic_episodes_form'],
             ],
-            'position' => 500,
+            'position' => 700,
         ];
 
         return $form_data;
