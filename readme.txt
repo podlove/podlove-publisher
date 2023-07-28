@@ -104,6 +104,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2023-07-28 =
+
+* fix: add permission check for cron diagnostics
+
 = 2023-07-14 =
 
 * fix: Auphonic metadata import
