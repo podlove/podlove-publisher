@@ -37,7 +37,7 @@
             :key="`voice-${vindex}-contributor-${kindex}`"
             :value="contributor.id"
           >
-            {{ contributor.name }}
+            {{ contributor.publicname || contributor.realname || contributor.nickname }}
           </option>
         </select>
       </div>
