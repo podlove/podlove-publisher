@@ -104,6 +104,13 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2023-08-05 =
+
+* api: filter episodes by show slug (`...&show=myshow`)
+* api: list all shows (`...podlove/v2/shows`)
+* change order of episode page sections
+* fix: Assigning transcript Voices does not work #1384
+
 = 2023-07-28 =
 
 * fix: add permission check for cron diagnostics
