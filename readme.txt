@@ -51,7 +51,7 @@ And this is just the beginning. We have a rich roadmap that will bring even more
 
 Development of the plugin is an open process. The current version is available [on GitHub](https://github.com/podlove/podlove-publisher) Feel free to contribute and to fix errors or send improvements via GitHub.
 
-Requires PHP 5.4+
+Requires PHP 8.0+
 
 == Frequently Asked Questions ==
 
