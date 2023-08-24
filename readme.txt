@@ -104,6 +104,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2023-08-24 =
+
+* remove module: Twitter Card Integration
+
 = 2023-08-05 =
 
 * api: filter episodes by show slug (`...&show=myshow`)

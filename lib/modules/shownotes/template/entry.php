@@ -109,7 +109,7 @@ class Entry extends Wrapper
     /**
      * Image URL.
      *
-     * Open Graph or Twitter image.
+     * Open Graph image.
      *
      * @see image
      * @accessor
