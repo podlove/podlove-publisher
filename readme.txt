@@ -107,6 +107,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 = 2023-08-24 =
 
 * remove module: Twitter Card Integration
+* support page: replace link to Twitter with our Mastodon profile
 
 = 2023-08-05 =
 
