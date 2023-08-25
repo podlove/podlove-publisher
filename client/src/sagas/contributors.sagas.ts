@@ -9,7 +9,7 @@ import { PodloveApiClient } from '@lib/api'
 import { takeFirst } from './helper'
 import { createApi } from './api'
 import { selectors } from '@store'
-import { PodloveEpisode, PodloveEpisodeContribution } from '../types/episode.types'
+import { PodloveEpisode, PodloveEpisodeContribution, PodloveGroup, PodloveRole } from '../types/episode.types'
 import { Action } from 'redux'
 import { __ } from '../plugins/translations'
 
@@ -59,14 +59,23 @@ function* updateEpisodeContributions(api: PodloveApiClient) {
     return
   }
 
+  const roles: PodloveRole[] = yield select(selectors.contributors.roles)
+  const groups: PodloveGroup[] = yield select(selectors.contributors.groups)
   const data: PodloveEpisodeContribution[] = yield select(selectors.episode.contributions)
-  const contributors = data.map(({ contributor_id, role_id, group_id, position, comment }) => ({
-    contributor_id: toInteger(contributor_id),
-    role_id: toInteger(role_id),
-    group_id: toInteger(group_id),
-    position: toInteger(position),
-    comment: comment || '',
-  }))
+
+  let contributors = data.map(function({ contributor_id, role_id, group_id, position, comment }) {
+    if (toInteger(role_id) == 0 && roles.length > 0)
+      role_id = 1
+    if (toInteger(group_id) == 0 && groups.length > 0)
+      group_id = 1
+    return {
+      contributor_id: toInteger(contributor_id),
+      role_id: toInteger(role_id),
+      group_id: toInteger(group_id),
+      position: toInteger(position),
+      comment: comment || ''
+    }
+  })
 
   yield api.put(`episodes/${episodeId}/contributions`, { contributors })
 }
