@@ -64,14 +64,10 @@ function* updateEpisodeContributions(api: PodloveApiClient) {
   const data: PodloveEpisodeContribution[] = yield select(selectors.episode.contributions)
 
   let contributors = data.map(function({ contributor_id, role_id, group_id, position, comment }) {
-    if (toInteger(role_id) == 0 && roles.length > 0)
-      role_id = 1
-    if (toInteger(group_id) == 0 && groups.length > 0)
-      group_id = 1
     return {
       contributor_id: toInteger(contributor_id),
-      role_id: toInteger(role_id),
-      group_id: toInteger(group_id),
+      role_id: toInteger(role_id) == 0 && roles.length > 0 ? 1 : toInteger(role_id),
+      group_id: toInteger(group_id) == 0 && groups.length > 0 ? 1 : toInteger(group_id),
       position: toInteger(position),
       comment: comment || ''
     }
