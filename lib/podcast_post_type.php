@@ -2,6 +2,8 @@
 
 namespace Podlove;
 
+use Podlove\Model\Episode;
+
 /**
  * Custom Post Type: "podcast".
  */
@@ -69,6 +71,15 @@ class Podcast_Post_Type
         add_filter('close_comments_for_post_types', [$this, 'compatibility_with_auto_comment_closing']);
 
         add_filter('get_the_excerpt', [$this, 'default_excerpt_to_episode_summary'], 10, 2);
+
+        add_filter('save_post_podcast', [$this, 'save_post_podcast'], 10, 3);
+    }
+
+    public function save_post_podcast($post_id, $post, $update)
+    {
+        if ($update === false) {
+            $this->handle_episode_created($post_id, $post);
+        }
     }
 
     /**
@@ -131,7 +142,6 @@ class Podcast_Post_Type
 
     public function default_excerpt_to_episode_summary($excerpt, $post)
     {
-
         if (get_post_type($post) !== 'podcast') {
             return $excerpt;
         }
@@ -215,5 +225,12 @@ class Podcast_Post_Type
         do_action('podlove_delete_episode', $episode);
 
         $episode->delete();
+    }
+
+    private function handle_episode_created($post_id, $post)
+    {
+        $episode = Episode::find_or_create_by_post_id($post_id);
+        $episode->type = 'full';
+        $episode->save();
     }
 }
