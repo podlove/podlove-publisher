@@ -45,6 +45,8 @@ class Contributors extends \Podlove\Modules\Base
         add_action('podlove_feed_settings_bottom', [$this, 'feed_settings']);
         add_action('podlove_feed_process', [$this, 'feed_process'], 10, 2);
 
+        add_action('podlove_episode_created', [$this, 'apply_default_contributors']);
+
         add_filter('podlove_twig_file_loader', function ($file_loader) {
             $file_loader->addPath(implode(DIRECTORY_SEPARATOR, [\Podlove\PLUGIN_DIR, 'lib', 'modules', 'contributors', 'templates']), 'contributors');
 
@@ -495,12 +497,12 @@ class Contributors extends \Podlove\Modules\Base
             'key' => 'contributors_form_table',
             'options' => [
                 'callback' => function () {
-                  ?>
+                    ?>
     <div data-client="podlove" style="margin: 15px 0;">
       <podlove-contributors></podlove-contributors>
     </div>
   <?php
-              }
+                }
             ],
             'position' => 500,
         ];
@@ -511,9 +513,7 @@ class Contributors extends \Podlove\Modules\Base
     /**
      * Contributors extension for podcast settings screen.
      *
-     * @param TableWrapper $wrapper form wrapper
-     * @param Podcast      $podcast podcast model
-     * @param mixed        $tabs
+     * @param mixed $tabs
      */
     public function podcast_settings_tab($tabs)
     {
@@ -821,6 +821,21 @@ class Contributors extends \Podlove\Modules\Base
         $api_v2->register_routes();
         $api_episode_contributor = new WP_REST_PodloveEpisodeContributions_Controller();
         $api_episode_contributor->register_routes();
+    }
+
+    public function apply_default_contributors(Episode $episode)
+    {
+        $defaults = DefaultContribution::all();
+        usort($defaults, function ($a, $b) { return $a->position <=> $b->position; });
+
+        foreach ($defaults as $default_contribution) {
+            $contribution = new EpisodeContribution();
+            $contribution->episode_id = $episode->id;
+            $contribution->contributor_id = $default_contribution->contributor_id;
+            $contribution->role_id = $default_contribution->role_id;
+            $contribution->group_id = $default_contribution->group_id;
+            $contribution->save();
+        }
     }
 
     /**

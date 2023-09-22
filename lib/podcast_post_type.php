@@ -232,5 +232,7 @@ class Podcast_Post_Type
         $episode = Episode::find_or_create_by_post_id($post_id);
         $episode->type = 'full';
         $episode->save();
+
+        do_action('podlove_episode_created', $episode);
     }
 }

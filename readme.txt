@@ -112,6 +112,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 * fix: contributors page does not error any more ([#1389](https://github.com/podlove/podlove-publisher/pull/1389))
 * fix: related episodes disappearing when using quick edit ([#1391](https://github.com/podlove/podlove-publisher/issues/1391))
 * fix(assets): show url when file can not be found
+* fix: default episode contributors work again
 
 = 2023-08-24 =
 
