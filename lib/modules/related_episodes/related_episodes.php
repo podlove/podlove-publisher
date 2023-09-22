@@ -16,7 +16,6 @@ class Related_Episodes extends \Podlove\Modules\Base
     {
         add_action('podlove_module_was_activated_related_episodes', [$this, 'was_activated']);
         add_filter('podlove_episode_form_data', [$this, 'episode_relation_form'], 10, 2);
-        add_action('save_post', [$this, 'update_episode_relations'], 10, 2);
         add_action('rest_api_init', [$this, 'api_init']);
 
         add_action('admin_print_styles', [$this, 'admin_print_styles']);
@@ -39,36 +38,6 @@ class Related_Episodes extends \Podlove\Modules\Base
     public function was_activated($module_name)
     {
         EpisodeRelation::build();
-    }
-
-    public function update_episode_relations($post_id)
-    {
-        // skip if the save does not come from the episode form
-        if (!isset($_POST['_podlove_meta'])) {
-            return;
-        }
-
-        $episode = Model\Episode::find_one_by_post_id($post_id);
-
-        if (!$episode) {
-            return;
-        }
-
-        $relations = EpisodeRelation::find_all_by_where('left_episode_id = '.$episode->id.' OR right_episode_id = '.$episode->id);
-        foreach ($relations as $episode_relation) {
-            $episode_relation->delete();
-        }
-
-        if (!isset($_POST['_podlove_meta']['related_episodes'])) {
-            return;
-        }
-
-        foreach ($_POST['_podlove_meta']['related_episodes'] as $episode_relation) {
-            $e = new EpisodeRelation();
-            $e->left_episode_id = $episode->id;
-            $e->right_episode_id = $episode_relation;
-            $e->save();
-        }
     }
 
     public function api_init()
@@ -149,7 +118,7 @@ class Related_Episodes extends \Podlove\Modules\Base
 			</script>
 			<script type="text/javascript">
 				var PODLOVE = PODLOVE || {};
-				
+
 				PODLOVE.related_episodes_existing_episode_relations = <?php echo json_encode($existing_episode_relations); ?>;
 			</script>
 			<?php
