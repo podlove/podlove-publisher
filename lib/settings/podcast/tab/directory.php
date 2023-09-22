@@ -110,14 +110,14 @@ class Directory extends Tab
 
             $wrapper->select('category_2', [
                 'label' => __('iTunes Categories', 'podlove-podcasting-plugin-for-wordpress'),
-                'description' => '',
+                'description' => __('Optional. May be ignored by directories.'),
                 'type' => 'select',
                 'options' => \Podlove\Itunes\categories(),
             ]);
 
             $wrapper->select('category_3', [
                 'label' => __('iTunes Categories', 'podlove-podcasting-plugin-for-wordpress'),
-                'description' => '',
+                'description' => __('Optional. May be ignored by directories.'),
                 'type' => 'select',
                 'options' => \Podlove\Itunes\categories(),
             ]);
