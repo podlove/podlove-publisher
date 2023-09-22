@@ -113,6 +113,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 * fix: related episodes disappearing when using quick edit ([#1391](https://github.com/podlove/podlove-publisher/issues/1391))
 * fix(assets): show url when file can not be found
 * fix: default episode contributors work again
+* fix: when episode title field is empty, it shows the blog title as greyed out placeholder (which is the fallback used in the feed etc.)
 
 = 2023-08-24 =
 

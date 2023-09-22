@@ -15,6 +15,7 @@
           rounded-md
         "
         :value="state.title"
+        :placeholder="state.post_title"
         @input="updateTitle($event)"
       />
     </div>
@@ -39,6 +40,7 @@ export default defineComponent({
     return {
       state: mapState({
         title: selectors.episode.title,
+        post_title: selectors.post.title
       }),
       dispatch: injectStore().dispatch,
     }
