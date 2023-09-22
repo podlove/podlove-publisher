@@ -861,8 +861,9 @@ class WP_REST_PodloveEpisode_Controller extends \WP_REST_Controller
 
         if ($file->size == 0) {
             return new \Podlove\Api\Response\OkResponse([
+                'status' => 'ok',
                 'message' => 'file size cannot be determined',
-                'status' => 'ok'
+                'file_url' => $file->get_file_url(),
             ]);
         }
         do_action('podlove_media_file_content_verified', $file->id);
