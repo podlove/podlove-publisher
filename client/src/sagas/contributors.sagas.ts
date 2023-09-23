@@ -9,7 +9,8 @@ import { PodloveApiClient } from '@lib/api'
 import { takeFirst } from './helper'
 import { createApi } from './api'
 import { selectors } from '@store'
-import { PodloveEpisode, PodloveEpisodeContribution, PodloveGroup, PodloveRole } from '../types/episode.types'
+import { PodloveRole, PodloveGroup } from '../types/contributors.types'
+import { PodloveEpisode, PodloveEpisodeContribution } from '../types/episode.types'
 import { Action } from 'redux'
 import { __ } from '../plugins/translations'
 
@@ -63,7 +64,7 @@ function* updateEpisodeContributions(api: PodloveApiClient) {
   const groups: PodloveGroup[] = yield select(selectors.contributors.groups)
   const data: PodloveEpisodeContribution[] = yield select(selectors.episode.contributions)
 
-  let contributors = data.map(function({ contributor_id, role_id, group_id, position, comment }) {
+  let contributors = data.map(function ({ contributor_id, role_id, group_id, position, comment }) {
     return {
       contributor_id: toInteger(contributor_id),
       role_id: toInteger(role_id) == 0 && roles.length > 0 ? 1 : toInteger(role_id),
