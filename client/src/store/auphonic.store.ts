@@ -88,7 +88,7 @@ export type AuphonicTrackAlgorithms = {
   backforeground: string
   denoise: boolean
   denoiseamount: number
-  hipfilter: boolean
+  filtering: boolean
 }
 
 export type Preset = Production & {
@@ -187,7 +187,7 @@ export const startProduction = createAction<Partial<Production>>(START_PRODUCTIO
 
 // Presets
 export const setPresets = createAction<Preset[]>(SET_PRESETS)
-export const setPreset = createAction<Preset>(SET_PRESET)
+export const setPreset = createAction<string>(SET_PRESET)
 
 // Files & File Services
 export const setServices = createAction<Service[]>(SET_SERVICES)
@@ -379,7 +379,7 @@ export const reducer = handleActions(
               {
                 identifier: file.id,
                 identifier_new: file.id,
-                filtering: file.algorithms.hipfilter,
+                filtering: file.algorithms.filtering,
                 noise_and_hum_reduction: file.algorithms.denoise,
                 fore_background: file.algorithms.backforeground,
                 input_file_name: file.input_file,

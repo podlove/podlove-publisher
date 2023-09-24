@@ -27,7 +27,9 @@
               class="relative -m-2 p-2 flex items-center justify-around space-x-4 rounded-xl hover:bg-gray-50 focus-within:ring-2 focus-within:ring-indigo-500"
             >
               <div>
-                <h3 class="text-sm font-medium text-gray-900">{{ __('Create New Production') }}</h3>
+                <h3 class="text-sm font-medium text-gray-900">
+                  {{ __('Create New Production from Preset') }}
+                </h3>
               </div>
             </div>
             <div
@@ -58,7 +60,9 @@
               class="relative -m-2 p-2 flex items-center justify-around space-x-4 rounded-xl hover:bg-gray-50 focus-within:ring-2 focus-within:ring-indigo-500"
             >
               <div>
-                <h3 class="text-sm font-medium text-gray-900">{{ __('Select Production') }}</h3>
+                <h3 class="text-sm font-medium text-gray-900">
+                  {{ __('Select Existing Production') }}
+                </h3>
               </div>
             </div>
             <div
@@ -104,7 +108,8 @@ export default defineComponent({
   setup() {
     return {
       state: mapState({
-        preset: selectors.auphonic.preset,
+        presetUUID: selectors.auphonic.preset,
+        presets: selectors.auphonic.presets,
         isInitializing: selectors.auphonic.isInitializing,
       }),
       dispatch: injectStore().dispatch,
@@ -137,15 +142,18 @@ export default defineComponent({
   },
 
   computed: {
+    preset(): auphonic.Preset {
+      return this.state.presets.find((p: auphonic.Preset) => p.uuid === this.state.presetUUID)
+    },
     isInitializing(): boolean {
       return this.state.isInitializing
     },
     buttonState(): 'idle' | 'single' | 'multi' {
-      if (!this.state.preset) {
+      if (!this.preset) {
         return 'idle'
       }
 
-      return this.state.preset.is_multitrack ? 'multi' : 'single'
+      return this.preset.is_multitrack ? 'multi' : 'single'
     },
   },
 })

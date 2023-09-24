@@ -104,6 +104,20 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2023-09-24 =
+
+Polishing the Auphonic Module:
+
+* memorize selected preset
+* rename start screen labels (and empty select boxes instead of duplicating the label there)
+* reorganize "tracks" view
+  * reduce label noise by displaying more like a table
+  * move algorithm settings to dedicated column (instead of confusing toggleable UI)
+  * remove unhelpful "Manage Production" heading
+  * rename "current file" to "uploaded file"
+  * selected production information: default name to "New Production" and include creation date from production file
+* fix "filtering" algorithm parameter
+
 = 2023-09-22 =
 
 * change: new episodes default to type "full"

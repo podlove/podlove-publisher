@@ -9,7 +9,7 @@
       >
         <span class="w-full inline-flex truncate">
           <span v-if="currentPreset" class="truncate">{{ currentPreset._select.name }}</span>
-          <span v-else class="truncate">{{ __('Select Preset') }}</span>
+          <span v-else class="truncate">&nbsp;</span>
         </span>
         <span class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
           <SelectorIcon class="h-5 w-5 text-gray-400" aria-hidden="true" />
@@ -105,7 +105,7 @@ export default defineComponent({
 
   methods: {
     setPreset(preset: Preset) {
-      this.dispatch(auphonic.setPreset(preset))
+      this.dispatch(auphonic.setPreset(preset.uuid))
     },
   },
 
@@ -119,8 +119,9 @@ export default defineComponent({
         return { ...preset, _select: { name, date, is_multitrack } }
       })
     },
-    currentPreset(): PresetWithSelectionData | null {
-      return this.state.currentPreset
+    currentPreset(): PresetWithSelectionData | null | undefined {
+      const currentPreset = this.state.currentPreset
+      return this.presets.find((p) => p.uuid === currentPreset)
     },
   },
 })

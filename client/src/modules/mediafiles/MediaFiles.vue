@@ -74,7 +74,7 @@ export default defineComponent({
       return this.state.isInitializing
     },
     isMediaUploadEnabled(): boolean {
-      return this.state.modules.includes('wordpress_file_upload')
+      return this.state.modules?.includes('wordpress_file_upload')
     },
   },
 

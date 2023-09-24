@@ -1,9 +1,9 @@
 <template>
   <div>
-    <div class="flex flex-col sm:flex-row gap-3">
+    <div class="flex flex-col gap-2">
       <!-- step one -->
       <div>
-        <label class="block text-sm font-medium text-gray-700">Upload Method</label>
+        <label class="block md:hidden text-sm font-medium text-gray-700">Upload Method</label>
         <select
           @change="handleServiceSelection"
           class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
@@ -26,11 +26,11 @@
             :for="file_key + 'file-upload'"
             class="relative cursor-pointer bg-white rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500"
           >
-            <div class="sm:mt-8" v-if="filenameSelectedForUpload">
+            <div class="sm:mt-1" v-if="filenameSelectedForUpload">
               Upload
               <span class="text-sm font-normal">{{ filenameSelectedForUpload }}</span>
             </div>
-            <div class="sm:mt-8" v-else>{{ __('Upload a file') }}</div>
+            <div class="sm:mt-1" v-else>{{ __('Upload a file') }}</div>
             <input
               :id="file_key + 'file-upload'"
               name="file-upload"

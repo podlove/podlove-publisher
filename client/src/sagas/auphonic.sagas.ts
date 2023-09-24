@@ -31,6 +31,8 @@ function* initialize(api: PodloveApiClient) {
 
     yield takeEvery(auphonic.SET_PRODUCTION, memorizeSelectedProduction, api)
     yield takeEvery(auphonic.DESELECT_PRODUCTION, forgetSelectedProduction, api)
+
+    yield takeEvery(auphonic.SET_PRESET, memorizeSelectedPreset)
   }
 }
 
@@ -74,6 +76,7 @@ function* initializeAuphonicApi() {
   )
 
   yield call(maybeRestoreProductionSelection)
+  yield call(maybeRestorePresetSelection)
   yield put(auphonic.initDone())
 
   yield takeEvery(auphonic.CREATE_PRODUCTION, handleCreateProduction, auphonicApi)
@@ -278,7 +281,7 @@ function getTracksPayload(state: State): any {
           ...fileReference,
           algorithms: {
             denoise: track.noise_and_hum_reduction,
-            hipfilter: track.filtering,
+            filtering: track.filtering,
             backforeground: track.fore_background,
           },
         },
@@ -424,13 +427,13 @@ function* fetchServiceFiles(
 }
 
 function defaultTitle() {
-  return `Audio Production ${new Date().toLocaleString()}`
+  return `New Production`
 }
 
 function* handleCreateProduction(auphonicApi: AuphonicApiClient) {
-  const preset: auphonic.Preset = yield select(selectors.auphonic.preset)
+  const presetUUID: string = yield select(selectors.auphonic.preset)
   const { result } = yield auphonicApi.post(`productions.json`, {
-    preset: preset.uuid,
+    preset: presetUUID,
     metadata: { title: defaultTitle() },
   })
   const production = result.data
@@ -439,9 +442,9 @@ function* handleCreateProduction(auphonicApi: AuphonicApiClient) {
 }
 
 function* handleCreateMultitrackProduction(auphonicApi: AuphonicApiClient) {
-  const preset: auphonic.Preset = yield select(selectors.auphonic.preset)
+  const presetUUID: string = yield select(selectors.auphonic.preset)
   const { result } = yield auphonicApi.post(`productions.json`, {
-    preset: preset.uuid,
+    preset: presetUUID,
     metadata: { title: defaultTitle() },
     is_multitrack: true,
   })
@@ -546,6 +549,25 @@ function* maybeRestoreProductionSelection() {
 
     if (production) {
       yield put(auphonic.setProduction(production))
+    }
+  }
+}
+
+function* memorizeSelectedPreset() {
+  const preset: string = yield select(selectors.auphonic.preset)
+
+  if (localStorage) {
+    localStorage.setItem('podlove-auphonic-preset', preset)
+  }
+}
+
+function* maybeRestorePresetSelection() {
+  let savedPreset: string | null = null
+
+  if (localStorage) {
+    savedPreset = localStorage.getItem('podlove-auphonic-preset')
+    if (savedPreset) {
+      yield put(auphonic.setPreset(savedPreset))
     }
   }
 }
