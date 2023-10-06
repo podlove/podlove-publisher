@@ -8,8 +8,13 @@ use Podlove\Model;
 class Logging extends \Podlove\Modules\Base
 {
     protected $module_name = 'Logging';
-    protected $module_description = 'View podlove related logs in dashboard. (writes logs to database)';
     protected $module_group = 'system';
+
+    public function get_module_description()
+    {
+        $support_menu_label = __('Support', 'podlove-podcasting-plugin-for-wordpress');
+        return 'View podlove related logs at Podlove > '.$support_menu_label.'. (writes logs to database)';
+    }
 
     public function load()
     {
