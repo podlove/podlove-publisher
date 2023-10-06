@@ -54,7 +54,7 @@ class Support
 					</li>
 					<li>
 						<?php echo sprintf(
-						    __('For quick remarks and feedback, you can reach us at %Mastodon (fosstodon.org/@podlove)%s', 'podlove-podcasting-plugin-for-wordpress'),
+						    __('For quick remarks and feedback, you can reach us at %sMastodon (fosstodon.org/@podlove)%s', 'podlove-podcasting-plugin-for-wordpress'),
 						    '<a target="_blank" href="https://fosstodon.org/@podlove">',
 						    '</a>'
 						); ?>
