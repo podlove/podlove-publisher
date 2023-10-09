@@ -106,15 +106,15 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
-= unreleased =
-
+= 3.8.7 =
 
 * improve PHP 8 compatibility
   * stop using FILTER_SANITIZE_STRING
   * set default encoding in DOMDocument
   * set default values in transcript template internals
 
-
+* fix(plus): gracefully handle when things go wrong in image generator
+* fix(shownotes): handle image providers returning lists
 * fix subtle `get_the_excerpt` bug (uses post parameter now instead of the global post object)
 
 = 3.8.6 =
