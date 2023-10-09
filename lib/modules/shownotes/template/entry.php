@@ -112,6 +112,7 @@ class Entry extends Wrapper
      * Open Graph or Twitter image.
      *
      * @see image
+     *
      * @accessor
      */
     public function image()
@@ -123,6 +124,10 @@ class Entry extends Wrapper
         }
 
         $image_url = $this->entry->image ?? $data['providers']['open_graph']['image'] ?? $data['providers']['twitter']['image:src'] ?? false;
+
+        if (is_array($image_url)) {
+            $image_url = $image_url[0];
+        }
 
         if ($image_url) {
             return new \Podlove\Template\Image((new \Podlove\Model\Image($image_url, $this->entry->title))->setWidth(1024));
