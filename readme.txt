@@ -104,6 +104,11 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2023-10-09 =
+
+* fix(plus): gracefully handle when things go wrong in image generator
+* fix(shownotes): handle image providers returning lists
+
 = 2023-09-24 =
 
 Polishing the Auphonic Module:
