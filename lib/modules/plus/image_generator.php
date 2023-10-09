@@ -34,10 +34,14 @@ class ImageGenerator
         // });
     }
 
-    public function override_open_graph_image_data($_data)
+    public function override_open_graph_image_data($original_data)
     {
         $image = \Podlove\Model\Podcast::get()->cover_image;
         $url = $this->get_open_graph_image_url($image, '#F3F4F6');
+
+        if (!$url) {
+            return $original_data;
+        }
 
         return [
             'property' => 'og:image',
@@ -50,7 +54,9 @@ class ImageGenerator
         $image = \Podlove\Model\Podcast::get()->cover_image;
         $url = $this->get_open_graph_image_url($image, '#F3F4F6');
 
-        $response['social_media_image'] = $url;
+        if ($url) {
+            $response['social_media_image'] = $url;
+        }
 
         return $response;
     }
@@ -58,6 +64,10 @@ class ImageGenerator
     public function get_open_graph_image_url($square_image_url, $background_color)
     {
         $preset_id = $this->get_or_create_preset_id('podcast_simple');
+
+        if (!$preset_id) {
+            return null;
+        }
 
         $base = Plus::base_url().'/media/image/';
 
@@ -92,6 +102,11 @@ class ImageGenerator
 
         if (!isset($presets[$template_name])) {
             $response = $this->api->create_image_preset($template_name);
+
+            if (is_wp_error($response)) {
+                return null;
+            }
+
             $preset = json_decode($response['body']);
             $presets[$template_name] = $preset->id;
             update_option('podlove_plus_image_presets', $presets);
