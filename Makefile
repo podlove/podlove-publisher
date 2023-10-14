@@ -49,7 +49,7 @@ install_php_scoper:
 	composer require --dev bamarni/composer-bin-plugin:1.4.1
 	composer bin php-scoper config minimum-stability dev
 	composer bin php-scoper config prefer-stable true
-	composer bin php-scoper require --dev humbug/php-scoper:0.15.0
+	composer bin php-scoper require --dev --with-all-dependencies humbug/php-scoper:0.15.0
 
 build:
 	npm install
