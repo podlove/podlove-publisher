@@ -4,7 +4,7 @@
   "license": "MIT",
   "require": {
     "php": "^8.0",
-    "podlove/podlove-timeline": "1.*",
+    "podlove/podlove-timeline": "2.*",
     "monolog/monolog": "2.9.*",
     "symfony/yaml": "6.0.*",
     "symfony/polyfill-mbstring": "1.27.*",

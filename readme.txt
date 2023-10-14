@@ -111,6 +111,8 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
   * set default encoding in DOMDocument
   * set default values in transcript template internals
 
+* deps: update podlove-timeline to 2.0 (fixing various chapter related PHP warnings)
+
 = 2023-10-09 =
 
 * fix(plus): gracefully handle when things go wrong in image generator
