@@ -100,31 +100,31 @@ class GenericEntitySettings
 
         if (isset($_GET['action'])) {
             switch ($_GET['action']) {
-                        case 'new':   $this->new_template();
+                case 'new':   $this->new_template();
 
-break;
-                        case 'edit':  $this->edit_template();
+                    break;
+                case 'edit':  $this->edit_template();
 
-break;
+                    break;
 
-                        default:      $this->view_template();
+                default:      $this->view_template();
 
-break;
-                    }
+                    break;
+            }
         } else {
             $this->view_template();
         }
 
         do_action('podlove_settings_'.$this->entity_slug); ?>
-		</div>	
+		</div>
 		<?php
     }
 
     public static function get_action_link($entity_slug, $id, $title, $action = 'edit', $class = 'link')
     {
-        $podlove_tab = filter_input(INPUT_GET, 'podlove_tab', FILTER_SANITIZE_STRING);
+        $podlove_tab = htmlspecialchars($_REQUEST['podlove_tab'] ?? '');
         $request = $podlove_tab ? '&amp;podlove_tab='.$podlove_tab : '';
-        $page = filter_input(INPUT_GET, 'page', FILTER_SANITIZE_STRING);
+        $page = htmlspecialchars($_REQUEST['page'] ?? '');
 
         return sprintf(
             '<a href="?page=%s%s&amp;action=%s&amp;%s=%s" class="%s">'.$title.'</a>',
@@ -229,7 +229,7 @@ break;
     protected function view_template()
     {
         $tab = $this->is_tab ? '&amp;podlove_tab='.$this->tab_slug : '';
-        $page = filter_input(INPUT_GET, 'page', FILTER_SANITIZE_STRING); ?>
+        $page = htmlspecialchars($_REQUEST['page'] ?? ''); ?>
 		<h2>
 			<a href="?page=<?php echo $page.$tab; ?>&amp;action=new" class="add-new-h2"><?php echo $this->labels['add_new']; ?></a>
 		</h2>
@@ -245,7 +245,7 @@ break;
      */
     protected function redirect($action, $entity_id = null)
     {
-        $page = 'admin.php?page='.filter_input(INPUT_GET, 'page', FILTER_SANITIZE_STRING);
+        $page = 'admin.php?page='.htmlspecialchars($_REQUEST['page'] ?? '');
         $show = $entity_id ? '&'.$this->get_entity_slug().'='.$entity_id : '';
         $action = '&action='.$action;
         $tab = $this->is_tab ? '&podlove_tab='.$this->tab_slug : '';

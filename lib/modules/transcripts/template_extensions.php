@@ -31,6 +31,7 @@ class TemplateExtensions
      * ```
      *
      * @accessor
+     *
      * @dynamicAccessor episode.transcriptGrouped
      *
      * @param mixed $return
@@ -51,7 +52,7 @@ class TemplateExtensions
                     return new Template\Line($line);
                 }, $group['items']);
 
-                return new Template\Group($lines, $group['speaker'], $group['voice']);
+                return new Template\Group($lines, $group['speaker'] ?? null, $group['voice'] ?? null);
             }, $transcript);
         });
     }

@@ -95,7 +95,8 @@ class Podcast_Post_Meta_Box
     /**
      * Save post data on WordPress callback.
      *
-     * @param int $post_id
+     * @param int   $post_id
+     * @param mixed $post
      */
     public function save_postdata($post_id, $post)
     {
@@ -128,7 +129,7 @@ class Podcast_Post_Meta_Box
         // (including the _podlove_meta stuff above)
         // BUT we should keep the hooks for compatibility.
         $episode_data_filter = [
-            'guid' => FILTER_SANITIZE_STRING,
+            'guid' => FILTER_SANITIZE_ENCODED,
         ];
         $episode_data_filter = apply_filters('podlove_episode_data_filter', $episode_data_filter);
         $episode_data = filter_var_array($episode_data, $episode_data_filter);
@@ -188,33 +189,33 @@ class Podcast_Post_Meta_Box
     private static function get_form_data($episode)
     {
         $form_data = [
-          [
-              'type' => 'callback',
-              'key' => 'episode_assets',
-              'options' => [
-                  'callback' => function () {
-                  ?>
+            [
+                'type' => 'callback',
+                'key' => 'episode_assets',
+                'options' => [
+                    'callback' => function () {
+                        ?>
                     <div data-client="podlove" style="margin: 15px 0;">
                       <podlove-media-files></podlove-media-files>
                     </div>
                   <?php
-                  }
-              ],
-              'position' => 600,
-          ], [
-              'type' => 'callback',
-              'key' => 'descriptions',
-              'options' => [
-                  'callback' => function () {
-                  ?>
+                    }
+                ],
+                'position' => 600,
+            ], [
+                'type' => 'callback',
+                'key' => 'descriptions',
+                'options' => [
+                    'callback' => function () {
+                        ?>
                     <div data-client="podlove" style="margin: 15px 0;">
                       <podlove-description></podlove-description>
                     </div>
                   <?php
-                  }
-              ],
-              'position' => 900,
-          ]
+                    }
+                ],
+                'position' => 900,
+            ]
         ];
 
         // allow modules to add / change the form

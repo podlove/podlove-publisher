@@ -228,7 +228,7 @@ class MediaFile extends Base
             $template = apply_filters('podlove_file_url_template', $template);
             $template = str_replace('%media_file_base_url%', trailingslashit($podcast->get_media_file_base_uri()), $template);
             $template = str_replace('%episode_slug%', \Podlove\prepare_episode_slug_for_url($episode->slug), $template);
-            $template = str_replace('%suffix%', $episode_asset->suffix, $template);
+            $template = str_replace('%suffix%', $episode_asset->suffix ?? '', $template);
             $template = str_replace('%format_extension%', $file_type->extension, $template);
 
             return trim($template);
@@ -324,7 +324,7 @@ class MediaFile extends Base
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true); // make curl_exec() return the result
         curl_setopt($curl, CURLOPT_HEADER, true);         // header only
         curl_setopt($curl, CURLOPT_NOBODY, true);         // return no body; HTTP request method: HEAD
-        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, (\Podlove\get_setting('website', 'ssl_verify_peer') == 'on')); // Don't check SSL certificate in order to be able to use self signed certificates
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, \Podlove\get_setting('website', 'ssl_verify_peer') == 'on'); // Don't check SSL certificate in order to be able to use self signed certificates
         curl_setopt($curl, CURLOPT_FAILONERROR, true);
         curl_setopt($curl, CURLOPT_TIMEOUT, 3);          // HEAD requests shouldn't take > 2 seconds
 
