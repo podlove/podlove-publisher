@@ -134,7 +134,7 @@ class FileType
      */
     private function redirect($action, $format_id = null)
     {
-        $page = 'admin.php?page='.filter_var($_REQUEST['page'], FILTER_SANITIZE_URL).'&podlove_tab='.filter_var($_REQUEST['podlove_tab'], FILTER_SANITIZE_URL);
+        $page = 'admin.php?page='.htmlspecialchars($_REQUEST['page'] ?? '').'&podlove_tab='.htmlspecialchars($_REQUEST['podlove_tab'] ?? '');
         $show = ($format_id) ? '&file_type='.$format_id : '';
         $action = '&action='.$action;
 
@@ -154,7 +154,7 @@ class FileType
     {
         ?>
 		<h2>
-			<a href="?page=<?php echo filter_var($_REQUEST['page'], FILTER_SANITIZE_URL); ?>&amp;podlove_tab=<?php echo filter_var($_REQUEST['podlove_tab'], FILTER_SANITIZE_URL); ?>&amp;action=new" class="add-new-h2"><?php echo __('Add New', 'podlove-podcasting-plugin-for-wordpress'); ?></a>
+			<a href="?page=<?php echo htmlspecialchars($_REQUEST['page'] ?? ''); ?>&amp;podlove_tab=<?php echo htmlspecialchars($_REQUEST['podlove_tab'] ?? ''); ?>&amp;action=new" class="add-new-h2"><?php echo __('Add New', 'podlove-podcasting-plugin-for-wordpress'); ?></a>
 		</h2>
 		<p>
 			<?php echo __('This is a list of all file types Podlove Publisher knows about. If you would like to serve assets of an unknown file type, you must add it here before you can create the asset.', 'podlove-podcasting-plugin-for-wordpress'); ?>
@@ -172,7 +172,7 @@ class FileType
             'hidden' => [
                 'file_type' => $format->id,
                 'action' => $action,
-                'podlove_tab' => filter_var($_REQUEST['podlove_tab'], FILTER_SANITIZE_URL),
+                'podlove_tab' => htmlspecialchars($_REQUEST['podlove_tab'] ?? ''),
             ],
             'submit_button' => false, // for custom control in form_end
             'form_end' => function () {

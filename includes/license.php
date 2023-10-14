@@ -59,8 +59,7 @@ function podlove_episode_license_extend_form($form_data, $episode)
 					'.__('License Selector', 'podlove-podcasting-plugin-for-wordpress').'
 				</span>
 				',
-            'callback' => function () {
-            },
+            'callback' => function () {},
         ],
         'position' => 523,
     ];
@@ -125,7 +124,7 @@ function podlove_episode_license_extend_form($form_data, $episode)
 						<p class="podlove_podcast_license_image"></p>
 						<div class="podlove_license">
 							<p>
-								This work is licensed under the 
+								This work is licensed under the
 								<a class="podlove-license-link" rel="license" href=""></a>.
 							</p>
 						</div>
@@ -141,7 +140,7 @@ function podlove_episode_license_extend_form($form_data, $episode)
 
 add_filter('podlove_episode_data_filter', function ($filter) {
     return array_merge($filter, [
-        'license_name' => FILTER_SANITIZE_STRING,
+        'license_name' => FILTER_SANITIZE_ENCODED,
         'license_url' => FILTER_SANITIZE_URL,
     ]);
 });

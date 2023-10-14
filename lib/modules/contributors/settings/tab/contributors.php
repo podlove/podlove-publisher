@@ -67,7 +67,7 @@ class Contributors extends Tab
 
         add_filter('podlove_generic_entity_attributes_contributor', function ($attributes) {
             $sanitize = function ($var) {
-                return filter_var(stripslashes($var), FILTER_SANITIZE_STRING, ['flags' => FILTER_FLAG_NO_ENCODE_QUOTES]);
+                return filter_var(stripslashes($var), FILTER_SANITIZE_ENCODED, ['flags' => FILTER_FLAG_NO_ENCODE_QUOTES]);
             };
 
             $attributes['publicname'] = $sanitize($attributes['publicname']);

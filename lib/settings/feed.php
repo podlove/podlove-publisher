@@ -146,8 +146,8 @@ class Feed
 
         $args = filter_var_array($_REQUEST['podlove_podcast'], [
             'limit_items' => FILTER_SANITIZE_NUMBER_INT,
-            'feed_episode_title_variant' => FILTER_SANITIZE_STRING,
-            'feed_episode_title_template' => FILTER_SANITIZE_STRING,
+            'feed_episode_title_variant' => FILTER_SANITIZE_ENCODED,
+            'feed_episode_title_template' => FILTER_SANITIZE_ENCODED,
         ]);
 
         $podcast_settings['limit_items'] = $args['limit_items'];

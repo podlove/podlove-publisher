@@ -228,7 +228,7 @@ class MediaFile extends Base
             $template = apply_filters('podlove_file_url_template', $template);
             $template = str_replace('%media_file_base_url%', trailingslashit($podcast->get_media_file_base_uri()), $template);
             $template = str_replace('%episode_slug%', \Podlove\prepare_episode_slug_for_url($episode->slug), $template);
-            $template = str_replace('%suffix%', (string) $episode_asset->suffix, $template);
+            $template = str_replace('%suffix%', $episode_asset->suffix ?? '', $template);
             $template = str_replace('%format_extension%', $file_type->extension, $template);
 
             return trim($template);

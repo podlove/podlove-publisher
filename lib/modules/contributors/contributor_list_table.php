@@ -224,7 +224,7 @@ class Contributor_List_Table extends \Podlove\List_Table
 
     public function no_items()
     {
-        $url = sprintf('?page=%s&action=%s&podlove_tab=contributors', filter_input(INPUT_GET, 'page', FILTER_SANITIZE_URL), 'new'); ?>
+        $url = sprintf('?page=%s&action=%s&podlove_tab=contributors', htmlspecialchars($_REQUEST['page'] ?? ''), 'new'); ?>
 		<div style="margin: 20px 10px 10px 5px">
 	 		<span class="add-new-h2" style="background: transparent">
 			<?php _e('No items found.'); ?>
