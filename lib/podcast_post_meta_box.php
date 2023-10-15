@@ -240,14 +240,14 @@ class Podcast_Post_Meta_Box
 
         $episode_data_filter = [
             'number' => FILTER_SANITIZE_NUMBER_INT,
-            'title' => ['flags' => FILTER_FLAG_NO_ENCODE_QUOTES, 'filter' => FILTER_SANITIZE_ENCODED],
-            'subtitle' => ['flags' => FILTER_FLAG_NO_ENCODE_QUOTES, 'filter' => FILTER_SANITIZE_ENCODED],
-            'summary' => ['flags' => FILTER_FLAG_NO_ENCODE_QUOTES, 'filter' => FILTER_SANITIZE_ENCODED],
-            'slug' => FILTER_SANITIZE_ENCODED,
-            'type' => FILTER_SANITIZE_ENCODED,
-            'duration' => FILTER_SANITIZE_ENCODED,
-            'episode_assets' => ['flags' => FILTER_REQUIRE_ARRAY, 'filter' => FILTER_SANITIZE_ENCODED],
-            'guid' => FILTER_SANITIZE_ENCODED,
+            'title' => ['flags' => FILTER_FLAG_NO_ENCODE_QUOTES, 'filter' => FILTER_UNSAFE_RAW],
+            'subtitle' => ['flags' => FILTER_FLAG_NO_ENCODE_QUOTES, 'filter' => FILTER_UNSAFE_RAW],
+            'summary' => ['flags' => FILTER_FLAG_NO_ENCODE_QUOTES, 'filter' => FILTER_UNSAFE_RAW],
+            'slug' => FILTER_UNSAFE_RAW,
+            'type' => FILTER_UNSAFE_RAW,
+            'duration' => FILTER_UNSAFE_RAW,
+            'episode_assets' => ['flags' => FILTER_REQUIRE_ARRAY, 'filter' => FILTER_UNSAFE_RAW],
+            'guid' => FILTER_UNSAFE_RAW,
         ];
         $episode_data_filter = apply_filters('podlove_episode_data_filter', $episode_data_filter);
 
