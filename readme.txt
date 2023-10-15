@@ -104,6 +104,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2023-10-15 =
+
+* fix broken RSS feeds
+
 = 2023-10-14 =
 
 * improve PHP 8 compatibility

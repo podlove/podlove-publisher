@@ -21,6 +21,6 @@ class DomDocumentFragment extends \DOMDocument
 
     public function __toString()
     {
-        return str_replace('<?xml version="1.0"?>', '', $this->saveXML());
+        return str_replace('<?xml version="1.0" encoding="UTF-8"?>', '', $this->saveXML());
     }
 }
