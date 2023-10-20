@@ -14,12 +14,6 @@ class Ajax
      */
     public function __construct()
     {
-        // workaround to make is_network_admin() work in ajax requests
-        // @see https://core.trac.wordpress.org/ticket/22589
-        if (!defined('WP_NETWORK_ADMIN') && defined('DOING_AJAX') && DOING_AJAX && is_multisite() && preg_match('#^'.network_admin_url().'#i', $_SERVER['HTTP_REFERER'])) {
-            define('WP_NETWORK_ADMIN', true);
-        }
-
         $actions = [
             'get-new-guid',
             'validate-url',
@@ -488,7 +482,7 @@ class Ajax
 
         $data = \Podlove\Downloads_List_Data::get_data('post_date', 'asc');
 
-        $writer = Writer::createFromFileObject(new \SplTempFileObject()); //the CSV file will be created into a temporary File
+        $writer = Writer::createFromFileObject(new \SplTempFileObject()); // the CSV file will be created into a temporary File
 
         $headers = array_keys($data[0]);
         $writer->insertOne($headers);
@@ -510,7 +504,7 @@ class Ajax
         header('Content-type: application/json');
         echo json_encode($result);
 
-        exit();
+        exit;
     }
 
     // SELECT
@@ -874,7 +868,7 @@ class Ajax
             ->update_attributes(['position' => $position])
         ;
 
-        exit();
+        exit;
     }
 
     public function update_feed_position()
@@ -892,7 +886,7 @@ class Ajax
             ->update_attributes(['position' => $position])
         ;
 
-        exit();
+        exit;
     }
 
     public function hide_teaser()
@@ -919,7 +913,7 @@ class Ajax
     {
         echo sanitize_title($_REQUEST['title']);
 
-        exit();
+        exit;
     }
 
     private static function analytics_date_condition()

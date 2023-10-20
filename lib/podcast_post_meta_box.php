@@ -16,7 +16,7 @@ class Podcast_Post_Meta_Box
             if ($episode = Model\Episode::find_one_by_where('post_id = '.intval($post_id))) {
                 do_action('podlove_episode_content_has_changed', $episode->id);
             }
-        }, 10, 3);
+        });
     }
 
     public static function add_meta_box()
@@ -129,7 +129,7 @@ class Podcast_Post_Meta_Box
         // (including the _podlove_meta stuff above)
         // BUT we should keep the hooks for compatibility.
         $episode_data_filter = [
-            'guid' => FILTER_SANITIZE_ENCODED,
+            'guid' => FILTER_UNSAFE_RAW,
         ];
         $episode_data_filter = apply_filters('podlove_episode_data_filter', $episode_data_filter);
         $episode_data = filter_var_array($episode_data, $episode_data_filter);

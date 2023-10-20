@@ -52,7 +52,7 @@ function podlove_maybe_override_rss_post_titles($original_title)
                 return trim(strip_tags($episode->title));
             }
 
-                return $original_title;
+            return $original_title;
 
             break;
         case 'template':
@@ -61,7 +61,7 @@ function podlove_maybe_override_rss_post_titles($original_title)
                 return $title;
             }
 
-                return $original_title;
+            return $original_title;
 
             break;
 
@@ -96,7 +96,7 @@ function podlove_get_episode_title_by_template($post_id, $template)
     $title = str_replace('%mnemonic%', strip_tags(podlove_get_mnemonic($post_id)), $title);
     $title = str_replace('%episode_number%', $episode->number_padded(), $title);
 
-    $episode_title = trim(strip_tags($episode->title));
+    $episode_title = trim(strip_tags((string) $episode->title));
 
     if (!$episode_title) {
         $episode_title = get_post($post_id)->post_title;

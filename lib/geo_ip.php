@@ -116,6 +116,7 @@ class Geo_Ip
             // unarchive from the tar
             $phar = new \PharData($file->getPath());
             $phar->extractTo(self::get_upload_file_dir(), null, true);
+            unlink($tmpFile);
         } catch (Exception $e) {
             exit($e->getMessage());
         } catch (PharException $e) {
