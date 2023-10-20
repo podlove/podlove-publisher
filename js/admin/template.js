@@ -23,7 +23,7 @@
 		var templates   = [];
 
 		var template = function (id, title, content) {
-			
+
 			var $navigationItem = $("li a[data-id=" + id + "]", $navigation);
 			var isMarked = false;
 
@@ -45,7 +45,7 @@
 			var activate = function () {
 				$title.val(this.title);
 				$preview.val('[podlove-template template="' + this.title + '"]');
-				editor.getSession().setValue(this.content);
+				editor.getSession().setValue(this.content ? this.content : "");
 			};
 
 			return {
@@ -150,7 +150,7 @@
 		var handle_editor_change = function () {
 			// only track user input, *not* programmatical change
 			// @see https://github.com/ajaxorg/ace/issues/503#issuecomment-44525640
-			if (editor.curOp && editor.curOp.command.name) { 
+			if (editor.curOp && editor.curOp.command.name) {
 				update_editor_cache();
 			}
 		};

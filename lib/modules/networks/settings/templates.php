@@ -49,14 +49,14 @@ class Templates
 		<div class="wrap">
 			<h2><?php echo __('Templates', 'podlove-podcasting-plugin-for-wordpress'); ?></h2>
 			<?php $this->view_template(); ?>
-		</div>	
+		</div>
 		<?php
     }
 
     private function view_template()
     {
         echo __(
-            'Use network templates to share common templates in your podcast sites. 
+            'Use network templates to share common templates in your podcast sites.
 			They are available in all podcast sites.
 			If you define a local template for a template ID that also exists network-wide, the local template takes precedence.',
             'podlove-podcasting-plugin-for-wordpress'
@@ -101,6 +101,19 @@ class Templates
 			  </div>
 			</footer>
 			<div class="clear"></div>
+		</div>
+
+        <div class="podlove-template-shortcode" style="margin-top: 8px">
+		  <div>
+	  		<strong><?php _e('Embed with Shortcode', 'podlove-podcasting-plugin-for-wordpress'); ?></strong>
+			</div>
+		  <div style="margin-top: 4px; display: flex">
+				<input id="podlove_template_shortcode_preview" class="regular-text code" value="" style="margin-right: 8px">
+
+				<button class="button clipboard-btn" data-clipboard-target="#podlove_template_shortcode_preview">
+					Copy to Clipboard
+				</button>
+			</div>
 		</div>
 		<?php
     }
