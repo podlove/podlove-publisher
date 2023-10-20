@@ -106,7 +106,9 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 = 2023-10-20 =
 
+* merge back all changes from main branch (3.8.x releases)
 * fix broken Mastodon link
+* fix more PHP warnings (PHP 8+ compatibility)
 * improve description for Logging module
 
 = 2023-10-15 =
