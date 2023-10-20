@@ -258,16 +258,14 @@ $(document).ready(function() {
 			        ?>
 								<span class="log-details">
 									<span class="toggle"><a href="#"><?php echo __('toggle details', 'podlove-podcasting-plugin-for-wordpress'); ?></a></span>
-									<code class="details" style="display: none"><pre><?php
-			                                print_r((new \Spyc())->dump($extra, true)); ?></pre></code>
+									<code class="details" style="display: none"><pre><?php print_r($extra); ?></pre></code>
 								</span>
 								<?php
 			    } elseif (!$data && !empty($log_entry->context)) {
 			        ?>
 								<span class="log-details">
 									<span class="toggle"><a href="#"><?php echo __('toggle details', 'podlove-podcasting-plugin-for-wordpress'); ?></a></span>
-									<code class="details" style="display: none"><pre><?php
-			                                echo str_replace(',"', ','."\n".'"', $log_entry->context); ?></pre></code>
+									<code class="details" style="display: none"><pre><?php echo str_replace(',"', ','."\n".'"', $log_entry->context); ?></pre></code>
 								</span>
 								<?php
 			    } ?>
