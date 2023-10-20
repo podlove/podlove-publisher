@@ -29,9 +29,7 @@ class Podcast implements Licensable
         $this->fetch();
     }
 
-    public function __clone()
-    {
-    }
+    public function __clone() {}
 
     public function __set($name, $value)
     {
@@ -231,7 +229,7 @@ class Podcast implements Licensable
 
     public function has_cover_art()
     {
-        return strlen(trim($this->cover_image)) > 0;
+        return strlen(trim($this->cover_image ?? '')) > 0;
     }
 
     public function default_copyright_claim()

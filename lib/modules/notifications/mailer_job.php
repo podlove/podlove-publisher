@@ -67,7 +67,7 @@ class MailerJob
 
     public function isDebug()
     {
-        return $this->job->args['debug'] && $this->job->args['debug_receiver'];
+        return ($this->job->args['debug'] ?? false) && ($this->job->args['debug_receiver'] ?? false);
     }
 
     public function getSubject()

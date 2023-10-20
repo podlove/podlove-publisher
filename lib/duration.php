@@ -25,7 +25,7 @@ class Duration
 
     public function __construct($duration)
     {
-        $this->duration = trim($duration);
+        $this->duration = trim($duration ?? '');
         $this->normalize();
     }
 
