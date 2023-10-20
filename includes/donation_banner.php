@@ -15,6 +15,11 @@ function podlove_donation_banner()
 
     // only show on podlove settings pages
     $page_key = filter_input(INPUT_GET, 'page');
+
+    if (!$page_key) {
+        return;
+    }
+
     if (strpos($page_key, 'podlove') === false) {
         return;
     }
