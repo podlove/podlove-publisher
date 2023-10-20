@@ -104,6 +104,11 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2023-10-20 =
+
+* fix broken Mastodon link
+* improve description for Logging module
+
 = 2023-10-15 =
 
 * fix broken RSS feeds
