@@ -37,7 +37,7 @@ class PodcastLists
             return;
         }
 
-        if (!wp_verify_nonce($_REQUEST['_podlove_nonce'], self::$nonce)) {
+        if (!isset($_REQUEST['_podlove_nonce']) || !wp_verify_nonce($_REQUEST['_podlove_nonce'], self::$nonce)) {
             return;
         }
 
@@ -57,10 +57,11 @@ class PodcastLists
     public static function get_action_link($list, $title, $action = 'edit', $class = 'link')
     {
         return sprintf(
-            '<a href="?page=%s&amp;action=%s&amp;list=%s" class="%s">'.$title.'</a>',
+            '<a href="?page=%s&amp;action=%s&amp;list=%s&amp;_podlove_nonce=%s" class="%s">'.$title.'</a>',
             self::MENU_SLUG,
             $action,
             $list->id,
+            wp_create_nonce(self::$nonce),
             $class
         );
     }
