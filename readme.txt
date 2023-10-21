@@ -106,6 +106,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 3.8.11 =
+
+* fix: templates XHR issue in WP MultiSite
+
 = 3.8.10 =
 
 * fix: templates UI in WP MultiSite

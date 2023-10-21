@@ -40,6 +40,15 @@ class Templates
         wp_register_script('podlove-ace-js', \Podlove\PLUGIN_URL.'/js/admin/ace/ace.js');
 
         wp_register_script('podlove-template-js', \Podlove\PLUGIN_URL.'/js/admin/template.js', ['jquery', 'podlove-ace-js']);
+
+        wp_localize_script(
+            'podlove-template-js',
+            'podlove_admin_network_global',
+            [
+                'is_network_admin' => is_network_admin()
+            ]
+        );
+
         wp_enqueue_script('podlove-template-js');
     }
 

@@ -14,7 +14,7 @@ class TemplateController
         ];
 
         foreach ($actions as $action) {
-            if (is_network_admin()) {
+            if (isset($_REQUEST['is_network']) && $_REQUEST['is_network'] == 'yes') {
                 // No need to deactivate the scope because the script dies
                 // after the main action anyway.
                 add_action('wp_ajax_podlove-template-'.$action, [__CLASS__, 'activate_network_scope'], 9);
