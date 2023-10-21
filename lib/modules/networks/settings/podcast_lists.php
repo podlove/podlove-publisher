@@ -33,7 +33,7 @@ class PodcastLists
 
     public function process_form()
     {
-        if (!isset($_REQUEST['list'])) {
+        if (!isset($_REQUEST['list']) && !isset($_REQUEST['podlove_list'])) {
             return;
         }
 
@@ -217,10 +217,10 @@ class PodcastLists
     {
         $form_args = [
             'context' => 'podlove_list',
+            'nonce' => self::$nonce,
             'hidden' => [
                 'list' => $list->id,
-                'action' => $action,
-                'nonce' => self::$nonce
+                'action' => $action
             ],
         ];
 
