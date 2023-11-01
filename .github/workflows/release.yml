@@ -18,6 +18,7 @@ jobs:
       run: |
           make install_php_scoper
           make build
+          npm install fs-extra
           node bin/workspace.js
     - name: WordPress Plugin Deploy
       uses: 10up/action-wordpress-plugin-deploy@master
