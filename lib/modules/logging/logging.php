@@ -2,15 +2,19 @@
 
 namespace Podlove\Modules\Logging;
 
-use Monolog\Logger;
 use Podlove\Log;
 use Podlove\Model;
 
 class Logging extends \Podlove\Modules\Base
 {
     protected $module_name = 'Logging';
-    protected $module_description = 'View podlove related logs in dashboard. (writes logs to database)';
     protected $module_group = 'system';
+
+    public function get_module_description()
+    {
+        $support_menu_label = __('Support', 'podlove-podcasting-plugin-for-wordpress');
+        return 'View podlove related logs at Podlove > '.$support_menu_label.'. (writes logs to database)';
+    }
 
     public function load()
     {
@@ -51,13 +55,6 @@ class Logging extends \Podlove\Modules\Base
     public function register_database_logger()
     {
         global $wpdb;
-
-        if (Logger::API > 1) {
-            // WPDBHandler is not compatible to monolog 2.x so we need to bail here
-            // I can't upgrade to monolog 2.x because it raises minimum PHP to 7.2
-            // long term solution, maybe https: //packagist.org/packages/humbug/php-scoper
-            return;
-        }
 
         $log = Log::get();
         // write logs to database
@@ -145,7 +142,7 @@ function filter_log() {
 		error   = filterWrapper.find(".log-level.log-level-400 input[type=checkbox]:checked").length,
 		log = $("#podlove-log")
 	;
-	
+
 	log.find(".log-entry.log-level-100").toggle(!!debug);
 	log.find(".log-entry.log-level-200").toggle(!!info);
 	log.find(".log-entry.log-level-300").toggle(!!warning);
@@ -220,60 +217,58 @@ $(document).ready(function() {
 						<span class="log-extra">
 							<?php
                             $data = json_decode($log_entry->context);
-        if (isset($data->media_file_id)) {
-            if ($media_file = Model\MediaFile::find_by_id($data->media_file_id)) {
-                if ($episode = $media_file->episode()) {
-                    if ($asset = $media_file->episode_asset()) {
-                        echo sprintf('<a href="%s">%s/%s</a>', get_edit_post_link($episode->post_id), $episode->slug, $asset->title);
-                    }
-                }
-            }
-        }
-        if (isset($data->error)) {
-            echo sprintf(' "%s"', $data->error);
-        }
-        if (isset($data->episode_id)) {
-            if ($episode = Model\Episode::find_by_id($data->episode_id)) {
-                echo sprintf(' <a href="%s">%s</a>', get_edit_post_link($episode->post_id), get_the_title($episode->post_id));
-            }
-        }
-        if (isset($data->http_code)) {
-            echo ' HTTP Status: '.$data->http_code;
-        }
-        if (isset($data->mime_type, $data->expected_mime_type)) {
-            echo " Expected: {$data->expected_mime_type}, but found: {$data->mime_type}";
-        }
-        if (isset($data->type) && $data->type == 'twig') {
-            echo sprintf('in template "%s" line %d', print_r($data->template, true), $data->line);
-        }
+			    if (isset($data->media_file_id)) {
+			        if ($media_file = Model\MediaFile::find_by_id($data->media_file_id)) {
+			            if ($episode = $media_file->episode()) {
+			                if ($asset = $media_file->episode_asset()) {
+			                    echo sprintf('<a href="%s">%s/%s</a>', get_edit_post_link($episode->post_id), $episode->slug, $asset->title);
+			                }
+			            }
+			        }
+			    }
+			    if (isset($data->error)) {
+			        echo sprintf(' "%s"', $data->error);
+			    }
+			    if (isset($data->episode_id)) {
+			        if ($episode = Model\Episode::find_by_id($data->episode_id)) {
+			            echo sprintf(' <a href="%s">%s</a>', get_edit_post_link($episode->post_id), get_the_title($episode->post_id));
+			        }
+			    }
+			    if (isset($data->http_code)) {
+			        echo ' HTTP Status: '.$data->http_code;
+			    }
+			    if (isset($data->mime_type, $data->expected_mime_type)) {
+			        echo " Expected: {$data->expected_mime_type}, but found: {$data->mime_type}";
+			    }
+			    if (isset($data->type) && $data->type == 'twig') {
+			        echo sprintf('in template "%s" line %d', print_r($data->template, true), $data->line);
+			    }
 
-        $data = (array) $data;
-        $remove_keys = ['type', 'mime_type', 'expected_mime_type', 'error', 'episode_id'];
-        $extra = $data;
+			    $data = (array) $data;
+			    $remove_keys = ['type', 'mime_type', 'expected_mime_type', 'error', 'episode_id'];
+			    $extra = $data;
 
-        foreach ($remove_keys as $key) {
-            if (isset($extra[$key])) {
-                unset($extra[$key]);
-            }
-        }
+			    foreach ($remove_keys as $key) {
+			        if (isset($extra[$key])) {
+			            unset($extra[$key]);
+			        }
+			    }
 
-        if (count($extra) > 0) {
-            ?>
+			    if (count($extra) > 0) {
+			        ?>
 								<span class="log-details">
 									<span class="toggle"><a href="#"><?php echo __('toggle details', 'podlove-podcasting-plugin-for-wordpress'); ?></a></span>
-									<code class="details" style="display: none"><pre><?php
-                                    print_r((new \Spyc())->dump($extra, true)); ?></pre></code>
+									<code class="details" style="display: none"><pre><?php print_r($extra); ?></pre></code>
 								</span>
 								<?php
-        } elseif (!$data && !empty($log_entry->context)) {
-            ?>
+			    } elseif (!$data && !empty($log_entry->context)) {
+			        ?>
 								<span class="log-details">
 									<span class="toggle"><a href="#"><?php echo __('toggle details', 'podlove-podcasting-plugin-for-wordpress'); ?></a></span>
-									<code class="details" style="display: none"><pre><?php
-                                    echo str_replace(',"', ','."\n".'"', $log_entry->context); ?></pre></code>
+									<code class="details" style="display: none"><pre><?php echo str_replace(',"', ','."\n".'"', $log_entry->context); ?></pre></code>
 								</span>
 								<?php
-        } ?>
+			    } ?>
 						</span>
 					</td>
 				</tr>

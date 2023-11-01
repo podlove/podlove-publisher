@@ -30,7 +30,7 @@
 	"info_url": "https:\/\/www.airablenow.com\/",
 	"examples": ["AirableBot-Podcast\/1.0 ( https\/\/www.airablenow.com)"]
 }, {
-	"user_agents": ["^AlexaMediaPlayer\/1.", "^AlexaMediaPlayer\/16.", "^AlexaMediaPlayer\/2.", "^Echo.*APNG"],
+	"user_agents": ["^AlexaMediaPlayer\/1\\.", "^AlexaMediaPlayer\/16\\.", "^AlexaMediaPlayer\/2\\.", "^Echo.*APNG"],
 	"app": "Alexa-enabled device",
 	"device": "speaker",
 	"os": "alexa",
@@ -83,7 +83,7 @@
 	"svg": "amazon.svg",
 	"bot": true
 }, {
-	"user_agents": ["^AlexaMediaPlayer\/5."],
+	"user_agents": ["^AlexaMediaPlayer\/5\\."],
 	"app": "Amazon Echo Dot",
 	"device": "speaker",
 	"os": "alexa",
@@ -121,7 +121,7 @@
 	"info_url": "http:\/\/www.apple.com\/go\/applebot",
 	"description": "Applebot is the web crawler for Apple. Products like Siri and Spotlight Suggestions use Applebot."
 }, {
-	"user_agents": ["^AppleCoreMedia\/1..*iPod"],
+	"user_agents": ["^AppleCoreMedia\/1\\..*iPod"],
 	"device": "mp3_player",
 	"examples": ["AppleCoreMedia\/1.0.0.16G114 (iPod touch; U; CPU OS 12_4_2 like Mac OS X; en_us)"],
 	"os": "ios",
@@ -129,7 +129,7 @@
 	"info_url": "https:\/\/podnews.net\/article\/applecoremedia-user-agent",
 	"developer_notes": "This is a library used by a number of apps when progressively downloading podcasts. It is not (just) Apple Podcasts, and should not be treated as an Apple Podcasts useragent"
 }, {
-	"user_agents": ["^AppleCoreMedia\/1..*Macintosh"],
+	"user_agents": ["^AppleCoreMedia\/1\\..*Macintosh"],
 	"examples": ["AppleCoreMedia\/1.0.0.19A583 (Macintosh; U; Intel Mac OS X 10_15; en_us)"],
 	"device": "pc",
 	"os": "macos",
@@ -137,7 +137,7 @@
 	"info_url": "https:\/\/podnews.net\/article\/applecoremedia-user-agent",
 	"developer_notes": "This is a library used by a number of apps when progressively downloading podcasts. It is not (just) Apple Podcasts, and should not be treated as an Apple Podcasts useragent"
 }, {
-	"user_agents": ["^AppleCoreMedia\/1..*iPhone"],
+	"user_agents": ["^AppleCoreMedia\/1\\..*iPhone"],
 	"device": "phone",
 	"examples": ["AppleCoreMedia\/1.0.0.15G77 (iPhone; U; CPU OS 11_4_1 like Mac OS X; en_us)"],
 	"os": "ios",
@@ -145,7 +145,7 @@
 	"info_url": "https:\/\/podnews.net\/article\/applecoremedia-user-agent",
 	"developer_notes": "This is a library used by a number of apps when progressively downloading podcasts. It is not (just) Apple Podcasts, and should not be treated as an Apple Podcasts useragent"
 }, {
-	"user_agents": ["^AppleCoreMedia\/1..*iPad"],
+	"user_agents": ["^AppleCoreMedia\/1\\..*iPad"],
 	"device": "tablet",
 	"examples": ["AppleCoreMedia\/1.0.0.17A860 (iPad; U; CPU OS 13_1_2 like Mac OS X; en_us)"],
 	"os": "ios",
@@ -153,7 +153,7 @@
 	"info_url": "https:\/\/podnews.net\/article\/applecoremedia-user-agent",
 	"developer_notes": "This is a library used by a number of apps when progressively downloading podcasts. It is not (just) Apple Podcasts, and should not be treated as an Apple Podcasts useragent"
 }, {
-	"user_agents": ["^AppleCoreMedia\/1..*HomePod"],
+	"user_agents": ["^AppleCoreMedia\/1\\..*HomePod"],
 	"device": "speaker",
 	"examples": ["AppleCoreMedia\/1.0.0.16G78 (HomePod; U; CPU OS 12_4 like Mac OS X; en_us)"],
 	"os": "homepodos",
@@ -161,7 +161,7 @@
 	"info_url": "https:\/\/podnews.net\/article\/applecoremedia-user-agent",
 	"developer_notes": "This is a library used by a number of apps when progressively downloading podcasts. It is not (just) Apple Podcasts, and should not be treated as an Apple Podcasts useragent"
 }, {
-	"user_agents": ["^AppleCoreMedia\/1..*Apple TV"],
+	"user_agents": ["^AppleCoreMedia\/1\\..*Apple TV"],
 	"device": "tv",
 	"examples": ["AppleCoreMedia\/1.0.0.17J586 (Apple TV; U; CPU OS 13_0 like Mac OS X; en_us)"],
 	"os": "tvos",
@@ -169,7 +169,7 @@
 	"info_url": "https:\/\/podnews.net\/article\/applecoremedia-user-agent",
 	"developer_notes": "This is a library used by a number of apps when progressively downloading podcasts. It is not (just) Apple Podcasts, and should not be treated as an Apple Podcasts useragent"
 }, {
-	"user_agents": ["^AppleCoreMedia\/1..*Apple Watch"],
+	"user_agents": ["^AppleCoreMedia\/1\\..*Apple Watch"],
 	"device": "watch",
 	"os": "watchos",
 	"description": "AppleCoreMedia library",
@@ -190,7 +190,7 @@
 	"developer_notes": "Verified (via stamping the audio URL with the RSS useragent) as being sourced from Apple Podcasts; and accordingly this is marked as a bot since these downloads are duplicated with the phone.",
 	"examples": ["atc\/1.0","atc\/1.0 watchOS\/6.2 model\/Watch3,3 hwp\/t8004 build\/17T529 (6; dt:155)", "atc\/1.0 watchOS\/6.2.8 model\/Watch2,3 hwp\/t8002 build\/17U63 (6; dt:133)", "atc\/1.0 watchOS\/6.2.8 model\/Watch3,3 hwp\/t8004 build\/17U63 (6; dt:155)", "atc\/1.0 watchOS\/6.2.8 model\/Watch4,2 hwp\/t8006 build\/17U63 (6; dt:191)", "atc\/1.0 watchOS\/7.0.2 model\/Watch5,10 hwp\/t8006 build\/18R402 (6; dt:233)", "atc\/1.0 watchOS\/7.0.2 model\/Watch5,11 hwp\/t8006 build\/18R402 (6; dt:234)", "atc\/1.0 watchOS\/7.1 model\/Watch4,2 hwp\/t8006 build\/18R590 (6; dt:191)", "atc\/1.0 watchOS\/7.1 model\/Watch4,3 hwp\/t8006 build\/18R590 (6; dt:192)", "atc\/1.0 watchOS\/7.1 model\/Watch4,4 hwp\/t8006 build\/18R590 (6; dt:193)", "atc\/1.0 watchOS\/7.1 model\/Watch5,1 hwp\/t8006 build\/18R590 (6; dt:201)", "atc\/1.0 watchOS\/7.1 model\/Watch5,3 hwp\/t8006 build\/18R590 (6; dt:202)", "atc\/1.0 watchOS\/7.1 model\/Watch5,4 hwp\/t8006 build\/18R590 (6; dt:202)"]
 }, {
-	"user_agents": ["^Podcasts\/.*", "^Balados\/.*(.*)", "^Podcasti\/.*(.*)", "^Podcastit\/.*(.*)", "^Podcasturi\/.*(.*)", "^Podcasty\/.*(.*)", "^Podcast\u2019ler\/.*(.*)", "^Podkaster\/.*(.*)", "^Podcaster\/.*(.*)", "^Podcastok\/.*(.*)", "^\u041f\u043e\u0434\u043a\u0430\u0441\u0442\u0438\/.*(.*)", "^\u041f\u043e\u0434\u043a\u0430\u0441\u0442\u044b\/.*(.*)", "^\u05e4\u05d5\u05d3\u05e7\u05d0\u05e1\u05d8\u05d9\u05dd\/.*(.*)", "^\u0627\u0644\u0628\u0648\u062f\u0643\u0627\u0633\u062a\/.*(.*)", "^\u092a\u0949\u0921\u0915\u093e\u0938\u094d\u091f\/.*(.*)", "^\u0e1e\u0e47\u0e2d\u0e14\u0e04\u0e32\u0e2a\u0e17\u0e4c\/.*(.*)", "^\u64ad\u5ba2\/.*(.*)", "^\ud31f\uce90\uc2a4\ud2b8\/.*(.*)"],
+	"user_agents": ["^Podcasts\/.*", "^Balados\/.*\\(.*\\)", "^Podcasti\/.*\\(.*\\)", "^Podcastit\/.*\\(.*\\)", "^Podcasturi\/.*\\(.*\\)", "^Podcasty\/.*\\(.*\\)", "^Podcast\u2019ler\/.*\\(.*\\)", "^Podkaster\/.*\\(.*\\)", "^Podcaster\/.*\\(.*\\)", "^Podcastok\/.*\\(.*\\)", "^\u041f\u043e\u0434\u043a\u0430\u0441\u0442\u0438\/.*\\(.*\\)", "^\u041f\u043e\u0434\u043a\u0430\u0441\u0442\u044b\/.*\\(.*\\)", "^\u05e4\u05d5\u05d3\u05e7\u05d0\u05e1\u05d8\u05d9\u05dd\/.*\\(.*\\)", "^\u0627\u0644\u0628\u0648\u062f\u0643\u0627\u0633\u062a\/.*\\(.*\\)", "^\u092a\u0949\u0921\u0915\u093e\u0938\u094d\u091f\/.*\\(.*\\)", "^\u0e1e\u0e47\u0e2d\u0e14\u0e04\u0e32\u0e2a\u0e17\u0e4c\/.*\\(.*\\)", "^\u64ad\u5ba2\/.*\\(.*\\)", "^\ud31f\uce90\uc2a4\ud2b8\/.*\\(.*\\)"],
 	"examples": ["Podcasts\/1410.53 CFNetwork\/1111 Darwin\/19.0.0 (x86_64)", "Podcaster\/1410.53 CFNetwork\/1111 Darwin\/19.0.0 (x86_64)"],
 	"app": "Apple Podcasts",
 	"description": "The Apple Podcasts app.",
@@ -465,7 +465,7 @@
 	"developer_notes": "The podcastbot UA appears to be part of Facebook Podcasts onboarding",
 	"examples": ["facebookexternalhit\/1.1 ( http:\/\/www.facebook.com\/externalhit_uatext.php)", "podcastbot"]
 }, {
-	"user_agents": ["iPhone.+(FBAN\/FBIO.+)"],
+	"user_agents": ["iPhone.+\\[FBAN\/FBIO.+\\]"],
 	"app": "Facebook",
 	"device": "phone",
 	"os": "ios",
@@ -581,7 +581,7 @@
 	"info_url": "https:\/\/www.goodpods.com\/",
 	"svg": "goodpods.svg"
 }, {
-	"user_agents": ["Goodpods.[iI]OS \/ d+.d+.d+"],
+	"user_agents": ["Goodpods.[iI]OS \/ \\d+\\.\\d+\\.\\d+"],
 	"examples": ["Goodpods.iOS \/ 2.2.2"],
 	"app": "Goodpods",
 	"os": "ios",
@@ -589,7 +589,7 @@
 	"info_url": "https:\/\/www.goodpods.com\/",
 	"svg": "goodpods.svg"
 }, {
-	"user_agents": ["Goodpods\/d+.d+"],
+	"user_agents": ["Goodpods\/\\d+\\.\\d+"],
 	"examples": ["Goodpods\/2.2"],
 	"app": "Goodpods",
 	"os": "linux",
@@ -694,14 +694,14 @@
 	"device": "phone",
 	"os": "ios"
 }, {
-	"user_agents": ["iPhone.+GSA\/d+"],
+	"user_agents": ["iPhone.+GSA\/\\d+"],
 	"app": "Google Search App",
 	"device": "phone",
 	"os": "ios",
 	"examples": ["Mozilla\/5.0 (iPhone; CPU iPhone OS 14_6 like Mac OS X) AppleWebKit\/605.1.15 (KHTML, like Gecko) GSA\/166.0.381336632 Mobile\/15E148 Safari\/604.1"],
 	"description": "The Google Search App on iPhone."
 }, {
-	"user_agents": ["^gPodder\/.*Windows", "^gpodder.net"],
+	"user_agents": ["^gPodder\/.*Windows", "^gpodder\\.net"],
 	"app": "gPodder",
 	"os": "windows",
 	"device": "pc",
@@ -848,7 +848,7 @@
 	"info_url": "https:\/\/www.lesindesradios.fr\/",
 	"examples": ["lesindesradios"]
 }, {
-	"user_agents": ["^lesindesradios\/.*Linux;Android"],
+	"user_agents": ["^lesindesradios\/.*\\(Linux;Android"],
 	"app": "Les Ind\u00e9s Radios",
 	"os": "android",
 	"device": "phone",
@@ -883,7 +883,7 @@
 	"user_agents": ["^libwww-perl"],
 	"bot": true
 }, {
-	"user_agents": ["iPhone.+(LinkedInApp)"],
+	"user_agents": ["iPhone.+\\[LinkedInApp\\]"],
 	"app": "LinkedIn",
 	"device": "phone",
 	"os": "ios",
@@ -938,7 +938,7 @@
 	"examples": ["Mozilla\/5.0 (compatible; MJ12bot\/v1.4.8; http:\/\/mj12bot.com\/)"],
 	"bot": true
 }, {
-	"user_agents": ["^mpv 0."],
+	"user_agents": ["^mpv 0\\."],
 	"app": "mpv",
 	"info_url": "https:\/\/mpv.io\/"
 }, {
@@ -978,18 +978,18 @@
 	"app": "Opera",
 	"os": "android"
 }, {
-	"user_agents": ["Opera\/.*Linux"],
+	"user_agents": ["Opera\/.*\\(Linux"],
 	"app": "Opera",
 	"device": "pc",
 	"os": "linux"
 }, {
-	"user_agents": ["Opera\/.*Macintosh", "Macintosh.*OPR\/"],
+	"user_agents": ["Opera\/.*\\(Macintosh", "Macintosh.*OPR\/"],
 	"app": "Opera",
 	"device": "pc",
 	"os": "macos",
 	"examples": ["Mozilla\/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/86.0.4240.111 Safari\/537.36 OPR\/72.0.3815.186"]
 }, {
-	"user_agents": ["Opera\/.*Windows", "Windows.*OPR\/"],
+	"user_agents": ["Opera\/.*\\(Windows", "Windows.*OPR\/"],
 	"app": "Opera",
 	"device": "pc",
 	"os": "windows"
@@ -1191,6 +1191,12 @@
 	"info_url": "https:\/\/procast.coderocker.de\/",
 	"os": "ios"
 }, {
+	"user_agents": ["Podwatch-Pro Crawler"],
+	"app": "PodwatchPro",
+	"bot": true,
+	"description": "PodwatchPro is a podcast analytics software. This user agent is for crawling podcast data.",
+	"info_url": "https:\/\/www.agma-mmc.de\/media-analyse\/ma-podcast"
+}, {
 	"user_agents": ["Podyssey App"],
 	"app": "Podyssey",
 	"description": "Podyssey is a community for people that love podcasts. It's like Goodreads, but for podcasts.",
@@ -1268,14 +1274,14 @@
 	"description": "Repod is a social podcast app that helps creators engage, montetization, and grow their community.",
 	"svg": "repod.svg"
 }, {
-	"user_agents": ["request.js"],
+	"user_agents": ["request\\.js"],
 	"bot": true
 }, {
 	"user_agents": ["^Roku\/DVP-"],
 	"device": "tv",
 	"os": "roku"
 }, {
-	"user_agents": ["^RSSRadio "],
+	"user_agents": ["^RSSRadio \\("],
 	"bot": true
 }, {
 	"user_agents": ["^RSSRadio"],
@@ -1495,7 +1501,7 @@
 	"device": "speaker",
 	"os": "victorreader"
 }, {
-	"user_agents": ["^VLC\/d"],
+	"user_agents": ["^VLC\/\\d"],
 	"app": "VLC media player",
 	"device": "pc",
 	"examples": ["VLC\/3.0.8 LibVLC\/3.0.8"],
@@ -1561,7 +1567,7 @@
 	"user_agents": ["^msnbot\/"],
 	"bot": true
 }, {
-	"user_agents": ["^Deezer Podcasters\/1.0"],
+	"user_agents": ["^Deezer Podcasters\/1\\.0"],
 	"bot": true,
 	"app": "Deezer Podcasters"
 }, {
@@ -1587,19 +1593,19 @@
 	"app": "Instagram",
 	"examples": ["Instagram\/252729634 CFNetwork\/1126 Darwin\/19.5.0"]
 }, {
-	"user_agents": ["^SoundOn\/[d.]+s+Linux;Android", "^SoundOn\/[^12].d+.d+$", "^SoundOn\/1.[^1][^0-2]?.d+$"],
+	"user_agents": ["^SoundOn\/[\\d.]+s+\\(Linux;Android", "^SoundOn\/[^12]\\.d+\\.d+$", "^SoundOn\/1\\.[^1][^0-2]?\\.d+$"],
 	"app": "SoundOn",
 	"device": "phone",
 	"examples": ["SoundOn\/1.9.17 (Linux;Android 10) ExoPlayerLib\/2.9.4"],
 	"os": "android"
 }, {
-	"user_agents": ["^SoundOn\/1.1[0-2].d+$", "^SoundOn\/2.d+.d+$", "^SoundOn\/[d.]+s+iOS"],
+	"user_agents": ["^SoundOn\/1\\.1[0-2]\\.\\d+$", "^SoundOn\/2\\.\\d+\\.\\d+$", "^SoundOn\/[\\d.]+s+\\(iOS"],
 	"app": "SoundOn",
 	"device": "phone",
 	"examples": ["SoundOn\/1.10.1", "SoundOn\/2.2.0", "SoundOn\/2.2.2 (iOS)"],
 	"os": "ios"
 }, {
-	"user_agents": ["^SoundOn\/[d.]+s+bot"],
+	"user_agents": ["^SoundOn\/[\\d.]+\\s+\\(bot"],
 	"bot": true
 }, {
 	"user_agents": ["^Podverse\/.*Android Mobile App"],
@@ -1745,7 +1751,7 @@
 	"os": "ios",
 	"examples": ["MixerBox\/807.iOS (iPhone; iOS 14.4; en_US)"]
 }, {
-	"user_agents": ["^Podcastindex.org\/"],
+	"user_agents": ["^Podcastindex\\.org\/"],
 	"app": "Podcastindex.org",
 	"bot": true,
 	"svg": "podcast-index.svg",
@@ -2028,4 +2034,18 @@
     "app":"Iframely",
     "examples": ["Iframely/1.3.1 (+https://iframely.com/docs/about)"],
     "info_url": "https:\/\/iframely.com\/docs\/about"
+},{
+	"user_agents": ["^(radio\\.[a-zA-Z]{2,3}|GetPodcast) [0-9]+.[0-9]+.[0-9]+ \\([a-zA-Z]+;( iPhone OS)? .+; .+\\)$"],
+	"app": "radio.net",
+	"device": "phone",
+	"os": "ios",
+	"info_url": "https:\/\/www.radio.net\/",
+	"examples": ["radio.fr 5.6.22 (iPhone; iPhone OS 16.4; fr_FR)", "radio.de 5.6.22 (iPad; iPhone OS 16.4; de_DE)", "radio.de 5.6.22 (iPhone; iPhone OS 16.4; de_DE)", "radio.net 5.7.3 (iPhone; iPhone OS 17.0.1; fr_FR)", "GetPodcast 5.6.22 (iPhone; iPhone OS 16.4; de_DE)", "GetPodcast 5.6.22 (iPhone; 16.4; de_DE)"]
+}, {
+	"user_agents": ["^(radio\\.[a-zA-Z]{2,3}|GetPodcast)( |\\/)[0-9]+(\\.[0-9]+){3} \\([a-zA-Z]+;( ?(Android))? [\\.\\d]+(; [a-z]{1,3}(\\_|\\-)[a-zA-Z]{2,4})?\\)( ExoPlayerLib\\/[\\.\\d].+)?$"],
+	"app": "radio.net",
+	"device": "phone",
+	"os": "android",
+	"info_url": "https:\/\/www.radio.net\/",
+	"examples": ["radio.de/5.10.5.3 (Linux; 13) ExoPlayerLib/2.18.2", "radio.de/5.10.3.0 (Linux;Android 13) ExoPlayerLib/2.18.2", "radio.de/5.10.5.3 (Linux; Android 13) ExoPlayerLib/2.18.2", "radio.de/5.10.5.3 (Linux; Android 13; de_DE) ExoPlayerLib/2.18.2", "radio.de/5.10.5.3 (Linux; Android 13; zn-Hans) ExoPlayerLib/2.18.2", "GetPodcast/5.10.5.3 (Linux; Android 13; de_DE) ExoPlayerLib/2.18.2"]
 }]

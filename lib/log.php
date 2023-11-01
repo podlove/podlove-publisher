@@ -2,8 +2,8 @@
 
 namespace Podlove;
 
-use Monolog\Handler\ErrorLogHandler;
-use Monolog\Logger;
+use PodlovePublisher_Vendor\Monolog\Handler\ErrorLogHandler;
+use PodlovePublisher_Vendor\Monolog\Logger;
 
 /**
  * Podlove Logger class.
@@ -42,11 +42,26 @@ class Log
     /**
      * Proxy calls to Logger instance.
      *
-     * @param strong $name      method name
+     * @param string $name      method name
      * @param array  $arguments
      */
     public function __call($name, $arguments)
     {
+        // proxy deprecated monolog function names
+        // TODO: replace all add* calls in code
+        if ($name == 'addWarning') {
+            $name = 'warning';
+        }
+        if ($name == 'addInfo') {
+            $name = 'info';
+        }
+        if ($name == 'addError') {
+            $name = 'error';
+        }
+        if ($name == 'addDebug') {
+            $name = 'debug';
+        }
+
         if (method_exists($this->log, $name)) {
             call_user_func_array([$this->log, $name], $arguments);
         }

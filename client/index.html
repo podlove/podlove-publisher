@@ -1,0 +1,65 @@
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>Podlove Publisher Client Development Environment</title>
+    <link rel="shortcut icon" href="#" />
+  </head>
+
+  <body class="bg-gray-500 p-2">
+    <div data-client="podlove">
+      <podlove-media-files></podlove-media-files>
+      <div class="h-5"></div>
+      <podlove-auphonic></podlove-auphonic>
+      <div class="h-5"></div>
+      <podlove-description></podlove-description>
+      <div class="h-5"></div>
+      <podlove-chapters></podlove-chapters>
+      <div class="h-5"></div>
+      <podlove-transcripts></podlove-transcripts>
+      <div class="h-5"></div>
+      <podlove-contributors></podlove-contributors>
+      <div class="h-5"></div>
+      <podlove-related-episodes></podlove-related-episodes>
+      <div class="h-5"></div>
+      <podlove-soundbite></podlove-soundbite>
+    </div>
+
+    <script type="module" src="./src/client.ts"></script>
+
+    <script>
+      const user = 'admin' // the user name NOT the token name
+      const applicationPassword = `KQEO 27y5 PQEq UCbw Bprx JKdP`
+
+      window.addEventListener('load', () => {
+        fetch('http://localhost:3000/wp-json/podlove/v2/episodes')
+          .then((res) => res.json())
+          .then(({ results }) => {
+            if (!results.length) {
+              throw new Error('Missing Episodes')
+            }
+
+            return results[0]
+          })
+          .then((episode) =>
+            fetch(`http://localhost:3000/wp-json/podlove/v2/episodes/${episode.id}`)
+          )
+          .then((res) => res.json())
+          .then(({ id, post_id }) => {
+            window.initPodloveUI({
+              baseUrl: 'http://publisher.local',
+              api: {
+                base: 'http://localhost:3000/wp-json/podlove',
+                auth: btoa(`${user}:${applicationPassword}`),
+              },
+              post: {
+                id: post_id,
+              },
+              episode: {
+                id,
+              },
+            })
+          })
+      })
+    </script>
+  </body>
+</html>

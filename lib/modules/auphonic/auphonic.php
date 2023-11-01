@@ -27,7 +27,8 @@ class Auphonic extends \Podlove\Modules\Base
         add_action('wp_ajax_podlove-add-production-for-auphonic-webhook', [$this, 'ajax_add_episode_for_auphonic_webhook']);
         add_action('wp', [$this, 'auphonic_webhook']);
 
-        add_action('admin_print_styles', [$this, 'admin_print_styles']);
+        add_action('rest_api_init', [$this, 'api_init']);
+
         add_action('wp_ajax_podlove-refresh-auphonic-presets', [$this, 'ajax_refresh_presets']);
         add_action('wp_ajax_podlove-get-auphonic-preset', [$this, 'ajax_get_preset']);
 
@@ -38,6 +39,12 @@ class Auphonic extends \Podlove\Modules\Base
         }
 
         $this->register_settings();
+    }
+
+    public function api_init()
+    {
+        $api_v2 = new REST_API($this);
+        $api_v2->register_routes();
     }
 
     public function register_settings()
@@ -136,22 +143,18 @@ class Auphonic extends \Podlove\Modules\Base
                 ['data' => $_POST]
             );
 
-            return;
+            exit;
         }
 
         $post_id = (int) $_REQUEST['podlove-auphonic-production'];
+        $webhook_config = \get_post_meta($post_id, 'auphonic_webhook_config', true);
 
-        $episodes_to_be_remote_published = get_option('podlove_episodes_to_be_remote_published');
+        [
+            'authkey' => $authkey,
+            'enabled' => $enabled
+        ] = $webhook_config;
 
-        if (!is_array($episodes_to_be_remote_published) || !isset($episodes_to_be_remote_published[$post_id])) {
-            return;
-        }
-
-        $episode = $episodes_to_be_remote_published[$post_id];
-        $auth_key = $episode['auth_key'];
-        $action = $episode['action'];
-
-        if ($_REQUEST['authkey'] !== $auth_key) {
+        if ($_REQUEST['authkey'] !== $authkey) {
             \Podlove\Log::get()->addWarning(
                 'Auphonic webhook failed. AuthKey mismatch.',
                 ['post_id' => $post_id]
@@ -163,24 +166,33 @@ class Auphonic extends \Podlove\Modules\Base
         // Update episode with production results
         $this->update_production_data($post_id);
 
-        if ($action == 'publish') {
-            wp_publish_post($post_id);
+        if (!$enabled) {
+            // webhook was enabled on production start but disabled during production
+            \Podlove\Log::get()->addInfo(
+                'Auphonic webhook was enabled on production start but disabled during production. Episode data was updated but not published.',
+                ['post_id' => $post_id]
+            );
+
+            return;
         }
 
-        unset($episodes_to_be_remote_published[$post_id]);
-        update_option('podlove_episodes_to_be_remote_published', $episodes_to_be_remote_published);
+        \wp_publish_post($post_id);
+        \Podlove\Log::get()->addInfo(
+            'Auphonic webhook finished. Episode published.',
+            ['post_id' => $post_id]
+        );
+        exit;
     }
 
     /**
      * Updates Episode production data after Auphonic production has finished.
-     * Basically, this is like pushing the "Get Production Results" button.
      *
      * @param mixed $post_id
      */
     public function update_production_data($post_id)
     {
         $episode = \Podlove\Model\Episode::find_or_create_by_post_id($post_id);
-        $production = json_decode($this->fetch_production($_POST['uuid']));
+        $production = json_decode($this->fetch_production($_POST['uuid']), true)['data'];
 
         $metadata = [
             'title' => get_the_title($post_id),
@@ -438,37 +450,6 @@ class Auphonic extends \Podlove\Modules\Base
         }
 
         return [];
-    }
-
-    public function admin_print_styles()
-    {
-        $screen = get_current_screen();
-        if ($screen->base != 'post' && $screen->post_type != 'podcast' && $screen->base != 'podlove_page_podlove_settings_modules_handle') {
-            return;
-        }
-
-        wp_register_script(
-            'podlove_axios_script',
-            \Podlove\PLUGIN_URL.'/js/axios.min.js',
-            [],
-            \Podlove\get_plugin_header('Version')
-        );
-
-        wp_register_style(
-            'podlove_auphonic_admin_style',
-            $this->get_module_url().'/admin.css',
-            false,
-            \Podlove\get_plugin_header('Version')
-        );
-        wp_enqueue_style('podlove_auphonic_admin_style');
-
-        wp_register_script(
-            'podlove_auphonic_admin_script',
-            $this->get_module_url().'/admin.js',
-            ['jquery', 'jquery-ui-tabs', 'podlove_admin', 'podlove_axios_script'],
-            \Podlove\get_plugin_header('Version')
-        );
-        wp_enqueue_script('podlove_auphonic_admin_script');
     }
 
     public function check_code()

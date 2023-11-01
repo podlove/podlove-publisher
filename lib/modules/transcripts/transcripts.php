@@ -117,14 +117,14 @@ class Transcripts extends \Podlove\Modules\Base
             'key' => 'transcripts',
             'options' => [
                 'callback' => function () {
-                    $data = ''; ?>
-<div id="podlove-transcripts-app-data" style="display: none"><?php echo $data; ?></div>
-<div id="podlove-transcripts-app"><transcripts></transcripts></div>
+                    ?>
+  <div data-client="podlove" style="margin: 15px 0;">
+    <podlove-transcripts></podlove-transcripts>
+  </div>
 <?php
-                },
-                'label' => __('Transcripts', 'podlove-podcasting-plugin-for-wordpress'),
+                }
             ],
-            'position' => 425,
+            'position' => 480,
         ];
 
         return $form_data;
@@ -235,7 +235,7 @@ class Transcripts extends \Podlove\Modules\Base
     /**
      * Import transcript from remote file.
      */
-    public function transcript_import_from_asset(Episode $episode)
+    public static function transcript_import_from_asset(Episode $episode)
     {
         $asset_assignment = Model\AssetAssignment::get_instance();
 

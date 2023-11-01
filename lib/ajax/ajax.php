@@ -55,7 +55,6 @@ class Ajax
 
         // kickof specialized ajax controllers
         TemplateController::init();
-        FileController::init();
     }
 
     public function episode_next_number()

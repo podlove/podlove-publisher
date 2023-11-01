@@ -77,16 +77,6 @@ class SystemReport
             'player_version' => ['title' => 'Web Player Version', 'callback' => function () {
                 return \Podlove\get_webplayer_setting('version');
             }],
-            'monolog_version' => ['title' => 'Monolog Version', 'callback' => function () use (&$notices) {
-                if (\Monolog\Logger::API > 1) {
-                    $notices[] = sprintf(
-                        'Monolog version is %s (required by another plugin) but Podlove Publisher requires 1.x. That means no logs can be written to the database.',
-                        \Monolog\Logger::API
-                    );
-                }
-
-                return \Monolog\Logger::API;
-            }],
             'open_basedir' => ['callback' => function () use (&$notices) {
                 $open_basedir = trim(ini_get('open_basedir'));
 

@@ -31,6 +31,8 @@ class Directory extends Tab
             'owner_name',
             'owner_email',
             'category_1',
+            'category_2',
+            'category_3',
             'explicit',
             'complete',
             'funding_url',
@@ -102,6 +104,20 @@ class Directory extends Tab
             $wrapper->select('category_1', [
                 'label' => __('iTunes Categories', 'podlove-podcasting-plugin-for-wordpress'),
                 'description' => '',
+                'type' => 'select',
+                'options' => \Podlove\Itunes\categories(),
+            ]);
+
+            $wrapper->select('category_2', [
+                'label' => __('iTunes Categories', 'podlove-podcasting-plugin-for-wordpress'),
+                'description' => __('Optional. May be ignored by directories.'),
+                'type' => 'select',
+                'options' => \Podlove\Itunes\categories(),
+            ]);
+
+            $wrapper->select('category_3', [
+                'label' => __('iTunes Categories', 'podlove-podcasting-plugin-for-wordpress'),
+                'description' => __('Optional. May be ignored by directories.'),
                 'type' => 'select',
                 'options' => \Podlove\Itunes\categories(),
             ]);

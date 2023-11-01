@@ -31,11 +31,21 @@ make docker-install
 
 ## Development
 
-Use webpack when working with JS or CSS files:
+### Legacy JS Development
 
-```
-yarn run dev
-```
+1. Change your working direcetory to `js/`
+2. Run `npm install`
+3. Run `npm run serve` to start the development build
+4. Go to your local Wordpress environment and see your changes
+
+### Client Development
+
+1. Create an [Wordpress application password](https://www.paidmembershipspro.com/create-application-password-wordpress/)
+2. Update the authorization tokens in= `client/index.html`
+3. Change your working directory to `client/`
+4. Run `npm install`
+5. For isolated development run `WORDPRESS_URL=http://podlove.local npm run dev` with your Wordpress environment
+6. For integrated development run `npm run serve` and go to your local Wordpress environment and see your changes
 
 ## Formatting Code
 

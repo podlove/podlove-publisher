@@ -15,6 +15,10 @@ class ToolsSectionCronDiagnostics
 
     public static function diagnosis_start()
     {
+        if (!current_user_can('administrator')) {
+            exit;
+        }
+
         update_option('podlove_cron_diagnosis', 'started');
         update_option('podlove_cron_diagnosis_tries', 0);
         wp_schedule_single_event(time(), 'podlove_cron_diagnosis_cron');
@@ -23,6 +27,10 @@ class ToolsSectionCronDiagnostics
 
     public static function diagnosis_check()
     {
+        if (!current_user_can('administrator')) {
+            exit;
+        }
+
         $tries = get_option('podlove_cron_diagnosis_tries', 0);
         update_option('podlove_cron_diagnosis_tries', $tries + 1);
         \Podlove\AJAX\Ajax::respond_with_json([
@@ -45,7 +53,7 @@ class ToolsSectionCronDiagnostics
         $cron_constants = array_map(function ($constant) {
             return $constant.': '.(defined($constant) ? (constant($constant) ? 'on' : 'off') : 'not defined');
         }, $cron_constants); ?>
-		
+
 		<div id="podlove-cron-diagnosis-teaser">
 			Jobs not working properly? <button class="button" id="podlove-cron-diagnosis">Run WP Cron Diagnosis</button>
 		</div>

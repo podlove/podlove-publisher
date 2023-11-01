@@ -5,6 +5,8 @@ namespace Podlove\Modules\Contributors;
 use Podlove\Modules\Contributors\Model\Contributor;
 use Podlove\Modules\Contributors\Model\ContributorGroup;
 use Podlove\Modules\Contributors\Model\ContributorRole;
+use Podlove\Modules\Contributors\Model\DefaultContribution;
+
 use Podlove\Modules\Contributors\Model\EpisodeContribution;
 use WP_REST_Controller;
 
@@ -355,6 +357,72 @@ class WP_REST_PodloveContributors_Controller extends WP_REST_Controller
                 'permission_callback' => [$this, 'delete_item_permissions_check'],
             ],
         ]);
+        register_rest_route($this->namespace, $this->rest_base.'/defaults', [
+            [
+                'methods' => \WP_REST_Server::READABLE,
+                'callback' => [$this, 'get_items_default'],
+                'permission_callback' => [$this, 'get_item_permissions_check'],
+            ],
+            [
+                'methods' => \WP_REST_Server::CREATABLE,
+                'callback' => [$this, 'create_item_default'],
+                'permission_callback' => [$this, 'create_item_permissions_check'],
+            ],
+        ]);
+        register_rest_route($this->namespace, $this->rest_base.'/defaults/(?P<id>[\d]+)', [
+            'args' => [
+                'id' => [
+                    'description' => __('Unique identifier for defaults contributor.', 'podlove-podcasting-plugin-for-wordpress'),
+                    'type' => 'integer',
+                ],
+            ],
+            [
+                'methods' => \WP_REST_Server::READABLE,
+                'callback' => [$this, 'get_item_default'],
+                'permission_callback' => [$this, 'get_item_permissions_check'],
+            ],
+            [
+                'methods' => \WP_REST_Server::EDITABLE,
+                'callback' => [$this, 'update_item_default'],
+                'permission_callback' => [$this, 'update_item_permissions_check'],
+                'args' => [
+                    'contributor_id' => [
+                        'description' => __('Contributor ID of the default contributor', 'podlove-podcasting-plugin-for-wordpress'),
+                        'type' => 'integer',
+                        'required' => 'true',
+                        'validate_callback' => '\Podlove\Api\Validation::isContributorIdExist'
+                    ],
+                    'show_id' => [
+                        'description' => __('Show ID of the default contributor', 'podlove-podcasting-plugin-for-wordpress'),
+                        'type' => 'integer',
+                        'required' => 'true',
+                    ],
+                     'group_id' => [
+                        'description' => __('Group ID of the default contributor', 'podlove-podcasting-plugin-for-wordpress'),
+                        'type' => 'integer',
+                        'validate_callback' => '\Podlove\Api\Validation::isContributorGroupIdExist'
+                    ],
+                    'role_id' => [
+                        'description' => __('Role ID of the contributor group', 'podlove-podcasting-plugin-for-wordpress'),
+                        'type' => 'integer',
+                        'validate_callback' => '\Podlove\Api\Validation::isContributorRoleIdExist'
+                    ],
+                    'position' => [
+                        'description' => __('Position of the default contributor in the list', 'podlove-podcasting-plugin-for-wordpress'),
+                        'type' => 'integer',
+                    ],
+                    'comment' => [
+                        'description' => __('Comment to the default contributor', 'podlove-podcasting-plugin-for-wordpress'),
+                        'type' => 'string',
+                    ],
+                  ],
+            ],
+            [
+                'methods' => \WP_REST_Server::DELETABLE,
+                'callback' => [$this, 'delete_item_default'],
+                'permission_callback' => [$this, 'delete_item_permissions_check'],
+            ],
+        ]);
         register_rest_route($this->namespace, $this->rest_base.'/(?P<id>[\d]+)/episodes', [
             'args' => [
                 'id' => [
@@ -365,7 +433,7 @@ class WP_REST_PodloveContributors_Controller extends WP_REST_Controller
             [
                 'methods' => \WP_REST_Server::READABLE,
                 'callback' => [$this, 'get_episodes'],
-                'permission_callback' => '__return_true',
+                'permission_callback' => [$this, 'get_item_permissions_check'],
             ],
         ]);
     }
@@ -387,7 +455,7 @@ class WP_REST_PodloveContributors_Controller extends WP_REST_Controller
                 }
             } else {
                 if ($filter == 'all') {
-                    array_push($result, $this->get_contributor_data($entries[$i]));
+                    array_push($result, $this->get_contributor_data_full($entries[$i]));
                 }
             }
         }
@@ -460,6 +528,41 @@ class WP_REST_PodloveContributors_Controller extends WP_REST_Controller
         ]);
     }
 
+    public function get_items_default($request)
+    {
+        $defaults = DefaultContribution::all();
+
+        $entries = array_map(function($entry) {
+            return $entry->to_array();
+        }, $defaults);
+
+        return new \Podlove\Api\Response\OkResponse([
+            '_version' => 'v2',
+            'defaults' => $entries
+        ]);
+    }
+
+    public function get_item_default($request)
+    {
+        $id = $request->get_param('id');
+        $default = DefaultContribution::find_by_id($id);
+
+        if (!isset($default)) {
+            return new \Podlove\Api\Error\NotFound();
+        }
+
+        return new \Podlove\Api\Response\OkResponse([
+            '_version' => 'v2',
+            'id' => $default->id,
+            'contributor_id' => $default->contributor_id,
+            'show_id' => $default->show_id,
+            'group_id' => $default->group_id,
+            'role_id' => $default->role_id,
+            'position' => $default->position,
+            'comment' => $default->comment
+        ]);
+    }
+
     public function get_item($request)
     {
         $filter = $request->get_param('filter');
@@ -480,7 +583,10 @@ class WP_REST_PodloveContributors_Controller extends WP_REST_Controller
             }
         }
 
-        $result = $this->get_contributor_data($contributor);
+        if ($filter == 'all')
+            $result = $this->get_contributor_data_full($contributor);
+        else
+            $result = $this->get_contributor_data($contributor);
 
         return new \Podlove\Api\Response\OkResponse([
             '_version' => 'v2',
@@ -509,7 +615,7 @@ class WP_REST_PodloveContributors_Controller extends WP_REST_Controller
     public function create_item($request)
     {
         $contributor = new Contributor();
-        $contributor->visibilty = 0;
+        $contributor->visibility = 0;
         $contributor->contributioncount = 0;
         $contributor->save();
 
@@ -538,6 +644,17 @@ class WP_REST_PodloveContributors_Controller extends WP_REST_Controller
         return new \Podlove\Api\Response\CreateResponse([
             'status' => 'ok',
             'id' => $role->id
+        ]);
+    }
+
+    public function create_item_default($request)
+    {
+        $default = new DefaultContribution();
+        $default->save();
+
+        return new \Podlove\Api\Response\CreateResponse([
+            'status' => 'ok',
+            'id' => $default->id
         ]);
     }
 
@@ -608,12 +725,12 @@ class WP_REST_PodloveContributors_Controller extends WP_REST_Controller
             $contributor->avatar = $avatar;
         }
 
-        if (isset($request['visibilty'])) {
-            $visibilty = $request['visibilty'];
-            if ($visibilty == 'no') {
+        if (isset($request['visibility'])) {
+            $visibility = $request['visibility'];
+            if ($visibility == 'no') {
                 $contributor->visibility = 0;
             }
-            if ($visibilty == 'yes') {
+            if ($visibility == 'yes') {
                 $contributor->visibility = 1;
             }
         }
@@ -682,6 +799,47 @@ class WP_REST_PodloveContributors_Controller extends WP_REST_Controller
         ]);
     }
 
+    public function update_item_default($request)
+    {
+        $id = $request->get_param('id');
+        $default = DefaultContribution::find_by_id(($id));
+
+        if (!isset($default)) {
+            return new \Podlove\Api\Error\NotFound();
+        }
+
+        if (isset($request['contributor_id'])) {
+            $contributor_id = $request['contributor_id'];
+            $default->contributor_id = $contributor_id;
+        }
+
+        if (isset($request['group_id'])) {
+            $group_id = $request['group_id'];
+            $default->group_id = $group_id;
+        }
+
+        if (isset($request['role_id'])) {
+            $role_id = $request['role_id'];
+            $default->role_id = $role_id;
+        }
+
+        if (isset($request['position'])) {
+            $position = $request['position'];
+            $default->position = $position;
+        }
+
+        if (isset($request['comment'])) {
+            $comment = $request['comment'];
+            $default->comment = $comment;
+        }
+
+        $default->save();
+
+        return new \Podlove\Api\Response\OkResponse([
+            'status' => 'ok'
+        ]);
+    } 
+
     public function update_item_permissions_check($request)
     {
         if (!current_user_can('edit_posts')) {
@@ -739,6 +897,22 @@ class WP_REST_PodloveContributors_Controller extends WP_REST_Controller
         ]);
     }
 
+    public function delete_item_default($request) 
+    {
+        $id = $request->get_param('id');
+        $default = DefaultContribution::find_by_id(($id));
+
+        if (!isset($default)) {
+            return new \Podlove\Api\Error\NotFound();
+        }
+
+        $default->delete();
+
+        return new \Podlove\Api\Response\OkResponse([
+            'status' => 'ok'
+        ]);
+    }
+
     public function delete_item_permissions_check($request)
     {
         if (!current_user_can('edit_posts')) {
@@ -780,4 +954,24 @@ class WP_REST_PodloveContributors_Controller extends WP_REST_Controller
             'count' => $contributor->contributioncount,
         ];
     }
+
+    private function get_contributor_data_full($contributor)
+    {
+        return [
+            'id' => $contributor->id,
+            'identifier' => $contributor->identifier,
+            'visibility' => $contributor->visibility,
+            'avatar' => $contributor->avatar,
+            'publicname' => $contributor->publicname,
+            'nickname' => $contributor->nickname,
+            'realname' => $contributor->realname,
+            'mail' => $contributor->publicemail,
+            'department' => $contributor->department,
+            'organisation' => $contributor->organisation,
+            'jobtitle' => $contributor->jobtitle,
+            'gender' => $contributor->gender,
+            'count' => $contributor->contributioncount,
+        ];
+    }
+
 }

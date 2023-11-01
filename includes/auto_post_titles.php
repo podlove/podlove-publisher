@@ -123,7 +123,8 @@ function podlove_override_post_title_script()
         'placeholder' => __('Fill in episode title below', 'podlove-podcasting-plugin-for-wordpress'),
     ];
 
-    $data = apply_filters('podlove_js_data_for_post_title', $data, get_the_ID()); ?>
+    $data = apply_filters('podlove_js_data_for_post_title', $data, get_the_ID());
+    ?>
 <script type="text/javascript">
 var PODLOVE = PODLOVE || {};
 PODLOVE.override_post_title = <?php echo json_encode($data); ?>;

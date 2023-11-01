@@ -9,14 +9,14 @@ name: Beta Release
 jobs:
   build:
     name: Upload Release Asset
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
     steps:
       - name: Setup PHP with PECL extension
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '7.4'
+          php-version: '8.0'
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Build project
         env:
           TAG_NAME: ${{ github.ref }}
@@ -27,21 +27,13 @@ jobs:
           zip -r podlove-podcasting-plugin-for-wordpress.zip podlove-podcasting-plugin-for-wordpress
       - name: Create Release
         id: create_release
-        uses: actions/create-release@v1
+        uses: softprops/action-gh-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: ${{ github.ref }}
-          release_name: ${{ github.ref }}
+          name: ${{ github.ref }}
           draft: false
           prerelease: false
-      - name: Upload Release Asset
-        id: upload-release-asset
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
-          asset_path: ./podlove-podcasting-plugin-for-wordpress.zip
-          asset_name: podlove-podcasting-plugin-for-wordpress.zip
-          asset_content_type: application/zip
+          files: |
+            podlove-podcasting-plugin-for-wordpress.zip

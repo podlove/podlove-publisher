@@ -2,8 +2,8 @@
 
 namespace Podlove\Modules\Logging;
 
-use Monolog\Handler\AbstractProcessingHandler;
-use Monolog\Logger;
+use PodlovePublisher_Vendor\Monolog\Handler\AbstractProcessingHandler;
+use PodlovePublisher_Vendor\Monolog\Logger;
 
 class WPDBHandler extends AbstractProcessingHandler
 {
@@ -15,7 +15,7 @@ class WPDBHandler extends AbstractProcessingHandler
         parent::__construct($level, $bubble);
     }
 
-    protected function write(array $record)
+    protected function write(array $record): void
     {
         $row = new LogTable();
         $row->channel = $record['channel'];

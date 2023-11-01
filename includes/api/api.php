@@ -11,4 +11,5 @@ require_once \Podlove\PLUGIN_DIR.'includes/api/show.php';
 require_once \Podlove\PLUGIN_DIR.'includes/api/podcast.php';
 require_once \Podlove\PLUGIN_DIR.'includes/api/episodes.php';
 require_once \Podlove\PLUGIN_DIR.'includes/api/episodes/contributions.php';
+require_once \Podlove\PLUGIN_DIR.'includes/api/episodes/related_episodes.php';
 require_once \Podlove\PLUGIN_DIR.'includes/api/chapters.php';

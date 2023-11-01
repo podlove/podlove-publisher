@@ -105,9 +105,9 @@ function get_image_mime_type($image_type)
     return image_type_to_mime_type($image_type);
 }
 
-function get_setting($namespace, $name)
+function get_setting_defaults()
 {
-    $defaults = [
+    return [
         'website' => [
             'merge_episodes' => 'on',
             'hide_wp_feed_discovery' => 'off',
@@ -158,6 +158,11 @@ Regards,
             'episode' => 0,
         ],
     ];
+}
+
+function get_setting($namespace, $name)
+{
+    $defaults = get_setting_defaults();
 
     $options = get_option('podlove_'.$namespace);
     $options = wp_parse_args($options, $defaults[$namespace]);

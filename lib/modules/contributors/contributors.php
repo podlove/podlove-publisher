@@ -45,6 +45,8 @@ class Contributors extends \Podlove\Modules\Base
         add_action('podlove_feed_settings_bottom', [$this, 'feed_settings']);
         add_action('podlove_feed_process', [$this, 'feed_process'], 10, 2);
 
+        add_action('podlove_episode_created', [$this, 'apply_default_contributors']);
+
         add_filter('podlove_twig_file_loader', function ($file_loader) {
             $file_loader->addPath(implode(DIRECTORY_SEPARATOR, [\Podlove\PLUGIN_DIR, 'lib', 'modules', 'contributors', 'templates']), 'contributors');
 
@@ -494,77 +496,24 @@ class Contributors extends \Podlove\Modules\Base
             'type' => 'callback',
             'key' => 'contributors_form_table',
             'options' => [
-                'label' => __('Contributors', 'podlove-podcasting-plugin-for-wordpress'),
-                'callback' => [$this, 'contributors_form_for_episode_callback'],
+                'callback' => function () {
+                    ?>
+    <div data-client="podlove" style="margin: 15px 0;">
+      <podlove-contributors></podlove-contributors>
+    </div>
+  <?php
+                }
             ],
-            'position' => 850,
+            'position' => 500,
         ];
 
         return $form_data;
     }
 
-    public function contributors_form_for_episode_callback()
-    {
-        $current_page = get_current_screen();
-        $episode = Episode::find_one_by_post_id(get_the_ID());
-
-        // determine existing contributions
-        $contributions = [];
-        if ($current_page->action == 'add') {
-            $i = 0;
-            $permanent_contributors = [];
-            foreach (DefaultContribution::all() as $contribution_key => $contribution) {
-                $permanent_contributors[$contribution_key]['contributor'] = $contribution->getContributor();
-                $permanent_contributors[$contribution_key]['role'] = $contribution->getRole();
-                $permanent_contributors[$contribution_key]['group'] = $contribution->getGroup();
-                $permanent_contributors[$contribution_key]['comment'] = $contribution->comment;
-            }
-
-            foreach ($permanent_contributors as $permanent_contributor) {
-                $contrib = new \Podlove\Modules\Contributors\Model\EpisodeContribution();
-                $contrib->contributor_id = $permanent_contributor['contributor']->id;
-
-                if (isset($permanent_contributor['role'])) {
-                    $contrib->role = ContributorRole::find_by_id($permanent_contributor['role']->id);
-                }
-
-                if (isset($permanent_contributor['group'])) {
-                    $contrib->group = ContributorGroup::find_by_id($permanent_contributor['group']->id);
-                }
-
-                if (isset($permanent_contributor['comment'])) {
-                    $contrib->comment = $permanent_contributor['comment'];
-                }
-
-                $contributions[] = $contrib;
-            }
-
-            // map indices to IDs
-            $map = [];
-            $i = 0;
-            foreach ($contributions as $c) {
-                $map['default'.$c->contributor_id.'_'.$i] = $c;
-                ++$i;
-            }
-        } else {
-            $contributions = \Podlove\Modules\Contributors\Model\EpisodeContribution::all('WHERE `episode_id` = '.$episode->id.' ORDER BY `position` ASC');
-
-            // map indices to IDs
-            $map = [];
-            foreach ($contributions as $c) {
-                $map[$c->id] = $c;
-            }
-        }
-
-        \Podlove\Modules\Contributors\Contributors::contributors_form_table($map);
-    }
-
     /**
      * Contributors extension for podcast settings screen.
      *
-     * @param TableWrapper $wrapper form wrapper
-     * @param Podcast      $podcast podcast model
-     * @param mixed        $tabs
+     * @param mixed $tabs
      */
     public function podcast_settings_tab($tabs)
     {
@@ -872,6 +821,21 @@ class Contributors extends \Podlove\Modules\Base
         $api_v2->register_routes();
         $api_episode_contributor = new WP_REST_PodloveEpisodeContributions_Controller();
         $api_episode_contributor->register_routes();
+    }
+
+    public function apply_default_contributors(Episode $episode)
+    {
+        $defaults = DefaultContribution::all();
+        usort($defaults, function ($a, $b) { return $a->position <=> $b->position; });
+
+        foreach ($defaults as $default_contribution) {
+            $contribution = new EpisodeContribution();
+            $contribution->episode_id = $episode->id;
+            $contribution->contributor_id = $default_contribution->contributor_id;
+            $contribution->role_id = $default_contribution->role_id;
+            $contribution->group_id = $default_contribution->group_id;
+            $contribution->save();
+        }
     }
 
     /**

@@ -18,31 +18,7 @@ class File_Type_List_Table extends \Podlove\List_Table
 
     public function column_name($file_type)
     {
-        $actions = [
-            'edit' => sprintf(
-                '<a href="?page=%s&podlove_tab=%s&action=%s&file_type=%s">'.__('Edit', 'podlove-podcasting-plugin-for-wordpress').'</a>',
-                htmlspecialchars($_REQUEST['page'] ?? ''),
-                htmlspecialchars($_REQUEST['podlove_tab'] ?? ''),
-                'edit',
-                $file_type->id
-            ),
-            'delete' => sprintf(
-                '<a href="?page=%s&podlove_tab=%s&action=%s&file_type=%s&_podlove_nonce=%s">'.__('Delete', 'podlove-podcasting-plugin-for-wordpress').'</a>',
-                htmlspecialchars($_REQUEST['page'] ?? ''),
-                htmlspecialchars($_REQUEST['podlove_tab'] ?? ''),
-                'delete',
-                $file_type->id,
-                wp_create_nonce('update_file_type')
-            ),
-        ];
-
-        return sprintf(
-            '%1$s %2$s',
-            // $1%s
-            $file_type->name,
-            // $3%s
-            $this->row_actions($actions)
-        );
+        return $file_type->name;
     }
 
     public function column_id($file_type)

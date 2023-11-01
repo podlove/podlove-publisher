@@ -21,14 +21,14 @@
 
 Add support for Podlove Web Player 5
 
-Podlove Web Player 5 is the latest overhaul of our podcast web player. 
-It comes with its own configuration interface giving you full control over its appearance. 
+Podlove Web Player 5 is the latest overhaul of our podcast web player.
+It comes with its own configuration interface giving you full control over its appearance.
 
-Activate it in `Podlove > Podcast Settings > Player`. 
+Activate it in `Podlove > Podcast Settings > Player`.
 You are then prompted to install the "Podlove Web Player" plugin if you don't have it installed already.
 
-Configure the web player appearance in `Settings > Podlove Web Player`. 
-Existing web player shortcodes and template accessors continue to work as expected. 
+Configure the web player appearance in `Settings > Podlove Web Player`.
+Existing web player shortcodes and template accessors continue to work as expected.
 For detailed shortcode options, please refer to https://wordpress.org/plugins/podlove-web-player/
 
 = 2.9.10 =
@@ -98,7 +98,7 @@ This feature is sponsored by [Lage der Nation](https://lagedernation.org).
 
 **New Apple iTunes Categories**
 
-Apple updated their list of available iTunes categories. 
+Apple updated their list of available iTunes categories.
 Please check in `Podlove > Podcast Settings > Directory > iTunes Category` if you need or want to update your category.
 In case your previously selected category does not exist any more, a warning is shown.
 
@@ -106,7 +106,7 @@ Only one category is selectable now (instead of previously 3) to conform with iT
 
 **Download tracking with Google Analytics**
 
-Set your Google Analytics Tracking ID in Podlove > Expert Settings > Tracking. 
+Set your Google Analytics Tracking ID in Podlove > Expert Settings > Tracking.
 Then every download intent will be forwarded to Google Analytics.
 
 [#1058](https://github.com/podlove/podlove-publisher/pull/1058)
@@ -145,7 +145,7 @@ See [https://forschergeist.de/podcast/fg066-klimaneutralitaet/](https://forscher
 
 **Transcripts: Shortcode**
 
-The shortcode `[podlove-transcript]` displays a pretty html version of the transcript for your website. 
+The shortcode `[podlove-transcript]` displays a pretty html version of the transcript for your website.
 
 **Transcripts: Twig Template Support**
 
@@ -169,7 +169,7 @@ Of course there is a fully featured template API for transcripts as well. For ex
                 {% endfor %}
             </div>
         </div>
-        
+
     </div>
 {% endfor %}
 
@@ -266,9 +266,9 @@ A short demo video is available [in the documentation](https://docs.podlove.org/
 * the "Modules" screen has been redesigned
 * updated JavaScript and CSS processing library and other dependencies
 
-= 2.7.19 = 
+= 2.7.19 =
 
-We are now compatible to the new WordPress 5.0 Gutenberg block editor. 
+We are now compatible to the new WordPress 5.0 Gutenberg block editor.
 You can choose to use the new editor or stay with the classic editor for now by installing the classic editor plugin by WordPress.
 
 * feed: do not include `<itunes:summary>` tag if it is empty (Apple Podcast requirement)
@@ -280,7 +280,7 @@ You can choose to use the new editor or stay with the classic editor for now by 
 = 2.7.18 =
 
 * improve feed generation time when seasons are used ([#1010](https://github.com/podlove/podlove-publisher/issues/1010))
-* title migration module: 
+* title migration module:
   * remove "episode type" selector, always use "full"
   * add warning when there might be too many form fields
 * new PHP constant `PODLOVE_DISABLE_TAG_AND_CATEGORY_SEARCH` ([#1017](https://github.com/podlove/podlove-publisher/issues/1017))
@@ -292,8 +292,8 @@ You can choose to use the new editor or stay with the classic editor for now by 
 
 **Downloads Data Export**
 
-Download data per episode can now be exported as JSON and CSV. 
-On the Analytics page you will now find a simple export interface. 
+Download data per episode can now be exported as JSON and CSV.
+On the Analytics page you will now find a simple export interface.
 Select the episodes you want in the export or don't select any to export them all at once.
 
 **WP REST API Support**
@@ -492,7 +492,7 @@ Podlove Web Player 4 is the new default player.
 * fix deleting related episodes ([#907](https://github.com/podlove/podlove-publisher/issues/907))
 * fix network admin bar now does not include broken links if Publisher is not activated network-wide ([#933](https://github.com/podlove/podlove-publisher/issues/933))
 * fix import getting stuck issue ([#910](https://github.com/podlove/podlove-publisher/issues/910))
-* Bitlove module: remove all frontend functionality because it has been dysfunctional for a long time 
+* Bitlove module: remove all frontend functionality because it has been dysfunctional for a long time
 * fix Auphonic module showing wrong status message after file upload
 * fix Audacity chapter import when times contain commas
 * fix email notification issue where not emails were sent ([#938](https://github.com/podlove/podlove-publisher/issues/938))
@@ -512,12 +512,12 @@ Podlove Web Player 4 is the new default player.
 
 = 2.6.4 =
 
-Podlove Web Player 2: 
+Podlove Web Player 2:
 
 - fix: Remove Flash and Silverlight fallbacks due to security issue
 - fix: resolve compatibility issue with mediaelement library shipped with WordPress
 
-Podlove Web Player 4: 
+Podlove Web Player 4:
 
 - fix: newlines in summary are not converted to HTML linebreaks
 
@@ -700,7 +700,7 @@ Now a different approach is used. Instead of the original file URL, a dynamic li
 * fix WP-Rocket incompatibility with Podigee Player
 * fix Auphonic: when neither episode image nor post thumbnail are present, fallback to podcast cover art
 * fix PHP warnings in oembed module
- 
+
 = 2.4.0 =
 
 **Background Jobs System**
@@ -862,7 +862,7 @@ Design Update for Podlove Subscribe Button
 * enhance error message when resolving URL fails
 
 
-= 2.3.7 = 
+= 2.3.7 =
 
 * fix "add new" contributor button
 * fix migration class error
@@ -1021,9 +1021,9 @@ Please see the ["Understanding Templates" guide](http://docs.podlove.org/guides/
 
 **Image Caching, Resizing & Retina Support**
 
-We now take better control of podcast images, episode images, contributor avatars and our own social icons. 
-We are able to *resize* them to ideal sizes, which results in *faster page load times* for your users. *Retina 
-images* for higher-resolution displays are also supported. We do this automatically, so all you need to do 
+We now take better control of podcast images, episode images, contributor avatars and our own social icons.
+We are able to *resize* them to ideal sizes, which results in *faster page load times* for your users. *Retina
+images* for higher-resolution displays are also supported. We do this automatically, so all you need to do
 is click update, lean back and enjoy.
 
 Read all the details in our blog post ["Podlove Publisher 2.2: Say hello to image caching"](http://podlove.org/2015/05/20/podlove-publisher-2-2/)
@@ -1080,7 +1080,7 @@ While you are changing these, consider scaling them down appropriately. Your ima
 * fix: some server configurations (especially on shared webhosting) break cURLs ability to follow HTTP redirects. We now check for that configuration and, if necessary, resolve the URL manually before continuing normally.
 * fix: XSS vulnerabilities in contributors search
 * fix: Template accessor `contributor.id` now correctly returns the id, not the uri. `contributor.uri` is the new accessor to get the uri.
-* fix: Filtering contributions by id is now correctly affected by other filters, like group and role. Until now, `podcast.contributors({id: 'james', role: 'on-air'})` always returned James, no matter if he had the given role or not. 
+* fix: Filtering contributions by id is now correctly affected by other filters, like group and role. Until now, `podcast.contributors({id: 'james', role: 'on-air'})` always returned James, no matter if he had the given role or not.
 * add "Add New Contributor" item to contributor select list. Selecting it opens the screen to add a new contributor.
 * add Twig version to system report
 
@@ -1096,7 +1096,7 @@ While you are changing these, consider scaling them down appropriately. Your ima
 
 **Widgets**
 
-We added a happy bunch of widgets to make your life easy. 
+We added a happy bunch of widgets to make your life easy.
 
 * Podcast Information: Display cover, subtitle and summary of your podcast
 * Recent Episodes: Display a list of recent episodes, with cover art and duration if you like

@@ -34,15 +34,17 @@ function podlove_get_template_deprecations()
     foreach (\Podlove\Model\Template::all() as $template) {
         foreach ($deprecation_matcher as $deprecated_type => $matcher) {
             foreach ($matcher['matcher'] as $regex) {
-                if (preg_match('/'.$regex.'/', $template->content, $matches)) {
-                    $deprecations[] = [
-                        'context' => ['type' => 'template', 'id' => $template->id],
-                        'deprecated' => [
-                            'type' => $deprecated_type,
-                            'content' => $matches[0],
-                        ],
-                        'instead' => $matcher['data'][$regex],
-                    ];
+                if ($template->content) {
+                    if (preg_match('/'.$regex.'/', $template->content, $matches)) {
+                        $deprecations[] = [
+                            'context' => ['type' => 'template', 'id' => $template->id],
+                            'deprecated' => [
+                                'type' => $deprecated_type,
+                                'content' => $matches[0],
+                            ],
+                            'instead' => $matcher['data'][$regex],
+                        ];
+                    }
                 }
             }
         }
@@ -134,12 +136,12 @@ function podlove_render_deprecations($deprecations)
 				<li>
 					<?php
                     echo sprintf(
-        'Outdated %s %s in %s. Instead, use: %s',
-        $deprecation['deprecated']['type'],
-        '<code>'.$deprecation['deprecated']['content'].'</code>',
-        podlove_get_deprecation_context($deprecation['context']),
-        $deprecation['instead']
-    ); ?>
+                        'Outdated %s %s in %s. Instead, use: %s',
+                        $deprecation['deprecated']['type'],
+                        '<code>'.$deprecation['deprecated']['content'].'</code>',
+                        podlove_get_deprecation_context($deprecation['context']),
+                        $deprecation['instead']
+                    ); ?>
 				</li>
 			<?php } ?>
 			</ul>

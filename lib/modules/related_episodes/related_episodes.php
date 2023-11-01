@@ -2,6 +2,7 @@
 
 namespace Podlove\Modules\RelatedEpisodes;
 
+use Podlove\Api\Episodes\WP_REST_PodloveEpisodeRelated_Controller;
 use Podlove\Model;
 use Podlove\Modules\RelatedEpisodes\Model\EpisodeRelation;
 
@@ -15,7 +16,7 @@ class Related_Episodes extends \Podlove\Modules\Base
     {
         add_action('podlove_module_was_activated_related_episodes', [$this, 'was_activated']);
         add_filter('podlove_episode_form_data', [$this, 'episode_relation_form'], 10, 2);
-        add_action('save_post', [$this, 'update_episode_relations'], 10, 2);
+        add_action('rest_api_init', [$this, 'api_init']);
 
         add_action('admin_print_styles', [$this, 'admin_print_styles']);
 
@@ -39,34 +40,10 @@ class Related_Episodes extends \Podlove\Modules\Base
         EpisodeRelation::build();
     }
 
-    public function update_episode_relations($post_id)
+    public function api_init()
     {
-        // skip if the save does not come from the episode form
-        if (!isset($_POST['_podlove_meta'])) {
-            return;
-        }
-
-        $episode = Model\Episode::find_one_by_post_id($post_id);
-
-        if (!$episode) {
-            return;
-        }
-
-        $relations = EpisodeRelation::find_all_by_where('left_episode_id = '.$episode->id.' OR right_episode_id = '.$episode->id);
-        foreach ($relations as $episode_relation) {
-            $episode_relation->delete();
-        }
-
-        if (!isset($_POST['_podlove_meta']['related_episodes'])) {
-            return;
-        }
-
-        foreach ($_POST['_podlove_meta']['related_episodes'] as $episode_relation) {
-            $e = new EpisodeRelation();
-            $e->left_episode_id = $episode->id;
-            $e->right_episode_id = $episode_relation;
-            $e->save();
-        }
+        $api_episode_related = new WP_REST_PodloveEpisodeRelated_Controller();
+        $api_episode_related->register_routes();
     }
 
     public function episode_relation_form($form_data)
@@ -75,10 +52,15 @@ class Related_Episodes extends \Podlove\Modules\Base
             'type' => 'callback',
             'key' => 'episode_relation_form_table',
             'options' => [
-                'label' => __('Related Episodes', 'podlove-podcasting-plugin-for-wordpress'),
-                'callback' => [$this, 'episode_relation_form_callback'],
+                'callback' => function () {
+                    ?>
+                        <div data-client="podlove" style="margin: 15px 0;">
+                            <podlove-related-episodes></podlove-related-episodes>
+                        </div>
+                    <?php
+                }
             ],
-            'position' => 870,
+            'position' => 460,
         ];
 
         return $form_data;
@@ -136,7 +118,7 @@ class Related_Episodes extends \Podlove\Modules\Base
 			</script>
 			<script type="text/javascript">
 				var PODLOVE = PODLOVE || {};
-				
+
 				PODLOVE.related_episodes_existing_episode_relations = <?php echo json_encode($existing_episode_relations); ?>;
 			</script>
 			<?php

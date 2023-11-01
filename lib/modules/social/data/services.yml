@@ -118,6 +118,13 @@
   logo: 'mastodon.png'
   url_scheme: '%account-placeholder%'
 
+- title: 'Matrix'
+  name: 'matrix'
+  category: 'social'
+  description: 'Matrix User ID (@user:domain.org)'
+  logo: 'matrix.png'
+  url_scheme: 'https://matrix.to/#/%account-placeholder%'
+
 - title: 'OpenStreetMap'
   name: 'openstreetmap'
   category: 'social'

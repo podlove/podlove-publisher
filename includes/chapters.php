@@ -90,36 +90,19 @@ add_filter('podlove_episode_form_data', function ($form_data, $episode) {
         'type' => 'callback',
         'key' => 'chapters',
         'options' => [
-            'callback' => function () use ($episode) {
+            'callback' => function () {
                 ?>
-<div id="podlove-chapters-app-data" style="display: none"><?php echo $episode->get_chapters('json'); ?></div>
-<div id="podlove-chapters-app"><chapters></chapters></div>
-
-<noscript>
-	<textarea name="_podlove_meta[chapters]"><?php echo $episode->chapters; ?></textarea>
-</noscript>
+  <div data-client="podlove" style="margin: 15px 0;">
+    <podlove-chapters></podlove-chapters>
+  </div>
 <?php
-            },
-            'label' => __('Chapter Marks', 'podlove-podcasting-plugin-for-wordpress'),
-            // 'description' => __( '', 'podlove-podcasting-plugin-for-wordpress' )
+            }
         ],
-        'position' => 450,
+        'position' => 800,
     ];
 
     return $form_data;
 }, 10, 2);
-
-add_filter('podlove_episode_data_filter', function ($filter) {
-    return array_merge($filter, [
-        'chapters' => FILTER_UNSAFE_RAW,
-    ]);
-});
-
-add_filter('podlove_episode_data_before_save', function ($data) {
-    $data['chapters'] = \Podlove\maybe_encode_emoji($data['chapters']);
-
-    return $data;
-});
 
 // add PSC to rss feed
 add_action('podlove_append_to_feed_entry', function ($podcast, $episode, $feed, $format) {

@@ -1,5 +1,15 @@
 <?php
 
+function add_type_attribute($tag, $handle, $src)
+{
+    // if not your script, do nothing and return original $tag
+    if ('podlove-vue-app-client' !== $handle) {
+        return $tag;
+    }
+    // change the script tag by adding type="module" and return it.
+    return '<script crossorigin type="module" src="'.esc_url($src).'"></script>';
+}
+
 // admin styles & scripts
 add_action('admin_print_styles', function () {
     $screen = get_current_screen();
@@ -18,8 +28,12 @@ add_action('admin_print_styles', function () {
     // vue job dashboard
     if ($is_episode_edit_screen || in_array($screen->base, $vue_screens)) {
         wp_enqueue_script('podlove-episode-vue-apps', \Podlove\PLUGIN_URL.'/js/dist/app.js', ['underscore', 'jquery'], $version, true);
+        wp_enqueue_script('podlove-vue-app-client', \Podlove\PLUGIN_URL.'/client/dist/client.js', ['wp-i18n'], $version, false);
+        wp_enqueue_script('podlove-vue-app-client', \Podlove\PLUGIN_URL.'/client/dist/chunk_vendor.js', [], $version, false);
+        add_filter('script_loader_tag', 'add_type_attribute', 10, 3);
+        wp_enqueue_style('podlove-vue-app-client', \Podlove\PLUGIN_URL.'/client/dist/style.css', [], $version);
 
-        $episode = Podlove\Model\Episode::find_one_by_post_id(get_the_ID());
+        $episode = Podlove\Model\Episode::find_or_create_by_post_id(get_the_ID());
 
         if (!$episode) {
             wp_localize_script(
@@ -45,6 +59,32 @@ add_action('admin_print_styles', function () {
                     'osf_active' => is_plugin_active('shownotes/shownotes.php'),
                 ]
             );
+
+            add_filter('podlove_data_js', function ($data) use ($episode) {
+                $data['episode'] = [
+                    'duration' => $episode->duration,
+                    'id' => $episode->id
+                ];
+
+                $data['post'] = [
+                    'id' => get_the_ID()
+                ];
+
+                $data['api'] = [
+                    'base' => esc_url_raw(rest_url('podlove')),
+                    'nonce' => wp_create_nonce('wp_rest'),
+                ];
+
+                $assignments = \Podlove\Model\AssetAssignment::get_instance();
+
+                $data['assignments'] = [
+                    'image' => $assignments->image,
+                    'chapters' => $assignments->chapters,
+                    'transcript' => $assignments->transcript
+                ];
+
+                return $data;
+            });
         }
     }
 

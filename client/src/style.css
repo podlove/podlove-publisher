@@ -1,0 +1,9 @@
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* fix overwrites */
+input[type=checkbox]:checked::before {
+  content: '';
+}

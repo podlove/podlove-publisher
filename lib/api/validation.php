@@ -2,6 +2,10 @@
 
 namespace Podlove\Api;
 
+use Podlove\Modules\Contributors\Model\Contributor;
+use Podlove\Modules\Contributors\Model\ContributorGroup;
+use Podlove\Modules\Contributors\Model\ContributorRole;
+use Podlove\Modules\Contributors\Model\DefaultContribution;
 use Podlove\NormalPlayTime;
 
 class Validation
@@ -30,6 +34,21 @@ class Validation
             return true;
         }
 
+        return false;
+    }
+
+    public static function episodeCover($param, $request, $key)
+    {
+        $asset_assignment = Podlove\Model\AssetAssignment::get_instance();
+        if ($asset_assignment->image == 'manual') {
+            if (isset($param['cover'])) {
+                $cover = $param['cover'];
+                if (!Validation::url($cover, $request, $key)) {
+                    return false;
+                }
+                return true;
+            }
+        }
         return false;
     }
 
@@ -73,4 +92,45 @@ class Validation
 
         return true;
     }
+
+    public static function isContributorIdExist($param, $request, $key) {
+        if (isset($param)) {
+            $id = $param;
+            $contributor = Contributor::find_by_id($id);
+            if (!$contributor)
+                return false;
+        }
+        return true;
+    }
+
+    public static function isContributorGroupIdExist($param, $request, $key) {
+        if (isset($param)) {
+            $id = $param;
+            $group = ContributorGroup::find_by_id($id);
+            if (!$group)
+                return false;
+        }
+        return true;
+    }
+
+    public static function isContributorRoleIdExist($param, $request, $key) {
+        if (isset($param)) {
+            $id = $param;
+            $role = ContributorRole::find_by_id($id);
+            if (!$role)
+                return false;
+        }
+        return true;
+    }
+
+    public static function isContributorDefaultIdExist($param, $request, $key) {
+        if (isset($param)) {
+            $id = $param;
+            $contributor = DefaultContribution::find_one_by_property('contributor_id', $id);
+            if (!$contributor)
+                return false;
+        }
+        return true;
+    }
+
 }
