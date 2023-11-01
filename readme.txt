@@ -14,7 +14,7 @@ The one and only next generation podcast publishing system. Seriously. It's magi
 
 We built the Podlove Podcast Publisher because existing solutions are stuck in the past, complex and unwieldy. The Publisher helps you save time, worry less and provides a cutting edge listening experience for your audience.
 
-Official Site: [publisher.podlove.org](http://publisher.podlove.org/)
+Official Site: [podlove.org/podlove-podcast-publisher](https://podlove.org/podlove-podcast-publisher)
 
 = Video Tutorial: Getting started with Podlove Publisher =
 
