@@ -18,7 +18,7 @@ function podlove_validate_image_cache()
 {
     set_time_limit(5 * MINUTE_IN_SECONDS);
 
-    PHP_Timer::start();
+    $start_time = hrtime(true);
     $cache_files = glob(trailingslashit(Image::cache_dir()).'*'.DIRECTORY_SEPARATOR.'*'.DIRECTORY_SEPARATOR.'cache.yml');
     foreach ($cache_files as $cache_file) {
         $cache = Yaml::parse(file_get_contents($cache_file));
@@ -38,8 +38,10 @@ function podlove_validate_image_cache()
         }
     }
 
-    $time = PHP_Timer::stop();
-    \Podlove\Log::get()->addInfo(sprintf('Finished validating %d images in %s', count($cache_files), PHP_Timer::secondsToTimeString($time)));
+    $stop_time = hrtime(true);
+    $duration = ($stop_time - $start_time) / 1e+6;
+    $duration_string = round($duration).'ms';
+    \Podlove\Log::get()->addInfo(sprintf('Finished validating %d images in %s', count($cache_files), $duration_string));
 }
 
 function podlove_refetch_cached_image($url, $filename)
@@ -126,15 +128,15 @@ function podlove_handle_cache_files()
         case IMAGETYPE_JPEG:
             header('Content-Type: image/jpeg');
 
-        break;
+            break;
         case IMAGETYPE_GIF:
             header('Content-Type: image/gif');
 
-        break;
+            break;
         case IMAGETYPE_PNG:
             header('Content-Type: image/png');
 
-        break;
+            break;
     }
 
     header('Content-Length: '.filesize($file));
