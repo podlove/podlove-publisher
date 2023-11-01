@@ -104,191 +104,34 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
-= 3.8.11, 3.8.12 =
+= 4.0.0 =
 
-* fix: templates XHR issue in WP MultiSite
-* fix: lists UI in WP MultiSite
+Podlove Publisher 4.0 is here, bringing a spring-clean (in November!) of the episode page. We tore up the foundation to bring you an all-new user interface.
 
-= 2023-11-01 =
+**Warning:** PHP 8.0 and above is now required!
 
-* Expert Settings: "File Types" are now readonly
+**Highlights**
 
-= 2023-10-20 =
+- **Episode Form** User Interface is modernised and auto-saves, so no work is ever lost.
+- **Auphonic module** includes Multitrack Support.
+- **New Contributors** can be added without leaving the episode page.
+- **Chapters** support images.
+- **REST API V2** is now, including many more endpoints. See the [API documentation](https://docs.podlove.org/podlove-publisher/api) for all the details.
 
-* merge back all changes from main branch (3.8.x releases)
-* fix broken Mastodon link
-* fix more PHP warnings (PHP 8+ compatibility)
-* improve description for Logging module
 
-= 2023-10-15 =
+**Tidbits**
 
-* fix broken RSS feeds
+- file “slug” field is prefixed with the media location so it’s more obvious what it is used for
+- episode duration is always auto-detected and not an input field any more
+- Auphonic Preset can be selected directly in the episode and does not rely on global module setting any more
+- removed module “Twitter Card Integration” (RIP). By the way, if you want to follow us on social media, find us here: https://fosstodon.org/@podlove
+- fix various PHP notices and warnings to be PHP 8.0+ compatible
 
-= 2023-10-14 =
+== Upgrade Notice ==
 
-* improve PHP 8 compatibility
-  * stop using FILTER_SANITIZE_STRING
-  * set default encoding in DOMDocument
-  * set default values in transcript template internals
+= 4.0.0 =
 
-* deps: update podlove-timeline to 2.0 (fixing various chapter related PHP warnings)
-
-= 2023-10-09 =
-
-* fix(plus): gracefully handle when things go wrong in image generator
-* fix(shownotes): handle image providers returning lists
-
-= 2023-09-24 =
-
-Polishing the Auphonic Module:
-
-* memorize selected preset
-* rename start screen labels (and empty select boxes instead of duplicating the label there)
-* reorganize "tracks" view
-  * reduce label noise by displaying more like a table
-  * move algorithm settings to dedicated column (instead of confusing toggleable UI)
-  * remove unhelpful "Manage Production" heading
-  * rename "current file" to "uploaded file"
-  * selected production information: default name to "New Production" and include creation date from production file
-* fix "filtering" algorithm parameter
-
-= 2023-09-22 =
-
-* change: new episodes default to type "full"
-* change: up to 3 iTunes categories can be selected again ([#1358](https://github.com/podlove/podlove-publisher/pull/1358))
-
-* fix: contributors page does not error any more ([#1389](https://github.com/podlove/podlove-publisher/pull/1389))
-* fix: related episodes disappearing when using quick edit ([#1391](https://github.com/podlove/podlove-publisher/issues/1391))
-* fix(assets): show url when file can not be found
-* fix: default episode contributors work again
-* fix: when episode title field is empty, it shows the blog title as greyed out placeholder (which is the fallback used in the feed etc.)
-
-= 2023-08-24 =
-
-* remove module: Twitter Card Integration
-* support page: replace link to Twitter with our Mastodon profile
-
-= 2023-08-05 =
-
-* api: filter episodes by show slug (`...&show=myshow`)
-* api: list all shows (`...podlove/v2/shows`)
-* change order of episode page sections
-* fix: Assigning transcript Voices does not work #1384
-
-= 2023-07-28 =
-
-* fix: add permission check for cron diagnostics
-
-= 2023-07-14 =
-
-* fix: Auphonic metadata import
-* fix: Auphonic module bottom spacing
-* fix: Soundbite double label
-
-= 2023-07-11 =
-
-* fix: invisible contributors selection
-
-= 2023-06-22 =
-
-* fix: episode title not visible in form
-
-= 2023-06-15 =
-
-* BREAKING: increase minimum PHP version from to 8.0 (Mastodon has spoken)
-* update all third party PHP libraries, notably:
-  * Twig (2.12.5 to 3.6.1)
-  * piwik/device-detector 3.12 to matomo/device-detector 6.1
-
-= 2023-06-12 =
-
-* fix: slug getting lost when manually saving or scheduling an episode
-
-= 2023-06-10 =
-
-* BREAKING: increase minimum PHP version from 7.0 to 7.4
-
-Updated UI Components on Episode page:
-
-- Soundbite
-- Related Episodes
-- Media Files / Asssets
-- Contributors
-
-= 2023-04-25 =
-
-Bring security fixes from main branch to beta:
-
-* fix XSS vulnerability
-* fix CSRF vulnerabilities by adding nonces to forms
-
-= 2023-01-20 =
-
-various Auphonic module fixes
-
-= 2023-01-16 =
-
-Fixes. Maybe a working beta?
-
-= 2022-12-30 =
-
-All-New Auphonic Module
-
-As you may know we're in the middle of upgrading all the sections in the episode
-screen. One of the more involved projects was(!) the Auphonic module. Feature
-requests for Multitrack support appeared since the feature was introduced by
-Auphonic, but the thought of adapting the module always felt daunting.
-
-Now we took the chance to rethink the workflow from the ground up, hopefully
-making everything a little easier; and of course there's multitrack support now.
-
-I just checked, Auphonic released their Multitrack feature in 2014
-(https://auphonic.com/blog/2014/10/21/auphonic-multitrack-algorithms-release/).
-So we're lagging a little behind, but we caught up! You can now create
-multitrack productions directly from inside Podlove Publisher.
-
-Please give the new interface a try, and send any feedback you have our way.
-
-= 2022-12-15 =
-
-API Updates:
-
-- add endpoints for related episode management
-  - `/podlove/v2/episodes/<id>/related`
-  - `/podlove/v2/episodes/related`
-  - `/podlove/v2/episodes/related/<id>`
-- add endpoints for episode tag management
-  - `/podlove/v2/episodes/<id>/tags`
-- rename "filter" parameter to "status", following WordPress API naming
-- include "license_name" and "license_url" in episode
-
-= 2022-09-04 =
-
-- feat: New UI module for episode description related information
-
-= 2022-07-25 =
-
-- update webvtt parser to support closing voice tags and a missing trailing newline
-
-= 2022-07-08 =
-
-- feat(api): include season_id in episode
-
-= 2022-07-01 =
-
-- feat(api): add routes to handle episode contributions and social services
-- feat(api): episode duration and slug enhancements
-
-= 2022-06-19 =
-
-- fix(core): incompatibility with matomo plugin by vendor-prefixing the device detector library
-- fix(shows): display episode summary in show feeds instead of the show summary
-
-= 2022-03-23 =
-
-We're working on bringing the whole JavaScript codebase onto a modern foundation. You will discover the Chapter Marks and Transcripts sections have a new look, as they are the first components we upgraded. They should be functionally equivalent to before.
-
-In the long run, this new foundation will allow us to build better interfaces on top of recent web technology.
+An all-new episode creation experience. Requires PHP 8.0 and above.
 
 ----
 
