@@ -59,7 +59,7 @@ Requires PHP 8.0+
 
 ### Is Podlove Podcast Publisher free?
 
-Yes! The core features of Podlove Podcast Publisher are and always will be free. [Paid Professional Support](https://publisher.podlove.org/support/) is available but not necessary to run the plugin.
+Yes! The core features of Podlove Podcast Publisher are and always will be free.
 
 ### Are there Download Statistics?
 
