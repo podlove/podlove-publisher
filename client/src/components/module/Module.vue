@@ -12,7 +12,7 @@
         </div>
       </div>
     </div>
-    <div class="bg-white shadow rounded-lg">
+    <div>
       <slot></slot>
     </div>
   </section>
@@ -35,5 +35,4 @@ export default defineComponent({
 })
 </script>
 
-<style>
-</style>
+<style></style>
