@@ -104,6 +104,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2023-11-01 =
+
+* Expert Settings: "File Types" are now readonly
+
 = 2023-10-20 =
 
 * merge back all changes from main branch (3.8.x releases)
