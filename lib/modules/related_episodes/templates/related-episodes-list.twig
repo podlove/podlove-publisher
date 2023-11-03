@@ -6,7 +6,7 @@
 		{{ option.before }}
 	{% endif %}
 
-	{% spaceless %}
+	{% apply spaceless %}
 		<ul>
 			{% for related_episode in related_episodes %}
 				<li>
@@ -14,6 +14,6 @@
 				</li>
 			{% endfor %}
 		</ul>
-	{% endspaceless %}
+	{% endapply %}
 
 {% endif %}

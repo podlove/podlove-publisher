@@ -111,6 +111,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 **Bugfixes**
 
 - Auphonic: open productions with missing algorithm information
+- Templates: fix broken core templates `downloads-select` and `related-episodes-list`
 
 = 4.0.0 =
 
