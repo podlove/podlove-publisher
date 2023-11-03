@@ -136,6 +136,12 @@ function* handleStartProduction(
   action: { type: string; payload: any }
 ) {
   const uuid = action.payload.uuid
+
+  yield call(handleSaveProduction, auphonicApi, {
+    type: auphonic.SAVE_PRODUCTION,
+    payload: { uuid: uuid },
+  })
+
   const webhookConfig: WebhookConfig | null = yield select(selectors.episode.auphonicWebhookConfig)
   const isWebhookEnabled: boolean = yield select(selectors.auphonic.publishWhenDone)
   const baseUrl: String = yield select(selectors.runtime.baseUrl)
@@ -158,11 +164,13 @@ function* handleStartProduction(
   // episode data.
 
   // start production
-  const {
-    result: { data: production },
-  } = yield auphonicApi.post(`production/${uuid}/start.json`, {})
+  const response = yield auphonicApi.post(`production/${uuid}/start.json`, {})
 
-  yield put(auphonic.setProduction(production))
+  if (response.result) {
+    yield put(auphonic.setProduction(response.result.data))
+  } else {
+    console.warn(response.error.error_message)
+  }
 }
 
 function* handleSaveTrack(auphonicApi: AuphonicApiClient, uuid: String, trackWrapper: any) {

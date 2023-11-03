@@ -108,6 +108,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 = 4.0.1 =
 
+**Enhancements**
+
+- Auphonic: autosave before "Start Production" so it is not required to explicitly save before starting
+
 **Bugfixes**
 
 - Auphonic: open productions with missing algorithm information
