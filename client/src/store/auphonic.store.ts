@@ -379,9 +379,9 @@ export const reducer = handleActions(
               {
                 identifier: file.id,
                 identifier_new: file.id,
-                filtering: file.algorithms.filtering,
-                noise_and_hum_reduction: file.algorithms.denoise,
-                fore_background: file.algorithms.backforeground,
+                filtering: file.algorithms?.filtering,
+                noise_and_hum_reduction: file.algorithms?.denoise,
+                fore_background: file.algorithms?.backforeground,
                 input_file_name: file.input_file,
                 save_state: 'unchanged',
               } as AudioTrack,

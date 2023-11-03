@@ -106,6 +106,12 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 4.0.1 =
+
+**Bugfixes**
+
+- Auphonic: open productions with missing algorithm information
+
 = 4.0.0 =
 
 Podlove Publisher 4.0 is here, bringing a spring-clean (in November!) of the episode page. We tore up the foundation to bring you an all-new user interface.
