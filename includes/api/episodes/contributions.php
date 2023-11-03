@@ -62,7 +62,7 @@ class WP_REST_PodloveEpisodeContributions_Controller extends WP_REST_Controller
                   'validate_callback' => '\Podlove\Api\Validation::isContributorRoleIdExist'
                 ],
                 'comment' => [
-                  'description' => __('Comment to the contributor', 'podlove-podcasting-plugin-for-wordpress'),
+                  'description' => __('Comment to the contribution', 'podlove-podcasting-plugin-for-wordpress'),
                   'type' => 'string'
                 ],
                 'default_contributor' => [

@@ -41,7 +41,7 @@ class WP_REST_PodloveChapters_Controller extends WP_REST_Controller
             [
                 'args' => [
                     'chapters' => [
-                        'description' => __('List of chapters, please use mp4chpat format.', 'podlove-podcasting-plugin-for-wordpress'),
+                        'description' => __('List of chapters, please use MP4Chaps format.', 'podlove-podcasting-plugin-for-wordpress'),
                         'type' => 'array',
                         'items' => [
                             'type' => 'object',
