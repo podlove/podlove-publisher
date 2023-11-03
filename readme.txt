@@ -112,6 +112,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 - Auphonic: open productions with missing algorithm information
 - Templates: fix broken core templates `downloads-select` and `related-episodes-list`
+- Classic Editor: display Episode Title Placeholder based on Blog Post Title
 
 = 4.0.0 =
 

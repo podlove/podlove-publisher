@@ -41,11 +41,11 @@ function* wordpressGutenbergUpdate() {
   )
 }
 
-function* postTitleUpdate(event: InputEvent) {
+function* postTitleUpdate(title: String) {
   yield put(
     wordpressStore.update({
       prop: 'title',
-      value: get(event, ['target', 'value']),
+      value: title,
     })
   )
 }
