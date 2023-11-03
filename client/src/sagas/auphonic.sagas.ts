@@ -164,7 +164,10 @@ function* handleStartProduction(
   // episode data.
 
   // start production
-  const response = yield auphonicApi.post(`production/${uuid}/start.json`, {})
+  const response: { result: any; error: any } = yield auphonicApi.post(
+    `production/${uuid}/start.json`,
+    {}
+  )
 
   if (response.result) {
     yield put(auphonic.setProduction(response.result.data))
