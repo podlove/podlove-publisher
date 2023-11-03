@@ -11,7 +11,6 @@
       </div>
 
       <div :class="{ 'text-left': true, 'opacity-0': isInitializing }">
-        <h2 class="text-lg font-medium text-gray-900">{{ __('No production connected yet') }}</h2>
         <p class="mt-1 text-sm text-gray-500">
           {{
             __(
