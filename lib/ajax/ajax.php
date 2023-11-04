@@ -55,6 +55,8 @@ class Ajax
 
         // kickof specialized ajax controllers
         TemplateController::init();
+        // TODO: remove once Dashboard Validation UI uses REST API
+        FileController::init();
     }
 
     public function episode_next_number()

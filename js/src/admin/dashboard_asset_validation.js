@@ -24,6 +24,7 @@ var PODLOVE = PODLOVE || {};
 
 				$(this).html('<i class="podlove-icon-spinner rotate"></i>');
 
+				// TODO: use REST API instead, then FileController can be deleted
 				$.ajax({
 					url: ajaxurl,
 					data: data,
@@ -53,6 +54,6 @@ var PODLOVE = PODLOVE || {};
 		// public
 		enable_validation();
 
-		return o;		
+		return o;
 	}
 }(jQuery));
