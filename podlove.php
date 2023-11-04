@@ -10,7 +10,7 @@
  * Author URI:  http://podlove.org
  * License:     MIT
  * License URI: license.txt
- * Text Domain: podlove-podcasting-plugin-for-wordpress.
+ * Text Domain: podlove-podcasting-plugin-for-wordpress
  */
 function load_podlove_podcast_publisher()
 {

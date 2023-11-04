@@ -186,19 +186,6 @@ function uninstall_for_current_blog()
     }
 }
 
-// prepare for translation
-if (did_action('plugins_loaded')) {
-    \Podlove\plugin_textdomain();
-} else {
-    add_action('plugins_loaded', '\Podlove\plugin_textdomain', 99);
-}
-
-function plugin_textdomain()
-{
-    // only use language packs, see http://ottopress.com/2013/language-packs-101-prepwork/
-    load_plugin_textdomain('podlove-podcasting-plugin-for-wordpress');
-}
-
 // Activate internal modules.
 add_action('init', ['\Podlove\Custom_Guid', 'init']);
 add_action('init', ['\Podlove\Downloads', 'init']);

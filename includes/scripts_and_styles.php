@@ -6,12 +6,13 @@ function add_type_attribute($tag, $handle, $src)
     if ('podlove-vue-app-client' !== $handle) {
         return $tag;
     }
+
     // change the script tag by adding type="module" and return it.
     return '<script crossorigin type="module" src="'.esc_url($src).'"></script>';
 }
 
 // admin styles & scripts
-add_action('admin_print_styles', function () {
+add_action('admin_enqueue_scripts', function () {
     $screen = get_current_screen();
 
     $is_episode_edit_screen = \Podlove\is_episode_edit_screen();
@@ -27,11 +28,10 @@ add_action('admin_print_styles', function () {
 
     // vue job dashboard
     if ($is_episode_edit_screen || in_array($screen->base, $vue_screens)) {
-        wp_enqueue_script('podlove-episode-vue-apps', \Podlove\PLUGIN_URL.'/js/dist/app.js', ['underscore', 'jquery'], $version, true);
-        wp_enqueue_script('podlove-vue-app-client', \Podlove\PLUGIN_URL.'/client/dist/client.js', ['wp-i18n'], $version, false);
-        wp_enqueue_script('podlove-vue-app-client', \Podlove\PLUGIN_URL.'/client/dist/chunk_vendor.js', [], $version, false);
+        wp_register_script('podlove-episode-vue-apps', \Podlove\PLUGIN_URL.'/js/dist/app.js', ['underscore', 'jquery'], $version, true);
+        wp_register_script('podlove-vue-app-client', \Podlove\PLUGIN_URL.'/client/dist/client.js', ['wp-i18n'], $version, false);
         add_filter('script_loader_tag', 'add_type_attribute', 10, 3);
-        wp_enqueue_style('podlove-vue-app-client', \Podlove\PLUGIN_URL.'/client/dist/style.css', [], $version);
+        wp_enqueue_style('podlove-vue-app-client-css', \Podlove\PLUGIN_URL.'/client/dist/style.css', [], $version);
 
         $episode = Podlove\Model\Episode::find_or_create_by_post_id(get_the_ID());
 
@@ -86,6 +86,11 @@ add_action('admin_print_styles', function () {
                 return $data;
             });
         }
+
+        wp_set_script_translations('podlove-vue-app-client', 'podlove-podcasting-plugin-for-wordpress');
+
+        wp_enqueue_script('podlove-episode-vue-apps');
+        wp_enqueue_script('podlove-vue-app-client');
     }
 
     if (\Podlove\is_podlove_settings_screen() || $is_episode_edit_screen) {
