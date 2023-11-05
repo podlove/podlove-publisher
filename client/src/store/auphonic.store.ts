@@ -28,6 +28,7 @@ export type Metadata = {
 
 export type AuphonicChapter = {
   start: string
+  start_sec: number
   title: string
   image?: string
   url?: string

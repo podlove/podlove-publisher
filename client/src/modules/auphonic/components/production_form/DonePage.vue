@@ -57,7 +57,9 @@
                     <!-- TODO: needs better translation support, see https://github.com/podlove/podlove-publisher/issues/1337 -->
                     <em>{{ entry.title }}</em> {{ __('in the Auphonic Production is:') }}
                   </p>
-                  <p class="truncate text-sm font-medium text-gray-900">{{ entry.there }}</p>
+                  <p class="truncate text-sm font-medium text-gray-900">
+                    {{ renderEntryPreview(entry) }}
+                  </p>
                 </div>
                 <div>
                   <button
@@ -91,10 +93,12 @@
 import { defineComponent } from 'vue'
 import { injectStore, mapState } from 'redux-vuex'
 import { selectors } from '@store'
-import { Production } from '@store/auphonic.store'
+import { AuphonicChapter, Production } from '@store/auphonic.store'
 import { update as updateEpisode } from '@store/episode.store'
+import { parsed as parsedChapters } from '@store/chapters.store'
 
 import { ClipboardCheckIcon, ExternalLinkIcon, ExclamationIcon } from '@heroicons/vue/outline'
+import { PodloveChapter } from '../../../../types/chapters.types'
 
 type Entry = {
   key: number
@@ -121,14 +125,75 @@ export default defineComponent({
         slug: selectors.episode.slug,
         license_name: selectors.episode.license_name,
         license_url: selectors.episode.license_url,
+        chapters: selectors.chapters.list,
       }),
       dispatch: injectStore().dispatch,
     }
   },
 
   methods: {
+    isDifferent(entry: Entry) {
+      switch (entry.title) {
+        case 'chapters':
+          const here = entry.here
+            .map((chapter: PodloveChapter) => {
+              return (
+                chapter.start + (chapter.title || '') + (chapter.href || '') + (chapter.image || '')
+              )
+            })
+            .join(';')
+
+          const there = entry.there
+            .map((chapter: AuphonicChapter) => {
+              return (
+                chapter.start_sec +
+                (chapter.title || '') +
+                (chapter.url || '') +
+                (chapter.image || '')
+              )
+            })
+            .join(';')
+
+          return here != there
+          break
+
+        default:
+          return entry.there != entry.here
+          break
+      }
+    },
+    renderEntryPreview(entry: Entry) {
+      switch (entry.title) {
+        case 'chapters':
+          const auphonicChapters: AuphonicChapter[] = entry.there
+          return auphonicChapters.map((chapter) => chapter.start + ' ' + chapter.title).join(' / ')
+          break
+
+        default:
+          return entry.there
+          break
+      }
+    },
     importMeta(prop: string, value: any) {
-      this.dispatch(updateEpisode({ prop, value }))
+      switch (prop) {
+        case 'chapters':
+          const auphonicChapters: AuphonicChapter[] = value
+          const chapters: PodloveChapter[] = auphonicChapters.map((chapter) => {
+            return {
+              start: chapter.start_sec || 0,
+              title: chapter.title || '',
+              href: chapter.url || '',
+              image: chapter.image || '',
+            }
+          })
+
+          this.dispatch(parsedChapters(chapters))
+          break
+
+        default:
+          this.dispatch(updateEpisode({ prop, value }))
+          break
+      }
     },
     importAllMeta() {
       this.visibleEntries.forEach((entry: Entry) => {
@@ -145,7 +210,6 @@ export default defineComponent({
       const production = this.state.production
       const state = this.state
 
-      // TODO: chapters
       return [
         { key: 1, title: 'title', here: state.title, there: production.metadata.title },
         { key: 2, title: 'subtitle', here: state.subtitle, there: production.metadata.subtitle },
@@ -166,10 +230,11 @@ export default defineComponent({
         // { key: 7, title: 'image', here: 'todo', there: production.image },
         // { key: 8, title: 'duration', here: state.duration, there: production.length_timestring },
         { key: 9, title: 'slug', here: state.slug, there: production.output_basename },
+        { key: 10, title: 'chapters', here: state.chapters, there: production.chapters },
       ]
     },
     visibleEntries(): Entry[] {
-      return this.entries.filter((e: Entry) => e.there && e.there != e.here)
+      return this.entries.filter((e: Entry) => e.there && this.isDifferent(e))
     },
   },
 })
