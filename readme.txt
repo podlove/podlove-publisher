@@ -106,6 +106,14 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 4.0.2 =
+
+**Bugfixes**
+
+- Auphonic: Chapters can be imported from production metadata
+- Contributors: Add support for Gravatar and default contributor image on edit screens
+- Dashboard: Asset Validation / Detection is working again [#1396](https://github.com/podlove/podlove-publisher/issues/1396)
+
 = 4.0.1 =
 
 **Enhancements**
