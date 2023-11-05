@@ -95,7 +95,7 @@ export default defineComponent({
             [voice]: {
               id: contributor.id,
               name: contributor.realname,
-              avatar: contributor.avatar,
+              avatar: contributor.avatar_url,
             },
           }
         },

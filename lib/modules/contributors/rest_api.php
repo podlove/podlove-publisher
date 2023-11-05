@@ -943,7 +943,7 @@ class WP_REST_PodloveContributors_Controller extends WP_REST_Controller
         return [
             'id' => $contributor->id,
             'identifier' => $contributor->identifier,
-            'avatar' => $contributor->avatar,
+            'avatar_url' => $contributor->avatar()->url(),
             'name' => $contributor->getName(),
             'mail' => $contributor->publicemail,
             'department' => $contributor->department,
@@ -962,6 +962,7 @@ class WP_REST_PodloveContributors_Controller extends WP_REST_Controller
             'identifier' => $contributor->identifier,
             'visibility' => $contributor->visibility,
             'avatar' => $contributor->avatar,
+            'avatar_url' => $contributor->avatar()->url(),
             'publicname' => $contributor->publicname,
             'nickname' => $contributor->nickname,
             'realname' => $contributor->realname,

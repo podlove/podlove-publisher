@@ -1,6 +1,7 @@
 export interface PodloveContributor {
   id: string
   avatar: string
+  avatar_url: string
   count: string
   department: string
   gender: string
