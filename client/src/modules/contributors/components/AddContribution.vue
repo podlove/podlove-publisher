@@ -40,14 +40,14 @@
                   >
                     <div class="flex items-center">
                       <img
-                        v-if="contributor.avatar"
-                        :src="contributor.avatar"
+                        v-if="contributor.avatar_url"
+                        :src="contributor.avatar_url"
                         alt=""
                         class="h-6 w-6 flex-shrink-0 rounded-full"
-                        @error="contributor.avatar = ''"
+                        @error="contributor.avatar_url = ''"
                       />
                       <UserCircleIcon
-                        v-if="!contributor.avatar"
+                        v-if="!contributor.avatar_url"
                         class="h-6 w-6 flex-shrink-0 rounded-full text-gray-500"
                       />
                       <span :class="['ml-3 truncate', selected && 'font-semibold']">
@@ -169,7 +169,7 @@ export default defineComponent({
           ? [
               {
                 id: null,
-                avatar: null,
+                avatar_url: null,
                 realname: `${this.__('Create: ')}${this.query}`,
               },
             ]

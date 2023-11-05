@@ -4,14 +4,14 @@
       <div class="flex min-w-0 flex-1 items-center">
         <div class="flex-shrink-0">
           <img
-            v-if="data.avatar"
+            v-if="data.avatar_url"
             class="h-12 w-12 rounded-full"
-            :src="data.avatar"
+            :src="data.avatar_url"
             :alt="data.name"
-            @error="data.avatar = ''"
+            @error="data.avatar_url = ''"
           />
           <UserCircleIcon
-            v-if="!data.avatar"
+            v-if="!data.avatar_url"
             class="h-12 w-12 flex-shrink-0 rounded-full text-gray-500"
           />
         </div>
