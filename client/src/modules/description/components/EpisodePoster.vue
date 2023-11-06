@@ -100,7 +100,7 @@ export default defineComponent({
   },
 
   computed: {
-    posterStyle() {
+    posterStyle(): object {
       const url = this.state.episodePoster || this.state.poster
 
       if (url === null) {
