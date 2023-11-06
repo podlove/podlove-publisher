@@ -38,7 +38,8 @@ class Automatic_Numbering extends \Podlove\Modules\Base
         ?>
         <script>
         function getNextEpisodeNumberForShow(showSlug) {
-            const numberInput = document.getElementById('_podlove_meta_number');
+            // FIXME: this needs to be part of the vue client to work properly
+            const numberInput = document.querySelector("[name='episode-number']");
 
             const params = new URLSearchParams({
                 showSlug: showSlug,
