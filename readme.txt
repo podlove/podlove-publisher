@@ -3,7 +3,7 @@ Contributors: eteubert
 Donate link: https://opencollective.com/podlove
 Tags: podlove, podcast, publishing, rss, feed, audio, mp3, m4a, player, webplayer, iTunes, radio
 Tested up to: 6.3.2
-Stable tag: 4.0.1
+Stable tag: 4.0.2
 Requires at least: 4.9.6
 Requires PHP: 8.0
 License: MIT
@@ -113,6 +113,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 - Auphonic: Chapters can be imported from production metadata
 - Contributors: Add support for Gravatar and default contributor image on edit screens
 - Dashboard: Asset Validation / Detection is working again [#1396](https://github.com/podlove/podlove-publisher/issues/1396)
+- Automatic Numbering: error when selecting a show
 
 = 4.0.1 =
 
