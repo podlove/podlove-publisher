@@ -32,7 +32,7 @@
     <label class="block text-sm font-medium text-gray-700">{{ __('Poster') }}</label>
     <div
       class="border shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block relative w-44 h-44 sm:text-sm border-gray-300 rounded-md mt-1 overflow-hidden bg-cover bg-no-repeat bg-center"
-      :style="{ 'background-image': `url(${state.episodePoster || state.poster})` }"
+      :style="posterStyle"
     >
       <div
         class="absolute z-10 left-0 top-0 w-full h-full flex justify-center items-center bg-white bg-opacity-40 hover:opacity-0 text-gray-500 opacity-100"
@@ -97,6 +97,18 @@ export default defineComponent({
       modalOpen: false,
       inputValue: null,
     }
+  },
+
+  computed: {
+    posterStyle() {
+      const url = this.state.episodePoster || this.state.poster
+
+      if (url === null) {
+        return {}
+      }
+
+      return { 'background-image': `url(${url})` }
+    },
   },
 
   methods: {
