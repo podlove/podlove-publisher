@@ -2,7 +2,11 @@
   <module name="chapters" :title="__('Contributors')" class="overflow-hidden">
     <template v-slot:actions> </template>
     <ul role="list" class="divide-y divide-gray-200">
-      <li v-for="(contribution, index) in state.contributions" :key="contribution.position">
+      <li
+        class="mb-0"
+        v-for="(contribution, index) in state.contributions"
+        :key="contribution.position"
+      >
         <Contribution
           v-if="contribution?.contributor_id"
           :data="contribution"
@@ -10,7 +14,7 @@
           :last="index === state.contributions.length - 1"
         />
       </li>
-      <li v-if="addContributorInput">
+      <li class="mb-0" v-if="addContributorInput">
         <AddContribution
           @addContributor="addContributor($event)"
           @createContributor="createContributor($event)"

@@ -15,17 +15,17 @@
             class="h-12 w-12 flex-shrink-0 rounded-full text-gray-500"
           />
         </div>
-        <div class="min-w-0 flex-1 px-4 md:grid md:gap-4">
+        <div class="min-w-0 flex-1 px-2 md:grid md:gap-4">
           <div class="flex-shrink-0">
             <p class="truncate text-sm font-medium text-gray-900">
               {{ data.realname }}
             </p>
-            <p class="mt-2 flex items-center text-sm text-gray-500">
+            <p class="flex items-center text-sm text-gray-500">
               <span class="truncate">{{ data.nickname }}</span>
             </p>
           </div>
         </div>
-        <div class="min-w-0 flex-1 px-4 md:grid md:grid-cols-2 md:gap-4">
+        <div class="min-w-0 flex-1 px-4 md:grid md:gap-4">
           <div>
             <label for="location" class="block text-sm font-medium leading-6 text-gray-900">{{
               __('Role')
@@ -44,7 +44,7 @@
             </select>
           </div>
         </div>
-        <div class="min-w-0 flex-1 px-4 md:grid md:grid-cols-2 md:gap-4">
+        <div class="min-w-0 flex-1 px-4 md:grid md:gap-4">
           <div>
             <label for="location" class="block text-sm font-medium leading-6 text-gray-900">{{
               __('Group')
@@ -63,7 +63,7 @@
             </select>
           </div>
         </div>
-        <div class="min-w-0 flex-1 px-4 md:grid md:grid-cols-2 md:gap-4">
+        <div class="min-w-0 flex-1 px-4 md:grid md:gap-4">
           <div>
             <label for="email" class="block text-sm font-medium leading-6 text-gray-900">{{
               __('Comment')
@@ -79,7 +79,7 @@
             </div>
           </div>
         </div>
-        <div class="flex space-x-2 justify-end">
+        <div class="flex space-x-2 justify-end mt-[30px]">
           <button
             @click="moveContributionUp()"
             :disabled="first"
@@ -120,7 +120,13 @@ import * as episode from '@store/episode.store'
 import { PodloveRole, PodloveGroup } from '../../../types/contributors.types'
 import { PodloveEpisodeContribution } from '../../../types/episode.types'
 
-import { ArrowUpIcon, ArrowDownIcon, XIcon, UserCircleIcon, PencilIcon } from '@heroicons/vue/outline'
+import {
+  ArrowUpIcon,
+  ArrowDownIcon,
+  XIcon,
+  UserCircleIcon,
+  PencilIcon,
+} from '@heroicons/vue/outline'
 
 import { get } from 'lodash'
 
@@ -130,7 +136,7 @@ export default defineComponent({
     ArrowDownIcon,
     XIcon,
     UserCircleIcon,
-    PencilIcon
+    PencilIcon,
   },
   props: {
     data: {
@@ -177,15 +183,15 @@ export default defineComponent({
       state: mapState({
         roles: selectors.contributors.roles,
         groups: selectors.contributors.groups,
-        baseUrl: selectors.runtime.baseUrl
+        baseUrl: selectors.runtime.baseUrl,
       }),
     }
   },
 
   computed: {
     editLink() {
-      return `${this.state.baseUrl}/wp-admin/admin.php?page=podlove_contributor_settings&action=edit&contributor=${this.data.contributor_id}`;
-    }
+      return `${this.state.baseUrl}/wp-admin/admin.php?page=podlove_contributor_settings&action=edit&contributor=${this.data.contributor_id}`
+    },
   },
 
   methods: {

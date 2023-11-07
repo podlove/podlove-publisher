@@ -111,6 +111,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 **Enhancements**
 
 - Auphonic: sort presets alphabetically
+- Contributors: make better use of available space
 
 **Bugfixes**
 
