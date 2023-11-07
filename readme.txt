@@ -117,6 +117,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 - episode metadata not saving reliably for some people
 - Auphonic: fix chapter time import
+- WordPress File Upload: display slug input (should be filled automatically but does not seem to work reliably)
 
 = 4.0.2 =
 
