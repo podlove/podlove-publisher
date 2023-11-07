@@ -106,6 +106,16 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 4.0.3 =
+
+**Enhancements**
+
+- Auphonic: sort presets alphabetically
+
+**Bugfixes**
+
+- Auphonic: fix chapter time import
+
 = 4.0.2 =
 
 **Bugfixes**

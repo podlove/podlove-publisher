@@ -111,13 +111,22 @@ export default defineComponent({
 
   computed: {
     presets(): PresetWithSelectionData[] {
-      return this.state.presets.map((preset: Preset) => {
-        const date = preset.creation_time.split('T')[0]
-        const name = preset.preset_name
-        const is_multitrack = preset.is_multitrack
+      return this.state.presets
+        .map((preset: Preset) => {
+          const date = preset.creation_time.split('T')[0]
+          const name = preset.preset_name
+          const is_multitrack = preset.is_multitrack
 
-        return { ...preset, _select: { name, date, is_multitrack } }
-      })
+          return { ...preset, _select: { name, date, is_multitrack } }
+        })
+        .toSorted((a: any, b: any) => {
+          const nameA = a._select.name.toUpperCase()
+          const nameB = b._select.name.toUpperCase()
+
+          if (nameA < nameB) return -1
+          if (nameA > nameB) return 1
+          return 0
+        })
     },
     currentPreset(): PresetWithSelectionData | null | undefined {
       const currentPreset = this.state.currentPreset
