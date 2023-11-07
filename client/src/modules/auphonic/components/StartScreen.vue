@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="m-12 mb-24 text-center max-w-5xl">
+    <div class="m-6 text-center max-w-5xl">
       <AuphonicLogo className="mx-auto h-16 w-16 text-gray-400" />
 
       <div class="w-full flex justify-center" v-if="isInitializing">
