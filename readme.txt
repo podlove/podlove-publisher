@@ -114,6 +114,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 **Bugfixes**
 
+- episode metadata not saving reliably for some people
 - Auphonic: fix chapter time import
 
 = 4.0.2 =

@@ -77,9 +77,12 @@ class Podcast_Post_Type
 
     public function save_post_podcast($post_id, $post, $update)
     {
-        if ($update === false) {
-            $this->handle_episode_created($post_id, $post);
-        }
+        // NOTE: not checking for $update and instead always calling this might
+        // fix an issue where the episode is not writable for some people.
+
+        // if ($update === false) {
+        $this->handle_episode_created($post_id, $post);
+        // }
     }
 
     /**
@@ -229,7 +232,16 @@ class Podcast_Post_Type
 
     private function handle_episode_created($post_id, $post)
     {
-        $episode = Episode::find_or_create_by_post_id($post_id);
+        $episode = Episode::find_one_by_property('post_id', $post_id);
+
+        // bail if episode already exists
+        if ($episode) {
+            return;
+        }
+
+        // otherwise create new episode
+        $episode = new Episode();
+        $episode->post_id = $post_id;
         $episode->type = 'full';
         $episode->save();
 
