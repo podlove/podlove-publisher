@@ -110,7 +110,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 **Bugfixes**
 
-- Auphonic: automatically fill in file slug, validate media files and fill in duration when production finishes
+
+- Auphonic: restore previous behaviour:
+  - automatically fill in file slug, validate media files and fill in duration when production finishes
+  - use slug as "output_basename" if it is set
 
 **Misc**
 

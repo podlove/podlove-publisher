@@ -316,6 +316,7 @@ function getProductionPayload(state: State): object {
     // have access to the URL here (for example in local development), so
     // sending the file as upload is more reliable.
     image: episode_poster,
+    output_basename: state.episode.slug,
     metadata: {
       ...newPayload.metadata,
       title: state.episode.title,
