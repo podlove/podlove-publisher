@@ -19,11 +19,11 @@
   "dependencies": {
     "@podlove/web-player": "5.7.4",
     "@popperjs/core": "2.11.4",
-    "axios": "0.26.1",
+    "axios": "1.6.1",
     "clipboard": "2.0.10",
     "elliptic": ">=6.5.4",
     "file-saver": "^2.0.5",
-    "npm": "6.14.16",
+    "npm": "8.19.4",
     "v2-datepicker": "^3.1.1",
     "vue-axios": "^2.1.5",
     "vue-select": "^3.10.8",
