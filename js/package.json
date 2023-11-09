@@ -14,7 +14,7 @@
     "podcast-chapter-parser-mp4chaps": "^1.0.2",
     "podcast-chapter-parser-psc": "^1.1.1",
     "vue": "^2.6.12",
-    "vue-loader": "^15.9.8"
+    "vue-loader": "^17.3.1"
   },
   "dependencies": {
     "@podlove/web-player": "5.7.4",
