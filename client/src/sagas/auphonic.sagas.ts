@@ -117,6 +117,7 @@ function* pollProductionSaga(auphonicApi: AuphonicApiClient) {
 
     // DONE
     if (production.status == 3) {
+      yield put(episode.update({ prop: 'slug', value: production.output_basename }))
       yield put(auphonic.stopPolling())
     }
 

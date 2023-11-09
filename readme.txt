@@ -108,6 +108,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 = 4.0.5 =
 
+**Bugfixes**
+
+- Auphonic: automatically fill in file slug, validate media files and fill in duration when production finishes
+
 **Misc**
 
 - cleanup legacy js app (dependency updates, deletion of unused code etc.)
