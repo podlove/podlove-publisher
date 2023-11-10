@@ -308,15 +308,16 @@ function getProductionPayload(state: State): object {
   // remove output_files from payload, because it doubles them
   const { output_files, ...newPayload } = payload
   const episode_poster = state.episode.poster || state.podcast.poster
+  const maybe_output_basename = state.episode.slug ? { output_basename: state.episode.slug } : {}
 
   return {
     ...newPayload,
+    ...maybe_output_basename,
     // NOTE: image is not actually sent; it's sent as a separate upload and
     // removed from the payload before saving metadata. reason: Auphonic may not
     // have access to the URL here (for example in local development), so
     // sending the file as upload is more reliable.
     image: episode_poster,
-    output_basename: state.episode.slug,
     metadata: {
       ...newPayload.metadata,
       title: state.episode.title,
