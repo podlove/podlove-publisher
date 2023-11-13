@@ -106,6 +106,12 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 4.0.7 =
+
+**Bugfixes**
+
+- avoid failure during database migration
+
 = 4.0.6 =
 
 **Bugfixes**

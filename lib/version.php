@@ -1581,6 +1581,13 @@ function run_migrations_for_version($version)
 
             break;
         case 152:
+            // Avoids `Row size too large.` errors.
+            // see https://community.podlove.org/t/media-validation-doesnt-work-upon-new-episode-and-storing-data-in-draft-in-general/3211/16?u=ericteubert
+            $wpdb->query(sprintf(
+                'OPTIMIZE TABLE `%s`',
+                Model\Episode::table_name()
+            ));
+
             $sql1 = sprintf(
                 'ALTER TABLE `%s` ADD COLUMN `soundbite_start` VARCHAR(255)',
                 Model\Episode::table_name()
@@ -1594,6 +1601,16 @@ function run_migrations_for_version($version)
 
             break;
         case 153:
+            // FIXME: inform user when a migration fails
+            // see https://github.com/podlove/podlove-publisher/issues/1274
+
+            // Avoids `Row size too large.` errors.
+            // see https://community.podlove.org/t/media-validation-doesnt-work-upon-new-episode-and-storing-data-in-draft-in-general/3211/16?u=ericteubert
+            $wpdb->query(sprintf(
+                'OPTIMIZE TABLE `%s`',
+                Model\Episode::table_name()
+            ));
+
             $sql = sprintf(
                 'ALTER TABLE `%s` ADD COLUMN `soundbite_title` VARCHAR(255)',
                 Model\Episode::table_name()
