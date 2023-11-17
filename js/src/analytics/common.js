@@ -74,7 +74,7 @@ PODLOVE.Analytics.addPercentageLabels = function (chart, total) {
 		}
 
 		// when a filter is set, only show active rows
-		if (filters.length > 0 && $.inArray(d.key, filters) === -1) {
+		if (filters.length > 0 && filters.includes(d.key)) {
 			row.select('.subLabel').style({
 				'display': 'none'
 			});

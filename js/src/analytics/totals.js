@@ -731,7 +731,9 @@ jQuery(document).ready(function ($) {
 		});
 	}
 
-	window.analyticsApp.$on("setChartRange", function (range) {
-		loadGlobalCharts(range)
-	})
+  if (window.analyticsApp) {
+    window.analyticsApp.$on("setChartRange", function (range) {
+      loadGlobalCharts(range)
+    })
+  }
 });
