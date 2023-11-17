@@ -114,6 +114,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 - fix shownotes unfurling
 - avoid failure during database migration
 
+**Misc**
+
+- update/cleanup various js dependencies
+
 = 4.0.6 =
 
 **Bugfixes**
