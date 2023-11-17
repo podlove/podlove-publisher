@@ -85,6 +85,10 @@ HTML;
     {
         $url = $entry->url;
 
+        if (!$url) {
+            return $entry;
+        }
+
         if (stripos($url, 'amazon.de') !== false) {
             $entry->affiliate_url = Affiliate::apply_amazon_de_affiliate($url);
         } elseif (stripos($url, 'thomann.de') !== false) {

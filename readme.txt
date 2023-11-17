@@ -111,6 +111,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 **Bugfixes**
 
 - fix media verification not saving
+- fix shownotes unfurling
 - avoid failure during database migration
 
 = 4.0.6 =

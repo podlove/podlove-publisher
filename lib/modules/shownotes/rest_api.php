@@ -389,6 +389,19 @@ class REST_API
 
         $response = $curl->get_response();
 
+        if (is_wp_error($response)) {
+            $entry->state = 'failed';
+            $entry->save();
+
+            $reason = $response->get_error_message();
+
+            return new \WP_Error(
+                'podlove_rest_unfurl_failed',
+                'error when unfurling entry ('.print_r($reason, true).')',
+                ['status' => 404]
+            );
+        }
+
         if (!$curl->isSuccessful()) {
             $entry->state = 'failed';
             $entry->save();
@@ -408,7 +421,7 @@ class REST_API
         // remove "data:..." images because they are too huge to store in database
         $url_size_threshold = 1000;
 
-        if (strlen($data['icon']['url']) > $url_size_threshold) {
+        if (isset($data['icon']) && strlen($data['icon']['url']) > $url_size_threshold) {
             unset($data['icon']);
         }
 
@@ -421,7 +434,7 @@ class REST_API
         $entry->unfurl_data = $data;
         $entry->state = 'fetched';
         $entry->url = $data['url'];
-        $entry->icon = $data['icon']['url'];
+        $entry->icon = $data['icon']['url'] ?? '';
         $entry->image = $data['image'];
 
         // todo: should probably do this in an async job
