@@ -77,7 +77,9 @@ function podlove_episodeno_quickedit_extend_action_items($actions, $post)
 
     $episode = \Podlove\Model\Episode::find_or_create_by_post_id($post->ID);
     // Not nice but seems like there is no more elegant way to do this right now
-    $actions['inline hide-if-no-js'] = str_replace('<button', '<button data-podlove-update-quickedit-episode-number="'.$episode->number.'" ', $actions['inline hide-if-no-js']);
+    if (isset($actions['inline hide-if-no-js'])) {
+        $actions['inline hide-if-no-js'] = str_replace('<button', '<button data-podlove-update-quickedit-episode-number="'.$episode->number.'" ', $actions['inline hide-if-no-js']);
+    }
 
     return $actions;
 }
