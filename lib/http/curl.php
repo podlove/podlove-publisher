@@ -9,7 +9,7 @@ use Podlove\Log;
  */
 class Curl
 {
-    // WP_Http_Curl instance
+    // WP_Http instance
     private $curl;
 
     // request call parameters
@@ -19,7 +19,7 @@ class Curl
 
     public function __construct()
     {
-        $this->curl = new \WP_Http_Curl();
+        $this->curl = new \WP_Http();
     }
 
     public function request($url, $params = [])
@@ -29,7 +29,6 @@ class Curl
             'stream' => false,
             'decompress' => false,
             'filename' => null,
-            'sslcertificates' => ABSPATH.WPINC.'/certificates/ca-bundle.crt',  // i guess this is just a missing default in the current wp curl lib
         ];
 
         $params = wp_parse_args($params, $defaults);
