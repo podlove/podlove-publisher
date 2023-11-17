@@ -14,7 +14,7 @@
     "podcast-chapter-parser-mp4chaps": "^1.0.2",
     "podcast-chapter-parser-psc": "^1.1.1",
     "vue": "^2.7.15",
-    "vue-loader": "^15.11.1"
+    "vue-loader": "^17.3.1"
   },
   "dependencies": {
     "@popperjs/core": "2.11.8",
