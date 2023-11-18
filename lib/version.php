@@ -42,7 +42,7 @@ namespace Podlove;
 
 use Podlove\Jobs\CronJobRunner;
 
-define(__NAMESPACE__.'\DATABASE_VERSION', 153);
+define('Podlove\DATABASE_VERSION', 154);
 
 add_action('admin_init', '\Podlove\maybe_run_database_migrations');
 add_action('admin_init', '\Podlove\run_database_migrations', 5);
@@ -1572,7 +1572,7 @@ function run_migrations_for_version($version)
                     'ALTER TABLE `%s` ADD COLUMN `image` TEXT',
                     \Podlove\Modules\Shownotes\Model\Entry::table_name()
                 );
-                $wpdb->query($sql);
+                \podlove_do_migration_query($sql);
             }
 
             break;
@@ -1596,8 +1596,9 @@ function run_migrations_for_version($version)
                 'ALTER TABLE `%s` ADD COLUMN `soundbite_duration` VARCHAR(255)',
                 Model\Episode::table_name()
             );
-            $wpdb->query($sql1);
-            $wpdb->query($sql2);
+
+            \podlove_do_migration_query($sql1);
+            \podlove_do_migration_query($sql2);
 
             break;
         case 153:
@@ -1616,7 +1617,7 @@ function run_migrations_for_version($version)
                 Model\Episode::table_name()
             );
 
-            $wpdb->query($sql);
+            \podlove_do_migration_query($sql);
 
             break;
     }
