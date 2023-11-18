@@ -80,6 +80,7 @@ class MediaFile extends Base
             $file = new MediaFile();
             $file->episode_id = $episode_id;
             $file->episode_asset_id = $episode_asset_id;
+            $file->active = true;
             $file->save();
         }
 

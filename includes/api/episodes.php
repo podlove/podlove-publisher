@@ -582,7 +582,7 @@ class WP_REST_PodloveEpisode_Controller extends \WP_REST_Controller
                 'asset' => $asset->title,
                 'url' => $file->get_file_url(),
                 'size' => $file->size,
-                'enable' => true,
+                'enable' => (bool) $file->active,
             ];
         }, $assets);
 
@@ -806,11 +806,13 @@ class WP_REST_PodloveEpisode_Controller extends \WP_REST_Controller
 
         $file = MediaFile::find_or_create_by_episode_id_and_episode_asset_id($episode->id, $asset_id);
         $file->determine_file_size();
+        $file->active = true;
         $file->save();
 
         if ($file->size == 0) {
             return new \Podlove\Api\Response\OkResponse([
                 'message' => 'file size cannot be determined',
+                'active' => $file->active,
                 'status' => 'ok'
             ]);
         }
@@ -820,6 +822,7 @@ class WP_REST_PodloveEpisode_Controller extends \WP_REST_Controller
             'status' => 'ok',
             'file_size' => $file->size,
             'file_url' => $file->get_file_url(),
+            'active' => $file->active
         ]);
     }
 
@@ -834,18 +837,15 @@ class WP_REST_PodloveEpisode_Controller extends \WP_REST_Controller
 
         $file = MediaFile::find_by_episode_id_and_episode_asset_id($episode->id, $asset_id);
         if ($file) {
-            // FIXME: Problem: When deleting a media file, all associated
-            // downloads are lost. We should never ever delete a media file.
-            // Maybe add a boolean flag to it instead that remembers if the
-            // checkbox is on or off.
-            // @see https://github.com/podlove/podlove-publisher/issues/1410
-            $file->delete();
+            $file->active = false;
+            $file->save();
         }
 
         return new \Podlove\Api\Response\OkResponse([
             'status' => 'ok',
             'file_size' => $file->size,
             'file_url' => $file->get_file_url(),
+            'active' => $file->active,
         ]);
     }
 
@@ -867,6 +867,7 @@ class WP_REST_PodloveEpisode_Controller extends \WP_REST_Controller
                 'status' => 'ok',
                 'message' => 'file size cannot be determined',
                 'file_url' => $file->get_file_url(),
+                'active' => $file->active,
             ]);
         }
         do_action('podlove_media_file_content_verified', $file->id);
@@ -875,6 +876,7 @@ class WP_REST_PodloveEpisode_Controller extends \WP_REST_Controller
             'status' => 'ok',
             'file_size' => $file->size,
             'file_url' => $file->get_file_url(),
+            'active' => $file->active,
         ]);
     }
 
