@@ -1620,5 +1620,19 @@ function run_migrations_for_version($version)
             \podlove_do_migration_query($sql);
 
             break;
+        case 154:
+            $wpdb->query(sprintf(
+                'OPTIMIZE TABLE `%s`',
+                Model\MediaFile::table_name()
+            ));
+
+            $sql = sprintf(
+                'ALTER TABLE `%s` ADD COLUMN `active` TINYINT',
+                Model\MediaFile::table_name()
+            );
+
+            \podlove_do_migration_query($sql);
+
+            break;
     }
 }
