@@ -834,6 +834,11 @@ class WP_REST_PodloveEpisode_Controller extends \WP_REST_Controller
 
         $file = MediaFile::find_by_episode_id_and_episode_asset_id($episode->id, $asset_id);
         if ($file) {
+            // FIXME: Problem: When deleting a media file, all associated
+            // downloads are lost. We should never ever delete a media file.
+            // Maybe add a boolean flag to it instead that remembers if the
+            // checkbox is on or off.
+            // @see https://github.com/podlove/podlove-publisher/issues/1410
             $file->delete();
         }
 
