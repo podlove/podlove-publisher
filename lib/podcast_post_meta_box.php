@@ -140,52 +140,6 @@ class Podcast_Post_Meta_Box
         $episode->update_attributes($episode_data);
     }
 
-    /**
-     * Save episode assets based on checkbox data.
-     *
-     * @param \Podlove\Model\Episode $episode
-     * @param array                  $checkbox_data Raw form data for checkboxes.
-     *                                              Contains 'on' for checked boxes and no entry at all for unchecked ones.
-     */
-    public function save_episode_assets($episode, $checkbox_data)
-    {
-        // create array where the keys are asset_ids and values false
-        $assets = array_map(
-            function ($_) {
-                return false;
-            },
-            array_flip(
-                array_map(
-                    function ($l) {
-                        return $l->id;
-                    },
-                    Model\EpisodeAsset::all()
-                )
-            )
-        );
-
-        // set those assets to true where the checkbox is set
-        foreach ($assets as $id => $_) {
-            if (isset($checkbox_data[$id]) && $checkbox_data[$id] === 'on') {
-                $assets[$id] = true;
-            }
-        }
-
-        // create new ones, delete unchecked ones
-        foreach ($assets as $episode_asset_id => $episode_asset_value) {
-            $file = Model\MediaFile::find_by_episode_id_and_episode_asset_id($episode->id, $episode_asset_id);
-
-            if ($file === null && $episode_asset_value) {
-                $file = new Model\MediaFile();
-                $file->episode_id = $episode->id;
-                $file->episode_asset_id = $episode_asset_id;
-                $file->save();
-            } elseif ($file !== null && !$episode_asset_value) {
-                $file->delete();
-            }
-        }
-    }
-
     private static function get_form_data($episode)
     {
         $form_data = [
