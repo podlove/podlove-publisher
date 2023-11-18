@@ -424,3 +424,4 @@ MediaFile::property('episode_id', 'INT');
 MediaFile::property('episode_asset_id', 'INT');
 MediaFile::property('size', 'INT');
 MediaFile::property('etag', 'VARCHAR(255)');
+MediaFile::property('active', 'TINYINT');
