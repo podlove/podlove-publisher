@@ -108,7 +108,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 = 2023-11-21 =
 
-- tbd
+- fix build script (correctly delete all vendor prefixed dependencies)
 
 ----
 
