@@ -832,6 +832,7 @@ class Contributors extends \Podlove\Modules\Base
             $contribution = new EpisodeContribution();
             $contribution->episode_id = $episode->id;
             $contribution->contributor_id = $default_contribution->contributor_id;
+            $contribution->position = $default_contribution->position;
             $contribution->role_id = $default_contribution->role_id;
             $contribution->group_id = $default_contribution->group_id;
             $contribution->save();
