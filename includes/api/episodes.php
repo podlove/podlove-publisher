@@ -724,7 +724,7 @@ class WP_REST_PodloveEpisode_Controller extends \WP_REST_Controller
         }
 
         if (isset($request['slug'])) {
-            $slug = $request['slug'];
+            $slug = trim($request['slug']);
             $episode->slug = $slug;
             $isSlugSet = true;
         }

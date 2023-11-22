@@ -108,6 +108,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 = 4.0.9 =
 
+**Enhancements**
+
+- trim whitespaces from beginning and end of file slug
+
 **Bugfixes**
 
 - fix division by zero in analytics
