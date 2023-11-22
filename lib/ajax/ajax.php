@@ -226,7 +226,11 @@ class Ajax
         }, ['downloads' => array_fill(0, \Podlove\Analytics\EpisodeDownloadAverage::HOURS_TO_CALCULATE, 0), 'rows' => 0]);
 
         $downloads = array_map(function ($item) use ($downloads) {
-            return round($item / $downloads['rows']);
+            if ($downloads['rows'] > 0) {
+                return round($item / $downloads['rows']);
+            }
+
+            return 0;
         }, $downloads['downloads']);
 
         $csv = '"downloads","hoursSinceRelease"'."\n";

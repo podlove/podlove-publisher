@@ -106,6 +106,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 4.0.9 =
+
+- fix division by zero in analytics
+
 = 4.0.8 =
 
 **Bugfixes**
