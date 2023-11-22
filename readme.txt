@@ -108,7 +108,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 = 4.0.9 =
 
+**Bugfixes**
+
 - fix division by zero in analytics
+- fix default contributors missing position attribute
 
 = 4.0.8 =
 
