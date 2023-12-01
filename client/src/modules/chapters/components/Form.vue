@@ -89,7 +89,7 @@
               @change="updateChapter('image', $event)"
               :value="state.selected.image"
             />
-            <button @click="selectImage()" :title="__('Select Chapter Image')" class="absolute right-2 top-1/2 -mt-3 text-gray-400 hover:text-gray-700"><upload-icon class="w-6 h-6" /></button>
+            <button @click.prevent="selectImage()" :title="__('Select Chapter Image')" class="absolute right-2 top-1/2 -mt-3 text-gray-400 hover:text-gray-700"><upload-icon class="w-6 h-6" /></button>
           </div>
         </div>
         <div class="mb-5 ml-1">
