@@ -111,6 +111,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 **Enhancements**
 
 - trim whitespaces from beginning and end of file slug
+- soundbite: change placeholder to HH:MM:SS to clarify format
 
 **Bugfixes**
 
