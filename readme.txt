@@ -117,6 +117,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 - fix division by zero in analytics
 - fix default contributors missing position attribute
+- fix Auphonic chapter timestamp import
 
 = 4.0.8 =
 
