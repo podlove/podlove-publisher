@@ -80,6 +80,7 @@ class MediaFile extends Base
             $file = new MediaFile();
             $file->episode_id = $episode_id;
             $file->episode_asset_id = $episode_asset_id;
+            $file->active = true;
             $file->save();
         }
 
@@ -424,3 +425,4 @@ MediaFile::property('episode_id', 'INT');
 MediaFile::property('episode_asset_id', 'INT');
 MediaFile::property('size', 'INT');
 MediaFile::property('etag', 'VARCHAR(255)');
+MediaFile::property('active', 'TINYINT');
