@@ -10,7 +10,7 @@
     "node-forge": "1.3.0",
     "normalplaytime": "^1.0.4",
     "podcast-chapter-parser-audacity": "^1.0.0",
-    "podcast-chapter-parser-hindenburg": "^1.0.3",
+    "podcast-chapter-parser-hindenburg": "^1.0.4",
     "podcast-chapter-parser-mp4chaps": "^1.0.2",
     "podcast-chapter-parser-psc": "^1.1.1",
     "vue": "^2.7.15",
