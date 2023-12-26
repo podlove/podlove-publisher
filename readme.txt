@@ -106,6 +106,12 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2023-12-26 =
+
+- new: show admin notice when a database migration fails
+- fix bug where tracking data could be lost by disabling a media file checkbox
+- fix bug where imported Hindenburg chapters were not sorted by time
+
 = 2023-11-21 =
 
 - fix build script (correctly delete all vendor prefixed dependencies)
