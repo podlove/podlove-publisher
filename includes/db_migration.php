@@ -17,6 +17,8 @@ function podlove_do_migration_query($sql)
             'query' => $wpdb->last_query,
         ]);
     }
+
+    return (bool) $success;
 }
 
 add_action('admin_notices', 'podlove_show_database_migration_error');

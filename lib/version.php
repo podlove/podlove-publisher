@@ -1631,7 +1631,17 @@ function run_migrations_for_version($version)
                 Model\MediaFile::table_name()
             );
 
-            \podlove_do_migration_query($sql);
+            if (\podlove_do_migration_query($sql)) {
+                $sql = sprintf(
+                    'UPDATE `%s` SET `active` = CASE
+                    WHEN size IS NOT NULL THEN 1
+                    ELSE 0
+                END',
+                    Model\MediaFile::table_name()
+                );
+
+                \podlove_do_migration_query($sql);
+            }
 
             break;
     }
