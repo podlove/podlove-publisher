@@ -134,7 +134,7 @@ class Shows extends \Podlove\Modules\Base
         }
 
         if ($show->language) {
-            $args['language'] = \Podlove\Modules\SubscribeButton\Button::language($show->language);
+            $args['language'] = Button::language($show->language);
         }
 
         return $args;
@@ -240,43 +240,57 @@ class Shows extends \Podlove\Modules\Base
      */
     public function episode_show_meta_box()
     {
-        $post = get_post();
-        $taxonomy = get_taxonomy('shows'); ?>
-		<div id="taxonomy-shows" class="categorydiv">
-			<input type='hidden' name='tax_input[shows][]' value='0' />
-			<ul id="showschecklist" class="categorychecklist form-no-clear">
-				<?php
-$terms = get_terms('shows', ['hide_empty' => false]);
-        $postterms = get_the_terms($post->id, 'shows');
-        $current = (isset($postterms[0]) ? $postterms[0]->term_id : 0); // Fetch the first element of the term array. We expect that there is only one "Show" term since a show is a unique property of an episode.
+        // TODO
+        // - render all shows + "Podcast / no show" as radio list
+        // - select the current one
+        // - send updates
+        // - then tackle Automatic Numbering
 
-        echo "
-						<li class='fubar'>
-							<label class='selectit'>
-								<input type='radio' name='tax_input[shows]'"
-        .checked($current, 0, false)
-        ."value='0' />"
-        .__('Podcast', 'podlove-podcasting-plugin-for-wordpress')
-        ." <span class='description'>(".__('no show assignment', 'podlove-podcasting-plugin-for-wordpress').')</span>'
-            .'</label>
-						</li>';
+        ?>
+        <div data-client="podlove" id="taxonomy-shows" class="categorydiv">
+          <podlove-show-select></podlove-show-select>
+        </div>
+        <?php
 
-        foreach ($terms as $term) {
-            $id = 'shows-'.(int) $term->term_id;
-
-            echo "
-							<li id='{$id}' class='fubar'>
-								<label class='selectit'>
-									<input type='radio' id='in-{$id}' name='tax_input[shows]'"
-            .checked($current, $term->term_id, false)
-            ."value='".esc_attr($term->slug)."' />"
-            .esc_html($term->name).
-                '</label>
-							</li>';
-        } ?>
-			</ul>
-		</div>
-		<?php
+        /*
+         * $post = get_post();
+         * $taxonomy = get_taxonomy('shows'); ?>
+         * <div id="taxonomy-shows" class="categorydiv">
+         * <input type='hidden' name='tax_input[shows][]' value='0' />
+         * <ul id="showschecklist" class="categorychecklist form-no-clear">
+         * <?php
+         * $terms = get_terms('shows', ['hide_empty' => false]);
+         * $postterms = get_the_terms($post->id, 'shows');
+         * $current = (isset($postterms[0]) ? $postterms[0]->term_id : 0); // Fetch the first element of the term array. We expect that there is only one "Show" term since a show is a unique property of an episode.
+         *
+         * echo "
+         * <li class='fubar'>
+         * <label class='selectit'>
+         * <input type='radio' name='tax_input[shows]'"
+         * .checked($current, 0, false)
+         * ."value='0' />"
+         * .__('Podcast', 'podlove-podcasting-plugin-for-wordpress')
+         * ." <span class='description'>(".__('no show assignment', 'podlove-podcasting-plugin-for-wordpress').')</span>'
+         * .'</label>
+         * </li>';
+         *
+         * foreach ($terms as $term) {
+         * $id = 'shows-'.(int) $term->term_id;
+         *
+         * echo "
+         * <li id='{$id}' class='fubar'>
+         * <label class='selectit'>
+         * <input type='radio' id='in-{$id}' name='tax_input[shows]'"
+         * .checked($current, $term->term_id, false)
+         * ."value='".esc_attr($term->slug)."' />"
+         * .esc_html($term->name).
+         * '</label>
+         * </li>';
+         * } ?>
+         * </ul>
+         * </div>
+         * <?php
+         */
     }
 
     public function scripts_and_styles()
