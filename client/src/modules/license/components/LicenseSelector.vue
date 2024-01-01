@@ -95,6 +95,36 @@
           </option>
         </select>
       </div>
+      <div v-if="isJurisdicationNeeded" class="mb-3">
+        <label class="block text-sm font-medium text-gray-700">
+          License Jurisdiction
+        </label>
+        <select
+          :value="licenseData?.optionJurisdication?.name"
+          @input="updateJurisdication($event)"
+          class="
+            mt-1
+            block
+            w-full
+            py-2
+            px-3
+            border border-gray-300
+            bg-white
+            rounded-md
+            shadow-sm
+            focus:outline-none focus:ring-indigo-500 focus:border-indigo-500
+            sm:text-sm
+          "
+        >
+          <option
+            v-for="(jurisdication, jindex) in PodloveLicenseOptionJurisdication"
+            :value="jurisdication.name"
+            :key="`jurisdiction-${jindex}`"
+          >
+            {{ jurisdication.name }}
+          </option>
+        </select>
+      </div>
       <div class="mb-5">
         <LicensePreview :license-data="licenseData"></LicensePreview>
       </div>
@@ -113,7 +143,8 @@ import LicensePreview from './LicenseView.vue'
 import PodloveButton from '@components/button/Button.vue'
 import Modal from '@components/modal/Modal.vue'
 
-import { PodloveLicense, PodloveLicenseVersion, PodloveLicenseOptionCommercial, PodloveLicenseOptionModification } from '../../../types/license.types'
+import { PodloveLicense, PodloveLicenseVersion, PodloveLicenseOptionCommercial, 
+  PodloveLicenseOptionModification, PodloveLicenseOptionJurisdication } from '../../../types/license.types'
 import { getLicenseFromUrl, getLicenseUrl } from '@lib/license'
 
 const PodloveLicenseVersionList: {
@@ -151,7 +182,8 @@ export default defineComponent({
       licenseData: { } as PodloveLicense,
       PodloveLicenseVersionList,
       PodloveLicenseOptionCommercialList,
-      PodloveLicenseOptionModificationList
+      PodloveLicenseOptionModificationList,
+      PodloveLicenseOptionJurisdication
     }
   },
   computed: {
@@ -160,6 +192,11 @@ export default defineComponent({
         return true
       return false
     },
+    isJurisdicationNeeded() : boolean {
+      if (this.licenseData.type == "cc" && this.licenseData.version == PodloveLicenseVersion.cc3)
+        return true;
+      return false;
+    }
   },
   methods: {
     openSelector() {
@@ -225,6 +262,17 @@ export default defineComponent({
       this.dispatch(
         updateEpisode({ prop: 'license_url', value: getLicenseUrl(this.licenseData) })
       )
+    },
+    updateJurisdication(event: Event) {
+      const value : string = (event.target as HTMLInputElement).value
+      const idx: number = PodloveLicenseOptionJurisdication.findIndex(item => item.name === value)
+
+      if (idx != undefined) {
+        this.licenseData.optionJurisdication = PodloveLicenseOptionJurisdication[idx]
+        this.dispatch(
+          updateEpisode({ prop: 'license_url', value: getLicenseUrl(this.licenseData) })
+        )
+      }
     }
   },
   mounted() {

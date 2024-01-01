@@ -3,15 +3,22 @@
     <div class="mb-3 text-sm font-medium text-gray-700">
       License preview:
     </div>
-    <div class="mb-3 w-full">
-      <div class="flex justify-center items-center">
-        <img class="text-center" :src="`${imageUrl}`"/>
+    <div v-if="isImageAvailable">
+      <div>
+        <div class="mb-3 w-full">
+        <div class="flex justify-center items-center">
+          <img class="text-center" :src="`${imageUrl}`"/>
+        </div>
+      </div>
+      <div class="mb-3 w-full text-center">
+        <p class="text-sm font-medium text-gray-700">This work is licensend under </p>
+        <a class="text-sm font-medium text-gray-700"
+          :href="`${licenseUrl}`">{{ licenseUrl }}</a>
       </div>
     </div>
-    <div class="mb-3 w-full text-center">
-      <p class="text-sm font-medium text-gray-700">This work is licensend under </p>
-      <a class="text-sm font-medium text-gray-700"
-        :href="`${licenseUrl}`">{{ licenseUrl }}</a>
+    <div v-if="!isImageAvailable">
+      <p class="text-sm font-medium text-gray-700">No license selected!</p>
+    </div>
     </div>
   </div>
 </template>
@@ -58,6 +65,12 @@ export default defineComponent({
     },
     imageUrl() : string | null {
       return getImageUrl(this.licenseData, this.state.baseUrl)
+    },
+    isImageAvailable() : boolean {
+      console.log(getImageUrl(this.licenseData, this.state.baseUrl))
+      if (getImageUrl(this.licenseData, this.state.baseUrl) != null)
+        return true
+      return false
     }
   }
 

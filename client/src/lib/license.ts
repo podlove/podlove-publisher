@@ -43,14 +43,10 @@ export function getLicenseUrl(input: PodloveLicense) : string | null {
       cc3 = cc3 + "-nd/"
     else
       cc3 = cc3 + "-sa/"
-    if (input.version != null)
-      cc3 = cc3 + input.version;
+    if (input.optionJurisdication == null || input.optionJurisdication.symbol == "international")
+      cc3 = cc3 + "3.0/"
     else
-      cc3 = cc3 + "3.0"
-    if (input.optionJurisdication == null || input.optionJurisdication == "international")
-      cc3 = cc3 + "/"
-    else
-      cc3 = cc3 + "/" + input.optionJurisdication
+      cc3 = cc3 + input.optionJurisdication.version + "/" + input.optionJurisdication.symbol + "/"
     return cc3 + "deed.en"
   }
   if (input.version == PodloveLicenseVersion.cc4) {
@@ -102,7 +98,7 @@ export function getLicenseFromUrl(url: string) : PodloveLicense {
       version = PodloveLicenseVersion.pdmark
     }
     else {
-      if (urlLowerCase.indexOf("/4.0")) {
+      if (urlLowerCase.indexOf("/4.0") >= 0) {
         version = PodloveLicenseVersion.cc4
       }
       else {
