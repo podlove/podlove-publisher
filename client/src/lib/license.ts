@@ -1,5 +1,6 @@
 
-import { PodloveLicense, PodloveLicenseOptionCommercial, PodloveLicenseOptionModification, PodloveLicenseVersion } from '../types/license.types'
+import { PodloveLicense, PodloveLicenseOptionCommercial, PodloveLicenseOptionModification, 
+  PodloveLicenseVersion, PodloveLicenseOptionJurisdication } from '../types/license.types'
 
 function imageUrlCommercialUseId(option: PodloveLicenseOptionCommercial | null) : string
 {
@@ -124,11 +125,19 @@ export function getLicenseFromUrl(url: string) : PodloveLicense {
     }
   }
 
+  let jurisdication = PodloveLicenseOptionJurisdication[0];
+  if (urlData.length > 2 ) {
+    const idx : number = PodloveLicenseOptionJurisdication.findIndex(item => item.symbol == urlData[2]);
+    if (idx > 0)
+      jurisdication = PodloveLicenseOptionJurisdication[idx];
+  }
+
+
   return {
     type: "cc",
     version: version,
     optionCommercial: commercial,
     optionModification: modification,
-    optionJurisdication: null
+    optionJurisdication: jurisdication
   } as PodloveLicense
 }
