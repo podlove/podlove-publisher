@@ -67,7 +67,6 @@ export default defineComponent({
       return getImageUrl(this.licenseData, this.state.baseUrl)
     },
     isImageAvailable() : boolean {
-      console.log(getImageUrl(this.licenseData, this.state.baseUrl))
       if (getImageUrl(this.licenseData, this.state.baseUrl) != null)
         return true
       return false

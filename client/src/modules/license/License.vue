@@ -1,37 +1,62 @@
 <template>
-  <module name="license" :title="__('License')">
+  <module name="license" :title=getModuleTitle>
     <template v-slot:actions>
-      <LicenseSelector></LicenseSelector>
+      <div v-if="isScopeEpisode">
+        <LicenseSelectorButton :scope="scope"></LicenseSelectorButton>
+      </div>
     </template>
     <div class="p-3">
       <div class="mb-3">
-        <LicenseName></LicenseName>
+        <LicenseName :scope="scope"></LicenseName>
       </div>
       <div class="mb-3">
-        <LicenseUrl></LicenseUrl>
+        <LicenseUrl :scope="scope"></LicenseUrl>
+      </div>
+      <div v-if="!isScopeEpisode">
+        <LicenseSelector :scope="scope"></LicenseSelector>
       </div>
     </div>
   </module>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { PropType, defineComponent } from 'vue'
 
 import Module from '@components/module/Module.vue'
 
-import LicenseSelector from './components/LicenseSelector.vue'
 import LicenseName from './components/LicenseName.vue'
 import LicenseUrl from './components/LicenseUrl.vue'
-import LicensePreview from './components/LicenseView.vue'
+import LicenseSelector from './components/LicenseSelector.vue'
+import LicenseSelectorButton from './components/LicenseSelectorButton.vue'
+
+import { PodloveLicenseScope } from '../../types/license.types'
 
 export default defineComponent({
   components: {
     Module,
-    LicenseSelector,
     LicenseName,
     LicenseUrl,
-    LicensePreview
+    LicenseSelector,
+    LicenseSelectorButton
   },
+  props: {
+    scope: {
+      type: String as PropType<PodloveLicenseScope>,
+      default: PodloveLicenseScope.Episode
+    }
+  },
+  computed: {
+    isScopeEpisode(): boolean {
+      if (this.scope == PodloveLicenseScope.Episode)
+        return true;
+      return false;
+    },
+    getModuleTitle(): string {
+      if (this.scope == PodloveLicenseScope.Episode)
+        return "Episode License"
+      return "Podcast License"
+    }
+  }
 })
 </script>
 

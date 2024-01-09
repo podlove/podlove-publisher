@@ -5,7 +5,7 @@
       <input 
         name="episode-license-name"
         type="text"
-        :value="state.episodeLicenseUrl"
+        :value="getLicenseUrl"
         @input="updateLicenseUrl"
         class="
           shadow-sm
@@ -23,22 +23,32 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { PropType, defineComponent } from 'vue'
 import { mapState, injectStore } from 'redux-vuex';
 
 import { selectors } from '@store';
 
 import Module from '@components/module/Module.vue'
 import * as episode from '@store/episode.store'
+import * as podcast from '@store/podcast.store'
+
+import { PodloveLicenseScope } from '../../../types/license.types';
 
 export default defineComponent({
   components: {
     Module,
   },
+  props: {
+    scope: {
+      type: String as PropType<PodloveLicenseScope>,
+      default: PodloveLicenseScope.Episode
+    }
+  },
   setup() {
     return {
       state: mapState({
         episodeLicenseUrl: selectors.episode.license_url,
+        podcastLicenseUrl: selectors.podcast.license_url
       }),
       dispatch: injectStore().dispatch,
     }
@@ -46,11 +56,25 @@ export default defineComponent({
   created() {
     this.dispatch(episode.init())
   },
+  computed: {
+    getLicenseUrl() : string {
+      if (this.scope == PodloveLicenseScope.Episode)
+        return this.state.episodeLicenseUrl
+      return this.state.podcastLicenseUrl
+    }
+  },
   methods: {
     updateLicenseUrl(event: Event) {
-      this.dispatch(
-        episode.update({prop: 'license_url', value: (event.target as HTMLInputElement).value})
-      )
+      if (this.scope == PodloveLicenseScope.Episode) {
+        this.dispatch(
+          episode.update({prop: 'license_url', value: (event.target as HTMLInputElement).value})
+        )
+      }
+      if (this.scope == PodloveLicenseScope.Podcast) {
+        this.dispatch(
+          podcast.update({prop: 'license_url', value: (event.target as HTMLInputElement).value})
+        )
+      }      
     }
   }
 })

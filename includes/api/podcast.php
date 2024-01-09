@@ -148,6 +148,8 @@ class WP_REST_Podlove_Controller extends WP_REST_Controller
             $res['copyright'] = $podcast->copyright;
         $res['expicit'] = $explicit;
         $res['category'] = $this->getCategoryName($podcast->category_1);
+        $res['license_url'] = $podcast->license_url;
+        $res['license_name'] = $podcast->license_name;
 
         $res = apply_filters('podlove_api_podcast_response', $res);
 
@@ -206,6 +208,14 @@ class WP_REST_Podlove_Controller extends WP_REST_Controller
             $category = $request['category'];
             $category_key = $this->getCategoryKey($category);
             $podcast->category_1 = $category_key;
+        }
+        if (isset($request['license_url'])) {
+            $license_url = $request['license_url'];
+            $podcast->license_url = $license_url;
+        }
+        if (isset($request['license_name'])) {
+            $license_name = $request['license_name'];
+            $podcast->license_name = $license_name;
         }
 
         $podcast->save();

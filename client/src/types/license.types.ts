@@ -16,6 +16,11 @@ export enum PodloveLicenseOptionModification {
     no = "No"
 }
 
+export enum PodloveLicenseScope {
+    Episode = "Episode",
+    Podcast = "Podcast"
+}
+
 export type PodloveJurisdicationObject = {
     symbol: string,
     name: string,
