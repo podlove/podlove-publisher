@@ -73,7 +73,7 @@ class REST_API
     public function get_contributors()
     {
         $entries = Contributor::all();
-        $entries = array_reduce($entries, function ($result = [], $contributor) {
+        $entries = array_reduce($entries, function ($result, $contributor) {
             if ($contributor->visibility != 1) {
                 return $result;
             }
@@ -838,7 +838,7 @@ class WP_REST_PodloveContributors_Controller extends WP_REST_Controller
         return new \Podlove\Api\Response\OkResponse([
             'status' => 'ok'
         ]);
-    } 
+    }
 
     public function update_item_permissions_check($request)
     {
@@ -897,7 +897,7 @@ class WP_REST_PodloveContributors_Controller extends WP_REST_Controller
         ]);
     }
 
-    public function delete_item_default($request) 
+    public function delete_item_default($request)
     {
         $id = $request->get_param('id');
         $default = DefaultContribution::find_by_id(($id));
