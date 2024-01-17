@@ -10,18 +10,16 @@ function get_description()
 
     $episode = \Podlove\Model\Episode::find_one_by_post_id($post->ID);
 
-    $summary = trim($episode->summary);
-    $subtitle = trim($episode->subtitle);
-    $title = trim($post->post_title);
+    $summary = trim($episode->summary ?? '');
+    $subtitle = trim($episode->subtitle ?? '');
+    $title = trim($post->post_title ?? '');
 
-    $description = '';
+    $description = $title;
 
-    if (strlen($summary)) {
+    if (strlen($summary) > 0) {
         $description = $summary;
-    } elseif (strlen($subtitle)) {
+    } elseif (strlen($subtitle) > 0) {
         $description = $subtitle;
-    } else {
-        $description = $title;
     }
 
     return apply_filters('podlove_feed_item_description', html_entity_decode($description));
