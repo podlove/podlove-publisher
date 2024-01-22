@@ -8,16 +8,13 @@ add_action('admin_notices', function () {
 				<strong><?php echo __('Podlove Publisher Error', 'podlove-podcasting-plugin-for-wordpress'); ?></strong>
 				<br>
 				<?php echo __('Required PHP extension "curl" is not installed. Common solution:', 'podlove-podcasting-plugin-for-wordpress'); ?>
-				<blockquote><code>sudo apt-get install php5-curl</code></blockquote>
-				<?php echo __('Then you need to restart you webserver:', 'podlove-podcasting-plugin-for-wordpress'); ?>
-				<blockquote><code>sudo service apache2 restart</code></blockquote> 
-				<?php echo __('or', 'podlove-podcasting-plugin-for-wordpress'); ?>
-				<blockquote><code>sudo service php5-fpm restart</code></blockquote> 
+				<blockquote><code>sudo apt-get install php-curl</code></blockquote>
+				<?php echo __('Then you need to restart you webserver.', 'podlove-podcasting-plugin-for-wordpress'); ?>
 				<?php
                 echo sprintf(
-        __('If this does not help, visit %s for assistance.', 'podlove-podcasting-plugin-for-wordpress'),
-        '<a href="https://community.podlove.org/c/podlove-publisher" target="_blank">community.podlove.org</a>'
-    ); ?>
+                    __('If this does not help, visit %s for assistance.', 'podlove-podcasting-plugin-for-wordpress'),
+                    '<a href="https://community.podlove.org/c/podlove-publisher" target="_blank">community.podlove.org</a>'
+                ); ?>
 			</p>
 		</div>
 	<?php } ?>
@@ -28,7 +25,7 @@ add_action('admin_notices', function () {
 				<br>
 				<?php echo __('Required PHP function "curl_exec" is disabled. You need to remove it from the list in the "disable_functions" setting in your php.ini. ', 'podlove-podcasting-plugin-for-wordpress'); ?>
 			</p>
-		</div>		
+		</div>
 	<?php } ?>
 	<?php
 });
