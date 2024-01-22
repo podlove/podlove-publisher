@@ -104,7 +104,7 @@ class Slack_Shownotes extends \Podlove\Modules\Base
 
         $this->register_option('slack_api_token', 'password', [
             'label' => __('Slack OAuth Access Token', 'podlove-podcasting-plugin-for-wordpress'),
-            'description' => '<a href="https://docs.podlove.org/podlove-publisher/guides/slacknotes.html" target="_blank">'.__('Follow guide on how to get the token.', 'podlove-podcasting-plugin-for-wordpress').'</a>',
+            'description' => '<a href="https://docs.podlove.org/podlove-publisher/modules/slacknotes/" target="_blank">'.__('Follow guide on how to get the token.', 'podlove-podcasting-plugin-for-wordpress').'</a>',
             'html' => ['class' => 'regular-text'],
         ]);
     }
