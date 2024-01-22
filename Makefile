@@ -64,6 +64,7 @@ build:
 	composer prefix-dependencies
 	rm -rf vendor/piwik
 	rm -rf vendor/twig
+	rm -rf vendor/psr
 	composer dump-autoload --classmap-authoritative
 	# client
 	make client

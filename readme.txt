@@ -111,6 +111,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 - fix security issues (XSS)
 - do not unnecessarily flush rewrite rules ([Issue#1432](https://github.com/podlove/podlove-publisher/issues/1432))
 - fix link to Slacknotes and Subscribe Button documentation
+- fix psr library not removed after prefixing ([Issue#1421](https://github.com/podlove/podlove-publisher/issues/1421))
 
 = 4.0.9 =
 
