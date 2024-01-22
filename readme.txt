@@ -109,6 +109,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 = 4.0.10 =
 
 - fix security issues (XSS)
+- do not unnecessarily flush rewrite rules ([Issue#1432](https://github.com/podlove/podlove-publisher/issues/1432))
 
 = 4.0.9 =
 
