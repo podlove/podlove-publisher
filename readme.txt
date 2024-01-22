@@ -106,6 +106,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 4.0.10 =
+
+- fix security issues (XSS)
+
 = 4.0.9 =
 
 **Enhancements**
