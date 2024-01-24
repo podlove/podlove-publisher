@@ -6,7 +6,7 @@ on:
       - "!*-beta*"
 jobs:
   tag:
-    name: New tag
+    name: Build and Release to WordPress.org
     runs-on: ubuntu-20.04
     steps:
     - name: Setup PHP with PECL extension

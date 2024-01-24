@@ -54,7 +54,7 @@ export function parseHindeburgChapters(input: string) {
   const xml = parser.parseFromString(input, 'text/xml')
   const chapterTags = xml.getElementsByTagName('Marker')
 
-  return Array.from(chapterTags).reduce((result: PodloveChapter[], tag) => {
+  let chapters = Array.from(chapterTags).reduce((result: PodloveChapter[], tag) => {
     if (
       !tag ||
       !tag.getAttribute('Type') ||
@@ -73,6 +73,12 @@ export function parseHindeburgChapters(input: string) {
 
     return result
   }, [])
+
+  chapters.sort(function (chapterA, chapterB) {
+    return chapterA.start - chapterB.start
+  })
+
+  return chapters
 }
 
 export function parsePodloveChapters(input: string): PodloveChapter[] {
@@ -87,7 +93,12 @@ export function parsePodloveChapters(input: string): PodloveChapter[] {
     var image = tag.getAttribute('image') || ''
 
     if (start !== null) {
-      result.push({ start: start, title: title.trim(), ...(href ? { href: href.trim() } : {}), ...(image ? { image: image.trim() } : {}) })
+      result.push({
+        start: start,
+        title: title.trim(),
+        ...(href ? { href: href.trim() } : {}),
+        ...(image ? { image: image.trim() } : {}),
+      })
     }
 
     return result

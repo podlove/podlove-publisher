@@ -59,14 +59,7 @@ client_next:
 client: client_legacy client_next
 
 build:
-	mkdir -p vendor-prefixed
-	composer install --no-progress --prefer-dist --optimize-autoloader --no-dev
-	composer prefix-dependencies
-	rm -rf vendor/piwik
-	rm -rf vendor/twig
-	rm -rf vendor/psr
-	composer dump-autoload --classmap-authoritative
-	# client
+	make composer_with_prefixing
 	make client
 
 	rm -rf dist/*

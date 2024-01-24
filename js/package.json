@@ -9,10 +9,6 @@
     "laravel-mix": "6.0.49",
     "node-forge": "1.3.1",
     "normalplaytime": "^1.0.4",
-    "podcast-chapter-parser-audacity": "^1.0.0",
-    "podcast-chapter-parser-hindenburg": "^1.0.4",
-    "podcast-chapter-parser-mp4chaps": "^1.0.2",
-    "podcast-chapter-parser-psc": "^1.1.1",
     "vue": "^2.7.16",
     "vue-loader": "^15.11.1"
   },
