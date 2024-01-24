@@ -116,7 +116,7 @@ class Repair
     {
         ?>
 		<p>
-			<a href="<?php echo admin_url('admin.php?page='.$_REQUEST['page'].'&repair=1'); ?>" class="button">
+			<a href="<?php echo esc_url(admin_url('admin.php?page='.$_REQUEST['page'].'&repair=1')); ?>" class="button">
 				<?php echo __('Attempt Repair', 'podlove-podcasting-plugin-for-wordpress'); ?>
 			</a>
 		</p>

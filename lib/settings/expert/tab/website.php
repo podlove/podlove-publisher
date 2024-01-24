@@ -15,9 +15,9 @@ class Website extends Tab
     public function init()
     {
         // always flush rewrite rules here for custom_episode_slug setting
-        if ($this->is_active()) {
+        add_action('update_option_podlove_website', function($old, $new) {
             set_transient('podlove_needs_to_flush_rewrite_rules', true);
-        }
+        }, 10, 2);
 
         add_settings_section(
             // $id

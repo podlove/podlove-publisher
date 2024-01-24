@@ -7,7 +7,7 @@
           name="soundbite-start"
           type="text"
           class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
-          placeholder="00:00:00"
+          placeholder="HH:MM:SS"
           :value="state.soundbite_start"
           @change="updateSoundbiteStart($event)"
         />
@@ -21,7 +21,7 @@
           name="soundbite-end"
           type="text"
           class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
-          placeholder="00:00:00"
+          placeholder="HH:MM:SS"
           :value=soundbite_end
           @change="updateSoundbiteEnd($event)"
         />
@@ -34,7 +34,7 @@
           name="soundbite-duration"
           type="text"
           class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
-          placeholder="00:00:00"
+          placeholder="HH:MM:SS"
           :value="state.soundbite_duration"
           @change="updateSoundbiteDuration($event)"
         />

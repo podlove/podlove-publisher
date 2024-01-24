@@ -18,11 +18,6 @@ function register_podcast_feeds()
             add_feed($feed->slug, '\\Podlove\\Feeds\\generate_podcast_feed');
         }
     }
-
-    // changing feed settings may affect permalinks, so we need to flush
-    if ($_REQUEST['page'] ?? '' === 'podlove_feeds_settings_handle') {
-        set_transient('podlove_needs_to_flush_rewrite_rules', true);
-    }
 }
 
 /**

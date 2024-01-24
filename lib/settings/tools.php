@@ -41,7 +41,7 @@ class Tools
         // Fields for section "General Maintenance"
         \Podlove\add_tools_field('gm-clear-caches', __('Clear Caches', 'podlove-podcasting-plugin-for-wordpress'), function () {
             ?>
-			<a href="<?php echo admin_url('admin.php?page='.$_REQUEST['page'].'&action=clear_caches'); ?>" class="button">
+			<a href="<?php echo esc_url(admin_url('admin.php?page='.$_REQUEST['page'].'&action=clear_caches')); ?>" class="button">
 				<?php echo __('Clear Caches', 'podlove-podcasting-plugin-for-wordpress'); ?>
 			</a>
 			<p class="description">

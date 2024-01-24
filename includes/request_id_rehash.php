@@ -9,7 +9,7 @@ function podlove_rehash_init_tools_section()
 
     \Podlove\add_tools_field('dsgvo-rehash-request_ids', __('Rehash Request IDs', 'podlove-podcasting-plugin-for-wordpress'), function () {
         ?>
-		<a href="<?php echo admin_url('admin.php?page='.$_REQUEST['page'].'&action=podlove_rehash_request_ids'); ?>" class="button">
+		<a href="<?php echo esc_url(admin_url('admin.php?page='.$_REQUEST['page'].'&action=podlove_rehash_request_ids')); ?>" class="button">
 			<?php echo __('Rehash Request IDs', 'podlove-podcasting-plugin-for-wordpress'); ?>
 		</a>
 		<p class="description">
