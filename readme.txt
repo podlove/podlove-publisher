@@ -3,7 +3,7 @@ Contributors: eteubert
 Donate link: https://opencollective.com/podlove
 Tags: podlove, podcast, publishing, rss, feed, audio, mp3, m4a, player, webplayer, iTunes, radio
 Tested up to: 6.4.2
-Stable tag: 4.0.10
+Stable tag: 4.0.11
 Requires at least: 4.9.6
 Requires PHP: 8.0
 License: MIT
@@ -106,19 +106,130 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
-= 2024-01-24 =
-
-- bring up to date with latest public release
-
-= 2023-12-26 =
+= 4.0.11 =
 
 - new: show admin notice when a database migration fails
 - fix bug where tracking data could be lost by disabling a media file checkbox
 - fix bug where imported Hindenburg chapters were not sorted by time
-
-= 2023-11-21 =
-
 - fix build script (correctly delete all vendor prefixed dependencies)
+- fix deprecation warnings ([#1431](https://github.com/podlove/podlove-publisher/pull/1431), [#1430](https://github.com/podlove/podlove-publisher/pull/1430))
+- update js dependencies
+- update help text for missing curl module
+
+= 4.0.10 =
+
+- fix security issues (XSS)
+- do not unnecessarily flush rewrite rules ([Issue#1432](https://github.com/podlove/podlove-publisher/issues/1432))
+- fix link to Slacknotes and Subscribe Button documentation
+- fix psr library not removed after prefixing ([Issue#1421](https://github.com/podlove/podlove-publisher/issues/1421))
+
+= 4.0.9 =
+
+**Enhancements**
+
+- trim whitespaces from beginning and end of file slug
+- soundbite: change placeholder to HH:MM:SS to clarify format
+
+**Bugfixes**
+
+- fix division by zero in analytics
+- fix default contributors missing position attribute
+- fix Auphonic chapter timestamp import
+- fix page reload when clicking chapter upload button
+
+= 4.0.8 =
+
+**Bugfixes**
+
+- fix broken analytics episode screen
+
+= 4.0.7 =
+
+**Bugfixes**
+
+- fix media verification not saving
+- fix shownotes unfurling
+- avoid failure during database migration
+
+**Misc**
+
+- update/cleanup various js dependencies
+
+= 4.0.6 =
+
+**Bugfixes**
+
+- Auphonic: saving production not working when slug is not set (bug introduced in 4.0.5)
+
+= 4.0.5 =
+
+**Bugfixes**
+
+
+- Auphonic: restore previous behaviour:
+  - automatically fill in file slug, validate media files and fill in duration when production finishes
+  - use slug as "output_basename" if it is set
+
+**Misc**
+
+- cleanup legacy js app (dependency updates, deletion of unused code etc.)
+
+= 4.0.3 / 4.0.4 =
+
+**Enhancements**
+
+- Auphonic: sort presets alphabetically
+- Contributors: make better use of available space
+
+**Bugfixes**
+
+- episode metadata not saving reliably for some people
+- Auphonic: fix chapter time import
+- WordPress File Upload: display slug input (should be filled automatically but does not seem to work reliably)
+
+= 4.0.2 =
+
+**Bugfixes**
+
+- Auphonic: Chapters can be imported from production metadata
+- Contributors: Add support for Gravatar and default contributor image on edit screens
+- Dashboard: Asset Validation / Detection is working again [#1396](https://github.com/podlove/podlove-publisher/issues/1396)
+- Automatic Numbering: error when selecting a show
+
+= 4.0.1 =
+
+**Enhancements**
+
+- Auphonic: autosave before "Start Production" so it is not required to explicitly save before starting
+
+**Bugfixes**
+
+- Auphonic: open productions with missing algorithm information
+- Templates: fix broken core templates `downloads-select` and `related-episodes-list`
+- Classic Editor: display Episode Title Placeholder based on Blog Post Title
+
+= 4.0.0 =
+
+Podlove Publisher 4.0 is here, bringing a spring-clean (in November!) of the episode page. We tore up the foundation to bring you an all-new user interface.
+
+**Warning:** PHP 8.0 and above is now required!
+
+**Highlights**
+
+- **Episode Form** User Interface is modernised and auto-saves, so no work is ever lost.
+- **Auphonic module** includes Multitrack Support.
+- **New Contributors** can be added without leaving the episode page.
+- **Chapters** support images.
+- **REST API V2** is now, including many more endpoints. See the [API documentation](https://docs.podlove.org/podlove-publisher/api) for all the details.
+
+
+**Tidbits**
+
+- file “slug” field is prefixed with the media location so it’s more obvious what it is used for
+- episode duration is always auto-detected and not an input field any more
+- Auphonic Preset can be selected directly in the episode and does not rely on global module setting any more
+- removed module “Twitter Card Integration” (RIP). By the way, if you want to follow us on social media, find us here: https://fosstodon.org/@podlove
+- fix various PHP notices and warnings to be PHP 8.0+ compatible
 
 ----
 
