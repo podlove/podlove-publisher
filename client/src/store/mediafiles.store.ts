@@ -11,11 +11,13 @@ export type MediaFile = {
 
 export type State = {
   is_initializing: boolean
+  slug_autogeneration_enabled: boolean
   files: MediaFile[]
 }
 
 export const initialState: State = {
   is_initializing: true,
+  slug_autogeneration_enabled: true,
   files: [],
 }
 
@@ -86,5 +88,6 @@ export const reducer = handleActions(
 
 export const selectors = {
   isInitializing: (state: State) => state.is_initializing,
+  slugAutogenerationEnabled: (state: State) => state.slug_autogeneration_enabled,
   files: (state: State) => state.files,
 }

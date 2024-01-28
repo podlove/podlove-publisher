@@ -29,6 +29,7 @@ function* initialize(api: PodloveApiClient) {
   yield takeEvery(mediafiles.DISABLE, handleDisable, api)
   yield takeEvery(mediafiles.VERIFY, handleVerify, api)
   yield takeEvery(episode.SAVED, maybeReverify, api)
+  yield takeEvery(episode.SAVED, maybeUpdateSlug, api)
   yield throttle(
     2000,
     [mediafiles.ENABLE, mediafiles.DISABLE, mediafiles.UPDATE],
@@ -99,6 +100,50 @@ function* maybeReverify(api: PodloveApiClient, action: { type: string; payload: 
 
   // verify all
   yield all(mediaFiles.map((file) => call(verifyEpisodeAsset, api, episodeId, file.asset_id)))
+}
+
+// THOUGHTS
+// - auto gen logic is both here and in the wordpress saga. needs to at least be
+//   dry
+// - previous slug generation was on PHP side, using WordPress' sanitize_title,
+//   which I do not want to reimplement in PHP
+// - maybe have a dedicated endpoint to push an unsanitized slug? But then I
+//   might as well send a "just generate me a slug" ping instead and do
+//   everything on the backend. Sounds best actually.
+function* maybeUpdateSlug(api: PodloveApiClient, action: { type: string; payload: object }) {
+  const changedKeys = Object.keys(action.payload)
+  const interestingKeys = ['title', 'number']
+  const slugNeedsUpdating = changedKeys.some((key) => interestingKeys.includes(key))
+
+  const generateTitle: boolean = yield select(selectors.settings.autoGenerateEpisodeTitle)
+  const template: string = yield select(selectors.settings.blogTitleTemplate)
+  const title: string = yield select(selectors.episode.title)
+  const episodeNumber: string = yield select(selectors.episode.number)
+  const mnemonic: string = yield select(selectors.podcast.mnemonic)
+  // TODO: get from episode?
+  const seasonNumber: string = ''
+  const padding: number = yield select(selectors.settings.episodeNumberPadding)
+
+  // So ugly: I don't want to have to know about the title template here, or if it's even used
+  if (slugNeedsUpdating) {
+    let newSlug = ''
+
+    if (generateTitle && template) {
+      const generatedTitle = template
+        .replace('%mnemonic%', mnemonic || '')
+        .replace('%episode_number%', (episodeNumber || '').padStart(padding || 0, '0'))
+        .replace('%season_number%', seasonNumber || '')
+        .replace('%episode_title%', title || '')
+      newSlug = generatedTitle
+    } else {
+      newSlug = title
+    }
+
+    // FIXME: `newSlug` is currently just the title. Needs to be slugged. But
+    // maybe I don't do all that here anyway, see thoughts above.
+
+    yield put(episode.update({ prop: 'slug', value: newSlug }))
+  }
 }
 
 function* verifyEpisodeAsset(api: PodloveApiClient, episodeId: number, assetId: number) {
