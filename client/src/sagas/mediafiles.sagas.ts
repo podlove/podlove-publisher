@@ -1,6 +1,6 @@
 import { PodloveApiClient } from '@lib/api'
 import { selectors } from '@store'
-import { all, call, delay, fork, put, select, takeEvery, throttle } from 'redux-saga/effects'
+import { all, call, debounce, fork, put, select, takeEvery, throttle } from 'redux-saga/effects'
 import * as mediafiles from '@store/mediafiles.store'
 import * as episode from '@store/episode.store'
 import * as wordpress from '@store/wordpress.store'
@@ -29,8 +29,7 @@ function* initialize(api: PodloveApiClient) {
   yield takeEvery(mediafiles.DISABLE, handleDisable, api)
   yield takeEvery(mediafiles.VERIFY, handleVerify, api)
   yield takeEvery(episode.SAVED, maybeReverify, api)
-  yield takeEvery(episode.SAVED, maybeUpdateSlug, api)
-  yield takeEvery(wordpress.UPDATE, maybeUpdateSlugFromWP, api)
+  yield debounce(2000, wordpress.UPDATE, maybeUpdateSlug, api)
 
   yield throttle(
     2000,
@@ -47,6 +46,10 @@ function* initialize(api: PodloveApiClient) {
 function* selectMediaFromLibrary() {
   yield put(wordpress.selectMediaFromLibrary({ onSuccess: { type: mediafiles.SET_UPLOAD_URL } }))
 }
+
+// NEXT UP:
+// - stop autoupdate on manual entry
+// - not working: Gutenberg + Blogtitle Autogen (probably better treated as separate issue)
 
 function* setUploadMedia(action: Action) {
   const url = get(action, ['payload'])
@@ -104,36 +107,22 @@ function* maybeReverify(api: PodloveApiClient, action: { type: string; payload: 
   yield all(mediaFiles.map((file) => call(verifyEpisodeAsset, api, episodeId, file.asset_id)))
 }
 
-function* maybeUpdateSlug(api: PodloveApiClient, action: { type: string; payload: object }) {
-  const changedKeys = Object.keys(action.payload)
-
-  const interestingKeys = ['title', 'number']
-  const slugNeedsUpdating = changedKeys.some((key) => interestingKeys.includes(key))
-
-  const episodeId: boolean = yield select(selectors.episode.id)
-  const postTitle: string = yield select(selectors.post.title)
-
-  if (slugNeedsUpdating) {
-    const { result } = yield api.get(`episodes/${episodeId}/build_slug`, {
-      query: { title: postTitle },
-    })
-    yield put(episode.update({ prop: 'slug', value: result.slug }))
-  }
-}
-
-function* maybeUpdateSlugFromWP(
+function* maybeUpdateSlug(
   api: PodloveApiClient,
   action: { type: string; payload: { prop: string; value: any } }
 ) {
   const episodeId: boolean = yield select(selectors.episode.id)
+  const oldSlug: boolean = yield select(selectors.episode.slug)
 
-  if (action.payload.prop == 'title') {
+  if (action.payload.prop == 'title' && action.payload.value) {
     const newTitle = action.payload.value
 
     const { result } = yield api.get(`episodes/${episodeId}/build_slug`, {
       query: { title: newTitle },
     })
-    yield put(episode.update({ prop: 'slug', value: result.slug }))
+    if (oldSlug != result.slug) {
+      yield put(episode.update({ prop: 'slug', value: result.slug }))
+    }
   }
 }
 
