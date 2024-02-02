@@ -17,6 +17,7 @@ function* mediafilesSaga(): any {
 
 function* initialize(api: PodloveApiClient) {
   const episodeId: string = yield select(selectors.episode.id)
+  const episodeSlug: string = yield select(selectors.episode.slug)
   const {
     result: { results: files },
   }: { result: { results: MediaFile[] } } = yield api.get(`episodes/${episodeId}/media`)
@@ -46,10 +47,6 @@ function* initialize(api: PodloveApiClient) {
 function* selectMediaFromLibrary() {
   yield put(wordpress.selectMediaFromLibrary({ onSuccess: { type: mediafiles.SET_UPLOAD_URL } }))
 }
-
-// NEXT UP:
-// - stop autoupdate on manual entry
-// - not working: Gutenberg + Blogtitle Autogen (probably better treated as separate issue)
 
 function* setUploadMedia(action: Action) {
   const url = get(action, ['payload'])
@@ -113,8 +110,9 @@ function* maybeUpdateSlug(
 ) {
   const episodeId: boolean = yield select(selectors.episode.id)
   const oldSlug: boolean = yield select(selectors.episode.slug)
+  const enabled: boolean = yield select(selectors.mediafiles.slugAutogenerationEnabled)
 
-  if (action.payload.prop == 'title' && action.payload.value) {
+  if (enabled && action.payload.prop == 'title' && action.payload.value) {
     const newTitle = action.payload.value
 
     const { result } = yield api.get(`episodes/${episodeId}/build_slug`, {
