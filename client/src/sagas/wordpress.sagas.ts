@@ -68,11 +68,17 @@ function* updatePostTitle() {
   const seasonNumber: string = ''
   const padding: number = yield select(selectors.settings.episodeNumberPadding)
 
-  wordpress.postTitleInput.value = template
+  const newTitle = template
     .replace('%mnemonic%', mnemonic || '')
     .replace('%episode_number%', (episodeNumber || '').padStart(padding || 0, '0'))
     .replace('%season_number%', seasonNumber || '')
     .replace('%episode_title%', title || '')
+
+  if (wordpress.postTitleInput.value != newTitle) {
+    wordpress.postTitleInput.value = newTitle
+
+    yield postTitleUpdate(newTitle)
+  }
 }
 
 function* selectMediaFromLibrary(action: { payload: { onSuccess: Action } }) {
