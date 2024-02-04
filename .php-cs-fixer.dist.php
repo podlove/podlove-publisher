@@ -11,6 +11,7 @@ $c = $config->setRules([
     '@PSR2' => true,
     '@PhpCsFixer' => true,
     'yoda_style' => false,
+    'fully_qualified_strict_types' => false,
     'array_syntax' => ['syntax' => 'short'],
     'trailing_comma_in_multiline' => false,
     'no_trailing_comma_in_singleline_array' => true,
