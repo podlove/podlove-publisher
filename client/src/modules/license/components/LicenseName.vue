@@ -57,19 +57,17 @@ export default defineComponent({
   },
   computed: {
     getLicenseName() : string {
-      if (this.scope == PodloveLicenseScope.Episode)
-        return this.state.episodeLicenseName
-      return this.state.podcastLicenseName
+      return this.scope == PodloveLicenseScope.Episode ? this.state.episodeLicenseName : this.state.podcastLicenseName
     }
   },
   methods: {
     updateLicenseName(event: Event) {
-      if (this.scope == PodloveLicenseScope.Episode) {
+      if (this.scope === PodloveLicenseScope.Episode) {
         this.dispatch(
           episode.update({prop: 'license_name', value: (event.target as HTMLInputElement).value})
         )
       }
-      if (this.scope == PodloveLicenseScope.Podcast) {
+      if (this.scope === PodloveLicenseScope.Podcast) {
         this.dispatch(
           podcast.update({prop: 'license_name', value: (event.target as HTMLInputElement).value})
         )

@@ -6,45 +6,34 @@ import {
   PodloveLicenseOptionJurisdication,
 } from '../types/license.types'
 
-function imageUrlCommercialUseId(option: PodloveLicenseOptionCommercial | null): string {
-  if (option == null) return ''
-  if (option == PodloveLicenseOptionCommercial.no) return '0'
-  else return '1'
-}
-
-function imageUrlModificationId(option: PodloveLicenseOptionModification | null): string {
-  if (option == null) return ''
-  switch (option) {
-    case PodloveLicenseOptionModification.yes:
-      return '1'
-    case PodloveLicenseOptionModification.yesbutshare:
-      return '10'
-    case PodloveLicenseOptionModification.no:
-      return '0'
-    default:
-      return '1'
-  }
-}
+import pdImage from '../assets/pd.png'
+import pdMarkImage from '../assets/pdmark.png'
+import cc_0_0_Image from '../assets/0_0.png'
+import cc_0_1_Image from '../assets/0_1.png'
+import cc_1_0_Image from '../assets/1_0.png'
+import cc_1_1_Image from '../assets/1_1.png'
+import cc_10_0_Image from '../assets/10_0.png'
+import cc_10_1_Image from '../assets/10_1.png'
 
 export function getLicenseUrl(input: PodloveLicense): string | null {
-  if (input.type == null || input.type != 'cc') return null
-  if (input.version == PodloveLicenseVersion.cc0)
+  if (input.type === null || input.type != 'cc') return null
+  if (input.version === PodloveLicenseVersion.cc0)
     return 'http://creativecommons.org/publicdomain/zero/1.0/'
-  if (input.version == PodloveLicenseVersion.pdmark)
+  if (input.version === PodloveLicenseVersion.pdmark)
     return 'http://creativecommons.org/publicdomain/mark/1.0/'
-  if (input.version == PodloveLicenseVersion.cc3) {
+  if (input.version === PodloveLicenseVersion.cc3) {
     let cc3 = 'http://creativecommons.org/licenses/by'
-    if (input.optionCommercial == PodloveLicenseOptionCommercial.no) cc3 = cc3 + '-nc'
-    if (input.optionModification == PodloveLicenseOptionModification.yes) cc3 = cc3 + '/'
-    else if (input.optionModification == PodloveLicenseOptionModification.no) cc3 = cc3 + '-nd/'
+    if (input.optionCommercial === PodloveLicenseOptionCommercial.no) cc3 = cc3 + '-nc'
+    if (input.optionModification === PodloveLicenseOptionModification.yes) cc3 = cc3 + '/'
+    else if (input.optionModification === PodloveLicenseOptionModification.no) cc3 = cc3 + '-nd/'
     else cc3 = cc3 + '-sa/'
-    if (input.optionJurisdication == null || input.optionJurisdication.symbol == 'international')
+    if (input.optionJurisdication === null || input.optionJurisdication.symbol === 'international')
       cc3 = cc3 + '3.0/'
     else
       cc3 = cc3 + input.optionJurisdication.version + '/' + input.optionJurisdication.symbol + '/'
     return cc3 + 'deed.en'
   }
-  if (input.version == PodloveLicenseVersion.cc4) {
+  if (input.version === PodloveLicenseVersion.cc4) {
     let cc4 = 'http://creativecommons.org/licenses/by'
     if (input.optionCommercial == PodloveLicenseOptionCommercial.no) cc4 = cc4 + '-nc'
     if (input.optionModification == PodloveLicenseOptionModification.yes) cc4 = cc4 + '/'
@@ -56,19 +45,20 @@ export function getLicenseUrl(input: PodloveLicense): string | null {
 }
 
 export function getImageUrl(input: PodloveLicense, baseUrl: string): string | null {
-  if (input.type == null || input.type != 'cc') return null
-  if (input.version == PodloveLicenseVersion.cc0)
-    return baseUrl + '/wp-content/plugins/podlove-publisher/images/cc/pd.png'
-  if (input.version == PodloveLicenseVersion.pdmark)
-    return baseUrl + '/wp-content/plugins/podlove-publisher/images/cc/pdmark.png'
-  return (
-    baseUrl +
-    '/wp-content/plugins/podlove-publisher/images/cc/' +
-    imageUrlModificationId(input.optionModification) +
-    '_' +
-    imageUrlCommercialUseId(input.optionCommercial) +
-    '.png'
-  )
+  if (input.type === null || input.type !== 'cc') return null
+  if (input.version === PodloveLicenseVersion.cc0)
+    return pdImage;
+  if (input.version === PodloveLicenseVersion.pdmark)
+    return pdMarkImage;
+  if (input.optionModification === null || input.optionCommercial === null) return null
+  switch(input.optionModification) {
+    case PodloveLicenseOptionModification.no:
+      return input.optionCommercial === PodloveLicenseOptionCommercial.no ? cc_0_0_Image : cc_0_1_Image
+    case PodloveLicenseOptionModification.yes:
+      return input.optionCommercial === PodloveLicenseOptionCommercial.no ? cc_1_0_Image : cc_1_1_Image
+    case PodloveLicenseOptionModification.yesbutshare:
+      return input.optionCommercial === PodloveLicenseOptionCommercial.no ? cc_10_0_Image : cc_10_1_Image
+  }
 }
 
 export function getLicenseFromUrl(url: string): PodloveLicense {
@@ -100,19 +90,18 @@ export function getLicenseFromUrl(url: string): PodloveLicense {
     }
   }
 
-  const urlArray = urlLowerCase.split('/')
-  const urlData = urlArray.slice(4)
+  const urlData = urlLowerCase.split('/').slice(4)
 
   let commercial: PodloveLicenseOptionCommercial = PodloveLicenseOptionCommercial.yes
-  if (urlData[0].indexOf('nc') >= 0) {
+  if (urlData[0].includes('nc')) {
     commercial = PodloveLicenseOptionCommercial.no
   }
 
   let modification: PodloveLicenseOptionModification = PodloveLicenseOptionModification.yes
-  if (urlData[0].indexOf('sa') >= 0) {
+  if (urlData[0].includes('sa')) {
     modification = PodloveLicenseOptionModification.yesbutshare
   } else {
-    if (urlData[0].indexOf('nd') >= 0) {
+    if (urlData[0].includes('nd')) {
       modification = PodloveLicenseOptionModification.no
     }
   }
@@ -120,7 +109,7 @@ export function getLicenseFromUrl(url: string): PodloveLicense {
   let jurisdication = PodloveLicenseOptionJurisdication[0]
   if (urlData.length > 2) {
     const idx: number = PodloveLicenseOptionJurisdication.findIndex(
-      (item) => item.symbol == urlData[2]
+      (item) => item.symbol === urlData[2]
     )
     if (idx > 0) jurisdication = PodloveLicenseOptionJurisdication[idx]
   }

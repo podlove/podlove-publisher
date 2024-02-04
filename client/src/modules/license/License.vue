@@ -47,14 +47,10 @@ export default defineComponent({
   },
   computed: {
     isScopeEpisode(): boolean {
-      if (this.scope == PodloveLicenseScope.Episode)
-        return true;
-      return false;
+      return this.scope === PodloveLicenseScope.Episode ? true : false
     },
     getModuleTitle(): string {
-      if (this.scope == PodloveLicenseScope.Episode)
-        return "Episode License"
-      return "Podcast License"
+      return this.scope === PodloveLicenseScope.Episode ? "Episode License" : "Podcast License"
     }
   }
 })

@@ -115,7 +115,6 @@ import Modal from '@components/modal/Modal.vue'
 import { PodloveLicense, PodloveLicenseVersion, PodloveLicenseOptionCommercial, 
   PodloveLicenseOptionModification, PodloveLicenseOptionJurisdication, PodloveLicenseScope } from '../../../types/license.types'
 import { getLicenseFromUrl, getLicenseUrl } from '@lib/license'
-import episodeSagas from '@sagas/episode.sagas'
 
 const PodloveLicenseVersionList: {
   key: string;
@@ -149,8 +148,8 @@ export default defineComponent({
   setup() {
     return {
       state: mapState({
-        episode_license_url: selectors.episode.license_url,
-        podcast_license_url: selectors.podcast.license_url
+        episodeLicenseUrl: selectors.episode.license_url,
+        podcastLicenseUrl: selectors.podcast.license_url
       }),
       dispatch: injectStore().dispatch,
     }
@@ -163,12 +162,12 @@ export default defineComponent({
   },
   computed: {
     isCommercialNModificationNeeded() : boolean {
-      if (this.getLicenseData().type == "cc" && (this.getLicenseData().version == PodloveLicenseVersion.cc3 || this.getLicenseData().version == PodloveLicenseVersion.cc4))
+      if (this.getLicenseData().type === "cc" && (this.getLicenseData().version === PodloveLicenseVersion.cc3 || this.getLicenseData().version === PodloveLicenseVersion.cc4))
         return true
       return false
     },
     isJurisdicationNeeded() : boolean {
-      if (this.getLicenseData().type == "cc" && this.getLicenseData().version == PodloveLicenseVersion.cc3)
+      if (this.getLicenseData().type === "cc" && this.getLicenseData().version === PodloveLicenseVersion.cc3)
         return true;
       return false;
     },
@@ -228,25 +227,25 @@ export default defineComponent({
       const value : string = (event.target as HTMLInputElement).value
       const idx: number = PodloveLicenseOptionJurisdication.findIndex(item => item.name === value)
 
-      if (idx != undefined) {
+      if (idx !== undefined) {
         licenseData.optionJurisdication = PodloveLicenseOptionJurisdication[idx]
         this.updateLicenseDataUrl(licenseData)
       }
     },
     updateLicenseDataUrl(licenseData: PodloveLicense) {
-      if (this.scope == PodloveLicenseScope.Episode) {
+      if (this.scope === PodloveLicenseScope.Episode) {
           this.dispatch(
             updateEpisode({ prop: 'license_url', value: getLicenseUrl(licenseData) })
           )
         }
-        if (this.scope == PodloveLicenseScope.Podcast) {
+        if (this.scope === PodloveLicenseScope.Podcast) {
           this.dispatch(
             updatePodcast({ prop: 'license_url', value: getLicenseUrl(licenseData) })
           )
         }
     },
     updateLicenseDataNameNUrl(licenseData: PodloveLicense) {
-      if (this.scope == PodloveLicenseScope.Episode) {
+      if (this.scope === PodloveLicenseScope.Episode) {
           this.dispatch(
             updateEpisode({ prop: 'license_name', value: licenseData.version })
           )
@@ -254,7 +253,7 @@ export default defineComponent({
             updateEpisode({ prop: 'license_url', value: getLicenseUrl(licenseData) })
           )
         }
-        if (this.scope == PodloveLicenseScope.Podcast) {
+        if (this.scope === PodloveLicenseScope.Podcast) {
           this.dispatch(
             updatePodcast({ prop: 'license_name', value: licenseData.version })
           )
@@ -264,8 +263,8 @@ export default defineComponent({
         }
     },
     getLicenseData() : PodloveLicense {
-      if (this.scope == PodloveLicenseScope.Episode) {
-        if (this.state.episode_license_url == null || this.state.episode_license_url == undefined) {
+      if (this.scope === PodloveLicenseScope.Episode) {
+        if (this.state.episodeLicenseUrl === null || this.state.episodeLicenseUrl === undefined) {
           return {
             type: "cc",
             version: PodloveLicenseVersion.pdmark,
@@ -274,9 +273,9 @@ export default defineComponent({
             optionJurisdication: null
           } as PodloveLicense
         }
-        return getLicenseFromUrl(this.state.episode_license_url)
+        return getLicenseFromUrl(this.state.episodeLicenseUrl)
       }
-      if (this.state.podcast_license_url == null || this.state.podcast_license_url == undefined) {
+      if (this.state.podcastLicenseUrl === null || this.state.podcastLicenseUrl === undefined) {
         return {
           type: "cc",
           version: PodloveLicenseVersion.pdmark,
@@ -285,7 +284,7 @@ export default defineComponent({
           optionJurisdication: null
         } as PodloveLicense
       }
-      return getLicenseFromUrl(this.state.podcast_license_url)
+      return getLicenseFromUrl(this.state.podcastLicenseUrl)
     }
   },
 })

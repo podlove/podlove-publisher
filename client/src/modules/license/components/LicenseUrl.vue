@@ -65,12 +65,12 @@ export default defineComponent({
   },
   methods: {
     updateLicenseUrl(event: Event) {
-      if (this.scope == PodloveLicenseScope.Episode) {
+      if (this.scope === PodloveLicenseScope.Episode) {
         this.dispatch(
           episode.update({prop: 'license_url', value: (event.target as HTMLInputElement).value})
         )
       }
-      if (this.scope == PodloveLicenseScope.Podcast) {
+      if (this.scope === PodloveLicenseScope.Podcast) {
         this.dispatch(
           podcast.update({prop: 'license_url', value: (event.target as HTMLInputElement).value})
         )
