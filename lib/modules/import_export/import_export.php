@@ -215,6 +215,7 @@ class Import_Export extends \Podlove\Modules\Base
 			(<span><?php echo self::get_maximum_upload_size_text(); ?></span>)
 			<input type="file" name="podlove_import"/> 
 			<input type="submit" value="<?php echo __('Import Podcast Data', 'podlove-podcasting-plugin-for-wordpress'); ?>" class="button" />
+			<?php wp_nonce_field('podlove_import', '_podlove_nonce'); ?>
 		</form>		
 		<?php
     }
@@ -226,6 +227,7 @@ class Import_Export extends \Podlove\Modules\Base
 			(<span><?php echo self::get_maximum_upload_size_text(); ?></span>)
 			<input type="file" name="podlove_import_tracking"/>
 			<input type="submit" value="<?php echo __('Import Tracking Data', 'podlove-podcasting-plugin-for-wordpress'); ?>" class="button" />
+			<?php wp_nonce_field('podlove_import_tracking', '_podlove_nonce'); ?>
 		</form>		
 		<?php
     }
