@@ -30,6 +30,14 @@ class PodcastExporter
         }
 
         if (isset($_GET['podlove_export']) && $_GET['podlove_export']) {
+            if (!current_user_can('administrator')) {
+                return;
+            }
+
+            if (!wp_verify_nonce($_REQUEST['_podlove_nonce'], 'podlove_export')) {
+                return;
+            }
+
             $exporter = new \Podlove\Modules\ImportExport\Export\PodcastExporter();
             $exporter->download();
             exit;

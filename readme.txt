@@ -112,6 +112,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 - fix SSRF vulnerability in Slacknotes module
 - add missing capability check and nonce validation to importer functions
+- add missing capability check and nonce validation to exporter functions
 
 = 4.0.11 =
 
