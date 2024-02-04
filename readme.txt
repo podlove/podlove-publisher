@@ -106,6 +106,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 4.0.12 =
+
+- fix SSRF vulnerability in Slacknotes module
+
 = 4.0.11 =
 
 - new: show admin notice when a database migration fails
