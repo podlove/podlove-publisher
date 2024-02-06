@@ -208,36 +208,25 @@ class Slack_Shownotes extends \Podlove\Modules\Base
      */
     public static function fetch_url_meta($url)
     {
-        $curl = curl_init();
-
-        curl_setopt_array($curl, [
-            CURLOPT_URL => $url,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => '',
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 10,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => 'GET',
-            CURLOPT_POSTFIELDS => '',
-            CURLOPT_HTTPHEADER => [
-                'cache-control: no-cache',
-            ],
-        ]);
-
-        $html = curl_exec($curl);
-        $err = curl_error($curl);
-
-        $effective_url = curl_getinfo($curl, CURLINFO_EFFECTIVE_URL);
-
-        curl_close($curl);
-
         $response = [
-            'url' => $effective_url,
+            'url' => $url,
             'title' => '',
         ];
 
-        if (!$err) {
+        $safe_response = wp_safe_remote_get($url);
+
+        $final_url = array_map(
+            function ($entry) { return $entry->url; },
+            $safe_response['http_response']->get_response_object()->history
+        )[0];
+
+        if ($final_url) {
+            $response['url'] = $final_url;
+        }
+
+        $html = $safe_response['body'];
+
+        if (!is_wp_error($safe_response)) {
             $dom = new \DOMDocument();
             $loaded = $dom->loadHTML($html, LIBXML_NOERROR);
 

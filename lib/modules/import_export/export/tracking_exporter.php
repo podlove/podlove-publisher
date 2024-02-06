@@ -19,6 +19,14 @@ class TrackingExporter
         }
 
         if (isset($_GET['podlove_export_tracking']) && $_GET['podlove_export_tracking']) {
+            if (!current_user_can('administrator')) {
+                exit;
+            }
+
+            if (!wp_verify_nonce($_REQUEST['_podlove_nonce'], 'podlove_export_tracking_download')) {
+                exit;
+            }
+
             delete_transient('podlove_tracking_export_finished');
 
             header('Content-Type: application/octet-stream');
@@ -43,9 +51,17 @@ class TrackingExporter
     {
         global $wpdb;
 
+        if (!current_user_can('administrator')) {
+            exit;
+        }
+
+        if (!wp_verify_nonce($_REQUEST['_podlove_nonce'], 'podlove_export_tracking')) {
+            exit;
+        }
+
         // only one export at a time
         if (get_option('podlove_tracking_export_all') !== false) {
-            return;
+            exit;
         }
 
         update_option('podlove_tracking_export_all', $wpdb->get_var('SELECT COUNT(*) FROM '.\Podlove\Model\DownloadIntent::table_name()));
