@@ -102,8 +102,6 @@ class Podcast implements Licensable
      */
     public function save()
     {
-        $this->set_property('media_file_base_uri', trailingslashit($this->media_file_base_uri));
-
         $this->with_blog_scope(function () {
             update_option('podlove_podcast', $this->data);
 
@@ -175,7 +173,7 @@ class Podcast implements Licensable
 
     public function get_media_file_base_uri()
     {
-        return apply_filters('podlove_media_file_base_uri', $this->media_file_base_uri);
+        return apply_filters('podlove_media_file_base_uri', trailingslashit($this->media_file_base_uri));
     }
 
     /**
