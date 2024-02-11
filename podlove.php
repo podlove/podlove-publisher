@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: Podlove Podcast Publisher
- * Plugin URI:  http://publisher.podlove.org
+ * Plugin URI:  https://podlove.org/podlove-podcast-publisher/
  * Description: The one and only next generation podcast publishing system. Seriously. It's magical and sparkles a lot.
  * Version: 4.0.12
  * Requires at least: 4.9.6
