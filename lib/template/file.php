@@ -37,6 +37,7 @@ class File extends Wrapper
      * Episode related to this file.
      *
      * @see  episode
+     *
      * @accessor
      */
     public function episode()
@@ -48,6 +49,7 @@ class File extends Wrapper
      * Asset related to this file.
      *
      * @see  asset
+     *
      * @accessor
      */
     public function asset()
@@ -63,6 +65,16 @@ class File extends Wrapper
     public function size()
     {
         return $this->file->size;
+    }
+
+    /**
+     * Is it active?
+     *
+     * @accessor
+     */
+    public function active()
+    {
+        return $this->file->active;
     }
 
     /**

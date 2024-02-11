@@ -108,7 +108,14 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 = 4.0.13 =
 
+**Features**
+
+- Templates: new `active` accessor for `File` objects. Returns if the file is marked as active.
+
+**Bugfixes and Improvements**
+
 - fix: don't use the Auphonic chapter image URL (real fix where chapter images are downloaded and served from WordPress will follow later)
+- fix: only display active files in download widgets
 - improve handling of upload directory
 
 = 4.0.12 =

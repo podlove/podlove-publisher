@@ -113,7 +113,7 @@ FROM
     LEFT JOIN '.EpisodeAsset::table_name().' a ON a.id = mf.episode_asset_id
     LEFT JOIN '.FileType::table_name().' ft ON ft.id = a.file_type_id
 WHERE
-    e.id = %d AND a.downloadable
+    e.id = %d AND a.downloadable AND mf.active
 ORDER BY
     position ASC
     ';

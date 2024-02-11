@@ -2,7 +2,7 @@
 	<li>Download:</li>
 	{% for file in episode.files %}
 	    {% set asset = file.asset %}
-	    {% if asset.downloadable %}
+	    {% if asset.downloadable and file.active %}
 			<li>
 				<a href="{{ file.publicUrl("download", "buttonlist") }}">{{ asset.title }}<span class="size">{{ file.size|formatBytes }}</span></a>
 			</li>
