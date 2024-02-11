@@ -183,7 +183,10 @@ export default defineComponent({
               start: Math.round((chapter.start_sec || 0) * 1000),
               title: chapter.title || '',
               href: chapter.url || '',
-              image: chapter.image || '',
+              // FIXME: chapter.image is an Auphonic URL which we can't use. We
+              // have to download the image and serve from WordPress.
+              // image: chapter.image || '',
+              image: '',
             }
           })
 

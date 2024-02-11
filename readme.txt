@@ -106,6 +106,11 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 4.0.13 =
+
+- fix: don't use the Auphonic chapter image URL (real fix where chapter images are downloaded and served from WordPress will follow later)
+- improve handling of upload directory
+
 = 4.0.12 =
 
 **Security**
