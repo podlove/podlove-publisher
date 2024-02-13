@@ -106,6 +106,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 4.0.14 =
+
+- fix: ensure slug field is always usable (wide enough, and prefix shortened if necessary)
+
 = 4.0.13 =
 
 **Features**
