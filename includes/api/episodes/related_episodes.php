@@ -4,10 +4,8 @@ namespace Podlove\Api\Episodes;
 
 use Podlove\Model\Episode;
 use Podlove\Modules\RelatedEpisodes\Model\EpisodeRelation;
-use WP_REST_Controller;
-use WP_REST_Server;
 
-class WP_REST_PodloveEpisodeRelated_Controller extends WP_REST_Controller
+class WP_REST_PodloveEpisodeRelated_Controller extends \WP_REST_Controller
 {
     public function __construct()
     {
@@ -32,17 +30,17 @@ class WP_REST_PodloveEpisodeRelated_Controller extends WP_REST_Controller
                         'enum' => ['publish', 'draft', 'all']
                     ],
                 ],
-                'methods' => WP_REST_Server::READABLE,
+                'methods' => \WP_REST_Server::READABLE,
                 'callback' => [$this, 'get_items'],
                 'permission_callback' => [$this, 'get_items_permissions_check'],
             ],
             [
-                'methods' => WP_REST_Server::EDITABLE,
+                'methods' => \WP_REST_Server::EDITABLE,
                 'callback' => [$this, 'update_items'],
                 'permission_callback' => [$this, 'update_items_permissions_check'],
             ],
             [
-                'methods' => WP_REST_Server::DELETABLE,
+                'methods' => \WP_REST_Server::DELETABLE,
                 'callback' => [$this, 'delete_items'],
                 'permission_callback' => [$this, 'delete_items_permissions_check'],
             ]
@@ -67,7 +65,7 @@ class WP_REST_PodloveEpisodeRelated_Controller extends WP_REST_Controller
                         'required' => 'true'
                     ],
                 ],
-                'methods' => WP_REST_Server::CREATABLE,
+                'methods' => \WP_REST_Server::CREATABLE,
                 'callback' => [$this, 'create_item'],
                 'permission_callback' => [$this, 'create_item_permissions_check'],
             ]
@@ -87,17 +85,17 @@ class WP_REST_PodloveEpisodeRelated_Controller extends WP_REST_Controller
                         'enum' => ['publish', 'draft']
                     ],
                 ],
-                'methods' => WP_REST_Server::READABLE,
+                'methods' => \WP_REST_Server::READABLE,
                 'callback' => [$this, 'get_item'],
                 'permission_callback' => [$this, 'get_items_permissions_check'],
             ],
             [
-                'methods' => WP_REST_Server::EDITABLE,
+                'methods' => \WP_REST_Server::EDITABLE,
                 'callback' => [$this, 'update_item'],
                 'permission_callback' => [$this, 'update_items_permissions_check'],
             ],
             [
-                'methods' => WP_REST_Server::DELETABLE,
+                'methods' => \WP_REST_Server::DELETABLE,
                 'callback' => [$this, 'delete_item'],
                 'permission_callback' => [$this, 'delete_items_permissions_check'],
             ]
@@ -184,7 +182,7 @@ class WP_REST_PodloveEpisodeRelated_Controller extends WP_REST_Controller
             return new \Podlove\Api\Error\NotFound('rest_not_found', $msg);
         }
 
-        $right_episode = Episode::find_by_id(($relation->right_episode_id));
+        $right_episode = Episode::find_by_id($relation->right_episode_id);
         $left_episode = Episode::find_by_id($relation->left_episode_id);
 
         if (!$right_episode) {
@@ -397,12 +395,12 @@ class WP_REST_PodloveEpisodeRelated_Controller extends WP_REST_Controller
     private function create_episode_relation($id, $related_id)
     {
         // Don't create duplicates
-        $relations = EpisodeRelation::find_all_by_where('left_episode_id = '.$id.' AND right_episode_id = '.$related_id);
+        $relations = EpisodeRelation::find_all_by_where('left_episode_id = '.intval($id).' AND right_episode_id = '.intval($related_id));
         if ($relations) {
             return;
         }
 
-        $relations = EpisodeRelation::find_all_by_where('right_episode_id = '.$id.' AND left_episode_id = '.$related_id);
+        $relations = EpisodeRelation::find_all_by_where('right_episode_id = '.intval($id).' AND left_episode_id = '.intval($related_id));
         if ($relations) {
             return;
         }
