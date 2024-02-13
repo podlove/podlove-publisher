@@ -35,7 +35,7 @@ export default defineConfig({
       output: {
         entryFileNames: `client.js`,
         chunkFileNames: `chunk-[name].js`,
-        assetFileNames: `style.[ext]`
+        assetFileNames: `[name].[ext]`
       }
     }
   }

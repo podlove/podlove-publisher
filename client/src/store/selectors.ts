@@ -60,6 +60,8 @@ const podcast = {
   author: createSelector(root.podcast, podcastStore.selectors.author),
   poster: createSelector(root.podcast, podcastStore.selectors.poster),
   link: createSelector(root.podcast, podcastStore.selectors.link),
+  license_name: createSelector(root.podcast, podcastStore.selectors.license_name),
+  license_url: createSelector(root.podcast, podcastStore.selectors.license_url),
 }
 
 const chapters = {
