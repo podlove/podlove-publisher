@@ -108,6 +108,8 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 = 4.0.14 =
 
+- add: migrate episode license selector user interface
+- fix: auto-generate file slug from episode-post-title
 - fix: ensure slug field is always usable (wide enough, and prefix shortened if necessary)
 - security: fix SQL injection vulnerability in Related Episodes module
 
