@@ -30,6 +30,7 @@ import { mapState, injectStore } from 'redux-vuex'
 
 import { selectors } from '@store'
 import { update as updateEpisode } from '@store/episode.store'
+import { disableSlugAutogen } from '@store/mediafiles.store'
 
 export default defineComponent({
   setup() {
@@ -47,6 +48,8 @@ export default defineComponent({
       this.dispatch(
         updateEpisode({ prop: 'slug', value: (event.target as HTMLInputElement).value })
       )
+      // disable slug generation on any manual input
+      this.dispatch(disableSlugAutogen())
     },
   },
 

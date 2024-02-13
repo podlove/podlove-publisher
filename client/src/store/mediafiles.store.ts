@@ -11,11 +11,13 @@ export type MediaFile = {
 
 export type State = {
   is_initializing: boolean
+  slug_autogeneration_enabled: boolean
   files: MediaFile[]
 }
 
 export const initialState: State = {
   is_initializing: true,
+  slug_autogeneration_enabled: false,
   files: [],
 }
 
@@ -28,6 +30,8 @@ export const DISABLE = 'podlove/publisher/mediafiles/DISABLE'
 export const VERIFY = 'podlove/publisher/mediafiles/VERIFY'
 export const UPLOAD_INTENT = 'podlove/publisher/mediafiles/UPLOAD_INTENT'
 export const SET_UPLOAD_URL = 'podlove/publisher/mediafiles/SET_UPLOAD_URL'
+export const ENABLE_SLUG_AUTOGEN = 'podlove/publisher/mediafiles/ENABLE_SLUG_AUTOGEN'
+export const DISABLE_SLUG_AUTOGEN = 'podlove/publisher/mediafiles/DISABLE_SLUG_AUTOGEN'
 
 export const init = createAction<void>(INIT)
 export const initDone = createAction<void>(INIT_DONE)
@@ -38,6 +42,8 @@ export const disable = createAction<number>(DISABLE)
 export const verify = createAction<number>(VERIFY)
 export const uploadIntent = createAction<void>(UPLOAD_INTENT)
 export const setUploadUrl = createAction<string>(SET_UPLOAD_URL)
+export const enableSlugAutogen = createAction<void>(ENABLE_SLUG_AUTOGEN)
+export const disableSlugAutogen = createAction<void>(DISABLE_SLUG_AUTOGEN)
 
 // TODO: enable revalidates I think?
 export const reducer = handleActions(
@@ -80,11 +86,20 @@ export const reducer = handleActions(
         []
       ),
     }),
+    [ENABLE_SLUG_AUTOGEN]: (state: State): State => ({
+      ...state,
+      slug_autogeneration_enabled: true,
+    }),
+    [DISABLE_SLUG_AUTOGEN]: (state: State): State => ({
+      ...state,
+      slug_autogeneration_enabled: false,
+    }),
   },
   initialState
 )
 
 export const selectors = {
   isInitializing: (state: State) => state.is_initializing,
+  slugAutogenerationEnabled: (state: State) => state.slug_autogeneration_enabled,
   files: (state: State) => state.files,
 }

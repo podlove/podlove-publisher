@@ -197,6 +197,24 @@ class WP_REST_PodloveEpisode_Controller extends \WP_REST_Controller
                 'permission_callback' => [$this, 'create_item_permissions_check'],
             ]
         ]);
+
+        register_rest_route($this->namespace, '/'.$this->rest_base.'/(?P<id>[\d]+)/build_slug', [
+            'args' => [
+                'id' => [
+                    'description' => __('Unique identifier for the episode.', 'podlove-podcasting-plugin-for-wordpress'),
+                    'type' => 'integer',
+                ],
+                'title' => [
+                    'type' => 'string'
+                ]
+            ],
+            [
+                'methods' => \WP_REST_Server::READABLE,
+                'callback' => [$this, 'build_slug'],
+                'permission_callback' => [$this, 'create_item_permissions_check'],
+            ]
+        ]);
+
         register_rest_route($this->namespace, '/'.$this->rest_base.'/(?P<id>[\d]+)', [
             'args' => [
                 'id' => [
@@ -663,6 +681,25 @@ class WP_REST_PodloveEpisode_Controller extends \WP_REST_Controller
         }
 
         return new \WP_REST_Response(null, 500);
+    }
+
+    public function build_slug($request)
+    {
+        $id = $request->get_param('id');
+        if (!$id) {
+            return;
+        }
+
+        $episode = Episode::find_by_id($id);
+        if (!$episode) {
+            return new \Podlove\Api\Error\NotFound();
+        }
+
+        $title = $request->get_param('title') ?? get_the_title($episode->post_id);
+
+        $slug = sanitize_title($title);
+
+        return new \Podlove\Api\Response\CreateResponse(['slug' => $slug]);
     }
 
     public function update_item_permissions_check($request)

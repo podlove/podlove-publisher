@@ -6,6 +6,7 @@ import { debounce, fork, put, select, takeEvery } from 'redux-saga/effects'
 import { PodloveEpisode } from '../types/episode.types'
 import * as auphonic from '../store/auphonic.store'
 import * as episode from '../store/episode.store'
+import * as mediafiles from '../store/mediafiles.store'
 import * as wordpress from '../store/wordpress.store'
 import { createApi } from './api'
 import { WebhookConfig } from './auphonic.sagas'
@@ -34,9 +35,15 @@ function* updateAuphonicWebhookConfig() {
 
 function* initialize(api: PodloveApiClient) {
   const episodeId: string = yield select(selectors.episode.id)
-  const { result: episodesResult }: { result: PodloveEpisode } = yield api.get(`episodes/${episodeId}`)
+  const { result: episodesResult }: { result: PodloveEpisode } = yield api.get(
+    `episodes/${episodeId}`
+  )
 
   if (episodesResult) {
+    if (episodesResult.slug === null) {
+      yield put(mediafiles.enableSlugAutogen())
+    }
+
     yield put(episode.set(episodesResult))
   }
 }

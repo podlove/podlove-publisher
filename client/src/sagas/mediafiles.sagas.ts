@@ -1,11 +1,11 @@
 import { PodloveApiClient } from '@lib/api'
 import { selectors } from '@store'
-import { all, call, delay, fork, put, select, takeEvery, throttle } from 'redux-saga/effects'
+import { all, call, debounce, fork, put, select, takeEvery, throttle } from 'redux-saga/effects'
 import * as mediafiles from '@store/mediafiles.store'
 import * as episode from '@store/episode.store'
 import * as wordpress from '@store/wordpress.store'
 import { MediaFile } from '@store/mediafiles.store'
-import { takeFirst } from './helper'
+import { takeFirst, channel } from './helper'
 import { createApi } from './api'
 import { Action } from 'redux'
 import { get } from 'lodash'
@@ -17,6 +17,7 @@ function* mediafilesSaga(): any {
 
 function* initialize(api: PodloveApiClient) {
   const episodeId: string = yield select(selectors.episode.id)
+  const episodeSlug: string = yield select(selectors.episode.slug)
   const {
     result: { results: files },
   }: { result: { results: MediaFile[] } } = yield api.get(`episodes/${episodeId}/media`)
@@ -29,6 +30,8 @@ function* initialize(api: PodloveApiClient) {
   yield takeEvery(mediafiles.DISABLE, handleDisable, api)
   yield takeEvery(mediafiles.VERIFY, handleVerify, api)
   yield takeEvery(episode.SAVED, maybeReverify, api)
+  yield debounce(2000, wordpress.UPDATE, maybeUpdateSlug, api)
+
   yield throttle(
     2000,
     [mediafiles.ENABLE, mediafiles.DISABLE, mediafiles.UPDATE],
@@ -99,6 +102,26 @@ function* maybeReverify(api: PodloveApiClient, action: { type: string; payload: 
 
   // verify all
   yield all(mediaFiles.map((file) => call(verifyEpisodeAsset, api, episodeId, file.asset_id)))
+}
+
+function* maybeUpdateSlug(
+  api: PodloveApiClient,
+  action: { type: string; payload: { prop: string; value: any } }
+) {
+  const episodeId: boolean = yield select(selectors.episode.id)
+  const oldSlug: boolean = yield select(selectors.episode.slug)
+  const enabled: boolean = yield select(selectors.mediafiles.slugAutogenerationEnabled)
+
+  if (enabled && action.payload.prop == 'title' && action.payload.value) {
+    const newTitle = action.payload.value
+
+    const { result } = yield api.get(`episodes/${episodeId}/build_slug`, {
+      query: { title: newTitle },
+    })
+    if (oldSlug != result.slug) {
+      yield put(episode.update({ prop: 'slug', value: result.slug }))
+    }
+  }
 }
 
 function* verifyEpisodeAsset(api: PodloveApiClient, episodeId: number, assetId: number) {

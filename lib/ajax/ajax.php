@@ -39,7 +39,6 @@ class Ajax
             'analytics-global-total-downloads',
             'analytics-global-total-downloads-by-show',
             'analytics-csv-episodes-table',
-            'episode-slug',
             'admin-news',
             'job-create',
             'job-get',
@@ -913,13 +912,6 @@ class Ajax
     public function get_license_parameters_from_url()
     {
         self::respond_with_json(\Podlove\Model\License::get_license_from_url($_REQUEST['url']));
-    }
-
-    public function episode_slug()
-    {
-        echo sanitize_title($_REQUEST['title']);
-
-        exit;
     }
 
     private static function analytics_date_condition()
