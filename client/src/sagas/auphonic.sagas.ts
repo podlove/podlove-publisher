@@ -320,7 +320,7 @@ function getProductionPayload(state: State): object {
     image: episode_poster,
     metadata: {
       ...newPayload.metadata,
-      title: state.episode.title,
+      title: state.episode.title || state.post.title,
       subtitle: state.episode.subtitle,
       summary: state.episode.summary,
       artist: state.podcast.author_name,
@@ -440,15 +440,20 @@ function* fetchServiceFiles(
   yield put(auphonic.setServiceFiles({ uuid, files: result.data }))
 }
 
-function defaultTitle() {
-  return `New Production`
+function* titleWithFallback() {
+  const episodeTitle: string = yield select(selectors.episode.title)
+  const postTitle: string = yield select(selectors.post.title)
+
+  return episodeTitle || postTitle || `New Production`
 }
 
 function* handleCreateProduction(auphonicApi: AuphonicApiClient) {
   const presetUUID: string = yield select(selectors.auphonic.preset)
+  const title: string = yield titleWithFallback()
+
   const { result } = yield auphonicApi.post(`productions.json`, {
     preset: presetUUID,
-    metadata: { title: defaultTitle() },
+    metadata: { title: title },
   })
   const production = result.data
 
@@ -457,9 +462,11 @@ function* handleCreateProduction(auphonicApi: AuphonicApiClient) {
 
 function* handleCreateMultitrackProduction(auphonicApi: AuphonicApiClient) {
   const presetUUID: string = yield select(selectors.auphonic.preset)
+  const title: string = yield titleWithFallback()
+
   const { result } = yield auphonicApi.post(`productions.json`, {
     preset: presetUUID,
-    metadata: { title: defaultTitle() },
+    metadata: { title: title },
     is_multitrack: true,
   })
   const production = result.data
