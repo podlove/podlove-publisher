@@ -72,6 +72,10 @@ class Ajax
 
     public function job_create()
     {
+        if (!current_user_can('administrator')) {
+            exit;
+        }
+
         $job_name = filter_input(INPUT_POST, 'name');
         $job_args = isset($_REQUEST['args']) && is_array($_REQUEST['args']) ? $_REQUEST['args'] : [];
 
@@ -98,6 +102,9 @@ class Ajax
 
     public function job_get()
     {
+        if (!current_user_can('administrator')) {
+            exit;
+        }
         $job_id = filter_input(INPUT_GET, 'job_id');
         $job = \Podlove\Model\Job::find_by_id($job_id);
 
@@ -110,6 +117,9 @@ class Ajax
 
     public function job_delete()
     {
+        if (!current_user_can('administrator')) {
+            exit;
+        }
         $job_id = filter_input(INPUT_GET, 'job_id');
         $job = \Podlove\Model\Job::find_by_id($job_id);
 
@@ -124,6 +134,10 @@ class Ajax
 
     public function jobs_get()
     {
+        if (!current_user_can('administrator')) {
+            exit;
+        }
+
         $jobs = \Podlove\Model\Job::all();
         $jobs = array_map(function ($j) {
             $job = $j->to_array();
@@ -513,38 +527,38 @@ class Ajax
     }
 
     // SELECT
-//     count(id) downloads,
-//     source
+    //     count(id) downloads,
+    //     source
     // FROM
-//     wp_podlove_downloadintentclean
+    //     wp_podlove_downloadintentclean
     // GROUP BY
-//     source
+    //     source
     // ORDER BY
-//     downloads DESC;
+    //     downloads DESC;
 
     // SELECT
-//     count(id) downloads,
-//     CONCAT(source, "/", context)
+    //     count(id) downloads,
+    //     CONCAT(source, "/", context)
     // FROM
-//     wp_podlove_downloadintentclean
+    //     wp_podlove_downloadintentclean
     // GROUP BY
-//     source,
-//     context
+    //     source,
+    //     context
     // ORDER BY
-//     downloads DESC;
+    //     downloads DESC;
 
     // SELECT
-//     count(di.id) downloads,
-//     t.name
+    //     count(di.id) downloads,
+    //     t.name
     // FROM
-//     wp_podlove_downloadintentclean di
-//     JOIN `wp_podlove_mediafile` f ON f.id = di.`media_file_id`
-//     JOIN `wp_podlove_episodeasset` a ON a.id = f.`episode_asset_id`
-//     JOIN `wp_podlove_filetype` t ON t.id = a.`file_type_id`
+    //     wp_podlove_downloadintentclean di
+    //     JOIN `wp_podlove_mediafile` f ON f.id = di.`media_file_id`
+    //     JOIN `wp_podlove_episodeasset` a ON a.id = f.`episode_asset_id`
+    //     JOIN `wp_podlove_filetype` t ON t.id = a.`file_type_id`
     // GROUP BY
-//     t.id
+    //     t.id
     // ORDER BY
-//     downloads DESC;
+    //     downloads DESC;
 
     public static function analytics_global_assets()
     {

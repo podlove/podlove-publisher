@@ -112,6 +112,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 - fix: auto-generate file slug from episode-post-title
 - fix: ensure slug field is always usable (wide enough, and prefix shortened if necessary)
 - security: fix SQL injection vulnerability in Related Episodes module
+- security: ensure only administrators can manage jobs
 
 = 4.0.13 =
 
