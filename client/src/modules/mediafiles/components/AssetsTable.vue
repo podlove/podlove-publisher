@@ -87,9 +87,7 @@ found" -->
           </tr>
         </tbody>
       </table>
-      <p class="mt-3 text-sm leading-6 text-gray-600">
-        {{ __('Episode Duration:') }} {{ duration }}
-      </p>
+      <p class="mt-3 text-sm leading-6 text-gray-600">{{ __('Duration:') }} {{ duration }}</p>
     </div>
     <AssetsEmptyState v-else />
   </div>
@@ -168,11 +166,19 @@ export default defineComponent({
       return this.files.length > 0
     },
     duration(): string {
+      const unknownDuration = '--:--:--.---'
+
       if (!this.state.duration) {
-        return '-'
+        return unknownDuration
       }
 
-      return Timestamp.fromString(this.state.duration).pretty
+      const timestamp = Timestamp.fromString(this.state.duration)
+
+      if (timestamp.totalMs === 0) {
+        return unknownDuration
+      }
+
+      return timestamp.pretty
     },
   },
 })
