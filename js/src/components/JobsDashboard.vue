@@ -96,7 +96,8 @@ export default {
             this.aborting.push(job.id)
             $.getJSON(ajaxurl, {
                 action: 'podlove-job-delete',
-                job_id: job.id
+                job_id: job.id,
+                nonce: podlove_admin_global.nonce_ajax
             })
         },
         isAborting(job) {

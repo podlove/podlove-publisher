@@ -113,6 +113,7 @@ add_action('admin_enqueue_scripts', function () {
             [
                 'rest_url' => esc_url_raw(rest_url()),
                 'nonce' => wp_create_nonce('wp_rest'),
+                'nonce_ajax' => wp_create_nonce('podlove_ajax'),
                 'post_id' => get_the_ID(),
             ]
         );

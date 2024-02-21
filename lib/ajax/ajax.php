@@ -73,6 +73,12 @@ class Ajax
     public function job_create()
     {
         if (!current_user_can('administrator')) {
+            http_response_code(401);
+            exit;
+        }
+
+        if (!wp_verify_nonce($_REQUEST['nonce'], 'podlove_ajax')) {
+            http_response_code(401);
             exit;
         }
 
@@ -118,8 +124,15 @@ class Ajax
     public function job_delete()
     {
         if (!current_user_can('administrator')) {
+            http_response_code(401);
             exit;
         }
+
+        if (!wp_verify_nonce($_REQUEST['nonce'], 'podlove_ajax')) {
+            http_response_code(401);
+            exit;
+        }
+
         $job_id = filter_input(INPUT_GET, 'job_id');
         $job = \Podlove\Model\Job::find_by_id($job_id);
 
