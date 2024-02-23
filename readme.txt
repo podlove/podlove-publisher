@@ -106,6 +106,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 4.0.16 =
+
+- add: capability "podlove_manage_contributors" for contributors settings screens
+
 = 4.0.15 =
 
 - security: add nonces to jobs management
