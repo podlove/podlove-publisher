@@ -475,6 +475,7 @@ Podcast::property('uri_delimiter');
 Podcast::property('limit_items');
 Podcast::property('feed_episode_title_variant');
 Podcast::property('feed_episode_title_template');
+Podcast::property('feed_transcripts');
 Podcast::property('language');
 Podcast::property('complete');
 Podcast::property('flattr'); // @deprecated since 2.3.0 (now: wp_option "podlove_flattr")

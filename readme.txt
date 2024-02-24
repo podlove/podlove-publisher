@@ -108,6 +108,24 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 = 4.0.16 =
 
+**Feature: Better control over transcripts in RSS feed**
+
+There is a new feature under `Podlove > Podcast Feeds` called "Episode
+Transcripts" to control how episode transcripts should be referenced in your RSS
+feed. The default is "Publisher Generated vtt", which is nearly the same
+behavior as before (In previous versions, three variants were referenced: vtt,
+json and srt. The json and srt URLs still work but they are not referenced in
+the RSS feed any more as they are not neccessary and removing them reduces feed
+size). There is a dedicated "Do not include in feed" option, in case you do not
+want the transcripts in your RSS feed.
+
+Finally, you may prefer to host your transcript assets externally, just like
+your audio files. If you have configured a transcript asset, you can now select
+it in this setting. Then the RSS feed will reference this external file
+directly.
+
+**Other**
+
 - add: capability "podlove_manage_contributors" for contributors settings screens
 
 = 4.0.15 =

@@ -40,6 +40,8 @@ class Transcripts extends \Podlove\Modules\Base
         add_action('podlove_media_file_content_has_changed', [$this, 'handle_changed_media_file']);
         add_action('podlove_media_file_content_verified', [$this, 'handle_changed_media_file']);
 
+        add_action('podlove_feeds_global_form', [$this, 'add_feeds_global_form'], 10, 1);
+
         add_filter('podlove_twig_file_loader', function ($file_loader) {
             $file_loader->addPath(implode(DIRECTORY_SEPARATOR, [\Podlove\PLUGIN_DIR, 'lib', 'modules', 'transcripts', 'twig']), 'transcripts');
 
@@ -423,19 +425,7 @@ class Transcripts extends \Podlove\Modules\Base
     public function add_transcript_to_feed()
     {
         add_action('podlove_append_to_feed_entry', function ($podcast, $episode, $feed, $format) {
-            if (Transcript::exists_for_episode($episode->id)) {
-                $url = add_query_arg('podlove_transcript', 'webvtt', get_permalink($episode->post_id));
-                $url = str_replace(home_url(), site_url(), $url);
-                echo "\n\t\t".'<podcast:transcript url="'.esc_attr($url).'" type="text/vtt" />';
-
-                $url = add_query_arg('podlove_transcript', 'json_podcastindex', get_permalink($episode->post_id));
-                $url = str_replace(home_url(), site_url(), $url);
-                echo "\n\t\t".'<podcast:transcript url="'.esc_attr($url).'" type="application/json" />';
-
-                $url = add_query_arg('podlove_transcript', 'xml', get_permalink($episode->post_id));
-                $url = str_replace(home_url(), site_url(), $url);
-                echo "\n\t\t".'<podcast:transcript url="'.esc_attr($url).'" type="application/xml" />';
-            }
+            $this->print_rss_feed_links($podcast, $episode);
         }, 10, 4);
     }
 
@@ -471,6 +461,28 @@ class Transcripts extends \Podlove\Modules\Base
         ]);
     }
 
+    public function add_feeds_global_form($wrapper)
+    {
+        $options = [
+            'none' => __('Do not include in feed', 'podlove-podcasting-plugin-for-wordpress'),
+            'generated' => __('Publisher Generated vtt (Default)', 'podlove-podcasting-plugin-for-wordpress'),
+        ];
+
+        foreach (Model\EpisodeAsset::all() as $asset) {
+            $file_type = $asset->file_type();
+            if ($file_type && in_array($file_type->extension, ['vtt', 'srt'])) {
+                $options['asset_'.$asset->id] = sprintf(__('Asset: %s', 'podlove-podcasting-plugin-for-wordpress'), $asset->title);
+            }
+        }
+
+        $wrapper->select('feed_transcripts', [
+            'label' => __('Episode Transcripts', 'podlove-podcasting-plugin-for-wordpress'),
+            'description' => __('How should episode transcripts be referenced in the RSS feed?', 'podlove-podcasting-plugin-for-wordpress'),
+            'options' => $options,
+            'default' => 'generated',
+        ]);
+    }
+
     /**
      * When vtt media file changes, reimport transcripts.
      *
@@ -501,6 +513,53 @@ class Transcripts extends \Podlove\Modules\Base
         }
 
         $this->transcript_import_from_asset($media_file->episode());
+    }
+
+    private function print_rss_feed_links($podcast, $episode)
+    {
+        if (!Transcript::exists_for_episode($episode->id)) {
+            return;
+        }
+
+        if ($podcast->feed_transcripts == 'none') {
+            return;
+        }
+
+        if ($podcast->feed_transcripts == 'generated') {
+            $url = add_query_arg('podlove_transcript', 'webvtt', get_permalink($episode->post_id));
+            $url = str_replace(home_url(), site_url(), $url);
+            echo "\n\t\t".'<podcast:transcript url="'.esc_attr($url).'" type="text/vtt" />';
+
+            return;
+        }
+
+        if (preg_match('/^asset_(?<id>\d+)$/', $podcast->feed_transcripts, $matches) === 1) {
+            $asset_id = $matches['id'];
+            $asset = Model\EpisodeAsset::find_by_id($asset_id);
+
+            if (!$asset) {
+                return;
+            }
+
+            $file = Model\MediaFile::find_by_episode_id_and_episode_asset_id($episode->id, $asset->id);
+
+            if (!$file || !$file->active) {
+                return;
+            }
+
+            $file_type = $asset->file_type();
+
+            $url = $file->get_file_url();
+            echo "\n\t\t".'<podcast:transcript url="'.esc_attr($url).'" type="'.esc_attr($file_type->mime_type).'" />';
+        }
+
+        // $url = add_query_arg('podlove_transcript', 'json_podcastindex', get_permalink($episode->post_id));
+        // $url = str_replace(home_url(), site_url(), $url);
+        // echo "\n\t\t".'<podcast:transcript url="'.esc_attr($url).'" type="application/json" />';
+
+        // $url = add_query_arg('podlove_transcript', 'xml', get_permalink($episode->post_id));
+        // $url = str_replace(home_url(), site_url(), $url);
+        // echo "\n\t\t".'<podcast:transcript url="'.esc_attr($url).'" type="application/xml" />';
     }
 
     private function print_admin_notice()
