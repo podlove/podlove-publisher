@@ -127,6 +127,7 @@ directly.
 **Other**
 
 - add: capability "podlove_manage_contributors" for contributors settings screens
+- fix: sometimes missing voices in Podlove Web Player transcripts
 
 = 4.0.15 =
 
