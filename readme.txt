@@ -130,6 +130,7 @@ directly.
 - fix: sometimes missing voices in Podlove Web Player transcripts
 - fix: sometimes an enabled asset is disabled a few moments later
 - fix: show files as "not found" when they become unreachable
+- transcripts: rename "delete" action to "clear"
 
 = 4.0.15 =
 
