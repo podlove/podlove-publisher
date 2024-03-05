@@ -58,15 +58,23 @@ function* setUploadMedia(action: Action) {
 
 function* maybeUpdateDuration(api: PodloveApiClient) {
   const files: MediaFile[] = yield select(selectors.mediafiles.files)
+  const duration: string = yield select(selectors.episode.duration)
   const enabledFiles = files.filter((file) => file.enable && file.size && file.url)
   const audioFiles = enabledFiles.filter((file) => file.url.match(/\.(mp3|mp4|m4a|ogg|oga|opus)$/))
 
+  let newDuration
+
   if (audioFiles.length === 0) {
-    yield put(episode.update({ prop: 'duration', value: '0' }))
+    newDuration = '0'
   } else {
     const url = audioFiles[0].url
     const result: number = yield fetchDuration(url)
-    yield put(episode.update({ prop: 'duration', value: result.toString() }))
+
+    newDuration = result.toString()
+  }
+
+  if (parseFloat(duration) !== parseFloat(newDuration)) {
+    yield put(episode.update({ prop: 'duration', value: newDuration }))
   }
 }
 
