@@ -21,7 +21,7 @@
             v-for="(content, cindex) in transcript.content"
             :key="`transcript-${sindex}-content-${cindex}`"
           >
-            {{ content.text }}
+            {{ cindex === 0 && formatTime(content.start) }} {{ content.text }}
           </span>
         </span>
       </div>
@@ -51,6 +51,7 @@ import { PodloveTranscript } from '../../../types/transcripts.types'
 import { PodloveContributor } from '../../../types/contributors.types'
 
 import TranscriptsImport from './Import.vue'
+import Timestamp from '@lib/timestamp'
 
 interface Transcript {
   voiceId: string
@@ -145,8 +146,13 @@ export default defineComponent({
         }))
     },
   },
+
+  methods: {
+    formatTime(value: number): string {
+      return new Timestamp(value).pretty
+    },
+  }
 })
 </script>
 
-<style>
-</style>
+<style></style>
