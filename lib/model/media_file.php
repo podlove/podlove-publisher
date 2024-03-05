@@ -276,6 +276,8 @@ class MediaFile extends Base
                 // Having a proper state would be nice, but this "size = 1 byte" hack works for now.
                 $this->size = 1;
             }
+        } elseif ($http_code >= 400) {
+          $this->size = 0;
         }
 
         if ($this->size <= 0) {
