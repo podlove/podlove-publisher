@@ -88,6 +88,7 @@ function* handleEnable(api: PodloveApiClient, action: { type: string; payload: n
     asset_id: asset_id,
     url: result.file_url,
     size: result.file_size,
+    enable: true,
   }
 
   yield put(mediafiles.update(fileUpdate))

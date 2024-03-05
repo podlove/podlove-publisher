@@ -128,6 +128,7 @@ directly.
 
 - add: capability "podlove_manage_contributors" for contributors settings screens
 - fix: sometimes missing voices in Podlove Web Player transcripts
+- fix: sometimes an enabled asset is disabled a few moments later
 
 = 4.0.15 =
 
