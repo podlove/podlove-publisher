@@ -39,12 +39,20 @@
                 'cursor-default select-none relative py-2 pl-3 pr-9',
               ]"
             >
-              <div class="flex">
+              <div class="flex justify-between">
                 <span :class="['font-normal', 'truncate']">
+                  <span :class="[active ? 'text-indigo-200' : 'text-gray-500', 'ml-2 truncate']">
+                    {{ production._select.date }}
+                  </span>
                   {{ production._select.name }}
                 </span>
-                <span :class="[active ? 'text-indigo-200' : 'text-gray-500', 'ml-2 truncate']">
-                  {{ production._select.date }}
+                <span
+                  :class="[
+                    active ? 'text-indigo-200' : 'text-gray-500',
+                    'ml-2 truncate flex-shrink-0',
+                  ]"
+                >
+                  {{ production.status_string }}
                 </span>
               </div>
             </li>

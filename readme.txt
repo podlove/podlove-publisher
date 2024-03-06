@@ -131,6 +131,7 @@ directly.
 - fix: sometimes an enabled asset is disabled a few moments later
 - fix: show files as "not found" when they become unreachable
 - auphonic: add button to delete a track
+- auphonic: show status in production selection
 - transcripts: rename "delete" action to "clear"
 - transcripts: show timestamps in editor preview
 
