@@ -1,46 +1,40 @@
 <template>
-  <form class="pb-5 space-y-8 divide-y divide-gray-200">
-    <div class="space-y-8 divide-y divide-gray-200">
-      <div>
-        <div class="flex justify-between items-start">
-          <div>
-            <!--
-            <h3 class="text-lg leading-6 font-medium text-gray-900">Manage Production</h3>
-            -->
-            <p class="mt-1 text-sm text-gray-500">
-              {{ __('Selected Production:') }} {{ production?.metadata?.title }},
-              {{ __('created_at:') }}
-              {{ new Date(Date.parse(production?.creation_time)).toLocaleString() }}
-            </p>
+  <form class="pb-5 space-y-4">
+    <div class="space-y-8">
+      <div class="bg-white px-4 sm:px-6">
+        <div class="-ml-4 -mt-4 flex flex-wrap items-center justify-between sm:flex-nowrap">
+          <div class="ml-4 mt-4">
+            <div class="flex items-center">
+              <div class="flex-shrink-0">
+                <AuphonicLogo className="mx-auto h-12 w-12 text-gray-400" />
+              </div>
+              <div class="ml-4">
+                <h3 class="text-base font-semibold leading-6 text-gray-900">
+                  {{ production?.metadata?.title }}
+                </h3>
+                <p class="text-sm text-gray-500">
+                  {{ new Date(Date.parse(production?.creation_time)).toLocaleString() }}
+                </p>
+              </div>
+            </div>
           </div>
-          <div class="mt-1 flex items-center space-x-4">
+          <div class="ml-4 mt-4 flex items-center space-x-4 text-xs">
             <span v-if="isSaving" class="inline-flex items-center animate-pulse text-green-600">
               <CloudIcon class="mr-1 h-4 w-4" aria-hidden="true" />
               {{ __('Saving') }}
             </span>
-            <a
-              :href="production?.edit_page"
-              target="_blank"
-              class="inline-flex items-center rounded border border-gray-300 bg-white px-2.5 py-1.5 text-xs font-medium text-gray-500 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-              >{{ __('Edit in Auphonic') }}
-              <ExternalLinkIcon class="ml-1 -mr-0.5 h-4 w-4" aria-hidden="true"
-            /></a>
-
             <button
-              type="button"
-              class="bg-white rounded-md text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
               @click="deselectProduction"
+              type="button"
+              class="relative inline-flex items-center rounded-md bg-white px-3 py-2 font-medium text-gray-500 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
             >
-              <span class="sr-only">{{ __('Change Production') }}</span>
-              <span aria-hidden="true" :title="__('Deselect Production')">
-                <XIcon class="h-6 w-6" />
-              </span>
+              <XIcon class="-ml-0.5 mr-1.5 h-4 w-4 text-gray-400" aria-hidden="true" />
+              <span>{{ __('Deselect Production') }}</span>
             </button>
           </div>
         </div>
-
-        <div class="h-6"></div>
-
+      </div>
+      <div>
         <div v-if="showUploadScreen">{{ __('Uploading...') }}</div>
 
         <div v-if="showProcessingScreen">
@@ -230,6 +224,13 @@
       <div class="flex flex-col sm:flex-row gap-4 sm:gap-2 justify-between">
         <WebhookToggle />
         <div class="flex justify-end gap-3">
+          <a
+            :href="production?.edit_page"
+            target="_blank"
+            class="inline-flex items-center rounded border border-gray-300 bg-white px-2.5 py-1.5 text-xs font-medium text-gray-500 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+            >{{ __('Edit in Auphonic') }}
+            <ExternalLinkIcon class="ml-1 -mr-0.5 h-4 w-4" aria-hidden="true"
+          /></a>
           <podlove-button
             :variant="isSaving ? 'secondary-disabled' : 'secondary'"
             @click="saveProduction"
@@ -259,6 +260,8 @@ import { Production, AudioTrack } from '@store/auphonic.store'
 import DonePage from './production_form/DonePage.vue'
 import WebhookToggle from './WebhookToggle.vue'
 
+import AuphonicLogo from '../components/Logo.vue'
+
 import {
   XIcon,
   CogIcon,
@@ -285,6 +288,7 @@ export default defineComponent({
     ExternalLinkIcon,
     CloudIcon,
     TrashIcon,
+    AuphonicLogo,
     DonePage,
     WebhookToggle,
   },
