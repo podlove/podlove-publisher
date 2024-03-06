@@ -32,7 +32,9 @@
               @click="deselectProduction"
             >
               <span class="sr-only">{{ __('Change Production') }}</span>
-              <XIcon class="h-6 w-6" aria-hidden="true" />
+              <span aria-hidden="true" :title="__('Deselect Production')">
+                <XIcon class="h-6 w-6" />
+              </span>
             </button>
           </div>
         </div>
