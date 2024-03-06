@@ -66,7 +66,7 @@
 import { injectStore, mapState } from 'redux-vuex'
 import { defineComponent } from 'vue'
 import { selectors } from '@store'
-import { PencilIcon, XIcon } from '@heroicons/vue/outline'
+import { PencilIcon, XMarkIcon as XIcon } from '@heroicons/vue/24/outline'
 import { update as updateEpisode, selectPoster as selectEpisodePoster } from '@store/episode.store'
 
 import Modal from '@components/modal/Modal.vue'

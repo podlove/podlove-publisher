@@ -123,10 +123,10 @@ import { PodloveEpisodeContribution } from '../../../types/episode.types'
 import {
   ArrowUpIcon,
   ArrowDownIcon,
-  XIcon,
+  XMarkIcon as XIcon,
   UserCircleIcon,
   PencilIcon,
-} from '@heroicons/vue/outline'
+} from '@heroicons/vue/24/outline'
 
 import { get } from 'lodash'
 

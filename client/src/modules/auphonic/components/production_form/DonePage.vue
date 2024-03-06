@@ -100,7 +100,11 @@ import { AuphonicChapter, Production } from '@store/auphonic.store'
 import { update as updateEpisode } from '@store/episode.store'
 import { parsed as parsedChapters } from '@store/chapters.store'
 
-import { ClipboardCheckIcon, ExternalLinkIcon, ExclamationIcon } from '@heroicons/vue/outline'
+import {
+  ClipboardDocumentCheckIcon as ClipboardCheckIcon,
+  ArrowTopRightOnSquareIcon as ExternalLinkIcon,
+  ExclamationTriangleIcon as ExclamationIcon,
+} from '@heroicons/vue/24/outline'
 import { PodloveChapter } from '../../../../types/chapters.types'
 
 type Entry = {

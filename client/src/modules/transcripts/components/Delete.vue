@@ -41,7 +41,7 @@
 import { injectStore, mapState } from 'redux-vuex'
 import { deleteTranscripts } from '@store/transcripts.store'
 import { defineComponent } from '@vue/runtime-core'
-import { ExclamationIcon } from '@heroicons/vue/outline'
+import { ExclamationTriangleIcon as ExclamationIcon } from '@heroicons/vue/24/outline'
 import { DialogTitle } from '@headlessui/vue'
 
 import selectors from '@store/selectors'

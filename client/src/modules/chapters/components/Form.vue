@@ -129,7 +129,11 @@ import {
   add as addChapter,
   selectImage,
 } from '@store/chapters.store'
-import { PlusSmIcon, BookmarkAltIcon, UploadIcon } from '@heroicons/vue/outline'
+import {
+  PlusIcon as PlusSmIcon,
+  BookmarkIcon as BookmarkAltIcon,
+  ArrowUpTrayIcon as UploadIcon,
+} from '@heroicons/vue/24/outline'
 
 import PodloveButton from '@components/button/Button.vue'
 import { PodloveChapter } from '../../../types/chapters.types'

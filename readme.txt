@@ -135,6 +135,7 @@ directly.
 - auphonic: show status in production selection
 - transcripts: rename "delete" action to "clear"
 - transcripts: show timestamps in editor preview
+- upgrade heroicons (icon library) from v1 to v2
 
 = 4.0.15 =
 

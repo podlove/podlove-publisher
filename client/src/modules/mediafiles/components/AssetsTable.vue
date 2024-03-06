@@ -100,9 +100,9 @@ import { selectors } from '@store'
 import { injectStore, mapState } from 'redux-vuex'
 import * as mediafiles from '@store/mediafiles.store'
 
-import { CheckCircleIcon, XCircleIcon } from '@heroicons/vue/solid'
+import { CheckCircleIcon, XCircleIcon } from '@heroicons/vue/24/solid'
 
-import { CloudIcon } from '@heroicons/vue/outline'
+import { CloudIcon } from '@heroicons/vue/24/outline'
 
 import Timestamp from '@lib/timestamp'
 import AssetsEmptyState from './AssetsEmptyState.vue'

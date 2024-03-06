@@ -29,7 +29,7 @@
               type="button"
               class="relative inline-flex items-center rounded-md bg-white px-3 py-2 font-medium text-gray-500 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
             >
-              <ArrowDownIcon class="-ml-0.5 mr-1.5 h-4 w-4 text-gray-400" aria-hidden="true" />
+              <ArrowDownTrayIcon class="-ml-0.5 mr-1.5 h-4 w-4 text-gray-400" aria-hidden="true" />
               <span v-if="showImportPage">{{ __('Hide Import') }}</span>
               <span v-if="!showImportPage">{{ __('Show Import') }}</span>
             </button>
@@ -273,16 +273,17 @@ import WebhookToggle from './WebhookToggle.vue'
 import AuphonicLogo from '../components/Logo.vue'
 
 import {
-  XIcon,
+  XMarkIcon as XIcon,
   CogIcon,
   ChevronDownIcon,
   ChevronRightIcon,
-  DatabaseIcon,
-  ExternalLinkIcon,
+  CircleStackIcon as DatabaseIcon,
+  ArrowTopRightOnSquareIcon as ExternalLinkIcon,
   CloudIcon,
   TrashIcon,
   ArrowDownIcon,
-} from '@heroicons/vue/outline'
+  ArrowDownTrayIcon,
+} from '@heroicons/vue/24/outline'
 import { get } from 'lodash'
 
 type AlgorithmType = { [key in number]?: any }
@@ -300,6 +301,7 @@ export default defineComponent({
     CloudIcon,
     TrashIcon,
     ArrowDownIcon,
+    ArrowDownTrayIcon,
     AuphonicLogo,
     DonePage,
     WebhookToggle,

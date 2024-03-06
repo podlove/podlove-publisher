@@ -43,7 +43,7 @@ import { defineComponent } from '@vue/runtime-core'
 import { last, dropRight, get } from 'lodash'
 import { mapState } from 'redux-vuex'
 import selectors from '@store/selectors'
-import { DocumentTextIcon } from '@heroicons/vue/outline'
+import { DocumentTextIcon } from '@heroicons/vue/24/outline'
 
 import Avatar from '@components/icons/Avatar.vue'
 

@@ -91,7 +91,7 @@
 <script lang="ts">
 import { Dialog, DialogOverlay, TransitionChild, TransitionRoot } from '@headlessui/vue'
 import { defineComponent } from '@vue/runtime-core'
-import { XIcon } from '@heroicons/vue/outline'
+import { XMarkIcon as XIcon } from '@heroicons/vue/24/outline'
 
 export default defineComponent({
   components: {

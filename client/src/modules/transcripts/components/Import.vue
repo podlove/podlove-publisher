@@ -20,7 +20,7 @@
 import { get } from 'lodash'
 import { injectStore } from 'redux-vuex'
 import { defineComponent } from '@vue/runtime-core'
-import { UploadIcon, DocumentTextIcon } from '@heroicons/vue/outline'
+import { CloudArrowUpIcon as UploadIcon, DocumentTextIcon } from '@heroicons/vue/24/outline'
 
 import PodloveButton from '@components/button/Button.vue'
 import { importTranscripts, importTranscriptFromAsset } from '@store/transcripts.store'
