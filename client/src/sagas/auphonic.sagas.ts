@@ -89,6 +89,7 @@ function* initializeAuphonicApi() {
   yield takeEvery(auphonic.saveProduction, handleSaveProduction, auphonicApi)
   yield takeEvery(auphonic.startProduction, handleStartProduction, auphonicApi)
   yield takeEvery(auphonic.deselectProduction, handleDeselectProduction, auphonicApi)
+  yield takeEvery(auphonic.removeTrack, handleRemoveTrack, auphonicApi)
 
   // poll production updates while production is running
   // TODO: start polling when loading a production that is in production
@@ -130,6 +131,15 @@ function* handleDeselectProduction(auphonicApi: AuphonicApiClient) {
     result: { data: productions },
   } = yield auphonicApi.get(`productions.json`, { limit: 10, minimal_data: true })
   yield put(auphonic.setProductions(productions))
+}
+
+function* handleRemoveTrack(
+  auphonicApi: AuphonicApiClient,
+  action: { type: string; payload: any }
+) {
+  let uuid: string = yield select(selectors.auphonic.productionId)
+
+  yield auphonicApi.delete(`production/${uuid}/multi_input_files/${action.payload}.json`)
 }
 
 function* handleStartProduction(

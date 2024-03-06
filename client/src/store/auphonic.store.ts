@@ -163,6 +163,7 @@ export const SELECT_SERVICE = 'podlove/publisher/auphonic/SELECT_SERVICE'
 export const SET_SERVICE_FILES = 'podlove/publisher/auphonic/SET_SERVICE_FILES'
 export const SELECT_TRACKS = 'podlove/publisher/auphonic/SELECT_TRACKS'
 export const ADD_TRACK = 'podlove/publisher/auphonic/ADD_TRACK'
+export const REMOVE_TRACK = 'podlove/publisher/auphonic/REMOVE_TRACK'
 export const UPDATE_TRACK = 'podlove/publisher/auphonic/UPDATE_TRACK'
 export const SET_PRESETS = 'podlove/publisher/auphonic/SET_PRESETS'
 export const SET_PRESET = 'podlove/publisher/auphonic/SET_PRESET'
@@ -201,6 +202,7 @@ export const updateFileSelection =
 // Tracks
 export const selectTracks = createAction<string>(SELECT_TRACKS)
 export const addTrack = createAction<void>(ADD_TRACK)
+export const removeTrack = createAction<string>(REMOVE_TRACK)
 export const updateTrack = createAction<{ track: Partial<AudioTrack>; index: number }>(UPDATE_TRACK)
 
 // Polling
@@ -257,6 +259,12 @@ export const reducer = handleActions(
             save_state: 'new',
           },
         ],
+      }
+    },
+    [REMOVE_TRACK]: (state: State, action: { type: string; payload: string }): State => {
+      return {
+        ...state,
+        tracks: state.tracks.filter((track, index) => track.identifier != action.payload),
       }
     },
     [UPDATE_TRACK]: (

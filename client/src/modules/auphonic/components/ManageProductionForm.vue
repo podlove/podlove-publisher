@@ -80,6 +80,7 @@
                 <div class="block text-sm font-medium text-gray-700 mt-5 md:mt-0 md:col-span-1">
                   {{ __('Algorithm') }}
                 </div>
+                <div class="block w-8 md:col-span-1"></div>
               </div>
             </div>
 
@@ -120,65 +121,74 @@
                           <div class="block md:hidden text-sm font-medium text-gray-700 py-2">
                             {{ __('Algorithm') }}
                           </div>
-                          <div class="max-w-lg space-y-4">
-                            <div class="relative flex items-start">
-                              <div class="flex items-center h-5">
-                                <input
-                                  :id="`track_${index}_filtering`"
-                                  type="checkbox"
-                                  class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded"
-                                  :checked="track.filtering"
-                                  @input="handleToggleFiltering($event, index)"
-                                />
-                              </div>
-                              <div class="ml-3 text-sm">
-                                <label :for="`track_${index}_filtering`" class="text-gray-700">{{
-                                  __('Filtering')
-                                }}</label>
-                              </div>
+                          <div class="max-w-lg relative">
+                            <div
+                              :title="__('Remove Track')"
+                              @click="removeTrack(track.identifier)"
+                              class="absolute z-10 right-0 top-0 cursor-pointer text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                            >
+                              <TrashIcon class="h-6 w-6" aria-hidden="true" />
                             </div>
-                            <div>
+                            <div class="space-y-4">
                               <div class="relative flex items-start">
                                 <div class="flex items-center h-5">
                                   <input
-                                    :id="`track_${index}_noisehum`"
+                                    :id="`track_${index}_filtering`"
                                     type="checkbox"
                                     class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded"
-                                    :checked="track.noise_and_hum_reduction"
-                                    @input="handleToggleNoiseHum($event, index)"
+                                    :checked="track.filtering"
+                                    @input="handleToggleFiltering($event, index)"
                                   />
                                 </div>
                                 <div class="ml-3 text-sm">
-                                  <label :for="`track_${index}_noisehum`" class="text-gray-700">{{
-                                    __('Noise and Hum Reduction')
+                                  <label :for="`track_${index}_filtering`" class="text-gray-700">{{
+                                    __('Filtering')
                                   }}</label>
                                 </div>
                               </div>
-                            </div>
-                            <div>
-                              <div
-                                class="relative flex justify-start align-middle items-center gap-3"
-                              >
-                                <div class="text-sm">
-                                  <label :for="`track_${index}_fgbg`" class="text-gray-700">{{
-                                    __('Fore/Background')
-                                  }}</label>
+                              <div>
+                                <div class="relative flex items-start">
+                                  <div class="flex items-center h-5">
+                                    <input
+                                      :id="`track_${index}_noisehum`"
+                                      type="checkbox"
+                                      class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded"
+                                      :checked="track.noise_and_hum_reduction"
+                                      @input="handleToggleNoiseHum($event, index)"
+                                    />
+                                  </div>
+                                  <div class="ml-3 text-sm">
+                                    <label :for="`track_${index}_noisehum`" class="text-gray-700">{{
+                                      __('Noise and Hum Reduction')
+                                    }}</label>
+                                  </div>
                                 </div>
-
-                                <select
-                                  :value="track.fore_background"
-                                  @input="handleSelectForeBackground($event, index)"
-                                  :id="`track_${index}_fgbg`"
-                                  class="mt-1 block w-[168px] pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+                              </div>
+                              <div>
+                                <div
+                                  class="relative flex justify-start align-middle items-center gap-3"
                                 >
-                                  <option value="auto">{{ __('Auto') }}</option>
-                                  <option value="foreground">{{ __('Foreground Track') }}</option>
-                                  <option value="background">{{ __('Background Track') }}</option>
-                                  <option value="ducking">{{ __('Duck this Track') }}</option>
-                                  <option value="unchanged">
-                                    {{ __('Unchanged (Foreground)') }}
-                                  </option>
-                                </select>
+                                  <div class="text-sm">
+                                    <label :for="`track_${index}_fgbg`" class="text-gray-700">{{
+                                      __('Fore/Background')
+                                    }}</label>
+                                  </div>
+
+                                  <select
+                                    :value="track.fore_background"
+                                    @input="handleSelectForeBackground($event, index)"
+                                    :id="`track_${index}_fgbg`"
+                                    class="mt-1 block w-[168px] pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+                                  >
+                                    <option value="auto">{{ __('Auto') }}</option>
+                                    <option value="foreground">{{ __('Foreground Track') }}</option>
+                                    <option value="background">{{ __('Background Track') }}</option>
+                                    <option value="ducking">{{ __('Duck this Track') }}</option>
+                                    <option value="unchanged">
+                                      {{ __('Unchanged (Foreground)') }}
+                                    </option>
+                                  </select>
+                                </div>
                               </div>
                             </div>
                           </div>
@@ -186,6 +196,10 @@
                       </div>
                     </div>
                   </div>
+                  <!--
+                  <div class="w-8 md:col-span-1">
+                    <span @click="removeTrack(track.identifier)">X</span>
+                  </div>-->
                 </div>
               </li>
             </ul>
@@ -251,6 +265,7 @@ import {
   DatabaseIcon,
   ExternalLinkIcon,
   CloudIcon,
+  TrashIcon,
 } from '@heroicons/vue/outline'
 import { get } from 'lodash'
 
@@ -267,6 +282,7 @@ export default defineComponent({
     DatabaseIcon,
     ExternalLinkIcon,
     CloudIcon,
+    TrashIcon,
     DonePage,
     WebhookToggle,
   },
@@ -304,6 +320,9 @@ export default defineComponent({
     },
     addTrack() {
       this.dispatch(auphonic.addTrack())
+    },
+    removeTrack(id) {
+      this.dispatch(auphonic.removeTrack(id))
     },
     updateTrack(prop: string, value: any, index: number) {
       this.dispatch(
