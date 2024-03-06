@@ -342,7 +342,7 @@ export default defineComponent({
     addTrack() {
       this.dispatch(auphonic.addTrack())
     },
-    removeTrack(id) {
+    removeTrack(id: string) {
       this.dispatch(auphonic.removeTrack(id))
     },
     updateTrack(prop: string, value: any, index: number) {
