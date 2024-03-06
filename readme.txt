@@ -3,7 +3,7 @@ Contributors: eteubert
 Donate link: https://opencollective.com/podlove
 Tags: podlove, podcast, publishing, rss, feed, audio, mp3, m4a, player, webplayer, iTunes, radio
 Tested up to: 6.4.3
-Stable tag: 4.0.15
+Stable tag: 4.1.0
 Requires at least: 4.9.6
 Requires PHP: 8.0
 License: MIT
@@ -106,7 +106,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
-= 4.0.16 =
+= 4.1.0 =
 
 **Feature: Better control over transcripts in RSS feed**
 
@@ -124,15 +124,19 @@ your audio files. If you have configured a transcript asset, you can now select
 it in this setting. Then the RSS feed will reference this external file
 directly.
 
+**Auphonic improvements**
+
+- add button to always access the import screen
+- add button to delete a track
+- show status in production selection
+- rearrange / polish various some button and information positions
+
 **Other**
 
 - add: capability "podlove_manage_contributors" for contributors settings screens
 - fix: sometimes missing voices in Podlove Web Player transcripts
 - fix: sometimes an enabled asset is disabled a few moments later
 - fix: show files as "not found" when they become unreachable
-- auphonic: add button to always access the import screen
-- auphonic: add button to delete a track
-- auphonic: show status in production selection
 - transcripts: rename "delete" action to "clear"
 - transcripts: show timestamps in editor preview
 - upgrade heroicons (icon library) from v1 to v2
