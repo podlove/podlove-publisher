@@ -130,6 +130,7 @@ directly.
 - fix: sometimes missing voices in Podlove Web Player transcripts
 - fix: sometimes an enabled asset is disabled a few moments later
 - fix: show files as "not found" when they become unreachable
+- auphonic: add button to always access the import screen
 - auphonic: add button to delete a track
 - auphonic: show status in production selection
 - transcripts: rename "delete" action to "clear"

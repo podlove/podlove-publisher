@@ -24,6 +24,16 @@
               {{ __('Saving') }}
             </span>
             <button
+              v-if="production.status !== 3"
+              @click="showImportPage = !showImportPage"
+              type="button"
+              class="relative inline-flex items-center rounded-md bg-white px-3 py-2 font-medium text-gray-500 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+            >
+              <ArrowDownIcon class="-ml-0.5 mr-1.5 h-4 w-4 text-gray-400" aria-hidden="true" />
+              <span v-if="showImportPage">{{ __('Hide Import') }}</span>
+              <span v-if="!showImportPage">{{ __('Show Import') }}</span>
+            </button>
+            <button
               @click="deselectProduction"
               type="button"
               class="relative inline-flex items-center rounded-md bg-white px-3 py-2 font-medium text-gray-500 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
@@ -34,7 +44,7 @@
           </div>
         </div>
       </div>
-      <div>
+      <div class="space-y-4">
         <div v-if="showUploadScreen">{{ __('Uploading...') }}</div>
 
         <div v-if="showProcessingScreen">
@@ -59,7 +69,7 @@
           </div>
         </div>
 
-        <div v-if="production.status == 3">
+        <div v-if="production.status == 3 || showImportPage">
           <DonePage />
         </div>
 
@@ -271,6 +281,7 @@ import {
   ExternalLinkIcon,
   CloudIcon,
   TrashIcon,
+  ArrowDownIcon,
 } from '@heroicons/vue/outline'
 import { get } from 'lodash'
 
@@ -288,6 +299,7 @@ export default defineComponent({
     ExternalLinkIcon,
     CloudIcon,
     TrashIcon,
+    ArrowDownIcon,
     AuphonicLogo,
     DonePage,
     WebhookToggle,
@@ -296,6 +308,7 @@ export default defineComponent({
   data() {
     return {
       algorithmSettings: {} as AlgorithmType,
+      showImportPage: false,
     }
   },
 
