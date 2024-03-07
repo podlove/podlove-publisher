@@ -41,7 +41,7 @@ class Tools
         // Fields for section "General Maintenance"
         \Podlove\add_tools_field('gm-clear-caches', __('Clear Caches', 'podlove-podcasting-plugin-for-wordpress'), function () {
             ?>
-			<a href="<?php echo esc_url(admin_url('admin.php?page='.$_REQUEST['page'].'&action=clear_caches')); ?>" class="button">
+			<a href="<?php echo esc_url(admin_url('admin.php?page='.$_REQUEST['page'].'&action=clear_caches&nonce='.wp_create_nonce('podlove_tools'))); ?>" class="button">
 				<?php echo __('Clear Caches', 'podlove-podcasting-plugin-for-wordpress'); ?>
 			</a>
 			<p class="description">
@@ -62,13 +62,13 @@ class Tools
             $recent_job = Job::find_one_recent_job($job_class);
             $recent_job_id = $recent_job ? $recent_job->id : ''; ?>
 
-			<div 
-				class="podlove-job" 
-				data-job="Podlove-Jobs-UserAgentRefreshJob" 
+			<div
+				class="podlove-job"
+				data-job="Podlove-Jobs-UserAgentRefreshJob"
 				data-button-text="<?php echo sprintf(__('Start %s', 'podlove-podcasting-plugin-for-wordpress'), $job_class::title()); ?>"
 				data-recent-job-id="<?php echo $recent_job_id; ?>"
 				>
-				
+
 			</div>
 
 			<div class="clear"></div>
@@ -84,13 +84,13 @@ class Tools
             $recent_job = Job::find_one_recent_job($job_class);
             $recent_job_id = $recent_job ? $recent_job->id : ''; ?>
 
-			<div 
-				class="podlove-job" 
-				data-job="Podlove-Jobs-DownloadIntentCleanupJob" 
+			<div
+				class="podlove-job"
+				data-job="Podlove-Jobs-DownloadIntentCleanupJob"
 				data-button-text="<?php echo sprintf(__('Start %s', 'podlove-podcasting-plugin-for-wordpress'), $job_class::title()); ?>"
 				data-recent-job-id="<?php echo $recent_job_id; ?>"
 				>
-				
+
 			</div>
 
 			<div class="clear"></div>
@@ -105,14 +105,14 @@ class Tools
         \Podlove\add_tools_field('ta-recalc-downloads-table', $job_class::title(), function () use ($job_class) {
             $recent_job = Job::find_one_recent_job($job_class);
             $recent_job_id = $recent_job ? $recent_job->id : ''; ?>
-			<div 
-				class="podlove-job" 
+			<div
+				class="podlove-job"
 				data-job="Podlove-Jobs-DownloadTimedAggregatorJob"
-				data-args="<?php echo esc_attr(json_encode(['force' => true])); ?>" 
+				data-args="<?php echo esc_attr(json_encode(['force' => true])); ?>"
 				data-button-text="<?php echo sprintf(__('Start %s', 'podlove-podcasting-plugin-for-wordpress'), $job_class::title()); ?>"
 				data-recent-job-id="<?php echo $recent_job_id; ?>"
 				>
-				
+
 			</div>
 
 			<p class="description">
@@ -130,6 +130,16 @@ class Tools
 
         switch (filter_input(INPUT_GET, 'action')) {
             case 'clear_caches':
+
+                if (!current_user_can('administrator')) {
+                  exit;
+                }
+
+                if (!wp_verify_nonce($_REQUEST['nonce'], 'podlove_tools')) {
+                  http_response_code(401);
+                  exit;
+                }
+
                 \Podlove\Repair::clear_podlove_cache();
                 \Podlove\Repair::clear_podlove_image_cache();
                 wp_redirect(admin_url('admin.php?page='.$_REQUEST['page']));
@@ -232,7 +242,7 @@ class Tools
 				</div>
 			<?php } ?>
 
-		</div>	
+		</div>
 		<?php
     }
 }
