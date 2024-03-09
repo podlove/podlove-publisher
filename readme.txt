@@ -115,6 +115,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 4.1.2 =
+
+* transcripts: include json link in RSS again when "Publisher Generated" is selected
+
 = 4.1.1 =
 
 * security: add nonces to tools actions

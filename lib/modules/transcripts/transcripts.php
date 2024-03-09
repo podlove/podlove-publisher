@@ -465,7 +465,7 @@ class Transcripts extends \Podlove\Modules\Base
     {
         $options = [
             'none' => __('Do not include in feed', 'podlove-podcasting-plugin-for-wordpress'),
-            'generated' => __('Publisher Generated vtt (Default)', 'podlove-podcasting-plugin-for-wordpress'),
+            'generated' => __('Publisher Generated WebVTT (Default)', 'podlove-podcasting-plugin-for-wordpress'),
         ];
 
         foreach (Model\EpisodeAsset::all() as $asset) {
@@ -517,23 +517,24 @@ class Transcripts extends \Podlove\Modules\Base
 
     private function print_rss_feed_links($podcast, $episode)
     {
-        if (!Transcript::exists_for_episode($episode->id)) {
-            return;
-        }
-
         if ($podcast->feed_transcripts == 'none') {
             return;
-        }
+        } else if ($podcast->feed_transcripts == 'generated') {
+            if (!Transcript::exists_for_episode($episode->id)) {
+                return;
+            }
 
-        if ($podcast->feed_transcripts == 'generated') {
-            $url = add_query_arg('podlove_transcript', 'webvtt', get_permalink($episode->post_id));
-            $url = str_replace(home_url(), site_url(), $url);
+            $permalink = get_permalink($episode->post_id);
+            $permalink = str_replace(home_url(), site_url(), $permalink);
+
+            $url = add_query_arg('podlove_transcript', 'webvtt', $permalink);
             echo "\n\t\t".'<podcast:transcript url="'.esc_attr($url).'" type="text/vtt" />';
 
-            return;
-        }
+            $url = add_query_arg('podlove_transcript', 'json_podcastindex', $permalink);
+            echo "\n\t\t".'<podcast:transcript url="'.esc_attr($url).'" type="application/json" />';
 
-        if (preg_match('/^asset_(?<id>\d+)$/', $podcast->feed_transcripts, $matches) === 1) {
+            return;
+        } elseif (preg_match('/^asset_(?<id>\d+)$/', $podcast->feed_transcripts, $matches) === 1) {
             $asset_id = $matches['id'];
             $asset = Model\EpisodeAsset::find_by_id($asset_id);
 
@@ -552,10 +553,6 @@ class Transcripts extends \Podlove\Modules\Base
             $url = $file->get_file_url();
             echo "\n\t\t".'<podcast:transcript url="'.esc_attr($url).'" type="'.esc_attr($file_type->mime_type).'" />';
         }
-
-        // $url = add_query_arg('podlove_transcript', 'json_podcastindex', get_permalink($episode->post_id));
-        // $url = str_replace(home_url(), site_url(), $url);
-        // echo "\n\t\t".'<podcast:transcript url="'.esc_attr($url).'" type="application/json" />';
 
         // $url = add_query_arg('podlove_transcript', 'xml', get_permalink($episode->post_id));
         // $url = str_replace(home_url(), site_url(), $url);
