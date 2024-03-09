@@ -12,31 +12,40 @@ The one and only next generation podcast publishing system. Seriously. It's magi
 
 == Description ==
 
-We built the Podlove Podcast Publisher because existing solutions are stuck in the past, complex and unwieldy. The Publisher helps you save time, worry less and provides a cutting edge listening experience for your audience.
+We started the Podlove Podcast Publisher project in 2012 because existing solutions were stuck in the past, complex and unwieldy. The Publisher helps you save time, worry less and provides a cutting edge listening experience for your audience.
 
 Official Site: [podlove.org/podlove-podcast-publisher](https://podlove.org/podlove-podcast-publisher)
 
-= Video Tutorial: Getting started with Podlove Publisher =
+### Video Tutorial: Getting started with Podlove Publisher
 
 [youtube http://www.youtube.com/watch?v=Hmrm-jUe6u4]
 
-= Compatible Feeds =
+### Compatible RSS Feeds
 
 The Publisher makes it easy to create highly expressive, efficient and super compatible podcast feeds with fine grained control over client behavior (e.g. GUID control to replace faulty episodes and for clients to reload) supporting all important meta data.
 
-= Multi-Format Publishing =
+### Multi-Format Publishing
 
 The Publisher also makes multi-format publishing - embracing all modern and legacy audio and video codecs - a snap. By adopting simple file name conventions, the plugin allows the podcaster to provide individual feeds for certain use cases or audiences without adding work for the podcaster during the publishing process.
 
-= Optimized Web Player =
+### Optimized Web Player
 
-The Publisher also comes with integrated with the Podlove Web Player plugin (which you do not need to install separately) and fully support its advanced options including multiple audio (MP4 AAC, MP3, Vorbis, Opus) and video (MP4 H.264, WebM, Theora) format support for web browsers. This Web Player is fully HTML5 compatible (but provides Flash fallback for ancient environments) and is ready for all touch based clients too.
+The Publisher also comes integrated with the Podlove Web Player plugin and fully supports its advanced options including multiple audio (MP4 AAC, MP3, Vorbis, Opus) and video (MP4 H.264, WebM, Theora) format support for web browsers. This Web Player is fully HTML5 compatible and is ready for all touch based clients too.
 
-= Chapter Support =
 
-The Publisher also makes it easy to publish chapter information in the player to make access to structured episodes even easier. Full support for linking directly to any part of your podcast on the web with instant playback included.
+### Metadata Galore
 
-= Flexible Templates =
+* **Chapter Marks:** The Publisher also makes it easy to publish chapter information in the player to make access to structured episodes even easier. Full support for linking directly to any part of your podcast on the web with instant playback included.
+* **Contributors:** Bring your team and guests front and center. Manage contributors, including their names, avatars and web urls.
+* **Transcripts:** WebVTT transcripts can be imported and even connected to your contributors. They are referenced in the RSS feed so they can be displayed by podcast apps.
+* **Seasons:** Does your podcast have seasons? We got you covered with a dedicated "Seasons" module.
+* **Related Episodes:** Manage and display related episodes on your website.
+
+### Auphonic Integration
+
+Auphonic is your all-in-one audio post production webtool to achieve a professional quality result. We provide a first class integration module for ease of use and best automation experience.
+
+### Flexible Templates
 
 To round it all up, a flexible template system enables you to published Podcasts in a defined fashion and change the style at any time without having to touch your individual postings later on.
 
