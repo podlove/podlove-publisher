@@ -301,7 +301,11 @@ class WP_REST_PodloveEpisode_Controller extends \WP_REST_Controller
                                 'required' => 'true'
                             ]
                         ]
-                    ]
+                      ],
+                      'show' => [
+                        'description' => 'Show slug. Assigns episode to given show.',
+                        'type' => 'string'
+                      ]
                 ],
                 'methods' => \WP_REST_Server::EDITABLE,
                 'callback' => [$this, 'update_item'],
@@ -539,6 +543,9 @@ class WP_REST_PodloveEpisode_Controller extends \WP_REST_Controller
             $explicit = true;
         }
 
+        $postterms = get_the_terms($episode->post_id, 'shows');
+        $show = (is_array($postterms) && isset($postterms[0]) ? $postterms[0]->slug : '');
+
         $data = [
             '_version' => 'v2',
             'id' => $id,
@@ -565,7 +572,8 @@ class WP_REST_PodloveEpisode_Controller extends \WP_REST_Controller
             'explicit' => $explicit,
             'license_name' => $episode->license_name,
             'license_url' => $episode->license_url,
-            'auphonic_production_id' => get_post_meta($episode->post_id, 'auphonic_production_id', true)
+            'auphonic_production_id' => get_post_meta($episode->post_id, 'auphonic_production_id', true),
+            'show' => $show
         ];
 
         $data = $this->enrich_with_season($data, $episode);
@@ -813,6 +821,10 @@ class WP_REST_PodloveEpisode_Controller extends \WP_REST_Controller
 
         if (isset($request['auphonic_production_id'])) {
             update_post_meta($episode->post_id, 'auphonic_production_id', $request['auphonic_production_id']);
+        }
+
+        if (isset($request['show'])) {
+          Shows\Shows::set_show_for_episode($episode->post_id, $request['show']);
         }
 
         $episode->save();
