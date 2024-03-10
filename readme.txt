@@ -119,6 +119,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 * transcripts: include json link in RSS again when "Publisher Generated" is selected
 * transcripts: polish timestamp rendering in preview (shorter, monospaced, right aligned, unselectable)
+* chapters: fix "unknown" durations
 
 = 4.1.1 =
 

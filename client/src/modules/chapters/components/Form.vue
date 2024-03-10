@@ -40,7 +40,9 @@
       </div>
       <div v-if="state.selected" class="md:w-4/12 sm:w-full md:mx-4 md:my-2 mt-0">
         <div class="mb-5 mt-2">
-          <label for="chapter-title" class="block text-sm font-medium text-gray-700">{{ __('Title') }}</label>
+          <label for="chapter-title" class="block text-sm font-medium text-gray-700">{{
+            __('Title')
+          }}</label>
           <div class="mt-1">
             <input
               name="chapter-title"
@@ -66,7 +68,9 @@
           </div>
         </div>
         <div class="mb-5">
-          <label for="chapter-start" class="block text-sm font-medium text-gray-700">{{ __('Start') }}</label>
+          <label for="chapter-start" class="block text-sm font-medium text-gray-700">{{
+            __('Start')
+          }}</label>
           <div class="mt-1">
             <input
               name="chapter-title"
@@ -89,11 +93,19 @@
               @change="updateChapter('image', $event)"
               :value="state.selected.image"
             />
-            <button @click.prevent="selectImage()" :title="__('Select Chapter Image')" class="absolute right-2 top-1/2 -mt-3 text-gray-400 hover:text-gray-700"><upload-icon class="w-6 h-6" /></button>
+            <button
+              @click.prevent="selectImage()"
+              :title="__('Select Chapter Image')"
+              class="absolute right-2 top-1/2 -mt-3 text-gray-400 hover:text-gray-700"
+            >
+              <upload-icon class="w-6 h-6" />
+            </button>
           </div>
         </div>
         <div class="mb-5 ml-1">
-          <podlove-button variant="danger" @click="removeChapter()">{{ __('Delete Chapter') }}</podlove-button>
+          <podlove-button variant="danger" @click="removeChapter()">{{
+            __('Delete Chapter')
+          }}</podlove-button>
         </div>
       </div>
     </div>
@@ -179,29 +191,17 @@ export default defineComponent({
           chapters: PodloveChapter[]
         ) => {
           const next = get(chapters, chapterIndex + 1)
+          const isLastChapter: boolean = next === undefined
           let durationMs: number
 
-          if (!next) {
+          if (isLastChapter) {
             durationMs = this.episodeDuration ? this.episodeDuration - (chapter.start || 0) : -1
           } else {
             durationMs = (next.start || 0) - (chapter.start || 0)
           }
 
-          let duration: string
-
-          switch (true) {
-            case durationMs === -1:
-              duration = 'Unknown'
-              break
-            case durationMs < 0:
-              duration = 'Unkown'
-              break
-            case this.episodeDuration !== null && durationMs > this.episodeDuration:
-              duration = 'Unkown'
-              break
-            default:
-              duration = new Timestamp(durationMs).prettyShort
-          }
+          const duration: string =
+            durationMs <= 0 ? 'Unknown' : new Timestamp(durationMs).prettyShort
 
           return [
             ...result,
