@@ -248,6 +248,7 @@ function getFileSelectionsForMultiTrack(state: State): PreparedFileSelection[] {
   const production_uuid = get(state, ['auphonic', 'production', 'uuid'], '')
   const tracks = get(state, ['auphonic', 'tracks'], [])
 
+  //@ts-ignore
   return tracks.reduce((agg, _track, index) => {
     //@ts-ignore
     agg.push(prepareFile(get(selections, `${production_uuid}_t${index}`)))
