@@ -296,7 +296,7 @@ class Transcripts extends \Podlove\Modules\Base
 
         if ($result === false) {
             if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'podlove_transcript_import') {
-                \Podlove\AJAX\Ajax::respond_with_json(['error' => $error]);
+                \Podlove\AJAX\Ajax::respond_with_json(['error' => 'Error parsing webvtt file']);
             }
 
             return;
