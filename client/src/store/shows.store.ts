@@ -4,9 +4,11 @@ import { handleActions, createAction } from 'redux-actions'
 
 export const INIT = 'podlove/publisher/shows/INIT'
 export const SET = 'podlove/publisher/shows/SET'
+export const SELECT = 'podlove/publisher/shows/SELECT'
 
 export const init = createAction<void>(INIT)
 export const set = createAction<PodloveShow[]>(SET)
+export const select = createAction<string>(SELECT)
 
 export type State = {
   shows: PodloveShow[]
