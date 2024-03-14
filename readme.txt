@@ -118,6 +118,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 = 4.1.4 =
 
 * Auphonic: reduce preset cache to 10 seconds so manual refreshing is not necessary (and remove broken refresh button on module page)
+* Auphonic: select configured show preset when selecting a show
 
 = 4.1.3 =
 
