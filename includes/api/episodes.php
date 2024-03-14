@@ -909,7 +909,7 @@ class WP_REST_PodloveEpisode_Controller extends \WP_REST_Controller
 
         $file = MediaFile::find_or_create_by_episode_id_and_episode_asset_id($episode->id, $asset_id);
         $file->determine_file_size();
-        $file->save();
+        $file->save(false);
 
         if ($file->size == 0) {
             return new \Podlove\Api\Response\OkResponse([
