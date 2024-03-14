@@ -115,6 +115,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 4.1.4 =
+
+* Auphonic: reduce preset cache to 10 seconds so manual refreshing is not necessary (and remove broken refresh button on module page)
+
 = 4.1.3 =
 
 * Shows selection in the episode was rewritten for the new frontend stack. It is now compatible with the Automatic Numbering module again.
