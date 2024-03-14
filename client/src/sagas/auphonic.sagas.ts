@@ -100,6 +100,8 @@ function* initializeAuphonicApi() {
 }
 
 function* pollWatcherSaga(auphonicApi: AuphonicApiClient) {
+  // immediately start polling once on init, in case the production is already running on page load
+  yield race([call(pollProductionSaga, auphonicApi), take(auphonic.STOP_POLLING)])
   while (true) {
     yield take(auphonic.START_POLLING)
     yield race([call(pollProductionSaga, auphonicApi), take(auphonic.STOP_POLLING)])
@@ -119,6 +121,11 @@ function* pollProductionSaga(auphonicApi: AuphonicApiClient) {
     // DONE
     if (production.status == 3) {
       yield put(episode.update({ prop: 'slug', value: production.output_basename }))
+    }
+
+    // see https://auphonic.com/api/info/production_status.json
+    const in_progress_status = [0, 1, 4, 5, 6, 7, 8, 12, 13, 14]
+    if (!in_progress_status.includes(production.status)) {
       yield put(auphonic.stopPolling())
     }
 
