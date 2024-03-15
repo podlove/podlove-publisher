@@ -3,6 +3,7 @@ import { handleActions, createAction } from 'redux-actions'
 
 export const INIT = 'podlove/publisher/admin/INIT'
 export const SET = 'podlove/publisher/admin/SET'
+export const UPDATE_TYPE = 'podlove/publisher/admin/UPDATE_TYPE'
 
 export type State = {
     bannerHide: boolean | null,
@@ -18,6 +19,7 @@ export const initialState: State = {
 
 export const init = createAction<void>(INIT)
 export const set = createAction<Partial<State>>(SET)
+export const update_type = createAction<string>(UPDATE_TYPE)
 
 export const reducer = handleActions(
     {
@@ -25,6 +27,10 @@ export const reducer = handleActions(
             bannerHide: get(action, ['payload', 'banner_hide'], state.bannerHide),
             type: get(action, ['payload', 'type'], state.type),
             feedUrl: get(action, ['payload', 'feedUrl'], state.feedUrl),
+        }),
+        [UPDATE_TYPE]: (state: State, action: { payload: string }): State => ({
+            ...state,
+            type: action.payload
         }),
     },
     initialState

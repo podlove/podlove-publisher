@@ -7,6 +7,7 @@ import PodloveMediaFiles from './mediafiles'
 import PodloveRelatedEpisodes from './related'
 import PodloveSoundbite from './soundbite'
 import PodloveLicense from './license'
+import PodloveOnboarding from './onboarding'
 
 export default {
   PodloveDescription,
@@ -18,4 +19,5 @@ export default {
   PodloveRelatedEpisodes,
   PodloveSoundbite,
   PodloveLicense,
+  PodloveOnboarding,
 }
