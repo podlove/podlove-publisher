@@ -23,14 +23,18 @@ class Onboarding extends \Podlove\Modules\Base
 
     public function onboarding_banner()
     {
+        if (isset($_REQUEST['page']) && $_REQUEST['page'] === 'podlove_settings_onboarding_handle') {
+            return;
+        }
+
         ?>
             <div class="podlove-banner">
-                <div class="podlove-onboarding-left">
+                <div class="podlove-banner-left">
                     <div class="podlove-banner-image">
                         <img src="<?php echo \Podlove\PLUGIN_URL.'/images/logo/podlove-publisher-icon-500.png'; ?>"/>
                     </div>
                 </div>
-                <div class="podlove-onboarding-right">
+                <div class="podlove-banner-right">
                     <h2 class="podlove-banner-head">Podlove Onboarding</h2>
                     <p class="podlove-banner-text">
                         Do you want to create a new podcast? Or do you already have a podcast and want to migrate?
