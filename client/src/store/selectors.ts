@@ -12,6 +12,7 @@ import * as podcastStore from './podcast.store'
 import * as auphonicStore from './auphonic.store'
 import * as mediafilesStore from './mediafiles.store'
 import * as relatedEpisodesStore from './relatedEpisodes.store'
+import * as adminStore from './admin.store'
 
 const root = {
   lifecycle: (state: State) => state.lifecycle,
@@ -26,6 +27,7 @@ const root = {
   mediafiles: (state: State) => state.mediafiles,
   settings: (state: State) => state.settings,
   relatedEpisodes: (state: State) => state.relatedEpisodes,
+  admin: (state: State) => state.admin,
 }
 
 const lifecycle = {
@@ -159,6 +161,12 @@ const relatedEpisodes = {
   ),
 }
 
+const admin = {
+  bannerHide: createSelector(root.admin, adminStore.selectors.bannerHide),
+  type: createSelector(root.admin, adminStore.selectors.type),
+  feedUrl: createSelector(root.admin, adminStore.selectors.feedUrl),
+}
+
 export default {
   lifecycle,
   podcast,
@@ -172,4 +180,5 @@ export default {
   auphonic,
   mediafiles,
   relatedEpisodes,
+  admin
 }
