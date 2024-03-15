@@ -5,6 +5,7 @@ namespace Podlove;
 namespace Podlove\Modules\Onboarding;
 
 use Podlove\Modules\Onboarding\Settings\OnboardingPage;
+use Podlove\Api\Admin\WP_REST_PodloveOnboarding_Controller;
 
 class Onboarding extends \Podlove\Modules\Base
 {
@@ -18,6 +19,7 @@ class Onboarding extends \Podlove\Modules\Base
             add_action('admin_enqueue_scripts', [$this, 'add_scripts_and_styles']);
             add_action('admin_notices', [$this, 'onboarding_banner']);
             add_action('admin_menu', [$this, 'add_onboarding_menu'], 20);
+            add_action('rest_api_init', [$this, 'api_init']);
         }
     }
 
@@ -61,5 +63,81 @@ class Onboarding extends \Podlove\Modules\Base
     public function add_onboarding_menu()
     {
         new OnboardingPage(\Podlove\Podcast_Post_Type::SETTINGS_PAGE_HANDLE);
+    }
+
+    /**
+     * Onboarding options:
+     *    - hide banner
+     *    - type: start / import
+     *    - feedurl
+     */
+
+     public static function is_banner_hide()
+    {
+        $onboarding_options = self::get_options();
+        if (isset($onboarding_options['hide_banner'])) {
+            return $onboarding_options['hide_banner'];
+        }
+
+        return false;
+    }
+
+    public static function set_banner_hide($option)
+    {
+        $onboarding_options = self::get_options();
+        if (strtolower($option) == 'true') {
+            $onboarding_options['hide_banner'] = true;
+        }
+        else {
+            if (isset($onboarding_options['hide_banner'])) {
+                unset($onboarding_options['hide_banner']);
+            }
+        }
+        self::update_options($onboarding_options);
+    }
+
+    /** PHP 8.1 change this to an enum */
+    public static function get_onboarding_type()
+    {
+        $onboarding_options = self::get_options();
+        if (isset($onboarding_options['type'])) {
+            return $onboarding_options['type'];
+        }
+    }
+
+    public static function set_onboarding_type($option)
+    {
+        $onboarding_options = self::get_options();
+        switch(strtolower($option)) {
+            case 'start':
+            case 'import':
+                $onboarding_options['type'] = $option;
+                break;
+            default:
+                if (isset($onboarding_options['type'])) {
+                    unset($onboarding_options['type']);
+                }
+                break;
+        }
+        self::update_options($onboarding_options);
+    }
+
+    private static function get_options()
+    {
+        return get_option('podlove_modules_onboarding', []);
+    }
+
+    private static function update_options($onboarding_options)
+    {
+        update_option('podlove_modules_onboarding', $onboarding_options);
+    }
+
+    /**
+     * Onboarding API init (add to admin-route)
+     */
+    public function api_init()
+    {
+        $api_onboarding = new WP_REST_PodloveOnboarding_Controller();
+        $api_onboarding->register_routes();
     }
 }
