@@ -1,7 +1,5 @@
 <?php
 
-namespace Podlove;
-
 namespace Podlove\Modules\Onboarding;
 
 use Podlove\Modules\Onboarding\Settings\OnboardingPage;
@@ -15,7 +13,7 @@ class Onboarding extends \Podlove\Modules\Base
 
     public function load()
     {
-        if (\is_onboarding_active()) {
+        if (\podlove_is_onboarding_active()) {
             add_action('admin_enqueue_scripts', [$this, 'add_scripts_and_styles']);
             add_action('admin_notices', [$this, 'onboarding_banner']);
             add_action('admin_menu', [$this, 'add_onboarding_menu'], 20);
@@ -25,7 +23,7 @@ class Onboarding extends \Podlove\Modules\Base
 
     public static function is_visible()
     {
-        if (\is_onboarding_active()) {
+        if (\podlove_is_onboarding_active()) {
             return true;
         }
         return false;
@@ -63,6 +61,11 @@ class Onboarding extends \Podlove\Modules\Base
     public function add_scripts_and_styles()
     {
         if (isset($_REQUEST['page']) && $_REQUEST['page'] === 'podlove_settings_onboarding_handle') {
+            $version = \Podlove\get_plugin_header('Version');
+            wp_register_script('podlove-vue-app-client', \Podlove\PLUGIN_URL.'/client/dist/client.js', ['wp-i18n'], $version, false);
+            wp_enqueue_style('podlove-vue-app-client-css', \Podlove\PLUGIN_URL.'/client/dist/style.css', [], $version);
+            wp_set_script_translations('podlove-vue-app-client', 'podlove-podcasting-plugin-for-wordpress');
+            wp_enqueue_script('podlove-vue-app-client');
         }
         wp_register_style('podlove-onboarding-style', $this->get_module_url().'/css/podlove-onboarding.css');
         wp_enqueue_style('podlove-onboarding-style');

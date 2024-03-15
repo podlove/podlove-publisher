@@ -32,8 +32,8 @@ class OnboardingPage
     public function page()
     {
         ?>
-            <div class="podlove-onboarding">
-                <H1>Hier kommt das Onboarding Widget hin</H1>
+            <div data-client="podlove">
+                <podlove-onboarding></podlove-onboarding>
             </div>
         <?php
     }

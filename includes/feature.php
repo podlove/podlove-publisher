@@ -1,6 +1,6 @@
 <?php
 
-function is_onboarding_active()
+function podlove_is_onboarding_active()
 {
     if (defined('PODLOVE_ONBOARDING') && PODLOVE_ONBOARDING) {
         return true;

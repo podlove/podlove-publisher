@@ -8,6 +8,7 @@ import PodloveRelatedEpisodes from './related'
 import PodloveSoundbite from './soundbite'
 import PodloveShowSelect from './shows'
 import PodloveLicense from './license'
+import PodloveOnboarding from './onboarding'
 
 export default {
   PodloveDescription,
@@ -20,4 +21,5 @@ export default {
   PodloveSoundbite,
   PodloveShowSelect,
   PodloveLicense,
+  PodloveOnboarding,
 }
