@@ -305,6 +305,10 @@ class WP_REST_PodloveEpisode_Controller extends \WP_REST_Controller
                       'show' => [
                         'description' => 'Show slug. Assigns episode to given show.',
                         'type' => 'string'
+                      ],
+                      'skip_validation' => [
+                        'description' => 'If true, mediafile validation is skipped on slug change.',
+                        'type' => 'boolean',
                       ]
                 ],
                 'methods' => \WP_REST_Server::EDITABLE,
@@ -829,13 +833,14 @@ class WP_REST_PodloveEpisode_Controller extends \WP_REST_Controller
 
         $episode->save();
 
-        if ($isSlugSet) {
+        // DEPRECATED: clients should validate themselves. Remove in v3.
+        if ($isSlugSet && !$request['skip_validation']) {
             $assets = EpisodeAsset::all();
 
             foreach ($assets as $asset) {
                 $file = MediaFile::find_or_create_by_episode_id_and_episode_asset_id($episode->id, $asset->id);
                 $file->determine_file_size();
-                $file->save();
+                $file->save(false);
             }
         }
 

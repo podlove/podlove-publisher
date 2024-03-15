@@ -121,6 +121,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 * Auphonic: select configured show preset when selecting a show
 * Auphonic: fix status updates when opening an episode with an already running production
 * performance: don't try to fetch file headers twice for unreachable URLs
+* performance: faster saving of slug changes
 
 = 4.1.3 =
 

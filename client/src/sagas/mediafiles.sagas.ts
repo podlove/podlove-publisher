@@ -1,6 +1,16 @@
 import { PodloveApiClient } from '@lib/api'
 import { selectors } from '@store'
-import { all, call, debounce, fork, put, select, takeEvery, throttle } from 'redux-saga/effects'
+import {
+  all,
+  call,
+  debounce,
+  fork,
+  put,
+  select,
+  takeEvery,
+  takeLatest,
+  throttle,
+} from 'redux-saga/effects'
 import * as mediafiles from '@store/mediafiles.store'
 import * as episode from '@store/episode.store'
 import * as wordpress from '@store/wordpress.store'
@@ -29,7 +39,7 @@ function* initialize(api: PodloveApiClient) {
   yield takeEvery(mediafiles.ENABLE, handleEnable, api)
   yield takeEvery(mediafiles.DISABLE, handleDisable, api)
   yield takeEvery(mediafiles.VERIFY, handleVerify, api)
-  yield takeEvery(episode.SAVED, maybeReverify, api)
+  yield takeLatest(episode.SLUG_CHANGED, verifyAll, api)
   yield debounce(2000, wordpress.UPDATE, maybeUpdateSlug, api)
 
   yield throttle(
@@ -101,16 +111,12 @@ function* handleDisable(api: PodloveApiClient, action: { type: string; payload: 
   yield api.put(`episodes/${episodeId}/media/${asset_id}/disable`, {})
 }
 
-function* maybeReverify(api: PodloveApiClient, action: { type: string; payload: object }) {
+function* verifyAll(api: PodloveApiClient) {
   const episodeId: number = yield select(selectors.episode.id)
   const mediaFiles: MediaFile[] = yield select(selectors.mediafiles.files)
 
-  if (!Object.keys(action.payload).includes('slug')) {
-    return
-  }
-
   // verify all
-  yield all(mediaFiles.map((file) => call(verifyEpisodeAsset, api, episodeId, file.asset_id)))
+  yield all(mediaFiles.map((file) => fork(verifyEpisodeAsset, api, episodeId, file.asset_id)))
 }
 
 function* maybeUpdateSlug(
