@@ -253,7 +253,13 @@ class Auphonic extends \Podlove\Modules\Base
         $presets = $this->api->fetch_presets();
         if ($presets && is_array($presets->data)) {
             $preset_list = [];
-            foreach ($presets->data as $preset_id => $preset) {
+
+            $raw_list = $presets->data;
+            usort($raw_list, function($a, $b) {
+                return $a->preset_name <=> $b->preset_name;
+            });
+
+            foreach ($raw_list as $preset) {
                 $preset_list[$preset->uuid] = $preset->preset_name;
             }
         } else {
