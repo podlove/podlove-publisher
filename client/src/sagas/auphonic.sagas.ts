@@ -112,6 +112,10 @@ function* pollProductionSaga(auphonicApi: AuphonicApiClient) {
   while (true) {
     let uuid: string = yield select(selectors.auphonic.productionId)
 
+    if (!uuid) {
+      yield put(auphonic.stopPolling())
+    }
+
     let {
       result: { data: production },
     } = yield auphonicApi.get(`production/${uuid}.json`)
