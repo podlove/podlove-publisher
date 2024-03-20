@@ -64,6 +64,15 @@ class Onboarding extends \Podlove\Modules\Base
             $version = \Podlove\get_plugin_header('Version');
             wp_register_script('podlove-vue-app-client', \Podlove\PLUGIN_URL.'/client/dist/client.js', ['wp-i18n'], $version, false);
             wp_enqueue_style('podlove-vue-app-client-css', \Podlove\PLUGIN_URL.'/client/dist/style.css', [], $version);
+            
+            add_filter('podlove_data_js', function ($data) {
+                $data['api'] = [
+                    'base' => esc_url_raw(rest_url('podlove')),
+                    'nonce' => wp_create_nonce('wp_rest'),
+                ];
+                return $data;
+            });
+
             wp_set_script_translations('podlove-vue-app-client', 'podlove-podcasting-plugin-for-wordpress');
             wp_enqueue_script('podlove-vue-app-client');
         }
