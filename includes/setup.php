@@ -71,6 +71,7 @@ function podlove_setup_podcast()
     $podcast = Model\Podcast::get();
     if (!$podcast->limit_items) {
         $podcast->limit_items = Model\Feed::ITEMS_NO_LIMIT;
+        $podcast->feed_transcripts = 'generated';
     }
     $podcast->save();
 }

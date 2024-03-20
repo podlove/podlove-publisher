@@ -97,7 +97,7 @@ import {
   ListboxOption,
   ListboxOptions,
 } from '@headlessui/vue'
-import { CheckIcon, SelectorIcon } from '@heroicons/vue/solid'
+import { CheckIcon, ChevronUpDownIcon as SelectorIcon } from '@heroicons/vue/24/solid'
 import { get } from 'lodash'
 
 export default defineComponent({

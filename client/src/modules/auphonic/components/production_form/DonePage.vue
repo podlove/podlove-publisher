@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="rounded-md bg-green-50 p-4">
+    <div class="rounded-md bg-green-50 p-4" v-if="production.status == 3">
       <div class="flex">
         <div class="flex-shrink-0">
           <ClipboardCheckIcon class="h-5 w-5 text-green-400" aria-hidden="true" />
@@ -86,6 +86,9 @@
         </div>
       </div>
     </div>
+    <div v-else class="mt-4 overflow-hidden rounded-lg bg-white shadow">
+      <div class="p-6">{{ __('Nothing to import') }}</div>
+    </div>
   </div>
 </template>
 
@@ -97,7 +100,11 @@ import { AuphonicChapter, Production } from '@store/auphonic.store'
 import { update as updateEpisode } from '@store/episode.store'
 import { parsed as parsedChapters } from '@store/chapters.store'
 
-import { ClipboardCheckIcon, ExternalLinkIcon, ExclamationIcon } from '@heroicons/vue/outline'
+import {
+  ClipboardDocumentCheckIcon as ClipboardCheckIcon,
+  ArrowTopRightOnSquareIcon as ExternalLinkIcon,
+  ExclamationTriangleIcon as ExclamationIcon,
+} from '@heroicons/vue/24/outline'
 import { PodloveChapter } from '../../../../types/chapters.types'
 
 type Entry = {
@@ -183,7 +190,10 @@ export default defineComponent({
               start: Math.round((chapter.start_sec || 0) * 1000),
               title: chapter.title || '',
               href: chapter.url || '',
-              image: chapter.image || '',
+              // FIXME: chapter.image is an Auphonic URL which we can't use. We
+              // have to download the image and serve from WordPress.
+              // image: chapter.image || '',
+              image: '',
             }
           })
 

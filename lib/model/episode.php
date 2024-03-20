@@ -454,7 +454,7 @@ class Episode extends Base implements Licensable
         return (new \Podlove\Duration($this->soundbite_duration))->get($format);
     }
 
-    public function get_next_episode_number($show_slug = null)
+    public static function get_next_episode_number($show_slug = null)
     {
         global $wpdb;
 
@@ -470,6 +470,7 @@ class Episode extends Base implements Licensable
         `'.Episode::table_name().'` e
             JOIN `'.$wpdb->posts.'` p ON e.post_id = p.id
         WHERE
+            p.post_type = \'podcast\' AND
             p.post_status IN (\'draft\', \'publish\', \'private\', \'pending\', \'future\')
             '.$sql_fragment.'
         ';

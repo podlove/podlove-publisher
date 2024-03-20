@@ -82,7 +82,7 @@
 import { defineComponent } from 'vue'
 import Module from '@components/module/Module.vue'
 import PodloveButton from '@components/button/Button.vue'
-import { PlusSmIcon, RefreshIcon } from '@heroicons/vue/outline'
+import { PlusIcon as PlusSmIcon, ArrowPathIcon as RefreshIcon } from '@heroicons/vue/24/outline'
 import { selectors } from '@store'
 
 import { injectStore, mapState } from 'redux-vuex'

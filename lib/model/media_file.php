@@ -18,9 +18,9 @@ class MediaFile extends Base
      *
      * @override Base::save()
      */
-    public function save()
+    public function save($determine_size = true)
     {
-        if (!$this->size) {
+        if ($determine_size && !$this->size) {
             $this->determine_file_size();
         }
 
@@ -227,7 +227,7 @@ class MediaFile extends Base
 
             $template = (string) $podcast->get_url_template();
             $template = apply_filters('podlove_file_url_template', $template);
-            $template = str_replace('%media_file_base_url%', trailingslashit($podcast->get_media_file_base_uri()), $template);
+            $template = str_replace('%media_file_base_url%', $podcast->get_media_file_base_uri(), $template);
             $template = str_replace('%episode_slug%', \Podlove\prepare_episode_slug_for_url($episode->slug), $template);
             $template = str_replace('%suffix%', $episode_asset->suffix ?? '', $template);
             $template = str_replace('%format_extension%', $file_type->extension, $template);
@@ -276,6 +276,8 @@ class MediaFile extends Base
                 // Having a proper state would be nice, but this "size = 1 byte" hack works for now.
                 $this->size = 1;
             }
+        } elseif ($http_code >= 400) {
+          $this->size = 0;
         }
 
         if ($this->size <= 0) {

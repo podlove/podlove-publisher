@@ -89,6 +89,7 @@ function* initializeAuphonicApi() {
   yield takeEvery(auphonic.saveProduction, handleSaveProduction, auphonicApi)
   yield takeEvery(auphonic.startProduction, handleStartProduction, auphonicApi)
   yield takeEvery(auphonic.deselectProduction, handleDeselectProduction, auphonicApi)
+  yield takeEvery(auphonic.removeTrack, handleRemoveTrack, auphonicApi)
 
   // poll production updates while production is running
   // TODO: start polling when loading a production that is in production
@@ -99,6 +100,8 @@ function* initializeAuphonicApi() {
 }
 
 function* pollWatcherSaga(auphonicApi: AuphonicApiClient) {
+  // immediately start polling once on init, in case the production is already running on page load
+  yield race([call(pollProductionSaga, auphonicApi), take(auphonic.STOP_POLLING)])
   while (true) {
     yield take(auphonic.START_POLLING)
     yield race([call(pollProductionSaga, auphonicApi), take(auphonic.STOP_POLLING)])
@@ -109,6 +112,10 @@ function* pollProductionSaga(auphonicApi: AuphonicApiClient) {
   while (true) {
     let uuid: string = yield select(selectors.auphonic.productionId)
 
+    if (!uuid) {
+      yield put(auphonic.stopPolling())
+    }
+
     let {
       result: { data: production },
     } = yield auphonicApi.get(`production/${uuid}.json`)
@@ -118,6 +125,11 @@ function* pollProductionSaga(auphonicApi: AuphonicApiClient) {
     // DONE
     if (production.status == 3) {
       yield put(episode.update({ prop: 'slug', value: production.output_basename }))
+    }
+
+    // see https://auphonic.com/api/info/production_status.json
+    const in_progress_status = [0, 1, 4, 5, 6, 7, 8, 12, 13, 14]
+    if (!in_progress_status.includes(production.status)) {
       yield put(auphonic.stopPolling())
     }
 
@@ -130,6 +142,15 @@ function* handleDeselectProduction(auphonicApi: AuphonicApiClient) {
     result: { data: productions },
   } = yield auphonicApi.get(`productions.json`, { limit: 10, minimal_data: true })
   yield put(auphonic.setProductions(productions))
+}
+
+function* handleRemoveTrack(
+  auphonicApi: AuphonicApiClient,
+  action: { type: string; payload: any }
+) {
+  let uuid: string = yield select(selectors.auphonic.productionId)
+
+  yield auphonicApi.delete(`production/${uuid}/multi_input_files/${action.payload}.json`)
 }
 
 function* handleStartProduction(
@@ -240,6 +261,7 @@ function getFileSelectionsForMultiTrack(state: State): PreparedFileSelection[] {
 
   //@ts-ignore
   return tracks.reduce((agg, _track, index) => {
+    //@ts-ignore
     agg.push(prepareFile(get(selections, `${production_uuid}_t${index}`)))
     return agg
   }, [])
@@ -320,7 +342,7 @@ function getProductionPayload(state: State): object {
     image: episode_poster,
     metadata: {
       ...newPayload.metadata,
-      title: state.episode.title,
+      title: state.episode.title || state.post.title,
       subtitle: state.episode.subtitle,
       summary: state.episode.summary,
       artist: state.podcast.author_name,
@@ -440,15 +462,20 @@ function* fetchServiceFiles(
   yield put(auphonic.setServiceFiles({ uuid, files: result.data }))
 }
 
-function defaultTitle() {
-  return `New Production`
+function* titleWithFallback() {
+  const episodeTitle: string = yield select(selectors.episode.title)
+  const postTitle: string = yield select(selectors.post.title)
+
+  return episodeTitle || postTitle || `New Production`
 }
 
 function* handleCreateProduction(auphonicApi: AuphonicApiClient) {
   const presetUUID: string = yield select(selectors.auphonic.preset)
+  const title: string = yield titleWithFallback()
+
   const { result } = yield auphonicApi.post(`productions.json`, {
     preset: presetUUID,
-    metadata: { title: defaultTitle() },
+    metadata: { title: title },
   })
   const production = result.data
 
@@ -457,9 +484,11 @@ function* handleCreateProduction(auphonicApi: AuphonicApiClient) {
 
 function* handleCreateMultitrackProduction(auphonicApi: AuphonicApiClient) {
   const presetUUID: string = yield select(selectors.auphonic.preset)
+  const title: string = yield titleWithFallback()
+
   const { result } = yield auphonicApi.post(`productions.json`, {
     preset: presetUUID,
-    metadata: { title: defaultTitle() },
+    metadata: { title: title },
     is_multitrack: true,
   })
   const production = result.data

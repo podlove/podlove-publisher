@@ -6,6 +6,7 @@ import PodloveContributors from './contributors'
 import PodloveMediaFiles from './mediafiles'
 import PodloveRelatedEpisodes from './related'
 import PodloveSoundbite from './soundbite'
+import PodloveShowSelect from './shows'
 import PodloveLicense from './license'
 import PodloveOnboarding from './onboarding'
 
@@ -18,6 +19,7 @@ export default {
   PodloveMediaFiles,
   PodloveRelatedEpisodes,
   PodloveSoundbite,
+  PodloveShowSelect,
   PodloveLicense,
   PodloveOnboarding,
 }

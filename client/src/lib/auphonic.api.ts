@@ -112,6 +112,7 @@ const uploadApi =
 export interface AuphonicApiClient {
   get: (url: string, options?: ApiOptions) => Promise<{ result: any; error: any }>
   post: (url: string, data: any, options?: ApiOptions) => Promise<{ result: any; error: any }>
+  delete: (url: string, options?: ApiOptions) => Promise<{ result: any; error: any }>
   upload: (url: string, data: any, options?: ApiOptions) => Promise<{ result: any; error: any }>
 }
 

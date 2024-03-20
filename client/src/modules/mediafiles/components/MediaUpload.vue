@@ -20,7 +20,7 @@ import { mapState, injectStore } from 'redux-vuex'
 
 import { uploadIntent } from '@store/mediafiles.store'
 import PodloveButton from '@components/button/Button.vue'
-import { UploadIcon } from '@heroicons/vue/outline'
+import { CloudArrowUpIcon as UploadIcon } from '@heroicons/vue/24/outline'
 
 export default defineComponent({
   components: {

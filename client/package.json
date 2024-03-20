@@ -26,7 +26,7 @@
   "dependencies": {
     "@babel/types": "^7.18.7",
     "@headlessui/vue": "1.7.10",
-    "@heroicons/vue": "1.0.6",
+    "@heroicons/vue": "2.1.1",
     "@podlove/utils": "5.7.4",
     "@podlove/web-player": "5.7.4",
     "@popperjs/core": "2.11.4",

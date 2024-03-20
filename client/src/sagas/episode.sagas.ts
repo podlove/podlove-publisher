@@ -6,6 +6,7 @@ import { debounce, fork, put, select, takeEvery } from 'redux-saga/effects'
 import { PodloveEpisode } from '../types/episode.types'
 import * as auphonic from '../store/auphonic.store'
 import * as episode from '../store/episode.store'
+import * as mediafiles from '../store/mediafiles.store'
 import * as wordpress from '../store/wordpress.store'
 import { createApi } from './api'
 import { WebhookConfig } from './auphonic.sagas'
@@ -20,6 +21,7 @@ function* episodeSaga(): any {
   yield takeEvery(episode.UPDATE, collectEpisodeUpdate)
   yield debounce(1000, episode.UPDATE, save, apiClient)
   yield debounce(50, episode.QUICKSAVE, save, apiClient)
+  yield takeEvery(episode.SAVED, maybeMarkSlugAsChanged)
   yield takeEvery(episode.SELECT_POSTER, selectImageFromLibrary)
   yield takeEvery(episode.SET_POSTER, updatePoster)
   yield takeEvery(episode.SET, updateAuphonicWebhookConfig)
@@ -34,9 +36,15 @@ function* updateAuphonicWebhookConfig() {
 
 function* initialize(api: PodloveApiClient) {
   const episodeId: string = yield select(selectors.episode.id)
-  const { result: episodesResult }: { result: PodloveEpisode } = yield api.get(`episodes/${episodeId}`)
+  const { result: episodesResult }: { result: PodloveEpisode } = yield api.get(
+    `episodes/${episodeId}`
+  )
 
   if (episodesResult) {
+    if (episodesResult.slug === null) {
+      yield put(mediafiles.enableSlugAutogen())
+    }
+
     yield put(episode.set(episodesResult))
   }
 }
@@ -59,10 +67,16 @@ function* save(api: PodloveApiClient, action: Action) {
     return
   }
 
-  yield api.put(`episodes/${episodeId}`, EPISODE_UPDATE)
+  yield api.put(`episodes/${episodeId}`, EPISODE_UPDATE, { query: { skip_validation: '1' } })
   yield put(episode.saved(EPISODE_UPDATE))
 
   EPISODE_UPDATE = {}
+}
+
+function* maybeMarkSlugAsChanged(action: { type: string; payload: object }) {
+  if (Object.keys(action.payload).includes('slug')) {
+    yield put(episode.slugChanged())
+  }
 }
 
 function* selectImageFromLibrary() {

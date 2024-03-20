@@ -49,7 +49,7 @@ class RSS
             $attributes = apply_filters('podlove_feed_enclosure_attributes', $attributes, $media_file);
 
             foreach ($attributes as $k => $v) {
-                $element->setAttribute($k, $v);
+                $element->setAttribute($k, $v ?? '');
             }
 
             $dom->appendChild($element);

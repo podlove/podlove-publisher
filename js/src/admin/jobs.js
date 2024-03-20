@@ -13,7 +13,8 @@ var PODLOVE = PODLOVE || {};
         $.post(ajaxurl, {
             action: 'podlove-job-create',
             name: name,
-            args: args
+            args: args,
+            nonce: podlove_admin_global.nonce_ajax
         }, 'json').done(function(job) {
             // console.log("create job done", job);
 

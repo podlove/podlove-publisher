@@ -12,6 +12,7 @@ import * as auphonicStore from './auphonic.store'
 import * as mediafilesStore from './mediafiles.store'
 import * as relatedEpisodesStore from './relatedEpisodes.store'
 import * as adminStore from './admin.store'
+import * as showsStore from './shows.store'
 
 export default combineReducers({
   lifecycle: lifecycleStore.reducer,
@@ -27,4 +28,5 @@ export default combineReducers({
   mediafiles: mediafilesStore.reducer,
   relatedEpisodes: relatedEpisodesStore.reducer,
   admin: adminStore.reducer,
+  shows: showsStore.reducer,
 })

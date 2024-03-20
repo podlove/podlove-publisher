@@ -23,6 +23,7 @@ import { State as auphonicState } from './auphonic.store'
 import { State as mediafilesState } from './mediafiles.store'
 import { State as relatedEpisodesState } from './relatedEpisodes.store'
 import { State as adminState } from './admin.store'
+import { State as showsState } from './shows.store'
 
 import lifecycleSaga from '../sagas/lifecycle.sagas'
 import podcastSaga from '../sagas/podcast.sagas'
@@ -36,6 +37,7 @@ import auphonicSaga from '../sagas/auphonic.sagas'
 import mediafilesSaga from '../sagas/mediafiles.sagas'
 import relatedEpisodesSaga from '../sagas/relatedEpisodes.sagas'
 import adminSaga from '../sagas/admin.sagas'
+import showsSaga from '../sagas/shows.sagas'
 
 export interface State {
   lifecycle: LifecycleState
@@ -51,6 +53,7 @@ export interface State {
   mediafiles: mediafilesState
   relatedEpisodes: relatedEpisodesState
   admin: adminState
+  shows: showsState
 }
 
 const sagas = createSagaMiddleware()
@@ -70,5 +73,6 @@ sagas.run(auphonicSaga())
 sagas.run(mediafilesSaga())
 sagas.run(relatedEpisodesSaga())
 sagas.run(adminSaga())
+sagas.run(showsSaga())
 
 export { selectors, sagas }

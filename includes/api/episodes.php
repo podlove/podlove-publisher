@@ -197,6 +197,24 @@ class WP_REST_PodloveEpisode_Controller extends \WP_REST_Controller
                 'permission_callback' => [$this, 'create_item_permissions_check'],
             ]
         ]);
+
+        register_rest_route($this->namespace, '/'.$this->rest_base.'/(?P<id>[\d]+)/build_slug', [
+            'args' => [
+                'id' => [
+                    'description' => __('Unique identifier for the episode.', 'podlove-podcasting-plugin-for-wordpress'),
+                    'type' => 'integer',
+                ],
+                'title' => [
+                    'type' => 'string'
+                ]
+            ],
+            [
+                'methods' => \WP_REST_Server::READABLE,
+                'callback' => [$this, 'build_slug'],
+                'permission_callback' => [$this, 'create_item_permissions_check'],
+            ]
+        ]);
+
         register_rest_route($this->namespace, '/'.$this->rest_base.'/(?P<id>[\d]+)', [
             'args' => [
                 'id' => [
@@ -283,7 +301,15 @@ class WP_REST_PodloveEpisode_Controller extends \WP_REST_Controller
                                 'required' => 'true'
                             ]
                         ]
-                    ]
+                      ],
+                      'show' => [
+                        'description' => 'Show slug. Assigns episode to given show.',
+                        'type' => 'string'
+                      ],
+                      'skip_validation' => [
+                        'description' => 'If true, mediafile validation is skipped on slug change.',
+                        'type' => 'boolean',
+                      ]
                 ],
                 'methods' => \WP_REST_Server::EDITABLE,
                 'callback' => [$this, 'update_item'],
@@ -521,6 +547,9 @@ class WP_REST_PodloveEpisode_Controller extends \WP_REST_Controller
             $explicit = true;
         }
 
+        $postterms = get_the_terms($episode->post_id, 'shows');
+        $show = (is_array($postterms) && isset($postterms[0]) ? $postterms[0]->slug : '');
+
         $data = [
             '_version' => 'v2',
             'id' => $id,
@@ -547,7 +576,8 @@ class WP_REST_PodloveEpisode_Controller extends \WP_REST_Controller
             'explicit' => $explicit,
             'license_name' => $episode->license_name,
             'license_url' => $episode->license_url,
-            'auphonic_production_id' => get_post_meta($episode->post_id, 'auphonic_production_id', true)
+            'auphonic_production_id' => get_post_meta($episode->post_id, 'auphonic_production_id', true),
+            'show' => $show
         ];
 
         $data = $this->enrich_with_season($data, $episode);
@@ -665,6 +695,25 @@ class WP_REST_PodloveEpisode_Controller extends \WP_REST_Controller
         return new \WP_REST_Response(null, 500);
     }
 
+    public function build_slug($request)
+    {
+        $id = $request->get_param('id');
+        if (!$id) {
+            return;
+        }
+
+        $episode = Episode::find_by_id($id);
+        if (!$episode) {
+            return new \Podlove\Api\Error\NotFound();
+        }
+
+        $title = $request->get_param('title') ?? get_the_title($episode->post_id);
+
+        $slug = sanitize_title($title);
+
+        return new \Podlove\Api\Response\CreateResponse(['slug' => $slug]);
+    }
+
     public function update_item_permissions_check($request)
     {
         if (!current_user_can('edit_posts')) {
@@ -778,15 +827,20 @@ class WP_REST_PodloveEpisode_Controller extends \WP_REST_Controller
             update_post_meta($episode->post_id, 'auphonic_production_id', $request['auphonic_production_id']);
         }
 
+        if (isset($request['show'])) {
+          Shows\Shows::set_show_for_episode($episode->post_id, $request['show']);
+        }
+
         $episode->save();
 
-        if ($isSlugSet) {
+        // DEPRECATED: clients should validate themselves. Remove in v3.
+        if ($isSlugSet && !$request['skip_validation']) {
             $assets = EpisodeAsset::all();
 
             foreach ($assets as $asset) {
                 $file = MediaFile::find_or_create_by_episode_id_and_episode_asset_id($episode->id, $asset->id);
                 $file->determine_file_size();
-                $file->save();
+                $file->save(false);
             }
         }
 
@@ -860,7 +914,7 @@ class WP_REST_PodloveEpisode_Controller extends \WP_REST_Controller
 
         $file = MediaFile::find_or_create_by_episode_id_and_episode_asset_id($episode->id, $asset_id);
         $file->determine_file_size();
-        $file->save();
+        $file->save(false);
 
         if ($file->size == 0) {
             return new \Podlove\Api\Response\OkResponse([

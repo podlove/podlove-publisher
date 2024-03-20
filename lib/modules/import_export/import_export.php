@@ -123,7 +123,7 @@ class Import_Export extends \Podlove\Modules\Base
 			<li><?php echo __('In your new WordPress instance, import that file.', 'podlove-podcasting-plugin-for-wordpress'); ?></li>
 		</ol>
 
-		<a href="?podlove_export=1" class="button"><?php echo __('Export Podcast Data', 'podlove-podcasting-plugin-for-wordpress'); ?></a>
+		<a href="?podlove_export=1&_podlove_nonce=<?php echo wp_create_nonce('podlove_export'); ?>" class="button"><?php echo __('Export Podcast Data', 'podlove-podcasting-plugin-for-wordpress'); ?></a>
 		<?php
     }
 
@@ -168,12 +168,12 @@ class Import_Export extends \Podlove\Modules\Base
 							$("#podlove_tracking_export_status_wrapper").show();
 
 							timeoutID = window.setTimeout(podlove_check_export_status, 1000);
-						} 
+						}
 
 						if (result.finished) {
 							$("#podlove_tracking_export").attr('disabled', false);
 							$("#podlove_tracking_export_status_wrapper").hide();
-							window.location = window.location + "&podlove_export_tracking=1";
+							window.location = window.location + "&podlove_export_tracking=1&_podlove_nonce=<?php echo wp_create_nonce('podlove_export_tracking_download'); ?>";
 						}
 					}
 				});
@@ -187,20 +187,19 @@ class Import_Export extends \Podlove\Modules\Base
 
 				$.ajax({
 					url: ajaxurl,
-					data: {action: 'podlove-export-tracking'},
-					dataType: 'json',
-					success: function(result) {
+					data: {action: 'podlove-export-tracking', _podlove_nonce: '<?php echo wp_create_nonce('podlove_export_tracking'); ?>'},
+					dataType: 'json'
+				}).done(function(result) {
 						console.log("tracking export finished");
-					}
+				    window.setTimeout(podlove_check_export_status, 2000);
 				});
 
-				window.setTimeout(podlove_check_export_status, 2000);
 			});
 
 			// start immediately, in case the user refreshes the page
 			podlove_check_export_status();
 		}(jQuery));
-		</script>		
+		</script>
 		<?php
     }
 
@@ -213,9 +212,10 @@ class Import_Export extends \Podlove\Modules\Base
 
 		<form method="POST" enctype="multipart/form-data">
 			(<span><?php echo self::get_maximum_upload_size_text(); ?></span>)
-			<input type="file" name="podlove_import"/> 
+			<input type="file" name="podlove_import"/>
 			<input type="submit" value="<?php echo __('Import Podcast Data', 'podlove-podcasting-plugin-for-wordpress'); ?>" class="button" />
-		</form>		
+			<?php wp_nonce_field('podlove_import', '_podlove_nonce'); ?>
+		</form>
 		<?php
     }
 
@@ -226,7 +226,8 @@ class Import_Export extends \Podlove\Modules\Base
 			(<span><?php echo self::get_maximum_upload_size_text(); ?></span>)
 			<input type="file" name="podlove_import_tracking"/>
 			<input type="submit" value="<?php echo __('Import Tracking Data', 'podlove-podcasting-plugin-for-wordpress'); ?>" class="button" />
-		</form>		
+			<?php wp_nonce_field('podlove_import_tracking', '_podlove_nonce'); ?>
+		</form>
 		<?php
     }
 
