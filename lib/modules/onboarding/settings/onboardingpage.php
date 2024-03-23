@@ -2,6 +2,8 @@
 
 namespace Podlove\Modules\Onboarding\Settings;
 
+use Podlove\Modules\Onboarding\Onboarding;
+
 class OnboardingPage
 {
     public static $pagehook;
@@ -24,13 +26,23 @@ class OnboardingPage
         );
     }
 
-    public static function get_page_link()
+    public static function get_page_link($select = '')
     {
-        return '?page=podlove_settings_onboarding_handle';
+        if ($select == 'start' || $select == 'import') {
+            $page = sprintf('?page=%s&select=%s', 'podlove_settings_onboarding_handle', $select);
+            return admin_url('admin.php'.$page);
+        }
+        return admin_url('admin.php?page=podlove_settings_onboarding_handle');
     }
 
     public function page()
     {
+        if (isset($_REQUEST['select'])) {
+            $option = $_REQUEST['select'];
+            if ($option == 'start' || $option == 'import') {
+                Onboarding::set_onboarding_type($option);
+            }
+        }
         ?>
             <div data-client="podlove">
                 <podlove-onboarding></podlove-onboarding>

@@ -45,13 +45,31 @@ class Onboarding extends \Podlove\Modules\Base
                 <div class="podlove-banner-right">
                     <h2 class="podlove-banner-head">Podlove Onboarding</h2>
                     <p class="podlove-banner-text">
-                        Do you want to create a new podcast? Or do you already have a podcast and want to migrate?
+                        Do you want to create a new podcast? Or do you already have a podcast and want to migrate?<br>
                         Try our Onboarding and Migration Assistant to set up your podcast.</p>
                     <div>
+                        <div class="podlove-banner-button-group">
+                            <div class="podlove-banner-button">
+                                <?php
+                            echo sprintf(
+            '<a class="podlove-banner-button" href="'.\Podlove\Modules\Onboarding\Settings\OnboardingPage::get_page_link().'">'.'Get started</a>'
+        ); ?>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="podlove-banner-button-group">
+                    <div class="podlove-banner-button">
                         <?php
                         echo sprintf(
-            '<a class="podlove-banner-button" href="'.admin_url('admin.php'.\Podlove\Modules\Onboarding\Settings\OnboardingPage::get_page_link()).'">'.'Get started</a>'
+            '<a class="podlove-banner-button" href="'.\Podlove\Modules\Onboarding\Settings\OnboardingPage::get_page_link('start').'">'.'Create new podcast </a>'
         ); ?>
+                    </div>
+                    <div class="podlove-banner-button">
+                        <?php
+                        echo sprintf(
+            '<a class="podlove-banner-button" href="'.\Podlove\Modules\Onboarding\Settings\OnboardingPage::get_page_link('import').'">'.'Import existing podcast </a>'
+        ); ?>
+                    </div>
                     </div>
                 </div>
             </div>
