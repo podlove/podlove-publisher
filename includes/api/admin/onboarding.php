@@ -29,14 +29,27 @@ class WP_REST_PodloveOnboarding_Controller extends WP_REST_Controller
     {
         register_rest_route($this->namespace, '/' . $this->rest_base . '/onboarding', [
             [
-              'methods' => WP_REST_Server::READABLE,
-              'callback' => [$this, 'get_onboarding_options'],
-              'permission_callback' => [$this, 'get_item_permissions_check'],
+                'methods' => WP_REST_Server::READABLE,
+                'callback' => [$this, 'get_onboarding_options'],
+                'permission_callback' => [$this, 'get_item_permissions_check'],
             ],
             [
-              'methods' => WP_REST_Server::EDITABLE,
-              'callback' => [$this, 'update_onboarding_options'],
-              'permission_callback' => [$this, 'update_item_permissions_check'],
+                'methods' => WP_REST_Server::EDITABLE,
+                'callback' => [$this, 'update_onboarding_options'],
+                'permission_callback' => [$this, 'update_item_permissions_check'],
+                [
+                    'args' => [
+                        'banner_hide' => [
+                            'description' => __('Hide the banner', 'podlove-podcasting-plugin-for-wordpress'),
+                            'type' => 'boolean'
+                        ],
+                        'type' => [
+                            'description' => __('Type of the onboarding', 'podlove-podcasting-plugin-for-wordpress'),
+                            'type' => 'string',
+                            'enum' => ['start', 'import', 'reset']
+                        ],
+                    ]
+                ]
             ],
         ]);
     }

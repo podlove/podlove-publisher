@@ -1,5 +1,4 @@
 .podlove-banner {
-    position: relative;
     width: 98%;
     display: grid;
     grid-auto-flow: column;
@@ -7,21 +6,21 @@
 }
 
 .podlove-banner-left {
-    position: relative;
+    padding: 2rem 0rem 2rem 2rem;
 }
 
 .podlove-banner-right {
-    position: relative;
-    padding-left: 1.5rem;
-    padding-right: 1.5rem;
-    padding-top: 6rem;
+    padding-top: 2rem;
     padding-bottom: 2rem;
     text-align: center;
 }
 
 .podlove-banner-image {
     object-fit: cover;
-    transform: scale(0.5, 0.5);
+    display: flex;
+    justify-content: center;
+    width: 240px;
+    height: 240px;
 }
 
 .podlove-banner-head {
@@ -34,7 +33,16 @@
     line-hight: 1.75rem;
 }
 
+.podlove-banner-button-group {
+    display: flex;
+    justify-content: center;
+}
+
 .podlove-banner-button {
+    padding: 20px;
+}
+
+a.podlove-banner-button {
     padding-top: 0.75rem;
     padding-bottom: 0.75rem; 
     padding-left: 1.5rem;
@@ -47,7 +55,7 @@
     background: #4F46E5;
 }
 
-.podlove-banner-button:hover {
+a.podlove-banner-button:hover {
     padding-top: 0.75rem;
     padding-bottom: 0.75rem; 
     padding-left: 1.5rem;

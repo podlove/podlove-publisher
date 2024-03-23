@@ -1,13 +1,15 @@
 <template>
     <module name="onboarding" :title="__('Onboarding')">
-        <div v-if="state.type === null">
-            <OnboardingSelect></OnboardingSelect>
-        </div>
-        <div v-if="state.type === 'start'">
-            <OnboardingStart></OnboardingStart>
-        </div>
-        <div v-if="state.type === 'import'">
-            <OnboardingImport></OnboardingImport>
+        <div class="px-4 pt-4 w-full">
+            <div v-if="state.type === null">
+                <OnboardingSelect></OnboardingSelect>
+            </div>
+            <div v-if="state.type === 'start'">
+                <OnboardingStart></OnboardingStart>
+            </div>
+            <div v-if="state.type === 'import'">
+                <OnboardingImport></OnboardingImport>
+            </div>
         </div>
     </module>
 </template>
