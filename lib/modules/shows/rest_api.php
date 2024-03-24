@@ -2,6 +2,7 @@
 
 namespace Podlove\Modules\Shows;
 
+use Podlove\Model\Episode;
 use Podlove\Modules\Shows\Model\Show;
 
 class REST_API
@@ -18,6 +19,20 @@ class REST_API
                 'permission_callback' => [$this, 'permission_check'],
             ]
         ]);
+
+        register_rest_route(self::api_namespace, self::api_base.'/next_episode_number', [
+          [
+              'args' => [
+                    'show' => [
+                        'description' => 'show slug',
+                        'type' => 'string'
+                    ]
+                ],
+                'methods' => \WP_REST_Server::READABLE,
+                'callback' => [$this, 'get_next_episode_number'],
+                'permission_callback' => [$this, 'permission_check'],
+            ]
+        ]);
     }
 
     public function get_items($request)
@@ -25,6 +40,14 @@ class REST_API
         $shows = Show::all();
 
         return rest_ensure_response($shows);
+    }
+
+    public function get_next_episode_number($request)
+    {
+      $slug = $request->get_param('show');
+      $show = $slug ? Show::find_one_term_by_property('slug', $slug) : null;
+
+      return Episode::get_next_episode_number($show ? $show->slug : null);
     }
 
     public function permission_check()

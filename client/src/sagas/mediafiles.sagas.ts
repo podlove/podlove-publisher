@@ -1,11 +1,21 @@
 import { PodloveApiClient } from '@lib/api'
 import { selectors } from '@store'
-import { all, call, delay, fork, put, select, takeEvery, throttle } from 'redux-saga/effects'
+import {
+  all,
+  call,
+  debounce,
+  fork,
+  put,
+  select,
+  takeEvery,
+  takeLatest,
+  throttle,
+} from 'redux-saga/effects'
 import * as mediafiles from '@store/mediafiles.store'
 import * as episode from '@store/episode.store'
 import * as wordpress from '@store/wordpress.store'
 import { MediaFile } from '@store/mediafiles.store'
-import { takeFirst } from './helper'
+import { takeFirst, channel } from './helper'
 import { createApi } from './api'
 import { Action } from 'redux'
 import { get } from 'lodash'
@@ -17,6 +27,7 @@ function* mediafilesSaga(): any {
 
 function* initialize(api: PodloveApiClient) {
   const episodeId: string = yield select(selectors.episode.id)
+  const episodeSlug: string = yield select(selectors.episode.slug)
   const {
     result: { results: files },
   }: { result: { results: MediaFile[] } } = yield api.get(`episodes/${episodeId}/media`)
@@ -28,7 +39,9 @@ function* initialize(api: PodloveApiClient) {
   yield takeEvery(mediafiles.ENABLE, handleEnable, api)
   yield takeEvery(mediafiles.DISABLE, handleDisable, api)
   yield takeEvery(mediafiles.VERIFY, handleVerify, api)
-  yield takeEvery(episode.SAVED, maybeReverify, api)
+  yield takeLatest(episode.SLUG_CHANGED, verifyAll, api)
+  yield debounce(2000, wordpress.UPDATE, maybeUpdateSlug, api)
+
   yield throttle(
     2000,
     [mediafiles.ENABLE, mediafiles.DISABLE, mediafiles.UPDATE],
@@ -55,15 +68,23 @@ function* setUploadMedia(action: Action) {
 
 function* maybeUpdateDuration(api: PodloveApiClient) {
   const files: MediaFile[] = yield select(selectors.mediafiles.files)
+  const duration: string = yield select(selectors.episode.duration)
   const enabledFiles = files.filter((file) => file.enable && file.size && file.url)
   const audioFiles = enabledFiles.filter((file) => file.url.match(/\.(mp3|mp4|m4a|ogg|oga|opus)$/))
 
+  let newDuration
+
   if (audioFiles.length === 0) {
-    yield put(episode.update({ prop: 'duration', value: '0' }))
+    newDuration = '0'
   } else {
     const url = audioFiles[0].url
     const result: number = yield fetchDuration(url)
-    yield put(episode.update({ prop: 'duration', value: result.toString() }))
+
+    newDuration = result.toString()
+  }
+
+  if (parseFloat(duration) !== parseFloat(newDuration)) {
+    yield put(episode.update({ prop: 'duration', value: newDuration }))
   }
 }
 
@@ -77,6 +98,7 @@ function* handleEnable(api: PodloveApiClient, action: { type: string; payload: n
     asset_id: asset_id,
     url: result.file_url,
     size: result.file_size,
+    enable: true,
   }
 
   yield put(mediafiles.update(fileUpdate))
@@ -89,16 +111,32 @@ function* handleDisable(api: PodloveApiClient, action: { type: string; payload: 
   yield api.put(`episodes/${episodeId}/media/${asset_id}/disable`, {})
 }
 
-function* maybeReverify(api: PodloveApiClient, action: { type: string; payload: object }) {
+function* verifyAll(api: PodloveApiClient) {
   const episodeId: number = yield select(selectors.episode.id)
   const mediaFiles: MediaFile[] = yield select(selectors.mediafiles.files)
 
-  if (!Object.keys(action.payload).includes('slug')) {
-    return
-  }
-
   // verify all
-  yield all(mediaFiles.map((file) => call(verifyEpisodeAsset, api, episodeId, file.asset_id)))
+  yield all(mediaFiles.map((file) => fork(verifyEpisodeAsset, api, episodeId, file.asset_id)))
+}
+
+function* maybeUpdateSlug(
+  api: PodloveApiClient,
+  action: { type: string; payload: { prop: string; value: any } }
+) {
+  const episodeId: boolean = yield select(selectors.episode.id)
+  const oldSlug: boolean = yield select(selectors.episode.slug)
+  const enabled: boolean = yield select(selectors.mediafiles.slugAutogenerationEnabled)
+
+  if (enabled && action.payload.prop == 'title' && action.payload.value) {
+    const newTitle = action.payload.value
+
+    const { result } = yield api.get(`episodes/${episodeId}/build_slug`, {
+      query: { title: newTitle },
+    })
+    if (oldSlug != result.slug) {
+      yield put(episode.update({ prop: 'slug', value: result.slug }))
+    }
+  }
 }
 
 function* verifyEpisodeAsset(api: PodloveApiClient, episodeId: number, assetId: number) {

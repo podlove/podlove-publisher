@@ -4,7 +4,7 @@
   }}</label>
   <div class="mt-2 sm:col-span-2 sm:mt-0">
     <div
-      class="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md"
+      class="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600"
     >
       <span class="flex select-none items-center pl-3 text-gray-500 sm:text-sm">{{
         assetPrefix
@@ -30,6 +30,7 @@ import { mapState, injectStore } from 'redux-vuex'
 
 import { selectors } from '@store'
 import { update as updateEpisode } from '@store/episode.store'
+import { disableSlugAutogen } from '@store/mediafiles.store'
 
 export default defineComponent({
   setup() {
@@ -47,12 +48,24 @@ export default defineComponent({
       this.dispatch(
         updateEpisode({ prop: 'slug', value: (event.target as HTMLInputElement).value })
       )
+      // disable slug generation on any manual input
+      this.dispatch(disableSlugAutogen())
     },
   },
 
   computed: {
     assetPrefix(): string {
-      return this.state.baseUri?.replace(/https?:\/\//i, '')
+      let url = this.state.baseUri?.replace(/https?:\/\//i, '').trim()
+
+      const lastSlashPos = url.trim().replace(/\/+$/g, '').lastIndexOf('/')
+
+      if (url.length > 30 && lastSlashPos > -1) {
+        // only take last subdirectory
+        // very.ultra.longdomain.tld/podcast/ => /podcast/
+        url = url.slice(lastSlashPos)
+      }
+
+      return url
     },
   },
 })

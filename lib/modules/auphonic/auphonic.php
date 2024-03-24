@@ -3,7 +3,6 @@
 namespace Podlove\Modules\Auphonic;
 
 use Podlove\Http;
-use Podlove\Modules\Shows\Model\Show;
 
 class Auphonic extends \Podlove\Modules\Base
 {
@@ -30,7 +29,6 @@ class Auphonic extends \Podlove\Modules\Base
         add_action('rest_api_init', [$this, 'api_init']);
 
         add_action('wp_ajax_podlove-refresh-auphonic-presets', [$this, 'ajax_refresh_presets']);
-        add_action('wp_ajax_podlove-get-auphonic-preset', [$this, 'ajax_get_preset']);
 
         add_action('podlove_show_form_end', [$this, 'shows_module_append_preset_option']);
 
@@ -87,32 +85,6 @@ class Auphonic extends \Podlove\Modules\Base
                 'description' => $description,
                 'html' => ['class' => 'regular-text'],
             ]);
-
-            $preset_list = $this->get_presets_list();
-
-            $this->register_option('auphonic_production_preset', 'select', [
-                'label' => __('Auphonic production preset', 'podlove-podcasting-plugin-for-wordpress'),
-                'description' => '<span class="podlove_auphonic_production_refresh"><i class="podlove-icon-repeat"></i></span> This preset will be used, if you create Auphonic production from an Episode.',
-                'html' => ['class' => 'regular-text'],
-                'options' => $preset_list,
-            ]);
-
-            // detect invalid preset
-            $preset = $this->get_module_option('auphonic_production_preset');
-            if ($preset && !in_array($preset, array_keys($preset_list))) {
-                add_action('admin_notices', function () use ($preset) {
-                    ?>
-                    <div id="message" class="error">
-                        <p>
-                            <strong>Auphonic Preset "<?php echo $preset; ?>" does not exist.</strong>
-                        </p>
-                        <p>
-                            The Auphonic preset does not exist any more. Please choose a valid one. <a href="<?php echo admin_url('admin.php?page=podlove_settings_modules_handle'); ?>"><?php echo __('Go to module settings', 'podlove-podcasting-plugin-for-wordpress'); ?></a>
-                        </p>
-                    </div>
-                    <?php
-                });
-            }
         }
     }
 
@@ -281,7 +253,13 @@ class Auphonic extends \Podlove\Modules\Base
         $presets = $this->api->fetch_presets();
         if ($presets && is_array($presets->data)) {
             $preset_list = [];
-            foreach ($presets->data as $preset_id => $preset) {
+
+            $raw_list = $presets->data;
+            usort($raw_list, function($a, $b) {
+                return $a->preset_name <=> $b->preset_name;
+            });
+
+            foreach ($raw_list as $preset) {
                 $preset_list[$preset->uuid] = $preset->preset_name;
             }
         } else {
@@ -289,33 +267,6 @@ class Auphonic extends \Podlove\Modules\Base
         }
 
         return $preset_list;
-    }
-
-    public function ajax_get_preset()
-    {
-        $show_slug = filter_input(INPUT_GET, 'showSlug');
-
-        $default = $this->get_module_option('auphonic_production_preset');
-
-        $preset_list = $this->get_presets_list();
-
-        $show = Show::find_one_term_by_property('slug', $show_slug);
-        if ($show && $show->auphonic_preset && $preset_list[$show->auphonic_preset]) {
-            $show_preset_key = $show->auphonic_preset;
-            $show_preset_name = $preset_list[$show->auphonic_preset];
-        } else {
-            $show_preset_key = null;
-            $show_preset_name = null;
-        }
-
-        return \Podlove\AJAX\AJAX::respond_with_json([
-            'preset_key' => $show_preset_key ?? $default,
-            'preset_name' => $show_preset_name ?? $preset_list[$default],
-            'default_preset_key' => $default,
-            'default_preset_name' => $preset_list[$default],
-            'show_preset_key' => $show_preset_key,
-            'show_preset_name' => $show_preset_name,
-        ]);
     }
 
     /**

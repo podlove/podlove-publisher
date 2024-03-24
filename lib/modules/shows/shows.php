@@ -234,49 +234,15 @@ class Shows extends \Podlove\Modules\Base
     }
 
     /**
-     * Provides the Show meta box for the Episode UI.
-     *
-     * NOTE: We do NOT use the default WordPress UI since it cannot be modified sufficiently enough
+     * Show selection meta box for the Episode UI.
      */
     public function episode_show_meta_box()
     {
-        $post = get_post();
-        $taxonomy = get_taxonomy('shows'); ?>
-		<div id="taxonomy-shows" class="categorydiv">
-			<input type='hidden' name='tax_input[shows][]' value='0' />
-			<ul id="showschecklist" class="categorychecklist form-no-clear">
-				<?php
-$terms = get_terms('shows', ['hide_empty' => false]);
-        $postterms = get_the_terms($post->id, 'shows');
-        $current = (isset($postterms[0]) ? $postterms[0]->term_id : 0); // Fetch the first element of the term array. We expect that there is only one "Show" term since a show is a unique property of an episode.
-
-        echo "
-						<li class='fubar'>
-							<label class='selectit'>
-								<input type='radio' name='tax_input[shows]'"
-        .checked($current, 0, false)
-        ."value='0' />"
-        .__('Podcast', 'podlove-podcasting-plugin-for-wordpress')
-        ." <span class='description'>(".__('no show assignment', 'podlove-podcasting-plugin-for-wordpress').')</span>'
-            .'</label>
-						</li>';
-
-        foreach ($terms as $term) {
-            $id = 'shows-'.(int) $term->term_id;
-
-            echo "
-							<li id='{$id}' class='fubar'>
-								<label class='selectit'>
-									<input type='radio' id='in-{$id}' name='tax_input[shows]'"
-            .checked($current, $term->term_id, false)
-            ."value='".esc_attr($term->slug)."' />"
-            .esc_html($term->name).
-                '</label>
-							</li>';
-        } ?>
-			</ul>
-		</div>
-		<?php
+      ?>
+      <div data-client="podlove">
+        <podlove-show-select></podlove-show-select>
+      </div>
+		  <?php
     }
 
     public function scripts_and_styles()
@@ -291,6 +257,17 @@ $terms = get_terms('shows', ['hide_empty' => false]);
             ['jquery'],
             \Podlove\get_plugin_header('Version')
         );
+    }
+
+    public static function set_show_for_episode($post_id, $show_slug) {
+      if (self::is_valid_existing_slug($show_slug)) {
+        wp_set_object_terms($post_id, $show_slug, 'shows');
+      }
+    }
+
+    public static function is_valid_existing_slug($slug) {
+      $valid_slugs = array_map(function($show) { return $show->slug; }, Show::all());
+      return in_array($slug, $valid_slugs);
     }
 
     /*

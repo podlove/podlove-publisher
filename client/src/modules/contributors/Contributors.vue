@@ -38,7 +38,7 @@ import Contribution from './components/Contribution.vue'
 import AddContribution from './components/AddContribution.vue'
 
 import { injectStore, mapState } from 'redux-vuex'
-import { PlusSmIcon } from '@heroicons/vue/outline'
+import { PlusIcon as PlusSmIcon } from '@heroicons/vue/24/outline'
 
 import { selectors } from '@store'
 import * as contributors from '@store/contributors.store'

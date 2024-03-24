@@ -19,6 +19,11 @@ class ToolsSectionCronDiagnostics
             exit;
         }
 
+        if (!wp_verify_nonce($_REQUEST['nonce'], 'podlove_ajax')) {
+          http_response_code(401);
+          exit;
+        }
+
         update_option('podlove_cron_diagnosis', 'started');
         update_option('podlove_cron_diagnosis_tries', 0);
         wp_schedule_single_event(time(), 'podlove_cron_diagnosis_cron');
@@ -29,6 +34,11 @@ class ToolsSectionCronDiagnostics
     {
         if (!current_user_can('administrator')) {
             exit;
+        }
+
+        if (!wp_verify_nonce($_REQUEST['nonce'], 'podlove_ajax')) {
+          http_response_code(401);
+          exit;
         }
 
         $tries = get_option('podlove_cron_diagnosis_tries', 0);
@@ -113,7 +123,8 @@ class ToolsSectionCronDiagnostics
 		$.ajax({
 			url: ajaxurl,
 			data: {
-				action: 'podlove-cron-diag-check'
+				action: 'podlove-cron-diag-check',
+				nonce: podlove_admin_global.nonce_ajax
 			}
 		}).always(function(data) {
 			if (data && data.success) {
@@ -144,7 +155,8 @@ class ToolsSectionCronDiagnostics
 		$.ajax({
 			url: ajaxurl,
 			data: {
-				action: 'podlove-cron-diag-start'
+				action: 'podlove-cron-diag-start',
+				nonce: podlove_admin_global.nonce_ajax
 			}
 		}).always(function() {
 			initLookForCronSuccess();

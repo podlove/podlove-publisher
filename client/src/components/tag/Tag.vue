@@ -20,7 +20,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { XCircleIcon } from "@heroicons/vue/solid"
+import { XCircleIcon } from "@heroicons/vue/24/solid"
 
 export default defineComponent({
     name: 'PodloveTag',

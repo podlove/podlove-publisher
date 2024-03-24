@@ -53,7 +53,7 @@ function podlove_pwp5_attributes($attributes)
     ];
 
     if (\Podlove\Modules\Base::is_active('contributors')) {
-        $config['contributors'] = array_filter(array_map(function ($c) {
+        $config['contributors'] = array_values(array_filter(array_map(function ($c) {
             $contributor = $c->getContributor();
 
             if (!$contributor || !$contributor->visibility) {
@@ -68,7 +68,7 @@ function podlove_pwp5_attributes($attributes)
                 'group' => $c->hasGroup() ? $c->getGroup()->to_array() : null,
                 'comment' => $c->comment,
             ];
-        }, EpisodeContribution::find_all_by_episode_id($episode->id)));
+        }, EpisodeContribution::find_all_by_episode_id($episode->id))));
     }
 
     return apply_filters('podlove_player5_config', $config, $episode);
@@ -113,7 +113,7 @@ FROM
     LEFT JOIN '.EpisodeAsset::table_name().' a ON a.id = mf.episode_asset_id
     LEFT JOIN '.FileType::table_name().' ft ON ft.id = a.file_type_id
 WHERE
-    e.id = %d AND a.downloadable
+    e.id = %d AND a.downloadable AND mf.active
 ORDER BY
     position ASC
     ';

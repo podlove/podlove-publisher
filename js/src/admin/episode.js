@@ -7,32 +7,6 @@ var PODLOVE = PODLOVE || {}
   PODLOVE.Episode = function (container) {
     var o = {}
 
-    // private
-
-    function maybe_update_episode_slug(title) {
-      if (o.slug_field.data('auto-update')) {
-        update_episode_slug(title)
-      }
-    }
-
-    // current ajax object to ensure only the latest one is active
-    var update_episode_slug_xhr
-
-    function update_episode_slug(title) {
-      if (update_episode_slug_xhr) update_episode_slug_xhr.abort()
-
-      update_episode_slug_xhr = $.ajax({
-        url: ajaxurl,
-        data: {
-          action: 'podlove-episode-slug',
-          title: title,
-        },
-        context: o.slug_field,
-      }).done(function (slug) {
-        $(this).val(slug).blur()
-      })
-    }
-
     o.slug_field = container.find('[name*=slug]')
 
     $('#_podlove_meta_subtitle').count_characters({
@@ -63,12 +37,6 @@ var PODLOVE = PODLOVE || {}
       }
     })
 
-    o.slug_field
-      .data('auto-update', !Boolean(o.slug_field.val())) // only auto-update if it is empty
-      .on('keyup', function () {
-        o.slug_field.data('auto-update', false) // stop autoupdate on manual change
-      })
-
     var typewatch = (function () {
       var timer = 0
       return function (callback, ms) {
@@ -97,9 +65,6 @@ var PODLOVE = PODLOVE || {}
 
         // update episode title
         $('#_podlove_meta_title').attr('placeholder', title)
-
-        // maybe update episode slug
-        maybe_update_episode_slug(title)
       })
       .trigger('titleHasChanged')
 

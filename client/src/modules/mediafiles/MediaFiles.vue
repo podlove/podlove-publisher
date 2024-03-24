@@ -41,7 +41,7 @@ import { injectStore, mapState } from 'redux-vuex'
 import * as mediafiles from '@store/mediafiles.store'
 import Module from '@components/module/Module.vue'
 
-import { RefreshIcon } from '@heroicons/vue/outline'
+import { ArrowPathIcon as RefreshIcon } from '@heroicons/vue/24/outline'
 
 import MediaSlug from './components/MediaSlug.vue'
 import MediaUpload from './components/MediaUpload.vue'

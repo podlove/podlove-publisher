@@ -18,7 +18,7 @@ class ContributorSettings
             // $menu_title
             __('Contributors', 'podlove-podcasting-plugin-for-wordpress'),
             // $capability
-            'administrator',
+            'podlove_manage_contributors',
             // $menu_slug
             'podlove_contributor_settings',
             // $function

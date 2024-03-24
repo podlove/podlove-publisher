@@ -2,8 +2,8 @@
 Contributors: eteubert
 Donate link: https://opencollective.com/podlove
 Tags: podlove, podcast, publishing, rss, feed, audio, mp3, m4a, player, webplayer, iTunes, radio
-Tested up to: 6.4.2
-Stable tag: 4.0.10
+Tested up to: 6.4.3
+Stable tag: 4.1.6
 Requires at least: 4.9.6
 Requires PHP: 8.0
 License: MIT
@@ -12,31 +12,40 @@ The one and only next generation podcast publishing system. Seriously. It's magi
 
 == Description ==
 
-We built the Podlove Podcast Publisher because existing solutions are stuck in the past, complex and unwieldy. The Publisher helps you save time, worry less and provides a cutting edge listening experience for your audience.
+We started the Podlove Podcast Publisher project in 2012 because existing solutions were stuck in the past, complex and unwieldy. The Publisher helps you save time, worry less and provides a cutting edge listening experience for your audience.
 
 Official Site: [podlove.org/podlove-podcast-publisher](https://podlove.org/podlove-podcast-publisher)
 
-= Video Tutorial: Getting started with Podlove Publisher =
+### Video Tutorial: Getting started with Podlove Publisher
 
 [youtube http://www.youtube.com/watch?v=Hmrm-jUe6u4]
 
-= Compatible Feeds =
+### Compatible RSS Feeds
 
 The Publisher makes it easy to create highly expressive, efficient and super compatible podcast feeds with fine grained control over client behavior (e.g. GUID control to replace faulty episodes and for clients to reload) supporting all important meta data.
 
-= Multi-Format Publishing =
+### Multi-Format Publishing
 
 The Publisher also makes multi-format publishing - embracing all modern and legacy audio and video codecs - a snap. By adopting simple file name conventions, the plugin allows the podcaster to provide individual feeds for certain use cases or audiences without adding work for the podcaster during the publishing process.
 
-= Optimized Web Player =
+### Optimized Web Player
 
-The Publisher also comes with integrated with the Podlove Web Player plugin (which you do not need to install separately) and fully support its advanced options including multiple audio (MP4 AAC, MP3, Vorbis, Opus) and video (MP4 H.264, WebM, Theora) format support for web browsers. This Web Player is fully HTML5 compatible (but provides Flash fallback for ancient environments) and is ready for all touch based clients too.
+The Publisher also comes integrated with the Podlove Web Player plugin and fully supports its advanced options including multiple audio (MP4 AAC, MP3, Vorbis, Opus) and video (MP4 H.264, WebM, Theora) format support for web browsers. This Web Player is fully HTML5 compatible and is ready for all touch based clients too.
 
-= Chapter Support =
 
-The Publisher also makes it easy to publish chapter information in the player to make access to structured episodes even easier. Full support for linking directly to any part of your podcast on the web with instant playback included.
+### Metadata Galore
 
-= Flexible Templates =
+* **Chapter Marks:** The Publisher also makes it easy to publish chapter information in the player to make access to structured episodes even easier. Full support for linking directly to any part of your podcast on the web with instant playback included.
+* **Contributors:** Bring your team and guests front and center. Manage contributors, including their names, avatars and web urls.
+* **Transcripts:** WebVTT transcripts can be imported and even connected to your contributors. They are referenced in the RSS feed so they can be displayed by podcast apps.
+* **Seasons:** Does your podcast have seasons? We got you covered with a dedicated "Seasons" module.
+* **Related Episodes:** Manage and display related episodes on your website.
+
+### Auphonic Integration
+
+Auphonic is your all-in-one audio post production webtool to achieve a professional quality result. We provide a first class integration module for ease of use and best automation experience.
+
+### Flexible Templates
 
 To round it all up, a flexible template system enables you to published Podcasts in a defined fashion and change the style at any time without having to touch your individual postings later on.
 
@@ -106,19 +115,228 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
-= 2024-01-24 =
+= 4.1.6 =
 
-- bring up to date with latest public release
+* Shows Settings: sort Auphonic presets alphabetically
 
-= 2023-12-26 =
+= 4.1.5 =
+
+* Hotfix: Creating Auphonic productions works again
+
+= 4.1.4 =
+
+* Auphonic: reduce preset cache to 10 seconds so manual refreshing is not necessary (and remove broken refresh button on module page)
+* Auphonic: select configured show preset when selecting a show
+* Auphonic: fix status updates when opening an episode with an already running production
+* performance: don't try to fetch file headers twice for unreachable URLs
+* performance: faster saving of slug changes
+
+= 4.1.3 =
+
+* Shows selection in the episode was rewritten for the new frontend stack. It is now compatible with the Automatic Numbering module again.
+
+= 4.1.2 =
+
+* transcripts: include json link in RSS again when "Publisher Generated" is selected
+* transcripts: polish timestamp rendering in preview (shorter, monospaced, right aligned, unselectable)
+* chapters: fix "unknown" durations
+
+= 4.1.1 =
+
+* security: add nonces to tools actions
+
+= 4.1.0 =
+
+**Feature: Better control over transcripts in RSS feed**
+
+There is a new feature under `Podlove > Podcast Feeds` called "Episode
+Transcripts" to control how episode transcripts should be referenced in your RSS
+feed. The default is "Publisher Generated vtt", which is nearly the same
+behavior as before (In previous versions, three variants were referenced: vtt,
+json and srt. The json and srt URLs still work but they are not referenced in
+the RSS feed any more as they are not neccessary and removing them reduces feed
+size). There is a dedicated "Do not include in feed" option, in case you do not
+want the transcripts in your RSS feed.
+
+Finally, you may prefer to host your transcript assets externally, just like
+your audio files. If you have configured a transcript asset, you can now select
+it in this setting. Then the RSS feed will reference this external file
+directly.
+
+**Auphonic improvements**
+
+- add button to always access the import screen
+- add button to delete a track
+- show status in production selection
+- rearrange / polish various some button and information positions
+
+**Other**
+
+- add: capability "podlove_manage_contributors" for contributors settings screens
+- fix: sometimes missing voices in Podlove Web Player transcripts
+- fix: sometimes an enabled asset is disabled a few moments later
+- fix: show files as "not found" when they become unreachable
+- transcripts: rename "delete" action to "clear"
+- transcripts: show timestamps in editor preview
+- upgrade heroicons (icon library) from v1 to v2
+
+= 4.0.15 =
+
+- security: add nonces to jobs management
+
+= 4.0.14 =
+
+- add: migrate episode license selector user interface
+- change: show unknown duration as "--:--:--.---" instead of "00:00:00.000"
+- fix: auto-generate file slug from episode-post-title
+- fix: ensure slug field is always usable (wide enough, and prefix shortened if necessary)
+- security: fix SQL injection vulnerability in Related Episodes module
+- security: ensure only administrators can manage jobs
+
+= 4.0.13 =
+
+**Features**
+
+- Templates: new `active` accessor for `File` objects. Returns if the file is marked as active.
+
+**Bugfixes and Improvements**
+
+- fix: don't use the Auphonic chapter image URL (real fix where chapter images are downloaded and served from WordPress will follow later)
+- fix: only display active files in download widgets
+- improve handling of upload directory
+
+= 4.0.12 =
+
+**Security**
+
+- fix SSRF vulnerability in Slacknotes module
+- add missing capability check and nonce validation to importer functions
+- add missing capability check and nonce validation to exporter functions
+
+= 4.0.11 =
 
 - new: show admin notice when a database migration fails
 - fix bug where tracking data could be lost by disabling a media file checkbox
 - fix bug where imported Hindenburg chapters were not sorted by time
-
-= 2023-11-21 =
-
 - fix build script (correctly delete all vendor prefixed dependencies)
+- fix deprecation warnings ([#1431](https://github.com/podlove/podlove-publisher/pull/1431), [#1430](https://github.com/podlove/podlove-publisher/pull/1430))
+- update js dependencies
+- update help text for missing curl module
+
+= 4.0.10 =
+
+- fix security issues (XSS)
+- do not unnecessarily flush rewrite rules ([Issue#1432](https://github.com/podlove/podlove-publisher/issues/1432))
+- fix link to Slacknotes and Subscribe Button documentation
+- fix psr library not removed after prefixing ([Issue#1421](https://github.com/podlove/podlove-publisher/issues/1421))
+
+= 4.0.9 =
+
+**Enhancements**
+
+- trim whitespaces from beginning and end of file slug
+- soundbite: change placeholder to HH:MM:SS to clarify format
+
+**Bugfixes**
+
+- fix division by zero in analytics
+- fix default contributors missing position attribute
+- fix Auphonic chapter timestamp import
+- fix page reload when clicking chapter upload button
+
+= 4.0.8 =
+
+**Bugfixes**
+
+- fix broken analytics episode screen
+
+= 4.0.7 =
+
+**Bugfixes**
+
+- fix media verification not saving
+- fix shownotes unfurling
+- avoid failure during database migration
+
+**Misc**
+
+- update/cleanup various js dependencies
+
+= 4.0.6 =
+
+**Bugfixes**
+
+- Auphonic: saving production not working when slug is not set (bug introduced in 4.0.5)
+
+= 4.0.5 =
+
+**Bugfixes**
+
+
+- Auphonic: restore previous behaviour:
+  - automatically fill in file slug, validate media files and fill in duration when production finishes
+  - use slug as "output_basename" if it is set
+
+**Misc**
+
+- cleanup legacy js app (dependency updates, deletion of unused code etc.)
+
+= 4.0.3 / 4.0.4 =
+
+**Enhancements**
+
+- Auphonic: sort presets alphabetically
+- Contributors: make better use of available space
+
+**Bugfixes**
+
+- episode metadata not saving reliably for some people
+- Auphonic: fix chapter time import
+- WordPress File Upload: display slug input (should be filled automatically but does not seem to work reliably)
+
+= 4.0.2 =
+
+**Bugfixes**
+
+- Auphonic: Chapters can be imported from production metadata
+- Contributors: Add support for Gravatar and default contributor image on edit screens
+- Dashboard: Asset Validation / Detection is working again [#1396](https://github.com/podlove/podlove-publisher/issues/1396)
+- Automatic Numbering: error when selecting a show
+
+= 4.0.1 =
+
+**Enhancements**
+
+- Auphonic: autosave before "Start Production" so it is not required to explicitly save before starting
+
+**Bugfixes**
+
+- Auphonic: open productions with missing algorithm information
+- Templates: fix broken core templates `downloads-select` and `related-episodes-list`
+- Classic Editor: display Episode Title Placeholder based on Blog Post Title
+
+= 4.0.0 =
+
+Podlove Publisher 4.0 is here, bringing a spring-clean (in November!) of the episode page. We tore up the foundation to bring you an all-new user interface.
+
+**Warning:** PHP 8.0 and above is now required!
+
+**Highlights**
+
+- **Episode Form** User Interface is modernised and auto-saves, so no work is ever lost.
+- **Auphonic module** includes Multitrack Support.
+- **New Contributors** can be added without leaving the episode page.
+- **Chapters** support images.
+- **REST API V2** is now, including many more endpoints. See the [API documentation](https://docs.podlove.org/podlove-publisher/api) for all the details.
+
+
+**Tidbits**
+
+- file “slug” field is prefixed with the media location so it’s more obvious what it is used for
+- episode duration is always auto-detected and not an input field any more
+- Auphonic Preset can be selected directly in the episode and does not rely on global module setting any more
+- removed module “Twitter Card Integration” (RIP). By the way, if you want to follow us on social media, find us here: https://fosstodon.org/@podlove
+- fix various PHP notices and warnings to be PHP 8.0+ compatible
 
 ----
 

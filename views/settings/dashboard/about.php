@@ -1,6 +1,6 @@
 <ul>
 	<li>
-		<a href="//publisher.podlove.org"><?php _e('Podlove Publisher', 'podlove-podcasting-plugin-for-wordpress'); ?></a>
+		<a href="https://podlove.org/podlove-podcast-publisher/"><?php _e('Podlove Publisher', 'podlove-podcasting-plugin-for-wordpress'); ?></a>
 	</li>
 	<li>
 		<a href="//podlove.org" target="_blank"><?php _e('Podlove Initiative', 'podlove-podcasting-plugin-for-wordpress'); ?></a>

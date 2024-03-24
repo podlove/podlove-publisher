@@ -76,6 +76,10 @@ function ends_with($haystack, $needle)
  */
 function escape_shortcodes($text)
 {
+    if ($text == null) {
+        return '';
+    }
+
     return preg_replace_callback('/'.get_shortcode_regex().'/', function ($matches) {
         return str_replace('[', '&#x005B;', $matches[0]);
     }, $text);
