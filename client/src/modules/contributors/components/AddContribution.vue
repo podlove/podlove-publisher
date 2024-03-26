@@ -84,7 +84,7 @@
 import { defineComponent } from 'vue'
 import { get } from 'lodash'
 
-import { XIcon, CheckIcon, ChevronDownIcon, UserCircleIcon } from '@heroicons/vue/outline'
+import { XMarkIcon as XIcon, CheckIcon, ChevronDownIcon, UserCircleIcon } from '@heroicons/vue/24/outline'
 
 import {
   Combobox,

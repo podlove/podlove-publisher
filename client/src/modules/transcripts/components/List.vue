@@ -5,7 +5,7 @@
       v-for="(transcript, sindex) in transcripts"
       :key="`transcript-${sindex}`"
     >
-      <div class="mr-2 w-12 text-gray-400">
+      <div class="mr-2 w-12 text-gray-400 select-none">
         <img
           class="w-12 h-12 rounded"
           v-if="transcript?.voice?.avatar"
@@ -15,13 +15,18 @@
       </div>
       <div class="w-full font-light text-sm mr-2">
         <span class="block font-bold">{{ transcript?.voice?.name }}</span>
-        <span>
-          <span
-            class="mr-1"
-            v-for="(content, cindex) in transcript.content"
-            :key="`transcript-${sindex}-content-${cindex}`"
-          >
-            {{ content.text }}
+        <span class="flex justify-between">
+          <span>
+            <span
+              class="mr-1"
+              v-for="(content, cindex) in transcript.content"
+              :key="`transcript-${sindex}-content-${cindex}`"
+            >
+              {{ content.text }}
+            </span>
+          </span>
+          <span class="ml-1 font-mono select-none">
+            {{ formatTime(transcript.content[0].start) }}
           </span>
         </span>
       </div>
@@ -43,7 +48,7 @@ import { defineComponent } from '@vue/runtime-core'
 import { last, dropRight, get } from 'lodash'
 import { mapState } from 'redux-vuex'
 import selectors from '@store/selectors'
-import { DocumentTextIcon } from '@heroicons/vue/outline'
+import { DocumentTextIcon } from '@heroicons/vue/24/outline'
 
 import Avatar from '@components/icons/Avatar.vue'
 
@@ -51,6 +56,7 @@ import { PodloveTranscript } from '../../../types/transcripts.types'
 import { PodloveContributor } from '../../../types/contributors.types'
 
 import TranscriptsImport from './Import.vue'
+import Timestamp from '@lib/timestamp'
 
 interface Transcript {
   voiceId: string
@@ -145,8 +151,13 @@ export default defineComponent({
         }))
     },
   },
+
+  methods: {
+    formatTime(value: number): string {
+      return new Timestamp(value).prettyShort
+    },
+  },
 })
 </script>
 
-<style>
-</style>
+<style></style>

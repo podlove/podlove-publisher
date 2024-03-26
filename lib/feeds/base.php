@@ -141,7 +141,8 @@ function get_xml_podcast_funding_node($url, $label)
     return $doc->saveXML($node);
 }
 
-function add_itunes_category ($category_html, $categories, $category_id) {
+function add_itunes_category($category_html, $categories, $category_id)
+{
     $category_id = apply_filters('podlove_feed_itunes_category_id', $category_id);
 
     if ($category_id) {
@@ -170,6 +171,7 @@ function add_itunes_category ($category_html, $categories, $category_id) {
             }
         }
     }
+
     return $category_html;
 }
 
@@ -253,10 +255,10 @@ function override_feed_head($hook, $podcast, $feed, $format)
 
         $categories = \Podlove\Itunes\categories(false);
 
-        $category_html='';
-        $category_html = add_itunes_category($category_html,$categories,$podcast->category_1);
-        $category_html = add_itunes_category($category_html,$categories,$podcast->category_2);
-        $category_html = add_itunes_category($category_html,$categories,$podcast->category_3);
+        $category_html = '';
+        $category_html = add_itunes_category($category_html, $categories, $podcast->category_1);
+        $category_html = add_itunes_category($category_html, $categories, $podcast->category_2);
+        $category_html = add_itunes_category($category_html, $categories, $podcast->category_3);
 
         echo apply_filters('podlove_feed_itunes_categories', $category_html);
         echo PHP_EOL;
@@ -290,7 +292,7 @@ function override_feed_head($hook, $podcast, $feed, $format)
         echo PHP_EOL;
 
         $complete = sprintf('<itunes:complete>%s</itunes:complete>', ($podcast->complete) ? 'yes' : 'no');
-        echo "\t".apply_filters('podlove_feed_itunes_complete', ($podcast->complete ? "\t{$complete}" : ''));
+        echo "\t".apply_filters('podlove_feed_itunes_complete', $podcast->complete ? "\t{$complete}" : '');
         echo PHP_EOL;
 
         $itunes_feed_id = (int) $feed->itunes_feed_id;
@@ -396,7 +398,7 @@ function override_feed_entry($hook, $podcast, $feed, $format)
             $type = sprintf('<itunes:episodeType>%s</itunes:episodeType>', $type);
             $xml .= $tag_prefix.apply_filters('podlove_feed_itunes_type_xml', $type);
 
-            $summary = apply_filters('podlove_feed_content', \Podlove\PHP\escape_shortcodes(html_entity_decode($episode->summary)));
+            $summary = apply_filters('podlove_feed_content', \Podlove\PHP\escape_shortcodes(html_entity_decode($episode->summary ?? '')));
             if (strlen($summary)) {
                 $summary = get_xml_cdata_node('itunes:summary', $summary);
             }

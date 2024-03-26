@@ -42,7 +42,7 @@ namespace Podlove;
 
 use Podlove\Jobs\CronJobRunner;
 
-define('Podlove\DATABASE_VERSION', 154);
+define('Podlove\DATABASE_VERSION', 156);
 
 add_action('admin_init', '\Podlove\maybe_run_database_migrations');
 add_action('admin_init', '\Podlove\run_database_migrations', 5);
@@ -1642,6 +1642,16 @@ function run_migrations_for_version($version)
 
                 \podlove_do_migration_query($sql);
             }
+
+            break;
+        case 155:
+            \podlove_init_capabilities();
+
+            break;
+        case 156:
+            $podcast = Model\Podcast::get();
+            $podcast->feed_transcripts = 'generated';
+            $podcast->save();
 
             break;
     }

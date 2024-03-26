@@ -30,6 +30,14 @@ class PodcastImporter
             return;
         }
 
+        if (!current_user_can('administrator')) {
+            return;
+        }
+
+        if (!wp_verify_nonce($_REQUEST['_podlove_nonce'], 'podlove_import')) {
+            return;
+        }
+
         // allow xml+gz uploads
         add_filter('mime_types', function ($mimes) {
             $mimes['xml'] = 'application/xml';

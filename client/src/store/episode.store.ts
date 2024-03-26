@@ -11,6 +11,7 @@ export const INIT = 'podlove/publisher/episode/INIT'
 export const UPDATE = 'podlove/publisher/episode/UPDATE'
 export const QUICKSAVE = 'podlove/publisher/episode/QUICKSAVE'
 export const SAVED = 'podlove/publisher/episode/SAVED'
+export const SLUG_CHANGED = 'podlove/publisher/episode/SLUG_CHANGED'
 export const SET = 'podlove/publisher/episode/SET'
 export const SET_POSTER = 'podlove/publisher/episode/SET_POSTER'
 export const SELECT_POSTER = 'podlove/publisher/episode/SELECT_POSTER'
@@ -42,6 +43,7 @@ export type State = {
   license_name: string | null
   license_url: string | null
   contributions: PodloveEpisodeContribution[]
+  show: string | null
 }
 
 export const initialState: State = {
@@ -65,6 +67,7 @@ export const initialState: State = {
   contributions: [],
   license_name: null,
   license_url: null,
+  show: null,
 }
 
 export const update = createAction<{ prop: string; value: any }>(UPDATE)
@@ -90,6 +93,7 @@ export const set = createAction<{
   soundbite_title?: string
   license_name?: string
   license_url?: string
+  show?: string
 }>(SET)
 export const moveContributionUp = createAction<PodloveEpisodeContribution>(MOVE_CONTRIBUTION_UP)
 export const moveContributionDown = createAction<PodloveEpisodeContribution>(MOVE_CONTRIBUTION_DOWN)
@@ -98,6 +102,7 @@ export const updateContribution = createAction<PodloveEpisodeContribution>(UPDAT
 export const addContribution = createAction<Partial<PodloveContributor>>(ADD_CONTRIBUTION)
 export const createContribution = createAction<string>(CREATE_CONTRIBUTION)
 export const saved = createAction<object>(SAVED)
+export const slugChanged = createAction<void>(SLUG_CHANGED)
 
 export const reducer = handleActions(
   {
@@ -123,6 +128,8 @@ export const reducer = handleActions(
         'soundbite_title',
         'license_name',
         'license_url',
+        'show',
+        'number',
       ]
       const other = ['image']
       const todo = ['tags']
@@ -165,6 +172,7 @@ export const reducer = handleActions(
       license_name: get(action, ['payload', 'license_name'], state.license_name),
       license_url: get(action, ['payload', 'license_url'], state.license_url),
       contributions: get(action, ['payload', 'contributions'], state.contributions),
+      show: get(action, ['payload', 'show'], state.show),
     }),
     [MOVE_CONTRIBUTION_UP]: (state: State, action: typeof moveContributionUp): State => {
       const index = state.contributions.findIndex(
@@ -260,4 +268,5 @@ export const selectors = {
   license_name: (state: State) => state.license_name,
   license_url: (state: State) => state.license_url,
   contributions: (state: State) => state.contributions,
+  currentShow: (state: State) => state.show,
 }

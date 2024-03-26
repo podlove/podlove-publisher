@@ -27,6 +27,15 @@ class Repair
 
     public static function do_repair()
     {
+        if (!current_user_can('administrator')) {
+          exit;
+        }
+
+        if (!wp_verify_nonce($_REQUEST['nonce'], 'podlove_tools')) {
+          http_response_code(401);
+          exit;
+        }
+
         self::clear_repair_log();
 
         self::clear_podlove_cache();
@@ -116,7 +125,7 @@ class Repair
     {
         ?>
 		<p>
-			<a href="<?php echo esc_url(admin_url('admin.php?page='.$_REQUEST['page'].'&repair=1')); ?>" class="button">
+			<a href="<?php echo esc_url(admin_url('admin.php?page='.$_REQUEST['page'].'&repair=1&nonce='.wp_create_nonce('podlove_tools'))); ?>" class="button">
 				<?php echo __('Attempt Repair', 'podlove-podcasting-plugin-for-wordpress'); ?>
 			</a>
 		</p>

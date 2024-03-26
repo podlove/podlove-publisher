@@ -12,6 +12,7 @@ import * as podcastStore from './podcast.store'
 import * as auphonicStore from './auphonic.store'
 import * as mediafilesStore from './mediafiles.store'
 import * as relatedEpisodesStore from './relatedEpisodes.store'
+import * as showsStore from './shows.store'
 
 const root = {
   lifecycle: (state: State) => state.lifecycle,
@@ -26,6 +27,7 @@ const root = {
   mediafiles: (state: State) => state.mediafiles,
   settings: (state: State) => state.settings,
   relatedEpisodes: (state: State) => state.relatedEpisodes,
+  shows: (state: State) => state.shows,
 }
 
 const lifecycle = {
@@ -110,11 +112,16 @@ const episode = {
       return result
     }
   ),
+  currentShow: createSelector(root.episode, episodeStore.selectors.currentShow),
 }
 
 const mediafiles = {
   isInitializing: createSelector(root.mediafiles, mediafilesStore.selectors.isInitializing),
   files: createSelector(root.mediafiles, mediafilesStore.selectors.files),
+  slugAutogenerationEnabled: createSelector(
+    root.mediafiles,
+    mediafilesStore.selectors.slugAutogenerationEnabled
+  ),
 }
 
 const runtime = {
@@ -159,6 +166,10 @@ const relatedEpisodes = {
   ),
 }
 
+const shows = {
+  list: createSelector(root.shows, showsStore.selectors.shows),
+}
+
 export default {
   lifecycle,
   podcast,
@@ -172,4 +183,5 @@ export default {
   auphonic,
   mediafiles,
   relatedEpisodes,
+  shows,
 }

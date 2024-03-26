@@ -1,6 +1,6 @@
 <template>
   <div v-if="state.transcripts.length > 0">
-    <podlove-button variant="secondary" size="small" @click="openModal()">Delete</podlove-button>
+    <podlove-button variant="secondary" size="small" @click="openModal()">Clear</podlove-button>
     <modal :open="modalVisible" @close="closeModal()">
       <div class="sm:flex sm:items-start">
         <div
@@ -20,17 +20,17 @@
         </div>
         <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
           <DialogTitle as="h3" class="text-lg leading-6 font-medium text-gray-900">
-            Delete Transcript
+            Clear Transcript
           </DialogTitle>
           <div class="mt-2">
             <p class="text-sm text-gray-500">
-              {{ __('Are you sure you want to delete your transcript?') }}
+              {{ __('Are you sure you want to clear your transcript?') }}
             </p>
           </div>
         </div>
       </div>
       <div class="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
-        <podlove-button class="sm:ml-3 sm:w-auto sm:text-sm" variant="danger" @click="deleteTranscripts()">{{ __('Delete') }}</podlove-button>
+        <podlove-button class="sm:ml-3 sm:w-auto sm:text-sm" variant="danger" @click="deleteTranscripts()">{{ __('Clear') }}</podlove-button>
         <podlove-button class="sm:ml-3 sm:w-auto sm:text-sm" @click="closeModal()">{{ __('Cancel') }}</podlove-button>
       </div>
     </modal>
@@ -41,7 +41,7 @@
 import { injectStore, mapState } from 'redux-vuex'
 import { deleteTranscripts } from '@store/transcripts.store'
 import { defineComponent } from '@vue/runtime-core'
-import { ExclamationIcon } from '@heroicons/vue/outline'
+import { ExclamationTriangleIcon as ExclamationIcon } from '@heroicons/vue/24/outline'
 import { DialogTitle } from '@headlessui/vue'
 
 import selectors from '@store/selectors'

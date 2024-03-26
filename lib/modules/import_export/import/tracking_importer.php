@@ -24,6 +24,14 @@ class TrackingImporter
             return;
         }
 
+        if (!current_user_can('administrator')) {
+            return;
+        }
+
+        if (!wp_verify_nonce($_REQUEST['_podlove_nonce'], 'podlove_import_tracking')) {
+            return;
+        }
+
         set_time_limit(10 * MINUTE_IN_SECONDS);
 
         add_filter('upload_mimes', function ($mimes_types) {

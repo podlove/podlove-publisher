@@ -148,11 +148,13 @@ class Feed
             'limit_items' => FILTER_SANITIZE_NUMBER_INT,
             'feed_episode_title_variant' => FILTER_UNSAFE_RAW,
             'feed_episode_title_template' => FILTER_UNSAFE_RAW,
+            'feed_transcripts' => FILTER_UNSAFE_RAW,
         ]);
 
         $podcast_settings['limit_items'] = $args['limit_items'];
         $podcast_settings['feed_episode_title_variant'] = $args['feed_episode_title_variant'];
         $podcast_settings['feed_episode_title_template'] = $args['feed_episode_title_template'];
+        $podcast_settings['feed_transcripts'] = $args['feed_transcripts'];
 
         update_option('podlove_podcast', $podcast_settings);
         \Podlove\Cache\TemplateCache::get_instance()->setup_purge();
@@ -362,6 +364,8 @@ class Feed
                 'html' => ['class' => 'regular-text required'],
                 'default' => '%mnemonic%%episode_number% %episode_title%',
             ]);
+
+            do_action('podlove_feeds_global_form', $wrapper);
         }); ?>
 		</form>
 		</div>

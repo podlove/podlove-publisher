@@ -13,6 +13,8 @@ class Wordpress_File_Upload extends \Podlove\Modules\Base
     public function load()
     {
         add_action('admin_init', [$this, 'register_hooks']);
+        // FIXME: this is huge. admin_init is not run for REST calls? what else might this affect?
+        add_action('rest_api_init', [$this, 'register_hooks']);
 
         $this->register_option('upload_subdir', 'string', [
             'label' => __('Upload subdirectory', 'podlove-podcasting-plugin-for-wordpress'),
@@ -30,9 +32,9 @@ class Wordpress_File_Upload extends \Podlove\Modules\Base
                 <div id="message" class="notice notice-success">
                     <p>
                         <strong><?php echo sprintf(
-                    __('Module "%s" is active.', 'podlove-podcasting-plugin-for-wordpress'),
-                    $this->module_name
-                ); ?></strong>
+                            __('Module "%s" is active.', 'podlove-podcasting-plugin-for-wordpress'),
+                            $this->module_name
+                        ); ?></strong>
                     </p>
                     <p>
                         <?php echo __('You need to configure the subdirectory in the WordPress upload directory where your media files should be stored.', 'podlove-podcasting-plugin-for-wordpress'); ?>
@@ -57,11 +59,14 @@ class Wordpress_File_Upload extends \Podlove\Modules\Base
 
     public function set_media_file_base_uri($uri)
     {
-        if (trim($uri) === '') {
+        // TODO: UX wise it is very confusing that the media_file_base_uri must
+        // be empty for this to work. But there are usecases (Proxy/CDN) where
+        // it's needed that cannot be ignored.
+        if (trim($uri, ' /') === '') {
             $upload_dir = wp_upload_dir();
             $upload_dir = $this->custom_media_upload_dir($upload_dir, true);
 
-            return $upload_dir['url'];
+            return trailingslashit($upload_dir['url']);
         }
 
         return $uri;

@@ -46,8 +46,6 @@ Thank you!
 <a name=“request-support”></a>
 # Ask for Support
 
-If you are looking for professional support, head over to [publisher.podlove.org/support](http://publisher.podlove.org/support/).
-
 We have a community forum for questions, answers and feature discussions at [community.podlove.org](https://community.podlove.org).
 
 Please check if your questions are answered in our growing documentation site [docs.podlove.org](http://docs.podlove.org). If you still have open questions, feel free to open a support issue.
@@ -57,11 +55,9 @@ Please check if your questions are answered in our growing documentation site [d
 
 Unfortunately, many themes are incompatible with [Custom Post Types](https://codex.wordpress.org/Post_Types), which the Podlove Publisher uses for episodes. When you encounter problems, **please go to the theme support first**.
 
-Only if you are sure you encountered a theme-related bug in the Podlove Publisher, post here. Otherwise, ask for help in our [community](https://community.podlove.org) or get [Professional Support](http://publisher.podlove.org/support/).
+Only if you are sure you encountered a theme-related bug in the Podlove Publisher, post here. Otherwise, ask for help in our [community](https://community.podlove.org).
 
 <a name=“donate”></a>
 # Donate
 
 We are happy about every donation. Please visit [podlove.org/donations](http://podlove.org/donations/) for details.
-
-You can also subscribe to [publisher.podlove.org/support](http://publisher.podlove.org/support/) to support us.

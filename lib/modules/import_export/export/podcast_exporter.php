@@ -30,6 +30,14 @@ class PodcastExporter
         }
 
         if (isset($_GET['podlove_export']) && $_GET['podlove_export']) {
+            if (!current_user_can('administrator')) {
+                return;
+            }
+
+            if (!wp_verify_nonce($_REQUEST['_podlove_nonce'], 'podlove_export')) {
+                return;
+            }
+
             $exporter = new \Podlove\Modules\ImportExport\Export\PodcastExporter();
             $exporter->download();
             exit;
@@ -134,7 +142,7 @@ class PodcastExporter
         foreach ($table_class::all() as $mediafile) {
             $xml_item = $xml_group->addChild("xmlns:wpe:{$item_name}");
             foreach ($table_class::property_names() as $property_name) {
-                if (strlen($mediafile->{$property_name}) === 0) {
+                if (is_null($mediafile->{$property_name}) || strlen($mediafile->{$property_name}) === 0) {
                     continue;
                 }
 
