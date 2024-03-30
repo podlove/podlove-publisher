@@ -10,9 +10,9 @@
       />
     </div>
     <div class="ml-3 text-sm">
-      <label for="explicit-content" class="font-medium text-gray-700">{{ state.explicit ? __('Explicit Content!') : __('Explicit Content?') }}</label>
+      <label for="explicit-content" class="font-medium text-gray-700">{{ state.explicit ? __('Explicit Content!', 'podlove-podcasting-plugin-for-wordpress') : __('Explicit Content?', 'podlove-podcasting-plugin-for-wordpress') }}</label>
       <p class="text-gray-500">
-        {{ __('For example, profanity or content that may not be suitable for children') }}
+        {{ __('For example, profanity or content that may not be suitable for children', 'podlove-podcasting-plugin-for-wordpress') }}
       </p>
     </div>
   </div>

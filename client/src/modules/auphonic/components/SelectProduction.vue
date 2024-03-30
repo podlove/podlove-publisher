@@ -1,7 +1,7 @@
 <template>
   <Listbox as="div" @update:modelValue="setProduction" :value="currentProduction">
     <ListboxLabel class="block text-sm font-medium text-gray-600 sr-only">
-      {{ __('Select Existing Production') }}
+      {{ __('Select Existing Production', 'podlove-podcasting-plugin-for-wordpress') }}
     </ListboxLabel>
     <div class="mt-1 relative">
       <ListboxButton

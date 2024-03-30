@@ -1,5 +1,5 @@
 <template>
-  <podlove-button variant="secondary" size="small" @click="openSelector">{{ __('License Selector') }}</podlove-button>
+  <podlove-button variant="secondary" size="small" @click="openSelector">{{ __('License Selector', 'podlove-podcasting-plugin-for-wordpress') }}</podlove-button>
   <modal :open="openDialog" @close="closeSelector">
     <LicenseSelector :scope="scope"></LicenseSelector>
   </modal>

@@ -2,34 +2,34 @@
   <tooltip>
     <template v-slot:trigger>
       <podlove-button variant="secondary" size="small" @click="simulateImportClick()"
-        >{{ __('Import') }}</podlove-button
+        >{{ __('Import', 'podlove-podcasting-plugin-for-wordpress') }}</podlove-button
       >
       <input ref="import" type="file" @change="importChapters" class="hidden" />
     </template>
     <template v-slot:content>
       <div class="text-xs">
-        <p class="text-gray-600 leading-3 font-semibold mb-2">{{ __('Accepts:') }}</p>
+        <p class="text-gray-600 leading-3 font-semibold mb-2">{{ __('Accepts:', 'podlove-podcasting-plugin-for-wordpress') }}</p>
         <ul class="text-gray-500 ml-1">
           <li class="mb-1">
             <a
               class="text-blue-500 underline"
               href="https://podlove.org/simple-chapters/"
               target="_blank"
-              >{{ __('Podlove Simple Chapters') }}</a
+              >{{ __('Podlove Simple Chapters', 'podlove-podcasting-plugin-for-wordpress') }}</a
             >
             (<code>.psc</code>),
           </li>
           <li class="mb-1">
             <a class="text-blue-500 underline" href="http://www.audacityteam.org" target="_blank"
-              >{{ __('Audacity') }}</a
+              >{{ __('Audacity', 'podlove-podcasting-plugin-for-wordpress') }}</a
             >
-            {{ __('Track Labels') }},
+            {{ __('Track Labels', 'podlove-podcasting-plugin-for-wordpress') }},
           </li>
           <li class="mb-1">
             <a class="text-blue-500 underline" href="https://hindenburg.com" target="_blank"
-              >{{ __('Hindenburg') }}</a
+              >{{ __('Hindenburg', 'podlove-podcasting-plugin-for-wordpress') }}</a
             >
-            {{ __('project files and MP4Chaps') }} (<code>.txt</code>)
+            {{ __('project files and MP4Chaps', 'podlove-podcasting-plugin-for-wordpress') }} (<code>.txt</code>)
           </li>
         </ul>
       </div>

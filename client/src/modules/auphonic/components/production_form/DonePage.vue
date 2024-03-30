@@ -13,10 +13,10 @@
                 :href="production.status_page"
                 target="_blank"
                 class="underline inline-flex items-center"
-                >{{ __('View Results') }}
+                >{{ __('View Results', 'podlove-podcasting-plugin-for-wordpress') }}
                 <ExternalLinkIcon class="ml-0.5 mr-1 h-4 w-4" aria-hidden="true"
               /></a>
-              {{ __('on the Auphonic status page.') }}
+              {{ __('on the Auphonic status page.', 'podlove-podcasting-plugin-for-wordpress') }}
             </p>
           </div>
         </div>
@@ -29,7 +29,7 @@
           <ExclamationIcon class="h-5 w-5 text-yellow-400" aria-hidden="true" />
         </div>
         <div class="ml-3">
-          <h3 class="text-sm font-medium text-yellow-800">{{ __('Warning') }}</h3>
+          <h3 class="text-sm font-medium text-yellow-800">{{ __('Warning', 'podlove-podcasting-plugin-for-wordpress') }}</h3>
           <div class="mt-2 text-sm text-yellow-700">
             <p>
               {{ production.warning_message }}
@@ -44,7 +44,7 @@
         <div>
           <h3 class="text-lg font-medium leading-6 text-gray-900">Import Metadata</h3>
           <p class="mt-1 text-sm text-gray-500">
-            {{ __('These values from your Auphonic Production differ from your local values:') }}
+            {{ __('These values from your Auphonic Production differ from your local values:', 'podlove-podcasting-plugin-for-wordpress') }}
           </p>
         </div>
 
@@ -55,7 +55,7 @@
                 <div class="min-w-0 flex-1">
                   <p class="truncate text-sm text-gray-500">
                     <!-- TODO: needs better translation support, see https://github.com/podlove/podlove-publisher/issues/1337 -->
-                    <em>{{ entry.title }}</em> {{ __('in the Auphonic Production is:') }}
+                    <em>{{ entry.title }}</em> {{ __('in the Auphonic Production is:', 'podlove-podcasting-plugin-for-wordpress') }}
                   </p>
                   <p class="truncate text-sm font-medium text-gray-900">
                     {{ renderEntryPreview(entry) }}
@@ -69,7 +69,7 @@
                   >
                     <!-- TODO: needs better translation support, see https://github.com/podlove/podlove-publisher/issues/1337 -->
                     {{ __('Import')
-                    }}<span class="hidden sm:inline">&nbsp;{{ __('from Auphonic') }}</span>
+                    }}<span class="hidden sm:inline">&nbsp;{{ __('from Auphonic', 'podlove-podcasting-plugin-for-wordpress') }}</span>
                   </button>
                 </div>
               </div>
@@ -81,13 +81,13 @@
             @click.prevent="importAllMeta"
             class="flex w-full items-center justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50"
           >
-            {{ __('Import all from Auphonic') }}
+            {{ __('Import all from Auphonic', 'podlove-podcasting-plugin-for-wordpress') }}
           </button>
         </div>
       </div>
     </div>
     <div v-else class="mt-4 overflow-hidden rounded-lg bg-white shadow">
-      <div class="p-6">{{ __('Nothing to import') }}</div>
+      <div class="p-6">{{ __('Nothing to import', 'podlove-podcasting-plugin-for-wordpress') }}</div>
     </div>
   </div>
 </template>

@@ -1,7 +1,7 @@
 <template>
   <Listbox as="div" @update:modelValue="setPreset" :value="currentPreset">
     <ListboxLabel class="block text-sm font-medium text-gray-600 sr-only">
-      {{ __('Select Preset') }}
+      {{ __('Select Preset', 'podlove-podcasting-plugin-for-wordpress') }}
     </ListboxLabel>
     <div class="mt-1 relative">
       <ListboxButton
@@ -45,7 +45,7 @@
                   v-if="preset._select.is_multitrack"
                   :class="[active ? 'text-indigo-200' : 'text-gray-500', 'ml-2 truncate']"
                 >
-                  {{ __('Multitrack') }}
+                  {{ __('Multitrack', 'podlove-podcasting-plugin-for-wordpress') }}
                 </span>
               </div>
             </li>

@@ -1,5 +1,5 @@
 <template>
-  <module name="description" :title="__('Episode Description')">
+  <module name="description" :title="__('Episode Description', 'podlove-podcasting-plugin-for-wordpress')">
     <div class="p-3">
       <div class="flex justify-items-stretch mb-5">
         <episode-poster class="mr-5"/>

@@ -11,7 +11,7 @@
         :checked="current === ''"
       />
       <label for="podlove-show-default" class="ml-2 block text-sm leading-6 text-gray-900">{{
-        __('Podcast (no show assignment)')
+        __('Podcast (no show assignment)', 'podlove-podcasting-plugin-for-wordpress')
       }}</label>
     </div>
     <div v-for="show in shows" class="flex items-center">

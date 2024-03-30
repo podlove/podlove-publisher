@@ -1,6 +1,6 @@
 <template>
   <label for="assets" class="block text-sm font-medium leading-6 text-gray-900 sm:pt-1.5">{{
-    __('Assets')
+    __('Assets', 'podlove-podcasting-plugin-for-wordpress')
   }}</label>
   <div class="mt-2 sm:col-span-2 sm:mt-0">
     <div v-if="hasFiles">
@@ -8,13 +8,13 @@
         <thead>
           <tr>
             <th scope="col" class="py-3.5 pl-3 text-left text-sm font-semibold text-gray-900">
-              {{ __('Enable') }}
+              {{ __('Enable', 'podlove-podcasting-plugin-for-wordpress') }}
             </th>
             <th scope="col" class="py-3.5 pr-3 text-left text-sm font-semibold text-gray-900">
-              {{ __('Asset') }}
+              {{ __('Asset', 'podlove-podcasting-plugin-for-wordpress') }}
             </th>
             <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-              {{ __('File') }}
+              {{ __('File', 'podlove-podcasting-plugin-for-wordpress') }}
             </th>
             <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"></th>
           </tr>
@@ -69,7 +69,7 @@ found" -->
                       'text-gray-400': !file.enable,
                       'text-red-400': file.enable,
                     }"
-                    >{{ __('File not found') }}</span
+                    >{{ __('File not found', 'podlove-podcasting-plugin-for-wordpress') }}</span
                   >
                   <span v-else>{{ fileSize(file) }}</span>
                 </span>
@@ -81,13 +81,13 @@ found" -->
                 class="inline-flex items-center rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:bg-white"
                 @click="() => handleVerify(file.asset_id)"
               >
-                {{ __('Verify') }}
+                {{ __('Verify', 'podlove-podcasting-plugin-for-wordpress') }}
               </button>
             </td>
           </tr>
         </tbody>
       </table>
-      <p class="mt-3 text-sm leading-6 text-gray-600">{{ __('Duration:') }} {{ duration }}</p>
+      <p class="mt-3 text-sm leading-6 text-gray-600">{{ __('Duration:', 'podlove-podcasting-plugin-for-wordpress') }} {{ duration }}</p>
     </div>
     <AssetsEmptyState v-else />
   </div>

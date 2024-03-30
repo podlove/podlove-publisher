@@ -2,7 +2,7 @@
   <div>
     <modal size="medium" :open="modalOpen" @close="closeModal()">
       <div class="border-gray-200 border-b pb-2 px-4 -mx-6 mb-4">
-        <h3 class="text-lg leading-6 font-medium text-gray-900">{{ __('Episode Poster') }}</h3>
+        <h3 class="text-lg leading-6 font-medium text-gray-900">{{ __('Episode Poster', 'podlove-podcasting-plugin-for-wordpress') }}</h3>
       </div>
       <div class="relative">
         <input
@@ -14,7 +14,7 @@
         />
         <button
           class="absolute right-2 top-1/2 -mt-3 text-gray-400 hover:text-gray-700"
-          :title="__('Clear Input')"
+          :title="__('Clear Input', 'podlove-podcasting-plugin-for-wordpress')"
           @click="updatePoster(null)"
         >
           <x-icon class="w-6 h-6" />
@@ -23,13 +23,13 @@
       <p class="mt-2 text-sm text-gray-500">
         {{
           __(
-            'Enter URL or select image from media library. Apple/iTunes recommends 3000 x 3000 pixel JPG or PNG'
+            'Enter URL or select image from media library. Apple/iTunes recommends 3000 x 3000 pixel JPG or PNG', 'podlove-podcasting-plugin-for-wordpress'
           )
         }}
       </p>
     </modal>
 
-    <label class="block text-sm font-medium text-gray-700">{{ __('Poster') }}</label>
+    <label class="block text-sm font-medium text-gray-700">{{ __('Poster', 'podlove-podcasting-plugin-for-wordpress') }}</label>
     <div
       class="border shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block relative w-44 h-44 sm:text-sm border-gray-300 rounded-md mt-1 overflow-hidden bg-cover bg-no-repeat bg-center"
       :style="posterStyle"
@@ -45,17 +45,17 @@
         v-if="state.asset === 'manual'"
       >
         <podlove-button @click="openModal()" class="w-32 mb-2"
-          ><span class="w-full text-center">{{ __('URL') }}</span></podlove-button
+          ><span class="w-full text-center">{{ __('URL', 'podlove-podcasting-plugin-for-wordpress') }}</span></podlove-button
         >
         <podlove-button class="w-32 text-center mb-2" @click="selectImage()"
-          ><span class="w-full text-center">{{ __('Media') }}</span></podlove-button
+          ><span class="w-full text-center">{{ __('Media', 'podlove-podcasting-plugin-for-wordpress') }}</span></podlove-button
         >
         <podlove-button
           variant="danger"
           class="w-32 text-center"
           :disabled="state.episodePoster === null"
           @click="updatePoster(null)"
-          ><span class="w-full text-center">{{ __('Reset') }}</span></podlove-button
+          ><span class="w-full text-center">{{ __('Reset', 'podlove-podcasting-plugin-for-wordpress') }}</span></podlove-button
         >
       </div>
     </div>

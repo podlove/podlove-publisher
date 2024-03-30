@@ -2,13 +2,13 @@
   <label
     for="mediafile_upload"
     class="block text-sm font-medium leading-6 text-gray-900 sm:pt-1.5"
-    >{{ __('Upload') }}</label
+    >{{ __('Upload', 'podlove-podcasting-plugin-for-wordpress') }}</label
   >
   <div class="mt-2 sm:col-span-2 sm:mt-0">
     <div>
       <podlove-button variant="primary" @click="uploadIntent" class="ml-1">
         <upload-icon class="-ml-0.5 mr-2 h-4 w-4" aria-hidden="true" />
-        {{ __('Upload Media File') }}
+        {{ __('Upload Media File', 'podlove-podcasting-plugin-for-wordpress') }}
       </podlove-button>
     </div>
   </div>
