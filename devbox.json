@@ -1,0 +1,12 @@
+{
+  "$schema": "https://raw.githubusercontent.com/jetpack-io/devbox/0.10.2/.schema/devbox.schema.json",
+  "packages": ["php@latest", "php83Packages.composer@latest", "nodejs@20"],
+  "shell": {
+    "init_hook": ["echo 'Welcome to devbox!' > /dev/null"],
+    "scripts": {
+      "bootstrap": "make install",
+      "build": "make build --always-make",
+      "client": ["cd client", "npm run dev"]
+    }
+  }
+}
