@@ -1,8 +1,8 @@
 <template>
   <div>
-    <label for="episode-license-name" class="block text-sm font-medium text-gray-700">{{ __('License url') }}</label>
+    <label for="episode-license-name" class="block text-sm font-medium text-gray-700">{{ __('License url', 'podlove-podcasting-plugin-for-wordpress') }}</label>
     <div class="mt-1">
-      <input 
+      <input
         name="episode-license-name"
         type="text"
         :value="getLicenseUrl"
@@ -18,7 +18,7 @@
         "
       />
     </div>
-    <p class="mt-2 text-sm text-gray-500">{{ __('Example: http://creativecommons.org/licenses/by/3.0/') }}</p>
+    <p class="mt-2 text-sm text-gray-500">{{ __('Example: http://creativecommons.org/licenses/by/3.0/', 'podlove-podcasting-plugin-for-wordpress') }}</p>
   </div>
 </template>
 
@@ -74,7 +74,7 @@ export default defineComponent({
         this.dispatch(
           podcast.update({prop: 'license_url', value: (event.target as HTMLInputElement).value})
         )
-      }      
+      }
     }
   }
 })

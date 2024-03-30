@@ -1,7 +1,7 @@
 <template>
   <div>
     <label for="subtitle" class="block text-sm font-medium text-gray-700">{{
-      __('Subtitle')
+      __('Subtitle', 'podlove-podcasting-plugin-for-wordpress')
     }}</label>
     <div class="mt-1">
       <textarea
@@ -24,7 +24,7 @@
       ></textarea>
     </div>
     <p class="mt-2 text-sm text-gray-500 flex justify-between">
-      <span>{{ __('Single sentence describing the episode.') }}</span>
+      <span>{{ __('Single sentence describing the episode.', 'podlove-podcasting-plugin-for-wordpress') }}</span>
       <span>{{ charactersLeft }}</span>
     </p>
   </div>

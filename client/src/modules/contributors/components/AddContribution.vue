@@ -5,7 +5,7 @@
         <div class="min-w-0 flex-1 px-4 md:grid md:grid-cols-2 md:gap-4">
           <Combobox as="div" v-model="data">
             <ComboboxLabel class="block text-sm font-medium leading-6 text-gray-900">{{
-              __('Select Contributor')
+              __('Select Contributor', 'podlove-podcasting-plugin-for-wordpress')
             }}</ComboboxLabel>
             <div class="relative mt-2 max-w-sm">
               <ComboboxInput
@@ -170,7 +170,7 @@ export default defineComponent({
               {
                 id: null,
                 avatar_url: null,
-                realname: `${this.__('Create: ')}${this.query}`,
+                realname: `${this.__('Create: ', 'podlove-podcasting-plugin-for-wordpress')}${this.query}`,
               },
             ]
           : []),

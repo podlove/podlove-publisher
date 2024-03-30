@@ -1,6 +1,6 @@
 <template>
     <div>
-      <label for="episode-license-name" class="block text-sm font-medium text-gray-700">{{ __('License name') }}</label>
+      <label for="episode-license-name" class="block text-sm font-medium text-gray-700">{{ __('License name', 'podlove-podcasting-plugin-for-wordpress') }}</label>
       <div class="mt-1">
         <input
           name="episode-license-name"

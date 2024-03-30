@@ -4,7 +4,7 @@
       <div class="w-full flex justify-center m-12 text-center" v-if="isInitializing">
         <div class="animate-pulse mt-4 flex space-x-4">
           <RefreshIcon class="animate-spin h-5 w-5 mr-3" />
-          {{ __('Loading...') }}
+          {{ __('Loading...', 'podlove-podcasting-plugin-for-wordpress') }}
         </div>
       </div>
       <div v-else>

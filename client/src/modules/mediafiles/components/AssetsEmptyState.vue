@@ -14,9 +14,9 @@
       />
     </svg>
 
-    <h3 class="mt-2 text-sm font-semibold text-gray-900">{{ __('No Assets') }}</h3>
+    <h3 class="mt-2 text-sm font-semibold text-gray-900">{{ __('No Assets', 'podlove-podcasting-plugin-for-wordpress') }}</h3>
     <p class="mt-1 text-sm text-gray-500">
-      {{ __('Please go to Podlove &rarr; Episode Assets and define at least one audio asset.') }}
+      {{ __('Please go to Podlove &rarr; Episode Assets and define at least one audio asset.', 'podlove-podcasting-plugin-for-wordpress') }}
     </p>
   </div>
 </template>

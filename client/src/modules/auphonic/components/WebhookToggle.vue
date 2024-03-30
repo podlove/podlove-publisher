@@ -19,7 +19,7 @@
       </Switch>
       <SwitchLabel as="span" class="ml-3">
         <span class="text-sm text-gray-900">{{
-          __('Publish Episode when Production is done')
+          __('Publish Episode when Production is done', 'podlove-podcasting-plugin-for-wordpress')
         }}</span>
       </SwitchLabel>
     </SwitchGroup>

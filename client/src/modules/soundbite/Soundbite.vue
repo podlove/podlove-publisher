@@ -1,5 +1,5 @@
 <template>
-    <module name="soundbite" :title="__('Soundbite')">
+    <module name="soundbite" :title="__('Soundbite', 'podlove-podcasting-plugin-for-wordpress')">
         <template v-slot:actions>
             <soundbite-clear></soundbite-clear>
         </template>

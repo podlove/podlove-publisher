@@ -30,7 +30,7 @@
               Upload
               <span class="text-sm font-normal">{{ filenameSelectedForUpload }}</span>
             </div>
-            <div class="sm:mt-1" v-else>{{ __('Upload a file') }}</div>
+            <div class="sm:mt-1" v-else>{{ __('Upload a file', 'podlove-podcasting-plugin-for-wordpress') }}</div>
             <input
               :id="file_key + 'file-upload'"
               name="file-upload"

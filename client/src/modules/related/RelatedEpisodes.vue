@@ -1,5 +1,5 @@
 <template>
-  <module name="relatedEpisodes" :title="__('Related episodes')">
+  <module name="relatedEpisodes" :title="__('Related episodes', 'podlove-podcasting-plugin-for-wordpress')">
     <div class="p-3">
       <div>
         <PodloveListbox
@@ -10,11 +10,11 @@
           multiple
         />
       </div>
-      <p class="mt-2 text-sm text-gray-500">{{ __('Select related episodes to this episode.') }}</p>
+      <p class="mt-2 text-sm text-gray-500">{{ __('Select related episodes to this episode.', 'podlove-podcasting-plugin-for-wordpress') }}</p>
     </div>
     <div class="pl-3 pb-3">
-      <Tag v-for="name in selectEpisodeNames" 
-        :value="name.title" 
+      <Tag v-for="name in selectEpisodeNames"
+        :value="name.title"
         :id="Number(name.id)"
         @removeTag = "removeTag($event)"
         >

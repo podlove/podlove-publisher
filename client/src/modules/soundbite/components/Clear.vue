@@ -1,5 +1,5 @@
 <template>
-    <podlove-button variant="secondary" size="small" @click="clearSoundbite()">{{ __('Clear') }}</podlove-button>
+    <podlove-button variant="secondary" size="small" @click="clearSoundbite()">{{ __('Clear', 'podlove-podcasting-plugin-for-wordpress') }}</podlove-button>
 </template>
 
 <script lang="ts">

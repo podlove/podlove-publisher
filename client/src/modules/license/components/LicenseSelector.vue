@@ -1,6 +1,6 @@
 <template>
   <div class="border-gray-200 border-b pb-2 px-3 py-5">
-    <h3 class="text-lg leading-6 font-medium text-gray-900">{{ __('License Selector') }}</h3>
+    <h3 class="text-lg leading-6 font-medium text-gray-900">{{ __('License Selector', 'podlove-podcasting-plugin-for-wordpress') }}</h3>
   </div>
   <div>
     <div class="mb-3">
@@ -112,7 +112,7 @@ import LicensePreview from './LicenseView.vue'
 import PodloveButton from '@components/button/Button.vue'
 import Modal from '@components/modal/Modal.vue'
 
-import { PodloveLicense, PodloveLicenseVersion, PodloveLicenseOptionCommercial, 
+import { PodloveLicense, PodloveLicenseVersion, PodloveLicenseOptionCommercial,
   PodloveLicenseOptionModification, PodloveLicenseOptionJurisdication, PodloveLicenseScope } from '../../../types/license.types'
 import { getLicenseFromUrl, getLicenseUrl } from '@lib/license'
 
@@ -132,7 +132,7 @@ const PodloveLicenseOptionModificationList: {
 }[] = Object.entries(PodloveLicenseOptionModification).map(([key, value]) => ({ key, value }));
 
 export default defineComponent({
-  components: { 
+  components: {
     PodloveButton,
     Modal,
     LicensePreview,

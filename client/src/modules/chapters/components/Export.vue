@@ -2,7 +2,7 @@
   <div>
     <popover>
       <template v-slot:trigger>
-        <podlove-button variant="secondary" size="small">{{ __('Export') }}</podlove-button>
+        <podlove-button variant="secondary" size="small">{{ __('Export', 'podlove-podcasting-plugin-for-wordpress') }}</podlove-button>
       </template>
       <template v-slot:content>
         <div class="bg-white p-7 -translate-x-full z-10 mt-3 transform ml-16 rounded-lg shadow-lg">
@@ -26,7 +26,7 @@
             "
           >
             <div class="text-sm font-medium text-gray-900 truncate w-full mr-2">
-              {{ __('Podlove Simple Chapters') }}
+              {{ __('Podlove Simple Chapters', 'podlove-podcasting-plugin-for-wordpress', 'podlove-podcasting-plugin-for-wordpress') }}
             </div>
             <div class="text-sm text-gray-500">.psc</div>
           </a>
@@ -48,7 +48,7 @@
               focus-visible:ring focus-visible:ring-indigo-500 focus-visible:ring-opacity-50
             "
           >
-            <div class="text-sm font-medium text-gray-900 truncate w-full mr-2">{{ __('MP4Chaps') }}</div>
+            <div class="text-sm font-medium text-gray-900 truncate w-full mr-2">{{ __('MP4Chaps', 'podlove-podcasting-plugin-for-wordpress') }}</div>
             <div class="text-sm text-gray-500">.txt</div>
           </a>
         </div>
