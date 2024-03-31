@@ -6,7 +6,7 @@
       <div class="w-full flex justify-center" v-if="isInitializing">
         <div class="animate-pulse mt-4 flex space-x-4">
           <RefreshIcon class="animate-spin h-5 w-5 mr-3" />
-          {{ __('Loading...') }}
+          {{ __('Loading...', 'podlove-podcasting-plugin-for-wordpress') }}
         </div>
       </div>
 
@@ -14,7 +14,7 @@
         <p class="mt-1 text-sm text-gray-500">
           {{
             __(
-              'Manage your audio post production with Auphonic. Get started by selecting an existing production or create a new one from an Auphonic preset.'
+              'Manage your audio post production with Auphonic. Get started by selecting an existing production or create a new one from an Auphonic preset.', 'podlove-podcasting-plugin-for-wordpress'
             )
           }}
         </p>
@@ -27,7 +27,7 @@
             >
               <div>
                 <h3 class="text-sm font-medium text-gray-900">
-                  {{ __('Create New Production from Preset') }}
+                  {{ __('Create New Production from Preset', 'podlove-podcasting-plugin-for-wordpress') }}
                 </h3>
               </div>
             </div>
@@ -48,8 +48,8 @@
                 ><plus-sm-icon class="-ml-0.5 mr-2 h-4 w-4" aria-hidden="true" />
                 {{
                   buttonState == 'multi'
-                    ? __('Create Multitrack Production')
-                    : __('Create Production')
+                    ? __('Create Multitrack Production', 'podlove-podcasting-plugin-for-wordpress')
+                    : __('Create Production', 'podlove-podcasting-plugin-for-wordpress')
                 }}</podlove-button
               >
             </div>
@@ -60,7 +60,7 @@
             >
               <div>
                 <h3 class="text-sm font-medium text-gray-900">
-                  {{ __('Select Existing Production') }}
+                  {{ __('Select Existing Production', 'podlove-podcasting-plugin-for-wordpress') }}
                 </h3>
               </div>
             </div>

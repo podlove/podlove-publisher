@@ -3,13 +3,13 @@
     <div class="grid grid-cols-2">
       <div>
         <podlove-button variant="primary" @click="simulateImportClick" class="ml-1">
-          <upload-icon class="-ml-0.5 mr-2 h-4 w-4" aria-hidden="true" /> {{ __('Import Transcript') }}
+          <upload-icon class="-ml-0.5 mr-2 h-4 w-4" aria-hidden="true" /> {{ __('Import Transcript', 'podlove-podcasting-plugin-for-wordpress') }}
         </podlove-button>
         <input ref="import" accept="text/vtt" type="file" @change="handleImport" class="hidden" key=""/>
       </div>
       <div>
         <podlove-button variant="primary" @click="importTranscriptFromAsset" class="ml-1">
-          {{ __('Get From Asset') }}
+          {{ __('Get From Asset', 'podlove-podcasting-plugin-for-wordpress') }}
         </podlove-button>
       </div>
     </div>

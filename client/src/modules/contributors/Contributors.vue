@@ -1,5 +1,5 @@
 <template>
-  <module name="chapters" :title="__('Contributors')" class="overflow-hidden">
+  <module name="chapters" :title="__('Contributors', 'podlove-podcasting-plugin-for-wordpress')" class="overflow-hidden">
     <template v-slot:actions> </template>
     <ul role="list" class="divide-y divide-gray-200">
       <li
@@ -24,7 +24,7 @@
     </ul>
     <div class="py-5 px-6 border-t border-gray-200">
       <podlove-button variant="primary" @click="showAddContributor()">
-        <plus-sm-icon class="-ml-0.5 mr-2 h-4 w-4" aria-hidden="true" /> {{ __('Add Contributor') }}
+        <plus-sm-icon class="-ml-0.5 mr-2 h-4 w-4" aria-hidden="true" /> {{ __('Add Contributor', 'podlove-podcasting-plugin-for-wordpress') }}
       </podlove-button>
     </div>
   </module>

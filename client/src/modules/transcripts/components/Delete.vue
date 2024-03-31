@@ -24,14 +24,14 @@
           </DialogTitle>
           <div class="mt-2">
             <p class="text-sm text-gray-500">
-              {{ __('Are you sure you want to clear your transcript?') }}
+              {{ __('Are you sure you want to clear your transcript?', 'podlove-podcasting-plugin-for-wordpress') }}
             </p>
           </div>
         </div>
       </div>
       <div class="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
-        <podlove-button class="sm:ml-3 sm:w-auto sm:text-sm" variant="danger" @click="deleteTranscripts()">{{ __('Clear') }}</podlove-button>
-        <podlove-button class="sm:ml-3 sm:w-auto sm:text-sm" @click="closeModal()">{{ __('Cancel') }}</podlove-button>
+        <podlove-button class="sm:ml-3 sm:w-auto sm:text-sm" variant="danger" @click="deleteTranscripts()">{{ __('Clear', 'podlove-podcasting-plugin-for-wordpress') }}</podlove-button>
+        <podlove-button class="sm:ml-3 sm:w-auto sm:text-sm" @click="closeModal()">{{ __('Cancel', 'podlove-podcasting-plugin-for-wordpress') }}</podlove-button>
       </div>
     </modal>
   </div>

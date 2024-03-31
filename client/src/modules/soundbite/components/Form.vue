@@ -1,7 +1,7 @@
 <template>
   <div class="grid md:grid-cols-4 md:grid-rows-1 sm:grid-rows-4 p-3">
     <div class="mb-5 ml-5">
-      <label for="soundbite-start" class="block text-sm font-medium text-gray-700">{{ __('Start') }}</label>
+      <label for="soundbite-start" class="block text-sm font-medium text-gray-700">{{ __('Start', 'podlove-podcasting-plugin-for-wordpress') }}</label>
       <div class="mt-1">
         <input
           name="soundbite-start"
@@ -14,7 +14,7 @@
       </div>
     </div>
     <div class="mb-5 ml-5">
-      <label for="soundbite-end" class="block text-sm font-medium text-gray-700">{{ __('End') }}</label
+      <label for="soundbite-end" class="block text-sm font-medium text-gray-700">{{ __('End', 'podlove-podcasting-plugin-for-wordpress') }}</label
       >
       <div class="mt-1">
         <input
@@ -28,7 +28,7 @@
       </div>
     </div>
     <div class="mb-5 ml-5">
-      <label for="soundbite-duration" class="block text-sm font-medium text-gray-700">{{ __('Duration') }}</label>
+      <label for="soundbite-duration" class="block text-sm font-medium text-gray-700">{{ __('Duration', 'podlove-podcasting-plugin-for-wordpress') }}</label>
       <div class="mt-1">
         <input
           name="soundbite-duration"
@@ -41,8 +41,8 @@
       </div>
     </div>
     <div class="mb-5 ml-5 md:mr-5">
-      <label for="soundbite-title" class="block text-sm font-medium text-gray-700">{{ __('Soundbite title') }}
-        <span class="text-xs">{{ __('(optional)') }}</span></label
+      <label for="soundbite-title" class="block text-sm font-medium text-gray-700">{{ __('Soundbite title', 'podlove-podcasting-plugin-for-wordpress') }}
+        <span class="text-xs">{{ __('(optional)', 'podlove-podcasting-plugin-for-wordpress') }}</span></label
       >
       <div class="mt-1">
         <input

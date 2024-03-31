@@ -1,7 +1,7 @@
 <template>
   <div>
     <label for="episode-type" class="block text-sm font-medium text-gray-700">{{
-      __('Type')
+      __('Type', 'podlove-podcasting-plugin-for-wordpress')
     }}</label>
     <div class="mt-1">
       <select
@@ -21,14 +21,14 @@
         :value="state.type"
         @input="updateType($event)"
       >
-        <option>{{ __('Please choose ...') }}</option>
-        <option value="full">{{ __('full (complete content of an episode)') }}</option>
-        <option value="trailer">{{ __('trailer (short, promotional piece of content that represents a preview of an episode)') }}</option>
-        <option value="bonus">{{ __('bonus (extra content for an episode, for example behind the scenes information)') }}</option>
+        <option>{{ __('Please choose ...', 'podlove-podcasting-plugin-for-wordpress') }}</option>
+        <option value="full">{{ __('full (complete content of an episode)', 'podlove-podcasting-plugin-for-wordpress') }}</option>
+        <option value="trailer">{{ __('trailer (short, promotional piece of content that represents a preview of an episode)', 'podlove-podcasting-plugin-for-wordpress') }}</option>
+        <option value="bonus">{{ __('bonus (extra content for an episode, for example behind the scenes information)', 'podlove-podcasting-plugin-for-wordpress') }}</option>
       </select>
     </div>
     <p class="mt-2 text-sm text-gray-500">
-      {{ __('Episode type. May be used by podcast clients.') }}
+      {{ __('Episode type. May be used by podcast clients.', 'podlove-podcasting-plugin-for-wordpress') }}
     </p>
   </div>
 </template>

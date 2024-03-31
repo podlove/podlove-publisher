@@ -1,5 +1,5 @@
 <template>
-  <module name="transcript" :title="__('Transcripts')">
+  <module name="transcript" :title="__('Transcripts', 'podlove-podcasting-plugin-for-wordpress')">
     <template v-slot:actions>
       <transcripts-voices class="mr-1" />
       <transcripts-export class="mr-1" />

@@ -1,6 +1,6 @@
 <template>
   <label for="filename_slug" class="block text-sm font-medium leading-6 text-gray-900 sm:pt-1.5">{{
-    __('Filename / Slug')
+    __('Filename / Slug', 'podlove-podcasting-plugin-for-wordpress')
   }}</label>
   <div class="mt-2 sm:col-span-2 sm:mt-0">
     <div

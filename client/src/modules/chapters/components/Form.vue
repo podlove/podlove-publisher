@@ -41,7 +41,7 @@
       <div v-if="state.selected" class="md:w-4/12 sm:w-full md:mx-4 md:my-2 mt-0">
         <div class="mb-5 mt-2">
           <label for="chapter-title" class="block text-sm font-medium text-gray-700">{{
-            __('Title')
+            __('Title', 'podlove-podcasting-plugin-for-wordpress')
           }}</label>
           <div class="mt-1">
             <input
@@ -69,7 +69,7 @@
         </div>
         <div class="mb-5">
           <label for="chapter-start" class="block text-sm font-medium text-gray-700">{{
-            __('Start')
+            __('Start', 'podlove-podcasting-plugin-for-wordpress')
           }}</label>
           <div class="mt-1">
             <input
@@ -83,7 +83,7 @@
         </div>
         <div class="mb-5">
           <label for="chapter-image" class="block text-sm font-medium text-gray-700"
-            >{{ __('Image') }} <span class="text-xs">{{ __('(optional)') }}</span></label
+            >{{ __('Image', 'podlove-podcasting-plugin-for-wordpress') }} <span class="text-xs">{{ __('(optional)', 'podlove-podcasting-plugin-for-wordpress') }}</span></label
           >
           <div class="mt-1 relative">
             <input
@@ -95,7 +95,7 @@
             />
             <button
               @click.prevent="selectImage()"
-              :title="__('Select Chapter Image')"
+              :title="__('Select Chapter Image', 'podlove-podcasting-plugin-for-wordpress')"
               class="absolute right-2 top-1/2 -mt-3 text-gray-400 hover:text-gray-700"
             >
               <upload-icon class="w-6 h-6" />
@@ -104,25 +104,25 @@
         </div>
         <div class="mb-5 ml-1">
           <podlove-button variant="danger" @click="removeChapter()">{{
-            __('Delete Chapter')
+            __('Delete Chapter', 'podlove-podcasting-plugin-for-wordpress')
           }}</podlove-button>
         </div>
       </div>
     </div>
     <div class="mt-5 ml-5 pb-5">
       <podlove-button variant="primary" @click="addChapter()">
-        <plus-sm-icon class="-ml-0.5 mr-2 h-4 w-4" aria-hidden="true" /> {{ __('Add Chapter') }}
+        <plus-sm-icon class="-ml-0.5 mr-2 h-4 w-4" aria-hidden="true" /> {{ __('Add Chapter', 'podlove-podcasting-plugin-for-wordpress') }}
       </podlove-button>
     </div>
   </div>
   <div v-else class="text-center h-96 flex items-center justify-center flex-col">
     <bookmark-alt-icon class="mx-auto h-12 w-12 text-gray-400" />
 
-    <h3 class="mt-2 text-sm font-medium text-gray-900">{{ __('No chapters') }}</h3>
-    <p class="mt-1 text-sm text-gray-500">{{ __('Get started by creating a new chapter.') }}</p>
+    <h3 class="mt-2 text-sm font-medium text-gray-900">{{ __('No chapters', 'podlove-podcasting-plugin-for-wordpress') }}</h3>
+    <p class="mt-1 text-sm text-gray-500">{{ __('Get started by creating a new chapter.', 'podlove-podcasting-plugin-for-wordpress') }}</p>
     <div class="mt-6">
       <podlove-button variant="primary" @click="addChapter()" class="ml-1">
-        <plus-sm-icon class="-ml-0.5 mr-2 h-4 w-4" aria-hidden="true" /> {{ __('Add Chapter') }}
+        <plus-sm-icon class="-ml-0.5 mr-2 h-4 w-4" aria-hidden="true" /> {{ __('Add Chapter', 'podlove-podcasting-plugin-for-wordpress') }}
       </podlove-button>
     </div>
   </div>

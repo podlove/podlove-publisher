@@ -1,6 +1,6 @@
 <template>
   <div>
-    <label for="episode-title" class="block text-sm font-medium text-gray-700">{{ __('Title') }}</label>
+    <label for="episode-title" class="block text-sm font-medium text-gray-700">{{ __('Title', 'podlove-podcasting-plugin-for-wordpress') }}</label>
     <div class="mt-1">
       <input
         name="episode-title"
@@ -19,7 +19,7 @@
         @input="updateTitle($event)"
       />
     </div>
-    <p class="mt-2 text-sm text-gray-500">{{ __('Clear, concise name for your episode. It is recommended to not include the podcast title, episode number, season number or date in this tag.') }}</p>
+    <p class="mt-2 text-sm text-gray-500">{{ __('Clear, concise name for your episode. It is recommended to not include the podcast title, episode number, season number or date in this tag.', 'podlove-podcasting-plugin-for-wordpress') }}</p>
   </div>
 </template>
 

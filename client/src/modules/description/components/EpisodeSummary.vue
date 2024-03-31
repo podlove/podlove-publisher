@@ -1,7 +1,7 @@
 <template>
   <div>
     <label for="summary" class="block text-sm font-medium text-gray-700">{{
-      __('Summary')
+      __('Summary', 'podlove-podcasting-plugin-for-wordpress')
     }}</label>
     <div class="mt-1">
       <textarea

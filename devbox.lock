@@ -1,0 +1,167 @@
+{
+  "lockfile_version": "1",
+  "packages": {
+    "nodejs@20": {
+      "last_modified": "2024-03-22T11:26:23Z",
+      "plugin_version": "0.0.2",
+      "resolved": "github:NixOS/nixpkgs/a3ed7406349a9335cb4c2a71369b697cecd9d351#nodejs_20",
+      "source": "devbox-search",
+      "version": "20.11.1",
+      "systems": {
+        "aarch64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/xjgg53kjjhwcx4p3dmywjmqjbv82xhyn-nodejs-20.11.1",
+              "default": true
+            },
+            {
+              "name": "libv8",
+              "path": "/nix/store/aq4aay71mvhbjnkni9rxjalnpnmmqrzc-nodejs-20.11.1-libv8"
+            }
+          ],
+          "store_path": "/nix/store/xjgg53kjjhwcx4p3dmywjmqjbv82xhyn-nodejs-20.11.1"
+        },
+        "aarch64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/v2a0w6001v9j9dzwcywjk7sj5djz6nmf-nodejs-20.11.1",
+              "default": true
+            },
+            {
+              "name": "libv8",
+              "path": "/nix/store/9g739av3wgvn5vfmagnw2snfmiqh95zc-nodejs-20.11.1-libv8"
+            }
+          ],
+          "store_path": "/nix/store/v2a0w6001v9j9dzwcywjk7sj5djz6nmf-nodejs-20.11.1"
+        },
+        "x86_64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/00lahyvbxdb24226g6gfxr7dqwz7maii-nodejs-20.11.1",
+              "default": true
+            },
+            {
+              "name": "libv8",
+              "path": "/nix/store/vf2zx8s3lql9ky587gabp83mjn7s88cx-nodejs-20.11.1-libv8"
+            }
+          ],
+          "store_path": "/nix/store/00lahyvbxdb24226g6gfxr7dqwz7maii-nodejs-20.11.1"
+        },
+        "x86_64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/rlv9fcq70pniyrm3xy21wgk5rdhdh12h-nodejs-20.11.1",
+              "default": true
+            },
+            {
+              "name": "libv8",
+              "path": "/nix/store/77y1yf6i43bznwvqalhxz0l6kd68lqqn-nodejs-20.11.1-libv8"
+            }
+          ],
+          "store_path": "/nix/store/rlv9fcq70pniyrm3xy21wgk5rdhdh12h-nodejs-20.11.1"
+        }
+      }
+    },
+    "php83Packages.composer@latest": {
+      "last_modified": "2024-03-23T13:32:18Z",
+      "resolved": "github:NixOS/nixpkgs/20bc93ca7b2158ebc99b8cef987a2173a81cde35#php83Packages.composer",
+      "source": "devbox-search",
+      "version": "2.7.2",
+      "systems": {
+        "aarch64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/xbh5cp67f8bb977p6mh6vcdzpga5dbs7-composer-2.7.2",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/xbh5cp67f8bb977p6mh6vcdzpga5dbs7-composer-2.7.2"
+        },
+        "aarch64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/znjn4pn8bmmchfmm538xj82xal5yyshr-composer-2.7.2",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/znjn4pn8bmmchfmm538xj82xal5yyshr-composer-2.7.2"
+        },
+        "x86_64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/8d7wyzfywjgnya9dzhb8pj9hzvpzlvg3-composer-2.7.2",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/8d7wyzfywjgnya9dzhb8pj9hzvpzlvg3-composer-2.7.2"
+        },
+        "x86_64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/g791bq4a0qnc2gja43hbjkn0yjknfz1n-composer-2.7.2",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/g791bq4a0qnc2gja43hbjkn0yjknfz1n-composer-2.7.2"
+        }
+      }
+    },
+    "php@latest": {
+      "last_modified": "2024-03-23T13:32:18Z",
+      "plugin_version": "0.0.3",
+      "resolved": "github:NixOS/nixpkgs/20bc93ca7b2158ebc99b8cef987a2173a81cde35#php83",
+      "source": "devbox-search",
+      "version": "8.3.4",
+      "systems": {
+        "aarch64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/xf96a3636zracrhpgak38q3xq9zs6spy-php-with-extensions-8.3.4",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/xf96a3636zracrhpgak38q3xq9zs6spy-php-with-extensions-8.3.4"
+        },
+        "aarch64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/7h5bwg9w1x765gfinxv7v161984zapqj-php-with-extensions-8.3.4",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/7h5bwg9w1x765gfinxv7v161984zapqj-php-with-extensions-8.3.4"
+        },
+        "x86_64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/v4712dw43sqaxa1fmfgziznsggkxsnxh-php-with-extensions-8.3.4",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/v4712dw43sqaxa1fmfgziznsggkxsnxh-php-with-extensions-8.3.4"
+        },
+        "x86_64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/z8g2j13cynr8bgiyn70pxixf7862iqxk-php-with-extensions-8.3.4",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/z8g2j13cynr8bgiyn70pxixf7862iqxk-php-with-extensions-8.3.4"
+        }
+      }
+    }
+  }
+}

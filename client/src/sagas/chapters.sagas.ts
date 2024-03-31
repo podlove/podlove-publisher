@@ -176,7 +176,7 @@ function* handleImport(action: { type: string; payload: string }) {
   })
 
   if (parsedChapters === null) {
-    yield put(notify({ type: 'error', message: __('Unable to parse PSC chapters.') }))
+    yield put(notify({ type: 'error', message: __('Unable to parse PSC chapters.', 'podlove-podcasting-plugin-for-wordpress') }))
     return
   }
 
