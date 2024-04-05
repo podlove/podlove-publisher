@@ -2,7 +2,7 @@
   <div v-if="state.transcripts.length > 0">
     <popover>
       <template v-slot:trigger>
-        <podlove-button variant="secondary" size="small" tabindex="-1">{{ __('Export') }}</podlove-button>
+        <podlove-button variant="secondary" size="small" tabindex="-1">{{ __('Export', 'podlove-podcasting-plugin-for-wordpress') }}</podlove-button>
       </template>
       <template v-slot:content>
         <div

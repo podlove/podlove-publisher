@@ -67,8 +67,9 @@ class OnboardingPage
     $site = urlencode(rtrim(get_site_url(), '/'));
     $user = $authentication['name'];
     $password = $authentication['password'];
+    $userLang = explode("_", get_locale())[0];
 
-    $iframeSrc = "{$onboardingInclude}?site_url={$site}&user_login={$user}&password={$password}";
+    $iframeSrc = "$onboardingInclude?site_url=$site&user_login=$user&password=$password&lang=$userLang";
 
     // this is needed because of this 18 years old bug: https://bugzilla.mozilla.org/show_bug.cgi?id=356558
     echo <<<EOD
