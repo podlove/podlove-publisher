@@ -28,54 +28,72 @@ class Onboarding extends \Podlove\Modules\Base
 
   public function onboarding_banner()
   {
-    if (isset($_REQUEST['page']) && $_REQUEST['page'] === 'podlove_settings_onboarding_handle') {
+    if (self::is_banner_hide()) {
       return;
     }
 
-?>
-    <div class="podlove-banner">
+    if (isset($_REQUEST['page']) && $_REQUEST['page'] === 'podlove_settings_onboarding_handle') {
+      return;
+    } ?>
+
+    <div id="podlove-banner" class="podlove-banner">
       <div class="podlove-banner-left">
         <div class="podlove-banner-image">
-          <img src="<?php echo \Podlove\PLUGIN_URL . '/images/logo/podlove-publisher-icon-500.png'; ?>" />
+          <img src="<?php echo \Podlove\PLUGIN_URL.'/images/logo/podlove-publisher-icon-500.png'; ?>" />
         </div>
       </div>
       <div class="podlove-banner-right">
+        <div>
+          <?php
+          echo sprintf(
+            '<a id="podlove-banner-dismiss" class="podlove-banner-dismiss" href=#> Dismiss </a>'
+        ); ?>
+        </div>
         <h2 class="podlove-banner-head">Podlove Onboarding</h2>
         <p class="podlove-banner-text">
           Do you want to create a new podcast? Or do you already have a podcast and want to migrate?<br>
           Try our Onboarding and Migration Assistant to set up your podcast.</p>
-        <div>
-          <div class="podlove-banner-button-group">
-            <div class="podlove-banner-button">
-              <?php
-              echo sprintf(
-                '<a class="podlove-banner-button" href="' . \Podlove\Modules\Onboarding\Settings\OnboardingPage::get_page_link() . '">' . 'Get started</a>'
-              ); ?>
-            </div>
-          </div>
-        </div>
         <div class="podlove-banner-button-group">
           <div class="podlove-banner-button">
             <?php
             echo sprintf(
-              '<a class="podlove-banner-button" href="' . \Podlove\Modules\Onboarding\Settings\OnboardingPage::get_page_link('start') . '">' . 'Create new podcast </a>'
-            ); ?>
+              '<a class="podlove-banner-button" href="'.\Podlove\Modules\Onboarding\Settings\OnboardingPage::get_page_link('start').'">'.'Create new podcast </a>'
+          ); ?>
           </div>
           <div class="podlove-banner-button">
             <?php
             echo sprintf(
-              '<a class="podlove-banner-button" href="' . \Podlove\Modules\Onboarding\Settings\OnboardingPage::get_page_link('import') . '">' . 'Import existing podcast </a>'
+                '<a class="podlove-banner-button" href="'.\Podlove\Modules\Onboarding\Settings\OnboardingPage::get_page_link('import').'">'.'Import existing podcast </a>'
             ); ?>
           </div>
         </div>
       </div>
     </div>
+    <script type="text/javascript">
+      const podloveBanner = document.getElementById('podlove-banner');
+      function hiddenPodloveBanner() {
+        podloveBanner.classList.add('hidden');
+      }
+      const dismissLink = document.getElementById('podlove-banner-dismiss');
+      console.log(dismissLink);
+      if (dismissLink !== undefined && dismissLink !== null) {
+        dismissLink.addEventListener('click', function(){
+          fetch(ajaxurl + '?' + new URLSearchParams({action: 'podlove-banner-hide'}),{
+              method: 'GET'
+          }).then(response => {
+            if (response.ok) {
+              hiddenPodloveBanner();
+            }
+          })
+        });
+      }
+    </script>
 <?php
   }
 
   public function add_scripts_and_styles()
   {
-    wp_register_style('podlove-onboarding-banner-style', $this->get_module_url() . '/css/podlove-onboarding-banner.css');
+    wp_register_style('podlove-onboarding-banner-style', $this->get_module_url().'/css/podlove-onboarding-banner.css');
     wp_enqueue_style('podlove-onboarding-banner-style');
   }
 
@@ -88,9 +106,8 @@ class Onboarding extends \Podlove\Modules\Base
    * Onboarding options:
    *    - hide banner
    *    - type: start / import
-   *    - feedurl
+   *    - feedurl.
    */
-
   public static function is_banner_hide()
   {
     $onboarding_options = self::get_options();
@@ -130,11 +147,14 @@ class Onboarding extends \Podlove\Modules\Base
       case 'start':
       case 'import':
         $onboarding_options['type'] = $option;
+
         break;
+
       default:
         if (isset($onboarding_options['type'])) {
           unset($onboarding_options['type']);
         }
+
         break;
     }
     self::update_options($onboarding_options);
@@ -151,7 +171,7 @@ class Onboarding extends \Podlove\Modules\Base
   }
 
   /**
-   * Onboarding API init (add to admin-route)
+   * Onboarding API init (add to admin-route).
    */
   public function api_init()
   {
