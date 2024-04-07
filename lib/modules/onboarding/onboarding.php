@@ -75,10 +75,13 @@ class Onboarding extends \Podlove\Modules\Base
         podloveBanner.classList.add('hidden');
       }
       const dismissLink = document.getElementById('podlove-banner-dismiss');
-      console.log(dismissLink);
       if (dismissLink !== undefined && dismissLink !== null) {
         dismissLink.addEventListener('click', function(){
-          fetch(ajaxurl + '?' + new URLSearchParams({action: 'podlove-banner-hide'}),{
+          fetch(ajaxurl + '?' + new URLSearchParams({
+              action: 'podlove-banner-hide',
+              _podlove_nonce: '<?php echo wp_create_nonce('podlove_onboarding'); ?>'
+            }),
+            {
               method: 'GET'
           }).then(response => {
             if (response.ok) {
@@ -106,7 +109,7 @@ class Onboarding extends \Podlove\Modules\Base
    * Onboarding options:
    *    - hide banner
    *    - type: start / import
-   *    - feedurl.
+   *    - feedurl
    */
   public static function is_banner_hide()
   {

@@ -917,6 +917,11 @@ class Ajax
 
     public function banner_hide()
     {
+        if (!wp_verify_nonce($_REQUEST['_podlove_nonce'], 'podlove_onboarding')) {
+            http_response_code(401);
+            exit;
+        }
+
         if (\podlove_is_onboarding_active()) {
             Onboarding::set_banner_hide('true');
         }
