@@ -15,9 +15,6 @@
     </div>
 </template>
 
-You can chose to either create a new podcast
-or import an existing podcast from another host. Choose the option that best suits your needs." "Create new podcast" "Import existing podcast "
-
 <script lang="ts">
 import { defineComponent } from 'vue'
 import { mapState, injectStore } from 'redux-vuex'

@@ -10,15 +10,14 @@
 }
 
 .podlove-banner-right {
-    padding-top: 2rem;
-    padding-bottom: 2rem;
-    text-align: center;
+    padding: 2rem 0rem 2rem 2rem;
+    text-align: left;
 }
 
 .podlove-banner-image {
     object-fit: cover;
     display: flex;
-    justify-content: center;
+    justify-content: left;
     width: 240px;
     height: 240px;
 }
@@ -35,11 +34,34 @@
 
 .podlove-banner-button-group {
     display: flex;
-    justify-content: center;
+    justify-content: left;
 }
 
 .podlove-banner-button {
     padding: 20px;
+}
+
+.podlove-banner-dismiss {
+    position: absolute;
+    top: 50px;
+    right: 30px;
+}
+
+a.podlove-banner-dismiss {
+    padding: 0.5rem;
+    border-width: 2px;
+    border-color: #D1D5DB;
+    border-style: solid;
+    border-radius: 2px;
+    color: #374151;
+    background-color: #E0E7FF;
+    font-size: 1rem;
+    font-weight: 300;
+}
+
+a.podlove-banner-dismiss:hover {
+    background-color: #6366F1;
+    color: #ffffff
 }
 
 a.podlove-banner-button {
