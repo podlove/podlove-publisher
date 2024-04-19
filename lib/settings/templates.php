@@ -87,7 +87,7 @@ $this->view_template(); ?>
             '</a>',
             '<a href="http://docs.podlove.org/reference/template-tags/" target="_blank">',
             '</a>',
-            '<a href="http://docs.podlove.org/guides/understanding-templates/" target="_blank">',
+            '<a href="http://docs.podlove.org/guides/templates/" target="_blank">',
             '</a>'
         ); ?>
 		<div id="template-editor">
