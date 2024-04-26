@@ -13,7 +13,7 @@ add_filter('podlove_episode_form_data', function ($form_data) {
             'type' => 'checkbox',
             'html' => ['style' => 'width: 200px;'],
             'default' => '-1',
-            'options' => [0 => 'no', 1 => 'yes', 2 => 'clean'],
+            'options' => [0 => 'false', 1 => 'true'],
         ],
         'position' => 770,
     ];

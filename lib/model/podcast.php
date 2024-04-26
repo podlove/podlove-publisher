@@ -235,6 +235,16 @@ class Podcast implements Licensable
         return '© '.date('Y').' '.($this->author_name ?? $this->title);
     }
 
+    public function explicit_text()
+    {
+        // backwards compatibility
+        if ($this->explicit == 2) {
+            return 'false';
+        }
+
+        return $this->explicit ? 'true' : 'false';
+    }
+
     /**
      * Episodes.
      *

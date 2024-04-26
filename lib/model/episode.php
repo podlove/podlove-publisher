@@ -224,11 +224,12 @@ class Episode extends Base implements Licensable
 
     public function explicit_text()
     {
+        // backwards compatibility
         if ($this->explicit == 2) {
-            return 'clean';
+            return 'false';
         }
 
-        return $this->explicit ? 'yes' : 'no';
+        return $this->explicit ? 'true' : 'false';
     }
 
     public function media_files($args = [])

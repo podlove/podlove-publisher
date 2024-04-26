@@ -117,6 +117,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 = 4.1.7 =
 
+* fix `itunes:explicit` RSS tag. It now contains the valid values "true" or "false".
 * fix typo in API: `explicit` field was mistyped as `expicit`
 
 = 4.1.6 =
