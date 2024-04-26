@@ -26,7 +26,7 @@
             "
           >
             <div class="text-sm font-medium text-gray-900 truncate w-full mr-2">
-              {{ __('Podlove Simple Chapters', 'podlove-podcasting-plugin-for-wordpress', 'podlove-podcasting-plugin-for-wordpress') }}
+              {{ __('Podlove Simple Chapters', 'podlove-podcasting-plugin-for-wordpress') }}
             </div>
             <div class="text-sm text-gray-500">.psc</div>
           </a>
