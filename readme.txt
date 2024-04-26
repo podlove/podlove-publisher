@@ -115,6 +115,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 4.1.7 =
+
+* fix typo in API: `explicit` field was mistyped as `expicit`
+
 = 4.1.6 =
 
 * Shows Settings: sort Auphonic presets alphabetically
