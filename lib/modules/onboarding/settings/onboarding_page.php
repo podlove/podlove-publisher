@@ -26,13 +26,8 @@ class OnboardingPage
     );
   }
 
-  public static function get_page_link($select = '')
+  public static function get_page_link()
   {
-    if ($select == 'start' || $select == 'import') {
-      $page = sprintf('?page=%s&select=%s', 'podlove_settings_onboarding_handle', $select);
-      
-      return admin_url('admin.php'.$page);
-    }
     return admin_url('admin.php?page=podlove_settings_onboarding_handle');
   }
 
@@ -55,7 +50,7 @@ class OnboardingPage
 
         case 'import':
           $onboardingInclude = $onboardingInclude.'/import';
-          
+
         break;
       }
     } else {
@@ -81,11 +76,22 @@ class OnboardingPage
 
       <style>
         #publisher-iframe {
-          width: calc(100% + 20px);
-          height: 850px;
+          width: 100%;
+          height: 100%;
           position: absolute;
           top: 0;
-          left: -20px;
+        }
+
+        #wpcontent {
+          padding-left: 0;
+        }
+
+        #wpbody-content {
+          height: 100%;
+          width: 100%;
+          padding-bottom: 0;
+          position: relative;
+          float: none;
         }
       </style>
     EOD;

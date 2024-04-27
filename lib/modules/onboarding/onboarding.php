@@ -39,33 +39,21 @@ class Onboarding extends \Podlove\Modules\Base
     <div id="podlove-banner" class="podlove-banner">
       <div class="podlove-banner-left">
         <div class="podlove-banner-image">
-          <img src="<?php echo \Podlove\PLUGIN_URL.'/images/logo/podlove-publisher-icon-500.png'; ?>" />
+          <img src="<?php print \Podlove\PLUGIN_URL.'/images/logo/podlove-publisher-icon-500.png'; ?>" />
         </div>
       </div>
       <div class="podlove-banner-right">
         <div>
           <?php
           echo sprintf(
-            '<a id="podlove-banner-dismiss" class="podlove-banner-dismiss" href=#> Dismiss </a>'
+            '<a id="podlove-banner-dismiss" class="podlove-banner-dismiss" href="#"></a>'
         ); ?>
         </div>
-        <h2 class="podlove-banner-head">Podlove Onboarding</h2>
-        <p class="podlove-banner-text">
-          Do you want to create a new podcast? Or do you already have a podcast and want to migrate?<br>
-          Try our Onboarding and Migration Assistant to set up your podcast.</p>
-        <div class="podlove-banner-button-group">
-          <div class="podlove-banner-button">
-            <?php
-            echo sprintf(
-              '<a class="podlove-banner-button" href="'.\Podlove\Modules\Onboarding\Settings\OnboardingPage::get_page_link('start').'">'.'Create new podcast </a>'
-          ); ?>
-          </div>
-          <div class="podlove-banner-button">
-            <?php
-            echo sprintf(
-                '<a class="podlove-banner-button" href="'.\Podlove\Modules\Onboarding\Settings\OnboardingPage::get_page_link('import').'">'.'Import existing podcast </a>'
-            ); ?>
-          </div>
+        <h2 class="podlove-banner-head"><?php print(__('Podlove Onboarding', 'podlove-podcasting-plugin-for-wordpress')); ?></h2>
+          <p class="podlove-banner-text">
+            <?php print(__('Do you want to create a new podcast? Or do you already have a podcast and want to migrate? Try our Onboarding and Migration Assistant to set up your podcast.', 'podlove-podcasting-plugin-for-wordpress')); ?>
+          </p>
+          <a class="podlove-banner-button" href="<?php print \Podlove\Modules\Onboarding\Settings\OnboardingPage::get_page_link() ?>"><?php print __('Start Onboarding', 'podlove-podcasting-plugin-for-wordpress'); ?></a>
         </div>
       </div>
     </div>
