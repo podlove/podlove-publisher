@@ -33,6 +33,12 @@ class WP_REST_Podlove_Controller extends WP_REST_Controller
             array_push( $categories_enum, $val );
         }
 
+        $locales = \Podlove\Locale\locales();
+        $locales_enum = [];
+        foreach ($locales as $key => $val) {
+            array_push( $locales_enum, $key );
+        }
+
         register_rest_route($this->namespace, '/'.$this->rest_base, [
             [
                 'methods' => WP_REST_Server::READABLE,
@@ -59,6 +65,11 @@ class WP_REST_Podlove_Controller extends WP_REST_Controller
                     'author_name' => [
                         'description' => __('Name of the podcast author. Publicly displayed in Podcast directories.', 'podlove-podcasting-plugin-for-wordpress'),
                         'type' => 'string',
+                    ],
+                    'cover_image' => [
+                        'description' => __('Cover art for the podcast', 'podlove-podcasting-plugin-for-wordpress'),
+                        'type' => 'string',
+                        'validate_callback' => '\Podlove\Api\Validation::url'
                     ],
                     'podcast_email' => [
                         'description' => __('Used by iTunes and other Podcast directories to contact you.', 'podlove-podcasting-plugin-for-wordpress'),
@@ -90,6 +101,11 @@ class WP_REST_Podlove_Controller extends WP_REST_Controller
                         'description' => __('iTunes category of the podcast', 'podlove-podcasting-plugin-for-wordpress'),
                         'type' => 'string',
                         'enum' => $categories_enum,
+                    ],
+                    'language' => [
+                        'description' => __('The language that is spoken in the podcast.', 'podlove-podcasting-plugin-for-wordpress'),
+                        'type' => 'string',
+                        'enum' => $locales_enum,
                     ]
                 ]
             ]
@@ -148,6 +164,7 @@ class WP_REST_Podlove_Controller extends WP_REST_Controller
             $res['copyright'] = $podcast->copyright;
         $res['expicit'] = $explicit;
         $res['category'] = $this->getCategoryName($podcast->category_1);
+        $res['language'] = $this->getLanguageName($podcast->language);
         $res['license_url'] = $podcast->license_url;
         $res['license_name'] = $podcast->license_name;
 
@@ -179,6 +196,10 @@ class WP_REST_Podlove_Controller extends WP_REST_Controller
             $author = $request['author_name'];
             $podcast->author_name = $author;
         }
+        if (isset($request['cover_image'])) {
+            $cover = $request['cover_image'];
+            $podcast->cover_image = $cover;
+        }
         if (isset($request['podcast_email'])) {
             $podcast_email = $request['podcast_email'];
             $podcast->owner_email = $podcast_email;
@@ -208,6 +229,10 @@ class WP_REST_Podlove_Controller extends WP_REST_Controller
             $category = $request['category'];
             $category_key = $this->getCategoryKey($category);
             $podcast->category_1 = $category_key;
+        }
+        if (isset($request['language'])) {
+            $language = $request['language'];
+            $podcast->language = $language;
         }
         if (isset($request['license_url'])) {
             $license_url = $request['license_url'];
@@ -244,4 +269,15 @@ class WP_REST_Podlove_Controller extends WP_REST_Controller
             }
         }
     }
+
+    private function getLanguageName($language_key) 
+    {
+        $language = \Podlove\Locale\locales();
+        foreach($language as $key => $val) {
+            if ($key == $language_key) {
+                return $val;
+            }
+        }
+    }
+
 }
