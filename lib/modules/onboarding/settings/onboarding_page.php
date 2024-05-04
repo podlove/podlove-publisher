@@ -39,24 +39,6 @@ class OnboardingPage
       return;
     }
 
-    if (isset($_REQUEST['select']) && ($_REQUEST['select'] == 'start' || $_REQUEST['select'] == 'import')) {
-        $option = $_REQUEST['select'];
-
-      switch ($option) {
-        case 'start':
-          $onboardingInclude = $onboardingInclude.'/onboarding';
-
-        break;
-
-        case 'import':
-          $onboardingInclude = $onboardingInclude.'/import';
-
-        break;
-      }
-    } else {
-      $onboardingInclude = $onboardingInclude.'/select';
-    }
-
     $authentication = Authentication::application_password();
 
     $site = urlencode(rtrim(get_site_url(), '/'));
@@ -77,21 +59,18 @@ class OnboardingPage
       <style>
         #publisher-iframe {
           width: 100%;
-          height: 100%;
+          height: calc(100vh - 32px);
           position: absolute;
           top: 0;
         }
 
-        #wpcontent {
-          padding-left: 0;
+        #wpbody {
+          height: 100%;
         }
 
-        #wpbody-content {
+        #wpcontent {
+          padding-left: 0;
           height: 100%;
-          width: 100%;
-          padding-bottom: 0;
-          position: relative;
-          float: none;
         }
       </style>
     EOD;
