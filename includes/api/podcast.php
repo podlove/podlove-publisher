@@ -28,16 +28,14 @@ class WP_REST_Podlove_Controller extends WP_REST_Controller
     public function register_routes()
     {
         $categories = \Podlove\Itunes\categories(false);
-        $categories_enum = [];
-        foreach ($categories as $key => $val) {
-            array_push( $categories_enum, $val );
-        }
+        $categories_val = array_values($categories);
+        $categories_enum = array_map(function($val) {
+            return str_replace('&', 'and', $val);
+        }, $categories_val);
+
 
         $locales = \Podlove\Locale\locales();
-        $locales_enum = [];
-        foreach ($locales as $key => $val) {
-            array_push( $locales_enum, $key );
-        }
+        $locales_enum = array_keys($locales);
 
         register_rest_route($this->namespace, '/'.$this->rest_base, [
             [
@@ -227,8 +225,11 @@ class WP_REST_Podlove_Controller extends WP_REST_Controller
         }
         if (isset($request['category'])) {
             $category = $request['category'];
+            $category = str_replace('and', '&', $category);
             $category_key = $this->getCategoryKey($category);
-            $podcast->category_1 = $category_key;
+            if ($category_key) {
+                $podcast->category_1 = $category_key;
+            }
         }
         if (isset($request['language'])) {
             $language = $request['language'];
@@ -268,6 +269,8 @@ class WP_REST_Podlove_Controller extends WP_REST_Controller
                 return $val;
             }
         }
+
+        return "";
     }
 
     private function getLanguageName($language_key) 
@@ -278,6 +281,8 @@ class WP_REST_Podlove_Controller extends WP_REST_Controller
                 return $val;
             }
         }
+
+        return "";
     }
 
 }
