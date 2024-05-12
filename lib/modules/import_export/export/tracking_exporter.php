@@ -113,7 +113,7 @@ class TrackingExporter
 
     public static function export_tracking_status()
     {
-        echo json_encode([
+        echo wp_json_encode([
             'all' => get_option('podlove_tracking_export_all'),
             'progress' => get_option('podlove_tracking_export_progress'),
             'finished' => (bool) get_transient('podlove_tracking_export_finished'),

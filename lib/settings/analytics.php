@@ -87,7 +87,7 @@ class Analytics
         header('Cache-Control: no-cache, must-revalidate');
         header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
         header('Content-type: application/json');
-        echo wp_json_encode($data);
+        echo wp_wp_json_encode($data);
 
         exit();
     }
@@ -699,7 +699,7 @@ wp_nonce_field('closedpostboxes', 'closedpostboxesnonce', false);
 		<script type="text/javascript">
 		var assetNames = <?php
 $assets = Model\EpisodeAsset::all();
-        echo json_encode(
+        echo wp_json_encode(
             array_combine(
                 array_map(function ($a) {
                     return $a->id;

@@ -94,7 +94,7 @@ class Module
         header('Content-type: application/json');
 
         $config = Html5Printer::config($episode, 'embed');
-        echo json_encode($config);
+        echo wp_json_encode($config);
         exit;
     }
 }

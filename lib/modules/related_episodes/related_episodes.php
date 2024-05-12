@@ -119,7 +119,7 @@ class Related_Episodes extends \Podlove\Modules\Base
 			<script type="text/javascript">
 				var PODLOVE = PODLOVE || {};
 
-				PODLOVE.related_episodes_existing_episode_relations = <?php echo json_encode($existing_episode_relations); ?>;
+				PODLOVE.related_episodes_existing_episode_relations = <?php echo wp_json_encode($existing_episode_relations); ?>;
 			</script>
 			<?php
     }

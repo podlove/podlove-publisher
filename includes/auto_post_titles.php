@@ -127,7 +127,7 @@ function podlove_override_post_title_script()
     ?>
 <script type="text/javascript">
 var PODLOVE = PODLOVE || {};
-PODLOVE.override_post_title = <?php echo json_encode($data); ?>;
+PODLOVE.override_post_title = <?php echo wp_json_encode($data); ?>;
 </script>
 <?php
 }

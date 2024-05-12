@@ -150,7 +150,7 @@ class Button
         $script_data_tag = $dom->createElement('script');
         $script_data_tag->appendChild(
             $dom->createTextNode(
-                sprintf("window.{$dataAccessor} = %s;", json_encode($this->args['data']))
+                sprintf("window.{$dataAccessor} = %s;", wp_json_encode($this->args['data']))
             )
         );
 

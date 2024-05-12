@@ -122,7 +122,7 @@ class PodcastLists
             $podcasts[] = $podcast;
         }
 
-        $_POST['podlove_list']['podcasts'] = json_encode($podcasts);
+        $_POST['podlove_list']['podcasts'] = wp_json_encode($podcasts);
 
         PodcastList::activate_network_scope();
         $list = PodcastList::find_by_id($_REQUEST['list']);
@@ -144,7 +144,7 @@ class PodcastLists
             $podcasts[] = $podcast;
         }
 
-        $_POST['podlove_list']['podcasts'] = json_encode($podcasts);
+        $_POST['podlove_list']['podcasts'] = wp_json_encode($podcasts);
 
         PodcastList::activate_network_scope();
         $list = new PodcastList();

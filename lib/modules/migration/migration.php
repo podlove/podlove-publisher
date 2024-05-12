@@ -272,7 +272,7 @@ function ajax_migrate_post()
     header('Cache-Control: no-cache, must-revalidate');
     header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
     header('Content-type: application/json');
-    echo json_encode(['url' => get_edit_post_link($new_post_id)]);
+    echo wp_json_encode(['url' => get_edit_post_link($new_post_id)]);
 
     exit();
 }

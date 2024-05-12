@@ -84,7 +84,7 @@ class ImageGenerator
             ]
         ];
 
-        $payload_encoded = base64_encode(json_encode($payload));
+        $payload_encoded = base64_encode(wp_json_encode($payload));
         $payload_encoded = rtrim($payload_encoded, '='); // trim padding
 
         $signature = hash_hmac('sha256', $preset_id.$payload_encoded, $this->token);

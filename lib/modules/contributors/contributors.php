@@ -432,7 +432,7 @@ class Contributors extends \Podlove\Modules\Base
                 }
             }
             if (!empty($posted_contributors)) {
-                update_post_meta($episode_details->post_id, '_podlove_episode_contributors', json_encode($posted_contributors));
+                update_post_meta($episode_details->post_id, '_podlove_episode_contributors', wp_json_encode($posted_contributors));
             }
         }
     }

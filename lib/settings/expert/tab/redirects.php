@@ -96,7 +96,7 @@ class Redirects extends Tab
 				<script type="text/javascript">
 				(function($) {
 
-					var existing_redirects = <?php echo json_encode(array_values($redirect_settings)); ?>;
+					var existing_redirects = <?php echo wp_json_encode(array_values($redirect_settings)); ?>;
 					var template_id = "#redirect-row-template";
 					var container_id = "#podlove-redirects";
 

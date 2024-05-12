@@ -79,9 +79,9 @@ use Podlove\Modules\Contributors\Contributors;
     <script type="text/javascript">
         var PODLOVE = PODLOVE || {};
         var i = 0;
-        var existing_contributions = <?php echo json_encode($existing_contributions); ?>;
+        var existing_contributions = <?php echo wp_json_encode($existing_contributions); ?>;
 
-        PODLOVE.Contributors = <?php echo json_encode(array_values($cjson)); ?>;
+        PODLOVE.Contributors = <?php echo wp_json_encode(array_values($cjson)); ?>;
         PODLOVE.Contributors_form_base_name = "<?php echo $form_base_name; ?>";
 
         (function($) {
@@ -132,7 +132,7 @@ use Podlove\Modules\Contributors\Contributors;
                     // Setting data attribute and avatar field
                     row.data("contributor-id", contributor.id);
                     row.find(".podlove-avatar-column").html( contributor.avatar );
-                    // Renaming all corresponding elements after the contributor has changed 
+                    // Renaming all corresponding elements after the contributor has changed
                     row.find(".podlove-contributor-dropdown").attr("name", PODLOVE.Contributors_form_base_name + "[" + i + "]" + "[" + contributor.id + "]" + "[id]");
                     row.find(".podlove-group").attr("name", PODLOVE.Contributors_form_base_name + "[" + i + "]" + "[" + contributor.id + "]" + "[group]");
                     row.find(".podlove-role").attr("name", PODLOVE.Contributors_form_base_name + "[" + i + "]" + "[" + contributor.id + "]" + "[role]");
@@ -174,7 +174,7 @@ use Podlove\Modules\Contributors\Contributors;
 
                         // Update Chosen before we focus on the new contributor
                         update_chosen();
-                        
+
                         // Focus new contributor
                         if (!init) {
                             $(".podlove-contributor-column").last().find(".chosen-container a").focus();
@@ -198,7 +198,7 @@ use Podlove\Modules\Contributors\Contributors;
                             default:
                                 console.log("Error when deleting social/donation entry: unknows form type '" + form_base_name + "'");
                         }
-                        
+
                         var data = {
                             action: ajax_action,
                             object_id: object_id
@@ -210,7 +210,7 @@ use Podlove\Modules\Contributors\Contributors;
                             dataType: 'json'
                         });
                     }
-                });				
+                });
             }
 
             function is_form_ready() {

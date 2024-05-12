@@ -22,7 +22,7 @@ class Webhook
             'method' => $this->method,
             'body' => [
                 'event' => $this->event,
-                'payload' => json_encode($this->payload)
+                'payload' => wp_json_encode($this->payload)
             ],
             '_redirection' => 0
         ]);

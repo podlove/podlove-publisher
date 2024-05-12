@@ -129,10 +129,10 @@ class License extends Tab
 		PODLOVE.License({
 			plugin_url: "<?php echo \Podlove\PLUGIN_URL; ?>",
 
-			types: JSON.parse('<?php echo json_encode(\Podlove\License\locales_cc()); ?>'),
-			locales: JSON.parse('<?php echo json_encode(\Podlove\License\locales_cc()); ?>'),
-			versions: JSON.parse('<?php echo json_encode(\Podlove\License\version_per_country_cc()); ?>'),
-			license: JSON.parse('<?php echo json_encode(\Podlove\Model\License::get_license_from_url($podcast->license_url)); ?>'),
+			types: JSON.parse('<?php echo wp_json_encode(\Podlove\License\locales_cc()); ?>'),
+			locales: JSON.parse('<?php echo wp_json_encode(\Podlove\License\locales_cc()); ?>'),
+			versions: JSON.parse('<?php echo wp_json_encode(\Podlove\License\version_per_country_cc()); ?>'),
+			license: JSON.parse('<?php echo wp_json_encode(\Podlove\Model\License::get_license_from_url($podcast->license_url)); ?>'),
 
 			license_name_field_id: '#podlove_podcast_license_name',
 			license_url_field_id: '#podlove_podcast_license_url'

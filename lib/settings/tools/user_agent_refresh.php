@@ -22,7 +22,7 @@ class UserAgentRefresh
 
         // podlove_refresh_user_agents($offset);
 
-        echo json_encode([
+        echo wp_json_encode([
             'offset' => $offset + 500,
             'total' => UserAgent::count(),
         ]);
