@@ -80,7 +80,7 @@ class Shows extends \Podlove\Modules\Base
 
     public function add_widget_settings_update($instance, $new_instance, $old_instance)
     {
-        $instance['show'] = !empty($new_instance['show']) ? strip_tags($new_instance['show']) : '';
+        $instance['show'] = !empty($new_instance['show']) ? wp_strip_all_tags($new_instance['show']) : '';
 
         return $instance;
     }

@@ -65,14 +65,14 @@ class RecentEpisodes extends \WP_Widget
         $show_image = isset($instance['show_image']) ? $instance['show_image'] : '';
         $show_duration = isset($instance['show_duration']) ? $instance['show_duration'] : ''; ?>
 		<p>
-			<label for="<?php echo $this->get_field_id('title'); ?>"><?php _e('Title', 'podlove-podcasting-plugin-for-wordpress'); ?></label> 
+			<label for="<?php echo $this->get_field_id('title'); ?>"><?php _e('Title', 'podlove-podcasting-plugin-for-wordpress'); ?></label>
 			<input class="widefat" id="<?php echo $this->get_field_id('title'); ?>" name="<?php echo $this->get_field_name('title'); ?>" value="<?php echo $title; ?>" />
 		</p>
 		<p>
-			<label for="<?php echo $this->get_field_id('number_of_episodes'); ?>"><?php _e('Number of Episodes', 'podlove-podcasting-plugin-for-wordpress'); ?></label> 
+			<label for="<?php echo $this->get_field_id('number_of_episodes'); ?>"><?php _e('Number of Episodes', 'podlove-podcasting-plugin-for-wordpress'); ?></label>
 			<input class="widefat" type="number" id="<?php echo $this->get_field_id('number_of_episodes'); ?>" name="<?php echo $this->get_field_name('number_of_episodes'); ?>" value="<?php echo $number_of_episodes; ?>" />
 		</p>
-		<p>		
+		<p>
 			<input class="widefat" type="checkbox" id="<?php echo $this->get_field_id('show_image'); ?>" name="<?php echo $this->get_field_name('show_image'); ?>" <?php echo $show_image ? 'checked="checked"' : ''; ?> />
 			<label for="<?php echo $this->get_field_id('show_image'); ?>"><?php _e('Display episode image', 'podlove-podcasting-plugin-for-wordpress'); ?></label><br />
 
@@ -85,10 +85,10 @@ class RecentEpisodes extends \WP_Widget
     public function update($new_instance, $old_instance)
     {
         $instance = [];
-        $instance['title'] = (!empty($new_instance['title'])) ? strip_tags($new_instance['title']) : '';
-        $instance['number_of_episodes'] = (!empty($new_instance['number_of_episodes'])) ? strip_tags($new_instance['number_of_episodes']) : '';
-        $instance['show_image'] = (!empty($new_instance['show_image'])) ? strip_tags($new_instance['show_image']) : '';
-        $instance['show_duration'] = (!empty($new_instance['show_duration'])) ? strip_tags($new_instance['show_duration']) : '';
+        $instance['title'] = (!empty($new_instance['title'])) ? wp_strip_all_tags($new_instance['title']) : '';
+        $instance['number_of_episodes'] = (!empty($new_instance['number_of_episodes'])) ? wp_strip_all_tags($new_instance['number_of_episodes']) : '';
+        $instance['show_image'] = (!empty($new_instance['show_image'])) ? wp_strip_all_tags($new_instance['show_image']) : '';
+        $instance['show_duration'] = (!empty($new_instance['show_duration'])) ? wp_strip_all_tags($new_instance['show_duration']) : '';
 
         return $instance;
     }
