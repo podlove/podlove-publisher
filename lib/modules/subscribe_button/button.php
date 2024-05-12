@@ -77,7 +77,7 @@ class Button
             return bin2hex(openssl_random_pseudo_bytes(7));
         }
 
-        return dechex(mt_rand());
+        return dechex(wp_rand());
     }
 
     /**

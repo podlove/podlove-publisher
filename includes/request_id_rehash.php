@@ -154,10 +154,10 @@ function podlove_rehash_fetch_some_request_ids($table, $limit = null)
     }
 
     $sql = sprintf(
-        'SELECT DISTINCT request_id 
-		FROM `%s` 
-		WHERE 
-		  request_id NOT LIKE "%s" 
+        'SELECT DISTINCT request_id
+		FROM `%s`
+		WHERE
+		  request_id NOT LIKE "%s"
 		  AND accessed_at < "%s"
 		%s',
         $table,
@@ -221,7 +221,7 @@ function podlove_rehash_get_random_string()
         return bin2hex(openssl_random_pseudo_bytes(12));
     }
 
-    return dechex(mt_rand()).dechex(mt_rand());
+    return dechex(wp_rand()).dechex(wp_rand());
 }
 
 function podlove_rehash_func($old_hash, $salt)
