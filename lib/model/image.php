@@ -369,7 +369,7 @@ class Image
         $source_url = $this->source_url;
         $current_url = $this->source_url;
 
-        $source_domain = parse_url($source_url, PHP_URL_HOST);
+        $source_domain = wp_parse_url($source_url, PHP_URL_HOST);
         $current_domain = explode(':', $_SERVER['HTTP_HOST'])[0];
 
         // if domains match, see if the image is part of the Publisher
@@ -643,7 +643,7 @@ class Image
 
     private function extract_file_extension()
     {
-        $url = parse_url($this->source_url);
+        $url = wp_parse_url($this->source_url);
 
         return pathinfo($url['path'], PATHINFO_EXTENSION);
     }

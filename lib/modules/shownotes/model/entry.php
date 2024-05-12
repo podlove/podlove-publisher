@@ -21,7 +21,7 @@ class Entry extends Base
     public function prepare_icon()
     {
         $services = \Podlove\Modules\Social\Social::services_config();
-        $host = parse_url($this->site_url, PHP_URL_HOST);
+        $host = wp_parse_url($this->site_url, PHP_URL_HOST);
         $icons = array_filter($services, function ($service) use ($host) {
             return stristr($service['url_scheme'], $host) !== false;
         });

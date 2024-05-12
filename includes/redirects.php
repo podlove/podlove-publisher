@@ -15,7 +15,7 @@ function podlove_handle_user_redirects()
     }
 
     // check for global redirects
-    $parsed_request = parse_url($_SERVER['REQUEST_URI']);
+    $parsed_request = wp_parse_url($_SERVER['REQUEST_URI']);
     $parsed_request_url = $parsed_request['path'];
     if (isset($parsed_request['query'])) {
         $parsed_request_url .= '?'.$parsed_request['query'];
@@ -36,7 +36,7 @@ function podlove_handle_user_redirects()
             continue;
         }
 
-        $parsed_url = parse_url($redirect['from']);
+        $parsed_url = wp_parse_url($redirect['from']);
         $parsed_redirect_url = $parsed_url['path'];
 
         if (isset($parsed_url['query'])) {
