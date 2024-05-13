@@ -844,6 +844,8 @@ class WP_REST_PodloveEpisode_Controller extends \WP_REST_Controller
             }
         }
 
+        \podlove_clear_feed_cache_for_post($episode->post_id);
+
         return new \Podlove\Api\Response\OkResponse([
             'status' => 'ok'
         ]);
@@ -872,6 +874,8 @@ class WP_REST_PodloveEpisode_Controller extends \WP_REST_Controller
         }
         do_action('podlove_media_file_content_verified', $file->id);
 
+        \podlove_clear_feed_cache_for_post($episode->post_id);
+
         return new \Podlove\Api\Response\OkResponse([
             'status' => 'ok',
             'file_size' => $file->size,
@@ -894,6 +898,8 @@ class WP_REST_PodloveEpisode_Controller extends \WP_REST_Controller
             $file->active = false;
             $file->save();
         }
+
+        \podlove_clear_feed_cache_for_post($episode->post_id);
 
         return new \Podlove\Api\Response\OkResponse([
             'status' => 'ok',

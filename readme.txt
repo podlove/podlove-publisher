@@ -115,6 +115,16 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= unreleased =
+
+* changes in an episode immediately affect the RSS feed
+
+There are various caches in place to ensure efficient delivery of the RSS feed
+to podcast clients. However it can be hard to guess how long it will take for a
+change to appear in the feed and podcatchers. Now, any change to the episode
+metadata or enabling/disabling an asset immediately clears the cache for that
+feed item, resulting in the change to be visible in the RSS feed immediately.
+
 = 4.1.7 =
 
 * fix `itunes:explicit` RSS tag. It now contains the valid values "true" or "false".

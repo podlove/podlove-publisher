@@ -17,3 +17,14 @@ add_action('podlove_episode_content_has_changed', function ($episode_id) {
         $episode->delete_caches();
     }
 });
+
+function podlove_clear_feed_cache_for_post($post_id) {
+  $cache = \Podlove\Cache\TemplateCache::get_instance();
+
+  foreach (Model\Feed::all() as $feed) {
+    if ($feed->slug) {
+      $cache_key = 'feed_item_'.$feed->slug.'_'.$post_id;
+      $cache->delete_cache_for($cache_key);
+    }
+  }
+}
