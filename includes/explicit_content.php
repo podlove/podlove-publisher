@@ -20,9 +20,3 @@ add_filter('podlove_episode_form_data', function ($form_data) {
 
     return $form_data;
 });
-
-add_filter('podlove_episode_data_filter', function ($filter) {
-    return array_merge($filter, [
-        'explicit' => FILTER_UNSAFE_RAW,
-    ]);
-});
