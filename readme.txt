@@ -125,6 +125,8 @@ change to appear in the feed and podcatchers. Now, any change to the episode
 metadata or enabling/disabling an asset immediately clears the cache for that
 feed item, resulting in the change to be visible in the RSS feed immediately.
 
+* transcripts: contributors in voices selection are sorted alphabetically
+
 * maintenance: fix various notices from WordPress Plugin Check tool
 
 = 4.1.7 =
