@@ -109,7 +109,15 @@ class Transcript extends \Podlove\Model\Base
     {
         $original_transcript = $transcript;
 
+        // TODO: I think this is how it should be instead.
+        $allow_empty_contributors = true;
+
         $transcript = array_map(function ($t) use ($allow_empty_contributors) {
+            // skip hidden voices
+            if ($t->contributor_id === 4294967295) {
+                return null;
+            }
+
             if (!$t->contributor_id && !$allow_empty_contributors) {
                 return null;
             }

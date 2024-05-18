@@ -23,7 +23,12 @@
           class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
           @change="updateContributor(voice.voice, $event)"
         >
-          <option value="0"></option>
+          <option value="4294967295">
+            [{{ __('hide from transcript', 'podlove-podcasting-plugin-for-wordpress') }}]
+          </option>
+          <option value="0">
+            {{ voice.voice }} ({{ __('plain text', 'podlove-podcasting-plugin-for-wordpress') }})
+          </option>
           <option
             v-for="(contributor, kindex) in sortedContributors"
             :key="`voice-${vindex}-contributor-${kindex}`"
