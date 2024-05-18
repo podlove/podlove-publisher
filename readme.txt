@@ -126,6 +126,8 @@ metadata or enabling/disabling an asset immediately clears the cache for that
 feed item, resulting in the change to be visible in the RSS feed immediately.
 
 * transcripts: contributors in voices selection are sorted alphabetically
+* transcripts: voices without assigned contributors appear in transcripts
+* transcripts: add dedicated option to hide a voice from a transcript
 
 * maintenance: fix various notices from WordPress Plugin Check tool
 
