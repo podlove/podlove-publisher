@@ -35,8 +35,12 @@
   <div v-else class="text-center h-96 flex items-center justify-center flex-col">
     <document-text-icon class="mx-auto h-12 w-12 text-gray-400" />
 
-    <h3 class="mt-2 text-sm font-medium text-gray-900">{{ __('No transcript yet', 'podlove-podcasting-plugin-for-wordpress') }}</h3>
-    <p class="mt-1 text-sm text-gray-500">{{ __('Get started by importing a transcript.', 'podlove-podcasting-plugin-for-wordpress') }}</p>
+    <h3 class="mt-2 text-sm font-medium text-gray-900">
+      {{ __('No transcript yet', 'podlove-podcasting-plugin-for-wordpress') }}
+    </h3>
+    <p class="mt-1 text-sm text-gray-500">
+      {{ __('Get started by importing a transcript.', 'podlove-podcasting-plugin-for-wordpress') }}
+    </p>
     <div class="mt-6">
       <transcripts-import outlet="content" class="mr-1" />
     </div>
@@ -149,6 +153,13 @@ export default defineComponent({
           ...transcript,
           voice: get(this.voices, [transcript.voiceId], { name: transcript.voiceId }),
         }))
+        .filter((transcript: Transcript) => {
+          const assignment = this.state.voices.find(
+            (voice: { voice: string; contributor: string }) => voice.voice == transcript.voiceId
+          )
+
+          return assignment.contributor != 4294967295
+        })
     },
   },
 
