@@ -67,7 +67,7 @@ export default defineComponent({
   },
 
   computed: {
-    sortedContributors() {
+    sortedContributors(): PodloveContributor[] {
       return this.state.contributors.sort((a: PodloveContributor, b: PodloveContributor) => {
         const aName = a.publicname || a.realname || a.nickname
         const bName = b.publicname || b.realname || b.nickname
