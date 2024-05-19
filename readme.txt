@@ -128,6 +128,7 @@ feed item, resulting in the change to be visible in the RSS feed immediately.
 * transcripts: contributors in voices selection are sorted alphabetically
 * fix: episode license and explicit value are not emptied when saving the episode
 * maintenance: fix various notices from WordPress Plugin Check tool
+* maintenance: js dependency updates
 
 
 = 4.1.7 =
