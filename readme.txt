@@ -1,7 +1,7 @@
 === Podlove Podcast Publisher ===
 Contributors: eteubert
 Donate link: https://opencollective.com/podlove
-Tags: podlove, podcast, publishing, rss, feed, audio
+Tags: podlove, podcast, publishing, rss, audio
 Tested up to: 6.5.3
 Stable tag: 4.1.8
 Requires at least: 4.9.6
