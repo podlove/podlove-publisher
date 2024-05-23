@@ -145,7 +145,7 @@ class WP_REST_Podlove_Controller extends WP_REST_Controller
 
         $feeds = $podcast->feeds(['only_discoverable' => true]);
         $feed_urls = array_map( function($feed) {
-            return ["$feed->name" => $feed->get_subscribe_url()];
+            return ["$feed->slug" => $feed->get_subscribe_url()];
         }, $feeds);
 
         $res = [];
