@@ -93,7 +93,13 @@ class Wordpress_File_Upload extends \Podlove\Modules\Base
         $podlove_subdir = $this->get_subdir();
 
         $id = isset($_REQUEST['post_id']) ? (int) $_REQUEST['post_id'] : 0;
-        $parent = $id ? get_post($id)->post_parent : 0;
+
+        if (isset($_REQUEST['post'])) {
+            // when uploaded via POST /wp/v2/media
+            $parent = (int) $_REQUEST['post'];
+        } else {
+            $parent = $id ? get_post($id)->post_parent : 0;
+        }
 
         if ($force_override || 'podcast' == get_post_type($id) || 'podcast' == get_post_type($parent)) {
             $upload['subdir'] = $podlove_subdir;
