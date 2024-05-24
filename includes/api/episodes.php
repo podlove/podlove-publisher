@@ -176,6 +176,10 @@ class WP_REST_PodloveEpisode_Controller extends \WP_REST_Controller
                         'description' => __('Filter by show slug.', 'podlove-podcasting-plugin-for-wordpress'),
                         'type' => 'string'
                     ],
+                    'guid' => [
+                        'description' => __('Filter by guid.', 'podlove-podcasting-plugin-for-wordpress'),
+                        'type' => 'string'
+                    ],
                     'sort_by' => [
                         'description' => __('Sort the list of episodes', 'podlove-podcasting-plugin-for-wordpress'),
                         'type' => 'string',
@@ -229,6 +233,10 @@ class WP_REST_PodloveEpisode_Controller extends \WP_REST_Controller
             ],
             [
                 'args' => [
+                    'guid' => [
+                        'description' => __('Globally unique id.', 'podlove-podcasting-plugin-for-wordpress'),
+                        'type' => 'string',
+                    ],
                     'title' => [
                         'description' => __('Clear, concise name for your episode.', 'podlove-podcasting-plugin-for-wordpress'),
                         'type' => 'string',
@@ -301,15 +309,15 @@ class WP_REST_PodloveEpisode_Controller extends \WP_REST_Controller
                                 'required' => 'true'
                             ]
                         ]
-                      ],
-                      'show' => [
+                    ],
+                    'show' => [
                         'description' => 'Show slug. Assigns episode to given show.',
                         'type' => 'string'
-                      ],
-                      'skip_validation' => [
+                    ],
+                    'skip_validation' => [
                         'description' => 'If true, mediafile validation is skipped on slug change.',
                         'type' => 'boolean',
-                      ]
+                    ]
                 ],
                 'methods' => \WP_REST_Server::EDITABLE,
                 'callback' => [$this, 'update_item'],
@@ -461,6 +469,7 @@ class WP_REST_PodloveEpisode_Controller extends \WP_REST_Controller
 
         $order_by = $request->get_param('order_by');
         $sort_by = $request->get_param('sort_by');
+        $guid_filter = $request->get_param('guid');
 
         $args = [];
         if ($order_by) {
@@ -496,6 +505,13 @@ class WP_REST_PodloveEpisode_Controller extends \WP_REST_Controller
             if ($show_slug) {
                 $show = Shows\Model\Show::find_one_by_episode_id($episode->id);
                 if (!$show || $show_slug != $show->slug) {
+                    continue;
+                }
+            }
+
+            // filter by guid
+            if ($guid_filter) {
+                if (get_the_guid($episode->post_id) != $guid_filter) {
                     continue;
                 }
             }
@@ -553,6 +569,7 @@ class WP_REST_PodloveEpisode_Controller extends \WP_REST_Controller
         $data = [
             '_version' => 'v2',
             'id' => $id,
+            'guid' => get_the_guid($episode->post_id),
             'slug' => $episode->slug,
             'post_id' => $episode->post_id,
             'title' => get_the_title($episode->post_id),
@@ -737,6 +754,10 @@ class WP_REST_PodloveEpisode_Controller extends \WP_REST_Controller
             return new \Podlove\Api\Error\NotFound();
         }
 
+        if (isset($request['guid'])) {
+            update_post_meta($episode->post_id, '_podlove_guid', $request['guid']);
+        }
+
         if (isset($request['title'])) {
             $title = $request['title'];
             $episode->title = $title;
@@ -828,7 +849,7 @@ class WP_REST_PodloveEpisode_Controller extends \WP_REST_Controller
         }
 
         if (isset($request['show'])) {
-          Shows\Shows::set_show_for_episode($episode->post_id, $request['show']);
+            Shows\Shows::set_show_for_episode($episode->post_id, $request['show']);
         }
 
         $episode->save();
