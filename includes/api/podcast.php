@@ -48,6 +48,10 @@ class WP_REST_Podlove_Controller extends WP_REST_Controller
                 'callback' => [$this, 'update_item'],
                 'permission_callback' => [$this, 'update_item_permissions_check'],
                 'args' => [
+                    'guid' => [
+                        'description' => __('Unique, global identifier for a podcast', 'podlove-podcasting-plugin-for-wordpress'),
+                        'type' => 'string',
+                    ],
                     'title' => [
                         'description' => __('Title of the podcast', 'podlove-podcasting-plugin-for-wordpress'),
                         'type' => 'string',
@@ -150,6 +154,7 @@ class WP_REST_Podlove_Controller extends WP_REST_Controller
 
         $res = [];
         $res['_version'] = 'v2';
+        $res['guid'] = $podcast->guid;
         $res['title'] = $podcast->title;
         $res['subtitle'] = $podcast->subtitle;
         $res['summary'] = $podcast->summary;
@@ -180,6 +185,10 @@ class WP_REST_Podlove_Controller extends WP_REST_Controller
     public function update_item($request)
     {
         $podcast = Podcast::get();
+        if (isset($request['guid'])) {
+            $guid = $request['guid'];
+            $podcast->guid = $guid;
+        }
         if (isset($request['title'])) {
             $title = $request['title'];
             $podcast->title = $title;
