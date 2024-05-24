@@ -143,6 +143,11 @@ class WP_REST_Podlove_Controller extends WP_REST_Controller
             $explicit = true;
         }
 
+        $feeds = $podcast->feeds(['only_discoverable' => true]);
+        $feed_urls = array_map( function($feed) {
+            return ["$feed->slug" => $feed->get_subscribe_url()];
+        }, $feeds);
+
         $res = [];
         $res['_version'] = 'v2';
         $res['title'] = $podcast->title;
@@ -165,6 +170,7 @@ class WP_REST_Podlove_Controller extends WP_REST_Controller
         $res['language'] = $this->getLanguageName($podcast->language);
         $res['license_url'] = $podcast->license_url;
         $res['license_name'] = $podcast->license_name;
+        $res['feeds'] = $feed_urls;
 
         $res = apply_filters('podlove_api_podcast_response', $res);
 
