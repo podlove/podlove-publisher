@@ -90,7 +90,7 @@ class MediaFile extends Base
     public static function find_by_episode_id_and_episode_asset_id($episode_id, $episode_asset_id)
     {
         $where = sprintf(
-            'episode_id = "%s" AND episode_asset_id = "%s"',
+            'episode_id = "%s" AND episode_asset_id = "%s" AND active = 1',
             $episode_id,
             $episode_asset_id
         );
@@ -277,7 +277,7 @@ class MediaFile extends Base
                 $this->size = 1;
             }
         } elseif ($http_code >= 400) {
-          $this->size = 0;
+            $this->size = 0;
         }
 
         if ($this->size <= 0) {

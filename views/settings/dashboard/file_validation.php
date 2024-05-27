@@ -41,7 +41,7 @@ define('ASSET_STATUS_ERROR', '<i class="clickable podlove-icon-remove"></i>');
                         ?>
 						<td class="media_file_status" data-media-file-id="<?php echo $file ? $file['media_file_id'] : ''; ?>">
 							<?php
-                            if (!$file) {
+                            if (!$file || !$file['active']) {
                                 echo ASSET_STATUS_INACTIVE;
                             } elseif ($file['size'] > 0) {
                                 echo ASSET_STATUS_OK;

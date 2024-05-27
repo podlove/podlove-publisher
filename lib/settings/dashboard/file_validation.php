@@ -16,7 +16,8 @@ class FileValidation
 			mf.episode_id,
 			mf.episode_asset_id,
 			mf.size,
-			mf.id media_file_id
+			mf.id media_file_id,
+      mf.active
 		FROM
 			`'.Model\MediaFile::table_name().'` mf
 			JOIN `'.Model\Episode::table_name().'` e ON e.id = mf.`episode_id`
@@ -37,6 +38,7 @@ class FileValidation
             $media_files[$row['episode_id']][$row['episode_asset_id']] = [
                 'size' => $row['size'],
                 'media_file_id' => $row['media_file_id'],
+                'active' => $row['active']
             ];
         }
 

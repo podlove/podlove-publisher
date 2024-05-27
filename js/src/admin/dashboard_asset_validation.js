@@ -30,10 +30,14 @@ var PODLOVE = PODLOVE || {};
 					data: data,
 					dataType: 'json',
 					success: function(result) {
-						if (result.file_size > 0) {
-							$that.html('<i class="clickable podlove-icon-ok"></i>');
+						if (!result.active) {
+							$that.html('<i class="clickable podlove-icon-minus"></i>');
 						} else {
-							$that.html('<i class="clickable podlove-icon-remove"></i>');
+							if (result.file_size > 0) {
+								$that.html('<i class="clickable podlove-icon-ok"></i>');
+							} else {
+								$that.html('<i class="clickable podlove-icon-remove"></i>');
+							}
 						}
 					}
 				});

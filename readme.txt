@@ -3,7 +3,7 @@ Contributors: eteubert
 Donate link: https://opencollective.com/podlove
 Tags: podlove, podcast, publishing, rss, audio
 Tested up to: 6.5.3
-Stable tag: 4.1.8
+Stable tag: 4.1.9
 Requires at least: 4.9.6
 Requires PHP: 8.0
 License: MIT
@@ -114,6 +114,13 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 6. Includes the Podlove Web Player. One more thing: you can manage and present all contributors easily.
 
 == Changelog ==
+
+= 4.1.9 =
+
+Various fixes regarding adjusted media file handling introduced in version 4.0.11:
+
+- dashboard shows a grey bar again when the file is inactive
+- RSS feed correctly skips items with inactive files again
 
 = 4.1.8 =
 

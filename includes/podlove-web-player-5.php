@@ -109,7 +109,7 @@ function podlove_pwp5_files($episode, $context)
     mf.id media_file_id, mf.size file_size, a.title asset_tile, a.downloadable, a.`position`, ft.mime_type, ft.`extension`
 FROM
     '.Episode::table_name().' e
-    LEFT JOIN '.MediaFile::table_name().' mf ON mf.episode_id = e.id
+    LEFT JOIN '.MediaFile::table_name().' mf ON mf.episode_id = e.id AND mf.active = 1
     LEFT JOIN '.EpisodeAsset::table_name().' a ON a.id = mf.episode_asset_id
     LEFT JOIN '.FileType::table_name().' ft ON ft.id = a.file_type_id
 WHERE
