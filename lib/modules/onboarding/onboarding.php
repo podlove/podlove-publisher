@@ -36,33 +36,41 @@ class Onboarding extends \Podlove\Modules\Base
       return;
     } ?>
 
-    <div id="podlove-banner" class="podlove-banner">
-      <div class="podlove-banner-left">
-        <div class="podlove-banner-image">
-          <img src="<?php print \Podlove\PLUGIN_URL.'/images/logo/podlove-publisher-icon-500.png'; ?>" />
-        </div>
-      </div>
-      <div class="podlove-banner-right">
-        <div>
-          <?php
+    <div id="podlove-panel-wrap" class=podlove-panel-wrap>
+      <div class="podlove-panel">
+        <?php
           echo sprintf(
-            '<a id="podlove-banner-dismiss" class="podlove-banner-dismiss" href="#"></a>'
-        ); ?>
-        </div>
-        <h2 class="podlove-banner-head"><?php print(__('Podlove Onboarding', 'podlove-podcasting-plugin-for-wordpress')); ?></h2>
-          <p class="podlove-banner-text">
-            <?php print(__('Do you want to create a new podcast? Or do you already have a podcast and want to migrate? Try our Onboarding and Migration Assistant to set up your podcast.', 'podlove-podcasting-plugin-for-wordpress')); ?>
-          </p>
-          <a class="podlove-banner-button" href="<?php print \Podlove\Modules\Onboarding\Settings\OnboardingPage::get_page_link() ?>"><?php print __('Start Onboarding', 'podlove-podcasting-plugin-for-wordpress'); ?></a>
+          '<a id="podlove-panel-banner-dismiss" class="podlove-panel-banner-dismiss" href="#"></a>'
+          ); ?>
+        <div class="podlove-panel-content">
+          <div class="podlove-panel-header">
+            <div class="podlove-panel-header-image">
+              <img src="data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' version='1.1' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns:svgjs='http://svgjs.dev/svgjs' width='1440' height='560' preserveAspectRatio='none' viewBox='0 0 1440 560'%3e%3cg mask='url(%26quot%3b%23SvgjsMask1092%26quot%3b)' fill='none'%3e%3cpath d='M272 242L271 -68' stroke-width='6' stroke='url(%26quot%3b%23SvgjsLinearGradient1093%26quot%3b)' stroke-linecap='round' class='Up'%3e%3c/path%3e%3cpath d='M121 369L120 691' stroke-width='6' stroke='url(%26quot%3b%23SvgjsLinearGradient1093%26quot%3b)' stroke-linecap='round' class='Up'%3e%3c/path%3e%3cpath d='M1223 512L1222 310' stroke-width='8' stroke='url(%26quot%3b%23SvgjsLinearGradient1094%26quot%3b)' stroke-linecap='round' class='Up'%3e%3c/path%3e%3cpath d='M1055 343L1054 -1' stroke-width='6' stroke='url(%26quot%3b%23SvgjsLinearGradient1095%26quot%3b)' stroke-linecap='round' class='Down'%3e%3c/path%3e%3cpath d='M1438 141L1437 -37' stroke-width='8' stroke='url(%26quot%3b%23SvgjsLinearGradient1095%26quot%3b)' stroke-linecap='round' class='Down'%3e%3c/path%3e%3cpath d='M339 160L338 -21' stroke-width='8' stroke='url(%26quot%3b%23SvgjsLinearGradient1093%26quot%3b)' stroke-linecap='round' class='Up'%3e%3c/path%3e%3cpath d='M1080 22L1079 -337' stroke-width='10' stroke='url(%26quot%3b%23SvgjsLinearGradient1096%26quot%3b)' stroke-linecap='round' class='Down'%3e%3c/path%3e%3cpath d='M300 467L299 274' stroke-width='10' stroke='url(%26quot%3b%23SvgjsLinearGradient1094%26quot%3b)' stroke-linecap='round' class='Up'%3e%3c/path%3e%3cpath d='M1438 372L1437 790' stroke-width='8' stroke='url(%26quot%3b%23SvgjsLinearGradient1094%26quot%3b)' stroke-linecap='round' class='Up'%3e%3c/path%3e%3cpath d='M296 497L295 755' stroke-width='10' stroke='url(%26quot%3b%23SvgjsLinearGradient1094%26quot%3b)' stroke-linecap='round' class='Up'%3e%3c/path%3e%3cpath d='M887 301L886 0' stroke-width='6' stroke='url(%26quot%3b%23SvgjsLinearGradient1093%26quot%3b)' stroke-linecap='round' class='Up'%3e%3c/path%3e%3cpath d='M286 172L285 18' stroke-width='8' stroke='url(%26quot%3b%23SvgjsLinearGradient1096%26quot%3b)' stroke-linecap='round' class='Down'%3e%3c/path%3e%3cpath d='M732 256L731 -48' stroke-width='8' stroke='url(%26quot%3b%23SvgjsLinearGradient1096%26quot%3b)' stroke-linecap='round' class='Down'%3e%3c/path%3e%3cpath d='M685 394L684 766' stroke-width='8' stroke='url(%26quot%3b%23SvgjsLinearGradient1095%26quot%3b)' stroke-linecap='round' class='Down'%3e%3c/path%3e%3cpath d='M1186 526L1185 354' stroke-width='6' stroke='url(%26quot%3b%23SvgjsLinearGradient1093%26quot%3b)' stroke-linecap='round' class='Up'%3e%3c/path%3e%3cpath d='M353 292L352 113' stroke-width='10' stroke='url(%26quot%3b%23SvgjsLinearGradient1094%26quot%3b)' stroke-linecap='round' class='Up'%3e%3c/path%3e%3cpath d='M253 447L252 646' stroke-width='10' stroke='url(%26quot%3b%23SvgjsLinearGradient1094%26quot%3b)' stroke-linecap='round' class='Up'%3e%3c/path%3e%3cpath d='M687 471L686 640' stroke-width='10' stroke='url(%26quot%3b%23SvgjsLinearGradient1094%26quot%3b)' stroke-linecap='round' class='Up'%3e%3c/path%3e%3cpath d='M1272 166L1271 457' stroke-width='6' stroke='url(%26quot%3b%23SvgjsLinearGradient1096%26quot%3b)' stroke-linecap='round' class='Down'%3e%3c/path%3e%3cpath d='M927 173L926 385' stroke-width='8' stroke='url(%26quot%3b%23SvgjsLinearGradient1093%26quot%3b)' stroke-linecap='round' class='Up'%3e%3c/path%3e%3cpath d='M1409 204L1408 483' stroke-width='10' stroke='url(%26quot%3b%23SvgjsLinearGradient1096%26quot%3b)' stroke-linecap='round' class='Down'%3e%3c/path%3e%3cpath d='M847 434L846 127' stroke-width='8' stroke='url(%26quot%3b%23SvgjsLinearGradient1095%26quot%3b)' stroke-linecap='round' class='Down'%3e%3c/path%3e%3cpath d='M437 224L436 -140' stroke-width='8' stroke='url(%26quot%3b%23SvgjsLinearGradient1093%26quot%3b)' stroke-linecap='round' class='Up'%3e%3c/path%3e%3cpath d='M126 67L125 -324' stroke-width='8' stroke='url(%26quot%3b%23SvgjsLinearGradient1094%26quot%3b)' stroke-linecap='round' class='Up'%3e%3c/path%3e%3cpath d='M804 35L803 -197' stroke-width='8' stroke='url(%26quot%3b%23SvgjsLinearGradient1095%26quot%3b)' stroke-linecap='round' class='Down'%3e%3c/path%3e%3cpath d='M983 242L982 7' stroke-width='10' stroke='url(%26quot%3b%23SvgjsLinearGradient1095%26quot%3b)' stroke-linecap='round' class='Down'%3e%3c/path%3e%3cpath d='M649 102L648 -247' stroke-width='10' stroke='url(%26quot%3b%23SvgjsLinearGradient1096%26quot%3b)' stroke-linecap='round' class='Down'%3e%3c/path%3e%3cpath d='M697 282L696 551' stroke-width='6' stroke='url(%26quot%3b%23SvgjsLinearGradient1096%26quot%3b)' stroke-linecap='round' class='Down'%3e%3c/path%3e%3cpath d='M1149 236L1148 19' stroke-width='10' stroke='url(%26quot%3b%23SvgjsLinearGradient1096%26quot%3b)' stroke-linecap='round' class='Down'%3e%3c/path%3e%3cpath d='M333 420L332 157' stroke-width='10' stroke='url(%26quot%3b%23SvgjsLinearGradient1096%26quot%3b)' stroke-linecap='round' class='Down'%3e%3c/path%3e%3cpath d='M1396 100L1395 -189' stroke-width='8' stroke='url(%26quot%3b%23SvgjsLinearGradient1093%26quot%3b)' stroke-linecap='round' class='Up'%3e%3c/path%3e%3cpath d='M797 117L796 -74' stroke-width='10' stroke='url(%26quot%3b%23SvgjsLinearGradient1094%26quot%3b)' stroke-linecap='round' class='Up'%3e%3c/path%3e%3cpath d='M1345 459L1344 43' stroke-width='10' stroke='url(%26quot%3b%23SvgjsLinearGradient1096%26quot%3b)' stroke-linecap='round' class='Down'%3e%3c/path%3e%3cpath d='M257 131L256 -32' stroke-width='6' stroke='url(%26quot%3b%23SvgjsLinearGradient1093%26quot%3b)' stroke-linecap='round' class='Up'%3e%3c/path%3e%3cpath d='M99 9L98 -234' stroke-width='8' stroke='url(%26quot%3b%23SvgjsLinearGradient1095%26quot%3b)' stroke-linecap='round' class='Down'%3e%3c/path%3e%3cpath d='M723 435L722 56' stroke-width='6' stroke='url(%26quot%3b%23SvgjsLinearGradient1093%26quot%3b)' stroke-linecap='round' class='Up'%3e%3c/path%3e%3c/g%3e%3cdefs%3e%3cmask id='SvgjsMask1092'%3e%3crect width='1440' height='560' fill='white'%3e%3c/rect%3e%3c/mask%3e%3clinearGradient x1='0%25' y1='100%25' x2='0%25' y2='0%25' id='SvgjsLinearGradient1093'%3e%3cstop stop-color='rgba(67%2c 56%2c 202%2c 0)' offset='0'%3e%3c/stop%3e%3cstop stop-color='rgba(67%2c 56%2c 202%2c 0.3)' offset='1'%3e%3c/stop%3e%3c/linearGradient%3e%3clinearGradient x1='0%25' y1='100%25' x2='0%25' y2='0%25' id='SvgjsLinearGradient1094'%3e%3cstop stop-color='rgba(233%2c 232%2c 249%2c 0)' offset='0'%3e%3c/stop%3e%3cstop stop-color='rgba(233%2c 232%2c 249%2c 0.3)' offset='1'%3e%3c/stop%3e%3c/linearGradient%3e%3clinearGradient x1='0%25' y1='0%25' x2='0%25' y2='100%25' id='SvgjsLinearGradient1095'%3e%3cstop stop-color='rgba(233%2c 232%2c 249%2c 0)' offset='0'%3e%3c/stop%3e%3cstop stop-color='rgba(233%2c 232%2c 249%2c 0.3)' offset='1'%3e%3c/stop%3e%3c/linearGradient%3e%3clinearGradient x1='0%25' y1='0%25' x2='0%25' y2='100%25' id='SvgjsLinearGradient1096'%3e%3cstop stop-color='rgba(67%2c 56%2c 202%2c 0)' offset='0'%3e%3c/stop%3e%3cstop stop-color='rgba(67%2c 56%2c 202%2c 0.3)' offset='1'%3e%3c/stop%3e%3c/linearGradient%3e%3c/defs%3e%3c/svg%3e"; />
+            </div>
+            <div class="podlove-panel-banner">
+              <div class="podlove-panel-banner-left">
+                <div class="podlove-panel-banner-image">
+                  <img src="<?php print \Podlove\PLUGIN_URL.'/images/logo/podlove-publisher-icon-500.png'; ?>" />
+                </div>
+              </div>
+              <div class="podlove-panel-banner-right">
+                <h2 class="podlove-panel-banner-head"><?php print(__('Podlove Onboarding', 'podlove-podcasting-plugin-for-wordpress')); ?></h2>
+                <p class="podlove-panel-banner-text">
+                  <?php print(__('Do you want to create a new podcast? Or do you already have a podcast and want to migrate? Try our Onboarding and Migration Assistant to set up your podcast.', 'podlove-podcasting-plugin-for-wordpress')); ?>
+                </p>
+                <a class="podlove-panel-banner-button" href="<?php print \Podlove\Modules\Onboarding\Settings\OnboardingPage::get_page_link() ?>"><?php print __('Start Onboarding', 'podlove-podcasting-plugin-for-wordpress'); ?></a>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
     <script type="text/javascript">
-      const podloveBanner = document.getElementById('podlove-banner');
+      const podloveBanner = document.getElementById('podlove-panel-wrap');
       function hiddenPodloveBanner() {
         podloveBanner.classList.add('hidden');
       }
-      const dismissLink = document.getElementById('podlove-banner-dismiss');
+      const dismissLink = document.getElementById('podlove-panel-banner-dismiss');
       if (dismissLink !== undefined && dismissLink !== null) {
         dismissLink.addEventListener('click', function(){
           fetch(ajaxurl + '?' + new URLSearchParams({
