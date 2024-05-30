@@ -54,11 +54,11 @@ class Onboarding extends \Podlove\Modules\Base
                 </div>
               </div>
               <div class="podlove-panel-banner-right">
-                <h2 class="podlove-panel-banner-head"><?php print(__('Podlove Onboarding', 'podlove-podcasting-plugin-for-wordpress')); ?></h2>
+                <h2 class="podlove-panel-banner-head"><?php print(__('Welcome to Podlove', 'podlove-podcasting-plugin-for-wordpress')); ?></h2>
                 <p class="podlove-panel-banner-text">
-                  <?php print(__('Do you want to create a new podcast? Or do you already have a podcast and want to migrate? Try our Onboarding and Migration Assistant to set up your podcast.', 'podlove-podcasting-plugin-for-wordpress')); ?>
+                  <?php print(__('Ready to share your voice with the world? Let\'s start your podcasting journey! Explore our new Onboarding Assistant for a seamless setup. Choose between starting a new podcast or importing an existing one, and let\'s get your stories out there!', 'podlove-podcasting-plugin-for-wordpress')); ?>
                 </p>
-                <a class="podlove-panel-banner-button" href="<?php print \Podlove\Modules\Onboarding\Settings\OnboardingPage::get_page_link() ?>"><?php print __('Start Onboarding', 'podlove-podcasting-plugin-for-wordpress'); ?></a>
+                <a class="podlove-panel-banner-button" href="<?php print \Podlove\Modules\Onboarding\Settings\OnboardingPage::get_page_link() ?>"><?php print __('Get started', 'podlove-podcasting-plugin-for-wordpress'); ?></a>
               </div>
             </div>
           </div>
