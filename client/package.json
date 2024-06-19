@@ -5,9 +5,9 @@
     "dev": "vite"
   },
   "devDependencies": {
-    "@babel/types": "7.17.0",
+    "@babel/types": "7.24.7",
     "@tailwindcss/forms": "^0.5.7",
-    "@types/lodash": "4.14.180",
+    "@types/lodash": "4.17.5",
     "@types/redux-actions": "2.6.2",
     "@types/uuid": "^9.0.7",
     "@vitejs/plugin-vue": "2.2.4",
@@ -24,13 +24,13 @@
     "vue-tsc": "0.33.7"
   },
   "dependencies": {
-    "@babel/types": "^7.18.7",
-    "@headlessui/vue": "1.7.10",
-    "@heroicons/vue": "2.1.1",
-    "@podlove/utils": "5.7.4",
-    "@podlove/web-player": "5.7.4",
+    "@babel/types": "7.24.7",
+    "@headlessui/vue": "1.7.22",
+    "@heroicons/vue": "2.1.4",
+    "@podlove/utils": "5.12.2",
+    "@podlove/web-player": "5.12.3",
     "@popperjs/core": "2.11.4",
-    "axios": "1.6.5",
+    "axios": "1.7.2",
     "lodash": "4.17.21",
     "redux": "4.1.2",
     "redux-actions": "2.6.5",
