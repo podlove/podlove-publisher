@@ -141,6 +141,23 @@ function get_xml_podcast_funding_node($url, $label)
     return $doc->saveXML($node);
 }
 
+function get_xml_podcast_license_node($identifier, $url)
+{
+    $doc = new \DOMDocument();
+    $node = $doc->createElement('podcast:license');
+    $text = $doc->createTextNode($identifier);
+    $node->appendChild($text);
+
+    if ($url) {
+        $attr = $doc->createAttribute('url');
+        $attr->value = esc_attr($url);
+
+        $node->appendChild($attr);
+    }
+
+    return $doc->saveXML($node);
+}
+
 function add_itunes_category($category_html, $categories, $category_id)
 {
     $category_id = apply_filters('podlove_feed_itunes_category_id', $category_id);
@@ -304,6 +321,12 @@ function override_feed_head($hook, $podcast, $feed, $format)
 
         if ($podcast->funding_url) {
             echo "\t".get_xml_podcast_funding_node($podcast->funding_url, $podcast->funding_label);
+            echo PHP_EOL;
+        }
+
+        if ($podcast->license_name) {
+            $license = $podcast->get_license();
+            echo "\t".get_xml_podcast_license_node($license->getIdentifier(), $podcast->license_url);
             echo PHP_EOL;
         }
 

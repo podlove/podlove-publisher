@@ -117,6 +117,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 = 4.1.11 =
 
+* new: support `podcast:license` tag in RSS feed
 * fix: imports correct chapter times from Auphonic (when using features that affect the episode duration)
 * maintenance: update various javascript dependencies
 

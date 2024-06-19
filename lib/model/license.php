@@ -30,6 +30,50 @@ class License
         $this->jurisdiction = $license['jurisdiction'];
     }
 
+    public function getIdentifier()
+    {
+        if ($this->version == 'pdmark') {
+            return 'PDM-1.0';
+        }
+
+        if ($this->version == 'cc0') {
+            return 'CC0-1.0';
+        }
+
+        if ($this->getLicenseType($this->url, $this->name) != 'cc') {
+            return $this->name;
+        }
+
+        $commercial_segment = match ($this->commercial_use) {
+            'yes' => false,
+            default => 'nc'
+        };
+
+        $modification_segment = match ($this->modification) {
+            'yes' => false,
+            'no' => 'nd',
+            default => 'sa'
+        };
+
+        $verison_segment = $this->version == 'cc3' ? '3.0' : '4.0';
+
+        $segments = [
+            'cc',
+            'by',
+            $commercial_segment,
+            $modification_segment,
+            $verison_segment
+        ];
+
+        if ($this->version == 'cc3' && $this->jurisdiction != 'international') {
+            $segments[] = $this->jurisdiction;
+        }
+
+        $segments = array_filter($segments);
+
+        return implode('-', $segments);
+    }
+
     public function getLicenseType($url, $name)
     {
         if (empty($url) || empty($name)) {
@@ -240,20 +284,20 @@ class License
             case 'yes':
                 return 1;
 
-            break;
+                break;
             case 'yesbutshare':
                 return 10;
 
-            break;
+                break;
             case 'no':
                 return 0;
 
-            break;
+                break;
 
             default:
                 return 1;
 
-            break;
+                break;
         }
     }
 
@@ -265,29 +309,29 @@ class License
     private function getURLSlug($allow_modifications, $allow_commercial_use)
     {
         switch ($allow_modifications) {
-                case 'yes':
-                    $modification_url_slug = '';
+            case 'yes':
+                $modification_url_slug = '';
 
                 break;
-                case 'yesbutshare':
-                    $modification_url_slug = '-sa';
+            case 'yesbutshare':
+                $modification_url_slug = '-sa';
 
                 break;
-                case 'no':
-                    $modification_url_slug = '-nd';
+            case 'no':
+                $modification_url_slug = '-nd';
 
                 break;
-            }
+        }
         switch ($allow_commercial_use) {
-                case 'yes':
-                    $commercial_use_url_slug = '';
+            case 'yes':
+                $commercial_use_url_slug = '';
 
                 break;
-                case 'no':
-                    $commercial_use_url_slug = '-nc';
+            case 'no':
+                $commercial_use_url_slug = '-nc';
 
                 break;
-            }
+        }
 
         return [
             'allow_modifications' => $modification_url_slug,
