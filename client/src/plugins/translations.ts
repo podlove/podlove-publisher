@@ -3,7 +3,7 @@ import { App } from 'vue'
 
 declare module '@vue/runtime-core' {
   interface ComponentCustomProperties {
-    __: (translation: string, domain?: string) => string;
+    __: (translation: string, domain: string) => string;
   }
 }
 

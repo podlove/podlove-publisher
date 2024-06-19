@@ -6,7 +6,7 @@
           <ClipboardCheckIcon class="h-5 w-5 text-green-400" aria-hidden="true" />
         </div>
         <div class="ml-3">
-          <h3 class="text-sm font-medium text-green-800">{{ __('Done') }}</h3>
+          <h3 class="text-sm font-medium text-green-800">{{ __('Done', 'podlove-podcasting-plugin-for-wordpress') }}</h3>
           <div class="mt-2 text-sm text-green-700">
             <p>
               <a
@@ -68,7 +68,7 @@
                     aria-label="Import from Auphonic"
                   >
                     <!-- TODO: needs better translation support, see https://github.com/podlove/podlove-publisher/issues/1337 -->
-                    {{ __('Import')
+                    {{ __('Import', 'podlove-podcasting-plugin-for-wordpress')
                     }}<span class="hidden sm:inline">&nbsp;{{ __('from Auphonic', 'podlove-podcasting-plugin-for-wordpress') }}</span>
                   </button>
                 </div>
