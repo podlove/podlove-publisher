@@ -13,6 +13,8 @@ class License
     public $modifcation;
     public $commercial_use;
     public $jurisdiction;
+    public $version;
+    public $modification;
 
     public function __construct($scope, $attributes)
     {
