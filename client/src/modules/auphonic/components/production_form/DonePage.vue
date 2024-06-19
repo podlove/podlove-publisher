@@ -153,7 +153,7 @@ export default defineComponent({
           const there = entry.there
             .map((chapter: AuphonicChapter) => {
               return (
-                Math.round((chapter.start_sec || 0) * 1000) +
+                Math.round((chapter.start_output_sec || 0) * 1000) +
                 (chapter.title || '') +
                 (chapter.url || '') +
                 (chapter.image || '')
@@ -187,7 +187,7 @@ export default defineComponent({
           const auphonicChapters: AuphonicChapter[] = value
           const chapters: PodloveChapter[] = auphonicChapters.map((chapter) => {
             return {
-              start: Math.round((chapter.start_sec || 0) * 1000),
+              start: Math.round((chapter.start_output_sec || 0) * 1000),
               title: chapter.title || '',
               href: chapter.url || '',
               // FIXME: chapter.image is an Auphonic URL which we can't use. We

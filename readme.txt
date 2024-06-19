@@ -115,6 +115,11 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 4.1.11 =
+
+* fix: imports correct chapter times from Auphonic (when using features that affect the episode duration)
+* maintenance: update various javascript dependencies
+
 = 4.1.10 =
 
 * fix: bug introduced in latest patch that created duplicate database entries for media files
