@@ -71,13 +71,26 @@ final class Generator
     {
         $items = [];
 
+        // TODO: guard that this is != null
+        $feed = \Podlove\Feeds\get_feed();
+
         while (have_posts()) {
             the_post();
+
+            $post = \get_post();
+            $episode = Model\Episode::find_one_by_post_id($post->ID);
+            $asset = $feed->episode_asset();
+            $file_type = $asset->file_type();
+            $file = Model\MediaFile::find_by_episode_id_and_episode_asset_id($episode->id, $asset->id);
+
+            // skip episode if there is no valid file
+            if (!$file) {
+                continue;
+            }
 
             // TODO
             // - <description>
             // - <atom:link> http://podlove.org/deep-link
-            // - <enclosure>
             // - <itunes:duration>
             // - <itunes:author>
             // - <itunes:subtitle>
@@ -90,6 +103,7 @@ final class Generator
             // - <podcast:transcript>
             // - <atom:contributor> list
             // - <podcast:person> list
+            // - caching per item
 
             $items[] = [
                 'name' => 'item',
@@ -100,11 +114,28 @@ final class Generator
                     'guid' => [
                         'attributes' => ['isPermalink' => 'false'],
                         'value' => get_the_guid()
-                    ]
+                    ],
+                    ...$this->enclosure($episode, $file, $asset, $feed, $file_type)
                 ]
             ];
         }
 
         return $items;
+    }
+
+    private function enclosure($episode, $file, $asset, $feed, $file_type)
+    {
+        $is_tracking_disabled = isset($_REQUEST['tracking']) && $_REQUEST['tracking'] == 'no';
+        $url = $is_tracking_disabled
+          ? $episode->enclosure_url($asset, null, null)
+          : $episode->enclosure_url($asset, 'feed', $feed->slug);
+
+        return ['enclosure' => [
+            'attributes' => [
+                'url' => $url,
+                'length' => (string) ($file->size > 0 ? $file->size : 0),
+                'type' => $file_type->mime_type
+            ]
+        ]];
     }
 }
