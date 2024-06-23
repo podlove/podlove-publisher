@@ -90,9 +90,8 @@ final class Generator
 
             // TODO
             // - <description>
-            // - <itunes:author>
+            // - <itunes:author> -- not in spec => remove? seems pointless as we do not use episodic data anyway
             // - <itunes:subtitle>
-            // - <itunes:title>
             // - <itunes:episode>
             // - <itunes:episodeType>
             // - <itunes:summary>
@@ -115,7 +114,8 @@ final class Generator
                     ],
                     ...$this->enclosure($episode, $file, $asset, $feed, $file_type),
                     ...$this->deep_link(),
-                    self::NS_ITUNES.'duration' => $episode->get_duration('HH:MM:SS')
+                    self::NS_ITUNES.'duration' => $episode->get_duration('HH:MM:SS'),
+                    ...$this->itunes_title($episode)
                 ]
             ];
         }
@@ -123,7 +123,7 @@ final class Generator
         return $items;
     }
 
-    private function enclosure($episode, $file, $asset, $feed, $file_type)
+    private function enclosure(Model\Episode $episode, $file, $asset, $feed, $file_type)
     {
         $is_tracking_disabled = isset($_REQUEST['tracking']) && $_REQUEST['tracking'] == 'no';
         $url = $is_tracking_disabled
@@ -147,6 +147,18 @@ final class Generator
                 'rel' => 'http://podlove.org/deep-link',
                 'href' => get_permalink().'#'
             ]
+        ]];
+    }
+
+    private function itunes_title(Model\Episode $episode)
+    {
+        if (!$episode->title) {
+            return [];
+        }
+
+        return [[
+            'name' => self::NS_ITUNES.'title',
+            'value' => trim($episode->title)
         ]];
     }
 }
