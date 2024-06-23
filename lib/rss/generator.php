@@ -92,7 +92,6 @@ final class Generator
             // - <description>
             // - <itunes:author> -- not in spec => remove? seems pointless as we do not use episodic data anyway
             // - <itunes:subtitle>
-            // - <itunes:episodeType>
             // - <itunes:summary>
             // - <itunes:image>
             // - <content:encoded>
@@ -116,6 +115,7 @@ final class Generator
                     self::NS_ITUNES.'duration' => $episode->get_duration('HH:MM:SS'),
                     ...$this->itunes_title($episode),
                     ...$this->itunes_episode($episode),
+                    ...$this->itunes_episode_type($episode),
                 ]
             ];
         }
@@ -172,6 +172,16 @@ final class Generator
         return [[
             'name' => self::NS_ITUNES.'episode',
             'value' => (string) $episode->number
+        ]];
+    }
+
+    private function itunes_episode_type(Model\Episode $episode)
+    {
+        $type = in_array($episode->type, ['full', 'trailer', 'bonus']) ? $episode->type : 'full';
+
+        return [[
+            'name' => self::NS_ITUNES.'episodeType',
+            'value' => $type
         ]];
     }
 }
