@@ -38,6 +38,21 @@ final class Generator
 
     private function channel()
     {
+        // TODO
+        // - <image> (url, title, link)
+        // - <atom:link> Pagination
+        // - <language>
+        // - <fyyd:verify>
+        // - <atom:contributor> list
+        // - <podcast:person> list
+        // - <podcast:funding>
+        // - <podcast:license>
+        // - <itunes:category>
+        // - <itunes:owner>
+        // - <itunes:image>
+        // - <itunes:subtitle>
+        // - <itunes:block>
+        // - <itunes:explicit>
         return [
             'title' => apply_filters('podlove_feed_title', ''),
             'link' => apply_filters('podlove_feed_link', \Podlove\get_landing_page_url()),
@@ -58,6 +73,23 @@ final class Generator
 
         while (have_posts()) {
             the_post();
+
+            // TODO
+            // - <description>
+            // - <atom:link> http://podlove.org/deep-link
+            // - <enclosure>
+            // - <itunes:duration>
+            // - <itunes:author>
+            // - <itunes:subtitle>
+            // - <itunes:title>
+            // - <itunes:episode>
+            // - <itunes:episodeType>
+            // - <itunes:summary>
+            // - <itunes:image>
+            // - <content:encoded>
+            // - <podcast:transcript>
+            // - <atom:contributor> list
+            // - <podcast:person> list
 
             $items[] = [
                 'name' => 'item',
