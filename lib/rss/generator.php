@@ -90,7 +90,6 @@ final class Generator
 
             // TODO
             // - <description>
-            // - <atom:link> http://podlove.org/deep-link
             // - <itunes:duration>
             // - <itunes:author>
             // - <itunes:subtitle>
@@ -115,7 +114,8 @@ final class Generator
                         'attributes' => ['isPermalink' => 'false'],
                         'value' => get_the_guid()
                     ],
-                    ...$this->enclosure($episode, $file, $asset, $feed, $file_type)
+                    ...$this->enclosure($episode, $file, $asset, $feed, $file_type),
+                    ...$this->deep_link()
                 ]
             ];
         }
@@ -135,6 +135,17 @@ final class Generator
                 'url' => $url,
                 'length' => (string) ($file->size > 0 ? $file->size : 0),
                 'type' => $file_type->mime_type
+            ]
+        ]];
+    }
+
+    private function deep_link()
+    {
+        return [[
+            'name' => self::NS_ATOM.'link',
+            'attributes' => [
+                'rel' => 'http://podlove.org/deep-link',
+                'href' => get_permalink().'#'
             ]
         ]];
     }
