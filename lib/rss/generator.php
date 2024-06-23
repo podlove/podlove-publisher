@@ -92,7 +92,6 @@ final class Generator
             // - <description>
             // - <itunes:author> -- not in spec => remove? seems pointless as we do not use episodic data anyway
             // - <itunes:subtitle>
-            // - <itunes:episode>
             // - <itunes:episodeType>
             // - <itunes:summary>
             // - <itunes:image>
@@ -115,7 +114,8 @@ final class Generator
                     ...$this->enclosure($episode, $file, $asset, $feed, $file_type),
                     ...$this->deep_link(),
                     self::NS_ITUNES.'duration' => $episode->get_duration('HH:MM:SS'),
-                    ...$this->itunes_title($episode)
+                    ...$this->itunes_title($episode),
+                    ...$this->itunes_episode($episode),
                 ]
             ];
         }
@@ -159,6 +159,19 @@ final class Generator
         return [[
             'name' => self::NS_ITUNES.'title',
             'value' => trim($episode->title)
+        ]];
+    }
+
+    private function itunes_episode(Model\Episode $episode)
+    {
+        if (!is_numeric($episode->number)) {
+            return [];
+        }
+
+        // TODO: think about if I should at least take over the value filters, like podlove_feed_itunes_episode
+        return [[
+            'name' => self::NS_ITUNES.'episode',
+            'value' => (string) $episode->number
         ]];
     }
 }
