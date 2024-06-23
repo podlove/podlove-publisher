@@ -90,7 +90,6 @@ final class Generator
 
             // TODO
             // - <description>
-            // - <itunes:duration>
             // - <itunes:author>
             // - <itunes:subtitle>
             // - <itunes:title>
@@ -115,7 +114,8 @@ final class Generator
                         'value' => get_the_guid()
                     ],
                     ...$this->enclosure($episode, $file, $asset, $feed, $file_type),
-                    ...$this->deep_link()
+                    ...$this->deep_link(),
+                    self::NS_ITUNES.'duration' => $episode->get_duration('HH:MM:SS')
                 ]
             ];
         }
