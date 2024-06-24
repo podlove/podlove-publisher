@@ -111,8 +111,8 @@ final class Generator
                         'value' => get_the_guid()
                     ],
                     ...$this->enclosure($episode, $file, $asset, $feed, $file_type),
-                    ...$this->deep_link(),
-                    self::NS_ITUNES.'duration' => $episode->get_duration('HH:MM:SS'),
+                    ...$this->deep_link($episode),
+                    ...$this->itunes_duration($episode),
                     ...$this->itunes_title($episode),
                     ...$this->itunes_episode($episode),
                     ...$this->itunes_episode_type($episode),
@@ -139,14 +139,22 @@ final class Generator
         ]];
     }
 
-    private function deep_link()
+    private function deep_link(Model\Episode $episode)
     {
         return [[
             'name' => self::NS_ATOM.'link',
             'attributes' => [
                 'rel' => 'http://podlove.org/deep-link',
-                'href' => get_permalink().'#'
+                'href' => get_permalink($episode->post_id).'#'
             ]
+        ]];
+    }
+
+    private function itunes_duration(Model\Episode $episode)
+    {
+        return [[
+            'name' => self::NS_ITUNES.'duration',
+            'value' => $episode->get_duration('HH:MM:SS')
         ]];
     }
 
