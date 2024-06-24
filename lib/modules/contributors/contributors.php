@@ -4,6 +4,7 @@ namespace Podlove\Modules\Contributors;
 
 use Podlove\Api\Episodes\WP_REST_PodloveEpisodeContributions_Controller;
 use Podlove\Model\Episode;
+use Podlove\Model\Feed;
 use Podlove\Modules;
 use Podlove\Modules\Contributors\Model\Contributor;
 use Podlove\Modules\Contributors\Model\ContributorGroup;
@@ -32,8 +33,8 @@ class Contributors extends \Podlove\Modules\Base
         add_filter('manage_edit-podcast_columns', [$this, 'add_new_podcast_columns']);
         add_action('manage_podcast_posts_custom_column', [$this, 'manage_podcast_columns']);
 
-        add_action('rss2_head', [$this, 'feed_head_contributors']);
-        add_action('podlove_append_to_feed_entry', [$this, 'feed_item_contributors'], 10, 4);
+        add_filter('podlove_rss_item', [$this, 'rss_inject_into_item'], 10, 3);
+        // TODO: podlove_rss_head
 
         add_action('podlove_xml_export', [$this, 'expandExportFile']);
         add_filter('podlove_import_jobs', [$this, 'expandImport']);
@@ -188,11 +189,11 @@ class Contributors extends \Podlove\Modules\Base
 
             switch (strtoupper($args['orderby'])) {
                 case 'COMMENT':
-                    $comperareFunc = 'Podlove\\Modules\\Contributors\\Model\\EpisodeContribution::sortByComment';
+                    $comperareFunc = 'Podlove\Modules\Contributors\Model\EpisodeContribution::sortByComment';
 
                     break;
                 case 'POSITION':
-                    $comperareFunc = 'Podlove\\Modules\\Contributors\\Model\\EpisodeContribution::sortByPosition';
+                    $comperareFunc = 'Podlove\Modules\Contributors\Model\EpisodeContribution::sortByPosition';
 
                     break;
             }
@@ -325,6 +326,7 @@ class Contributors extends \Podlove\Modules\Base
         return $jobs;
     }
 
+    // TODO: unused
     public function feed_head_contributors()
     {
         global $wp_query;
@@ -343,6 +345,62 @@ class Contributors extends \Podlove\Modules\Base
         echo apply_filters('podlove_feed_head_contributors', $contributor_xml);
     }
 
+    public function rss_inject_into_item(array $item, Episode $episode, Feed $feed): array
+    {
+        $contributions = array_map(fn ($contribution) => [
+            'contributor' => $contribution->getContributor(),
+            'contribution' => $contribution,
+        ], EpisodeContribution::find_all_by_episode_id($episode->id));
+
+        $contributions = array_filter($contributions, fn ($c) => $c['contributor']->visibility == 1);
+
+        $atom_ns_entries = array_map(function ($contribution) {
+            $contributor = $contribution['contributor'];
+
+            $name = [
+                'name' => \Podlove\RSS\Generator::NS_ATOM.'name',
+                'value' => $contributor->getName()
+            ];
+
+            $uri = $contributor->guid ? [
+                'name' => \Podlove\RSS\Generator::NS_ATOM.'uri',
+                'value' => $contributor->guid
+            ] : [];
+
+            return [
+                'name' => \Podlove\RSS\Generator::NS_ATOM.'contributor',
+                'value' => [$name, $uri]
+            ];
+        }, $contributions);
+
+        $podcast_ns_entries = array_map(function ($contribution) {
+            $contributor = $contribution['contributor'];
+
+            $attrs = [
+                'img' => $contributor->avatar()->url()
+            ];
+
+            if ($role = $this->role_for_contribution($contribution['contribution'])) {
+                $attrs['role'] = $role;
+            }
+
+            return [
+                'name' => \Podlove\RSS\Generator::NS_PODCAST.'person',
+                'value' => $contributor->getName(),
+                'attributes' => $attrs
+            ];
+        }, $contributions);
+
+        $item['value'] = [
+            ...$item['value'],
+            ...$atom_ns_entries,
+            ...$podcast_ns_entries
+        ];
+
+        return $item;
+    }
+
+    // TODO: unused
     public function feed_item_contributors($podcast, $episode, $feed, $format)
     {
         $contributor_xml = $this->prepare_contributions_for_feed(
@@ -837,6 +895,30 @@ class Contributors extends \Podlove\Modules\Base
             $contribution->group_id = $default_contribution->group_id;
             $contribution->save();
         }
+    }
+
+    // proof of concept for roles/groups
+    // next implementation should fully support all options
+    // @see https://github.com/Podcastindex-org/podcast-namespace/blob/main/taxonomy.json
+    private function role_for_contribution($contribution)
+    {
+        if ($role = $contribution->getRole()) {
+            switch (strtolower($role->title)) {
+                case 'guest':
+                case 'gast':
+                    return 'guest';
+                case 'host':
+                case 'team':
+                    return 'host';
+                case 'sponsor':
+                    return 'sponsor';
+
+                default:
+                    return null;
+            }
+        }
+
+        return null;
     }
 
     /**

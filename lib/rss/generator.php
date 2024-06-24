@@ -9,6 +9,7 @@ final class Generator
 {
     const NS_ATOM = '{http://www.w3.org/2005/Atom}';
     const NS_ITUNES = '{http://www.itunes.com/dtds/podcast-1.0.dtd}';
+    const NS_PODCAST = '{https://podcastindex.org/namespace/1.0}';
     private $podcast;
 
     public function __construct()
@@ -21,7 +22,8 @@ final class Generator
         $service = new \Sabre\Xml\Service();
         $service->namespaceMap = [
             'http://www.w3.org/2005/Atom' => 'atom',
-            'http://www.itunes.com/dtds/podcast-1.0.dtd' => 'itunes'
+            'http://www.itunes.com/dtds/podcast-1.0.dtd' => 'itunes',
+            'https://podcastindex.org/namespace/1.0' => 'podcast'
         ];
 
         $xml = $service->write('rss', new Element\RSS([
@@ -96,11 +98,9 @@ final class Generator
             // - <itunes:image>
             // - <content:encoded>
             // - <podcast:transcript>
-            // - <atom:contributor> list
-            // - <podcast:person> list
             // - caching per item
 
-            $items[] = [
+            $item = [
                 'name' => 'item',
                 'value' => [
                     'title' => \Podlove\Feeds\get_episode_title(),
@@ -118,6 +118,9 @@ final class Generator
                     ...$this->itunes_episode_type($episode),
                 ]
             ];
+
+            $item = apply_filters('podlove_rss_item', $item, $episode, $feed);
+            $items[] = $item;
         }
 
         return $items;
