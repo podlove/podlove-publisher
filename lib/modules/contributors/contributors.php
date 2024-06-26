@@ -34,7 +34,7 @@ class Contributors extends \Podlove\Modules\Base
         add_action('manage_podcast_posts_custom_column', [$this, 'manage_podcast_columns']);
 
         add_filter('podlove_rss_item', [$this, 'rss_inject_into_item'], 10, 3);
-        // TODO: podlove_rss_head
+        add_filter('podlove_rss_channel', [$this, 'rss_inject_into_channel']);
 
         add_action('podlove_xml_export', [$this, 'expandExportFile']);
         add_filter('podlove_import_jobs', [$this, 'expandImport']);
@@ -326,89 +326,30 @@ class Contributors extends \Podlove\Modules\Base
         return $jobs;
     }
 
-    // TODO: unused
-    public function feed_head_contributors()
+    public function rss_inject_into_channel(array $channel)
     {
-        global $wp_query;
-
-        $feed = \Podlove\Model\Feed::find_one_by_slug($wp_query->query_vars['feed']);
-
-        if (!$feed) {
-            return;
-        }
-
-        $contributor_xml = $this->prepare_contributions_for_feed(
-            \Podlove\Modules\Contributors\Model\ShowContribution::all(),
-            $feed
+        $data = $this->xml_data_for_contributions(
+            ShowContribution::all()
         );
 
-        echo apply_filters('podlove_feed_head_contributors', $contributor_xml);
+        return [
+            ...$channel,
+            ...$data
+        ];
     }
 
     public function rss_inject_into_item(array $item, Episode $episode, Feed $feed): array
     {
-        $contributions = array_map(fn ($contribution) => [
-            'contributor' => $contribution->getContributor(),
-            'contribution' => $contribution,
-        ], EpisodeContribution::find_all_by_episode_id($episode->id));
-
-        $contributions = array_filter($contributions, fn ($c) => $c['contributor']->visibility == 1);
-
-        $atom_ns_entries = array_map(function ($contribution) {
-            $contributor = $contribution['contributor'];
-
-            $name = [
-                'name' => \Podlove\RSS\Generator::NS_ATOM.'name',
-                'value' => $contributor->getName()
-            ];
-
-            $uri = $contributor->guid ? [
-                'name' => \Podlove\RSS\Generator::NS_ATOM.'uri',
-                'value' => $contributor->guid
-            ] : [];
-
-            return [
-                'name' => \Podlove\RSS\Generator::NS_ATOM.'contributor',
-                'value' => [$name, $uri]
-            ];
-        }, $contributions);
-
-        $podcast_ns_entries = array_map(function ($contribution) {
-            $contributor = $contribution['contributor'];
-
-            $attrs = [
-                'img' => $contributor->avatar()->url()
-            ];
-
-            if ($role = $this->role_for_contribution($contribution['contribution'])) {
-                $attrs['role'] = $role;
-            }
-
-            return [
-                'name' => \Podlove\RSS\Generator::NS_PODCAST.'person',
-                'value' => $contributor->getName(),
-                'attributes' => $attrs
-            ];
-        }, $contributions);
+        $data = $this->xml_data_for_contributions(
+            EpisodeContribution::find_all_by_episode_id($episode->id)
+        );
 
         $item['value'] = [
             ...$item['value'],
-            ...$atom_ns_entries,
-            ...$podcast_ns_entries
+            ...$data
         ];
 
         return $item;
-    }
-
-    // TODO: unused
-    public function feed_item_contributors($podcast, $episode, $feed, $format)
-    {
-        $contributor_xml = $this->prepare_contributions_for_feed(
-            \Podlove\Modules\Contributors\Model\EpisodeContribution::find_all_by_episode_id($episode->id),
-            $feed
-        );
-
-        echo apply_filters('podlove_feed_contributors', $contributor_xml);
     }
 
     /**
@@ -895,6 +836,58 @@ class Contributors extends \Podlove\Modules\Base
             $contribution->group_id = $default_contribution->group_id;
             $contribution->save();
         }
+    }
+
+    private function xml_data_for_contributions($raw_contributions)
+    {
+        $contributions = array_map(fn ($contribution) => [
+            'contributor' => $contribution->getContributor(),
+            'contribution' => $contribution,
+        ], $raw_contributions);
+
+        $contributions = array_filter($contributions, fn ($c) => $c['contributor']->visibility == 1);
+
+        $atom_ns_entries = array_map(function ($contribution) {
+            $contributor = $contribution['contributor'];
+
+            $name = [
+                'name' => \Podlove\RSS\Generator::NS_ATOM.'name',
+                'value' => $contributor->getName()
+            ];
+
+            $uri = $contributor->guid ? [
+                'name' => \Podlove\RSS\Generator::NS_ATOM.'uri',
+                'value' => $contributor->guid
+            ] : [];
+
+            return [
+                'name' => \Podlove\RSS\Generator::NS_ATOM.'contributor',
+                'value' => [$name, $uri]
+            ];
+        }, $contributions);
+
+        $podcast_ns_entries = array_map(function ($contribution) {
+            $contributor = $contribution['contributor'];
+
+            $attrs = [
+                'img' => $contributor->avatar()->url()
+            ];
+
+            if ($role = $this->role_for_contribution($contribution['contribution'])) {
+                $attrs['role'] = $role;
+            }
+
+            return [
+                'name' => \Podlove\RSS\Generator::NS_PODCAST.'person',
+                'value' => $contributor->getName(),
+                'attributes' => $attrs
+            ];
+        }, $contributions);
+
+        return [
+            ...$atom_ns_entries,
+            ...$podcast_ns_entries
+        ];
     }
 
     // proof of concept for roles/groups

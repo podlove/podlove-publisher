@@ -45,8 +45,6 @@ final class Generator
         // - <atom:link> Pagination
         // - <language>
         // - <fyyd:verify>
-        // - <atom:contributor> list
-        // - <podcast:person> list
         // - <podcast:funding>
         // - <podcast:license>
         // - <itunes:category>
@@ -55,7 +53,7 @@ final class Generator
         // - <itunes:subtitle>
         // - <itunes:block>
         // - <itunes:explicit>
-        return [
+        $channel = [
             'title' => apply_filters('podlove_feed_title', ''),
             'link' => apply_filters('podlove_feed_link', \Podlove\get_landing_page_url()),
             'description' => new Cdata($this->podcast->summary),
@@ -66,6 +64,8 @@ final class Generator
             self::NS_ITUNES.'type' => apply_filters('podlove_feed_itunes_type', in_array($this->podcast->itunes_type, ['episodic', 'serial']) ? $this->podcast->itunes_type : 'episodic'),
             self::NS_ITUNES.'summary' => apply_filters('podlove_feed_itunes_summary', $this->podcast->summary),
         ];
+
+        return apply_filters('podlove_rss_channel', $channel);
     }
 
     // NOTE: This uses/requires The WordPress Loop
