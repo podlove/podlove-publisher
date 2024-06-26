@@ -26,15 +26,9 @@ services:
       WORDPRESS_DB_USER: wordpress
       WORDPRESS_DB_PASSWORD: wordpress
       WORDPRESS_DB_NAME: wordpress
-
-    volumes:
-      - wp-data:/var/www/html/
     networks:
       - app-network
 
 networks:
   app-network:
     driver: bridge
-
-volumes:
-  wp-data:

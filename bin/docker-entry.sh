@@ -8,9 +8,5 @@ until mysql -h $HOST -P $PORT -D $WORDPRESS_DB_NAME -u $WORDPRESS_DB_USER -p$WOR
   sleep 2
 done
 
-# Running the WordPress installation process
-wp core install --allow-root --url=http://127.0.0.1 --path=/var/www/html --title="Podlove Publisher E2E Test Environment" --admin_email=admin@example.com --admin_user=admin --admin_password=admin --skip-email
-wp plugin install --activate --allow-root --path=/var/www/html /tmp/podlove-podcasting-plugin-for-wordpress.zip
-
 eval setup.sh
 eval docker-entrypoint.sh "apache2-foreground"
