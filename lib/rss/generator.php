@@ -53,24 +53,22 @@ final class Generator
         // - <itunes:category>
         // - <itunes:owner>
         // - <itunes:image>
-
-        // TODO: Think if I really need the individual filters. Everything is
-        // overridable via `podlove_rss_channel`. Strong tendency: remove.
         $channel = [
             'title' => apply_filters('podlove_feed_title', ''),
-            'link' => apply_filters('podlove_feed_link', \Podlove\get_landing_page_url()),
+            'link' => \Podlove\get_landing_page_url(),
             'description' => new Cdata($this->podcast->summary),
             'lastBuildDate' => mysql2date('D, d M Y H:i:s +0000', get_lastpostmodified('GMT'), false),
             'generator' => \Podlove\get_plugin_header('Name').' v'.\Podlove\get_plugin_header('Version'),
-            'copyright' => apply_filters('podlove_feed_copyright', $this->podcast->copyright ?? $this->podcast->default_copyright_claim()),
-            self::NS_ITUNES.'author' => apply_filters('podlove_feed_itunes_author', $this->podcast->author_name),
-            self::NS_ITUNES.'type' => apply_filters('podlove_feed_itunes_type', in_array($this->podcast->itunes_type, ['episodic', 'serial']) ? $this->podcast->itunes_type : 'episodic'),
-            self::NS_ITUNES.'summary' => apply_filters('podlove_feed_itunes_summary', $this->podcast->summary),
-            self::NS_ITUNES.'subtitle' => apply_filters('podlove_feed_itunes_subtitle', $this->podcast->subtitle),
-            self::NS_ITUNES.'explicit' => apply_filters('podlove_feed_itunes_explicit', $this->podcast->explicit_text()),
-            self::NS_ITUNES.'block' => apply_filters('podlove_feed_itunes_block', ($this->feed->enable) ? 'no' : 'yes'),
+            'copyright' => $this->podcast->copyright ?? $this->podcast->default_copyright_claim(),
+            self::NS_ITUNES.'author' => $this->podcast->author_name,
+            self::NS_ITUNES.'type' => in_array($this->podcast->itunes_type, ['episodic', 'serial']) ? $this->podcast->itunes_type : 'episodic',
+            self::NS_ITUNES.'summary' => $this->podcast->summary,
+            self::NS_ITUNES.'subtitle' => $this->podcast->subtitle,
+            self::NS_ITUNES.'explicit' => $this->podcast->explicit_text(),
+            self::NS_ITUNES.'block' => ($this->feed->enable) ? 'no' : 'yes',
         ];
 
+        // FIXME: "Shows" module hooks must use this filter instead.
         return apply_filters('podlove_rss_channel', $channel);
     }
 
