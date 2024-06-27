@@ -10,6 +10,7 @@ final class Generator
     const NS_ATOM = '{http://www.w3.org/2005/Atom}';
     const NS_ITUNES = '{http://www.itunes.com/dtds/podcast-1.0.dtd}';
     const NS_PODCAST = '{https://podcastindex.org/namespace/1.0}';
+    const NS_FYYD = '{https://fyyd.de/fyyd-ns/}';
 
     private $podcast;
     private $feed;
@@ -26,7 +27,8 @@ final class Generator
         $service->namespaceMap = [
             'http://www.w3.org/2005/Atom' => 'atom',
             'http://www.itunes.com/dtds/podcast-1.0.dtd' => 'itunes',
-            'https://podcastindex.org/namespace/1.0' => 'podcast'
+            'https://podcastindex.org/namespace/1.0' => 'podcast',
+            'https://fyyd.de/fyyd-ns/' => 'fyyd'
         ];
 
         $xml = $service->write('rss', new Element\RSS([
@@ -46,26 +48,28 @@ final class Generator
         // TODO
         // - <image> (url, title, link)
         // - <atom:link> Pagination
-        // - <language>
-        // - <fyyd:verify>
-        // - <podcast:funding>
-        // - <podcast:license>
         // - <itunes:category>
-        // - <itunes:owner>
-        // - <itunes:image>
         $channel = [
             'title' => apply_filters('podlove_feed_title', ''),
             'link' => \Podlove\get_landing_page_url(),
             'description' => new Cdata($this->podcast->summary),
             'lastBuildDate' => mysql2date('D, d M Y H:i:s +0000', get_lastpostmodified('GMT'), false),
             'generator' => \Podlove\get_plugin_header('Name').' v'.\Podlove\get_plugin_header('Version'),
+            'language' => $this->podcast->language,
             'copyright' => $this->podcast->copyright ?? $this->podcast->default_copyright_claim(),
             self::NS_ITUNES.'author' => $this->podcast->author_name,
             self::NS_ITUNES.'type' => in_array($this->podcast->itunes_type, ['episodic', 'serial']) ? $this->podcast->itunes_type : 'episodic',
             self::NS_ITUNES.'summary' => $this->podcast->summary,
+            self::NS_ITUNES.'image' => ['attributes' => ['href' => $this->podcast->cover_art()->url()]],
+            self::NS_ITUNES.'owner' => [
+                self::NS_ITUNES.'name' => $this->podcast->owner_name,
+                self::NS_ITUNES.'email' => $this->podcast->owner_email
+            ],
             self::NS_ITUNES.'subtitle' => $this->podcast->subtitle,
             self::NS_ITUNES.'explicit' => $this->podcast->explicit_text(),
             self::NS_ITUNES.'block' => ($this->feed->enable) ? 'no' : 'yes',
+            ...$this->podcast_funding(),
+            ...$this->podcast_license(),
         ];
 
         // FIXME: "Shows" module hooks must use this filter instead.
@@ -125,6 +129,42 @@ final class Generator
         }
 
         return $items;
+    }
+
+    private function podcast_funding()
+    {
+        if (!$this->podcast->funding_url) {
+            return [];
+        }
+
+        return [[
+            'name' => self::NS_PODCAST.'funding',
+            'value' => $this->podcast->funding_label,
+            'attributes' => [
+                'url' => $this->podcast->funding_url
+            ]
+        ]];
+    }
+
+    private function podcast_license()
+    {
+        if (!$this->podcast->license_name) {
+            return [];
+        }
+
+        $license = $this->podcast->get_license();
+
+        $entry = [
+            'name' => self::NS_PODCAST.'license',
+            'value' => $license->getIdentifier(),
+            'attributes' => []
+        ];
+
+        if ($this->podcast->license_url) {
+            $entry['attributes']['url'] = $this->podcast->license_url;
+        }
+
+        return [$entry];
     }
 
     private function enclosure(Model\Episode $episode, $file, $asset, $feed, $file_type)
