@@ -10,11 +10,14 @@ final class Generator
     const NS_ATOM = '{http://www.w3.org/2005/Atom}';
     const NS_ITUNES = '{http://www.itunes.com/dtds/podcast-1.0.dtd}';
     const NS_PODCAST = '{https://podcastindex.org/namespace/1.0}';
+
     private $podcast;
+    private $feed;
 
     public function __construct()
     {
         $this->podcast = Model\Podcast::get();
+        $this->feed = \Podlove\Feeds\get_feed();
     }
 
     public function generate(): void
@@ -50,9 +53,9 @@ final class Generator
         // - <itunes:category>
         // - <itunes:owner>
         // - <itunes:image>
-        // - <itunes:subtitle>
-        // - <itunes:block>
-        // - <itunes:explicit>
+
+        // TODO: Think if I really need the individual filters. Everything is
+        // overridable via `podlove_rss_channel`. Strong tendency: remove.
         $channel = [
             'title' => apply_filters('podlove_feed_title', ''),
             'link' => apply_filters('podlove_feed_link', \Podlove\get_landing_page_url()),
@@ -63,6 +66,9 @@ final class Generator
             self::NS_ITUNES.'author' => apply_filters('podlove_feed_itunes_author', $this->podcast->author_name),
             self::NS_ITUNES.'type' => apply_filters('podlove_feed_itunes_type', in_array($this->podcast->itunes_type, ['episodic', 'serial']) ? $this->podcast->itunes_type : 'episodic'),
             self::NS_ITUNES.'summary' => apply_filters('podlove_feed_itunes_summary', $this->podcast->summary),
+            self::NS_ITUNES.'subtitle' => apply_filters('podlove_feed_itunes_subtitle', $this->podcast->subtitle),
+            self::NS_ITUNES.'explicit' => apply_filters('podlove_feed_itunes_explicit', $this->podcast->explicit_text()),
+            self::NS_ITUNES.'block' => apply_filters('podlove_feed_itunes_block', ($this->feed->enable) ? 'no' : 'yes'),
         ];
 
         return apply_filters('podlove_rss_channel', $channel);
@@ -73,15 +79,12 @@ final class Generator
     {
         $items = [];
 
-        // TODO: guard that this is != null
-        $feed = \Podlove\Feeds\get_feed();
-
         while (have_posts()) {
             the_post();
 
             $post = \get_post();
             $episode = Model\Episode::find_one_by_post_id($post->ID);
-            $asset = $feed->episode_asset();
+            $asset = $this->feed->episode_asset();
             $file_type = $asset->file_type();
             $file = Model\MediaFile::find_by_episode_id_and_episode_asset_id($episode->id, $asset->id);
 
@@ -110,7 +113,7 @@ final class Generator
                         'attributes' => ['isPermalink' => 'false'],
                         'value' => get_the_guid()
                     ],
-                    ...$this->enclosure($episode, $file, $asset, $feed, $file_type),
+                    ...$this->enclosure($episode, $file, $asset, $this->feed, $file_type),
                     ...$this->deep_link($episode),
                     ...$this->itunes_duration($episode),
                     ...$this->itunes_title($episode),
@@ -119,7 +122,7 @@ final class Generator
                 ]
             ];
 
-            $item = apply_filters('podlove_rss_item', $item, $episode, $feed);
+            $item = apply_filters('podlove_rss_item', $item, $episode, $this->feed);
             $items[] = $item;
         }
 
