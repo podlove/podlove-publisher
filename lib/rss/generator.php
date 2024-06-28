@@ -46,12 +46,15 @@ final class Generator
     private function channel()
     {
         // TODO
-        // - <image> (url, title, link)
         // - <atom:link> Pagination
-        // - <itunes:category>
         $channel = [
             'title' => apply_filters('podlove_feed_title', ''),
             'link' => \Podlove\get_landing_page_url(),
+            'image' => [
+                'url' => $this->podcast->cover_art()->url(),
+                'title' => $this->podcast->title,
+                'link' => \Podlove\get_landing_page_url()
+            ],
             'description' => new Cdata($this->podcast->summary),
             'lastBuildDate' => mysql2date('D, d M Y H:i:s +0000', get_lastpostmodified('GMT'), false),
             'generator' => \Podlove\get_plugin_header('Name').' v'.\Podlove\get_plugin_header('Version'),
@@ -60,6 +63,7 @@ final class Generator
             self::NS_ITUNES.'author' => $this->podcast->author_name,
             self::NS_ITUNES.'type' => in_array($this->podcast->itunes_type, ['episodic', 'serial']) ? $this->podcast->itunes_type : 'episodic',
             self::NS_ITUNES.'summary' => $this->podcast->summary,
+            ...$this->itunes_categories(),
             self::NS_ITUNES.'image' => ['attributes' => ['href' => $this->podcast->cover_art()->url()]],
             self::NS_ITUNES.'owner' => [
                 self::NS_ITUNES.'name' => $this->podcast->owner_name,
@@ -74,6 +78,55 @@ final class Generator
 
         // FIXME: "Shows" module hooks must use this filter instead.
         return apply_filters('podlove_rss_channel', $channel);
+    }
+
+    private function itunes_categories()
+    {
+        $categories = \Podlove\Itunes\categories(prefix_subcategories: false);
+
+        return array_map(
+            fn ($category_id) => $this->itunes_category($category_id, $categories),
+            [
+                $this->podcast->category_1,
+                $this->podcast->category_2,
+                $this->podcast->category_3
+            ]
+        );
+    }
+
+    private function itunes_category($category_id, $categories)
+    {
+        if (!$category_id) {
+            return [];
+        }
+
+        [$cat, $subcat] = explode('-', $category_id);
+
+        // toplevel category
+        if ($subcat == '00') {
+            return [[
+                'name' => self::NS_ITUNES.'category',
+                'attributes' => ['text' => $categories[$category_id]]
+            ]];
+        }
+
+        // second level category
+        if ($categories[$category_id]) {
+            return [[
+                'name' => self::NS_ITUNES.'category',
+                'attributes' => ['text' => $categories[$cat.'-00']],
+                'value' => [
+                    'name' => self::NS_ITUNES.'category',
+                    'attributes' => ['text' => $categories[$category_id]],
+                ]
+            ]];
+        }
+
+        // unknown second level, default to toplevel
+        return [[
+            'name' => self::NS_ITUNES.'category',
+            'attributes' => ['text' => $categories[$cat.'-00']]
+        ]];
     }
 
     // NOTE: This uses/requires The WordPress Loop
