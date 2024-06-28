@@ -46,10 +46,11 @@ final class Generator
     private function channel()
     {
         // TODO
-        // - <atom:link> Pagination
+        // - <atom:link rel="self"
         $channel = [
             'title' => apply_filters('podlove_feed_title', ''),
             'link' => \Podlove\get_landing_page_url(),
+            ...$this->pagination(),
             'image' => [
                 'url' => $this->podcast->cover_art()->url(),
                 'title' => $this->podcast->title,
@@ -78,6 +79,40 @@ final class Generator
 
         // FIXME: "Shows" module hooks must use this filter instead.
         return apply_filters('podlove_rss_channel', $channel);
+    }
+
+    private function pagination()
+    {
+        global $wp_query;
+
+        $entries = [];
+
+        $current_page = get_query_var('paged') ? get_query_var('paged') : 1;
+        $feed_url = $this->feed->get_subscribe_url();
+
+        $link = fn ($rel, $page_num) => [
+            'name' => self::NS_ATOM.'link',
+            'attributes' => [
+                'rel' => $rel,
+                'href' => $page_num > 1 ? add_query_arg('paged', $page_num, $feed_url) : $feed_url
+            ]
+        ];
+
+        if ($current_page < $wp_query->max_num_pages) {
+            $entries[] = $link(rel: 'next', page_num: $current_page + 1);
+        }
+
+        if ($current_page > 1) {
+            $entries[] = $link(rel: 'prev', page_num: $current_page - 1);
+        }
+
+        $entries[] = $link(rel: 'first', page_num: 1);
+
+        if ($wp_query->max_num_pages > 1) {
+            $entries[] = $link(rel: 'last', page_num: $wp_query->max_num_pages);
+        }
+
+        return $entries;
     }
 
     private function itunes_categories()
