@@ -244,7 +244,11 @@ class License
             return 'Creative Commons Attribution'.$license_attributions.' 4.0 International License';
         }
 
-        return 'Creative Commons Attribution'.$license_attributions.' '.$versions[$license['jurisdiction']]['version'].' '.($license['jurisdiction'] == 'international' ? 'Unported' : $locales[$license['jurisdiction']]).' License';
+        if ($license['version'] == 'cc3') {
+            return 'Creative Commons Attribution'.$license_attributions.' '.$versions[$license['jurisdiction']]['version'].' '.($license['jurisdiction'] == 'international' ? 'Unported' : $locales[$license['jurisdiction']]).' License';
+        }
+
+        return 'undefined';
     }
 
     public static function get_url_from_license($license)

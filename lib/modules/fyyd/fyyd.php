@@ -24,12 +24,16 @@ class fyyd extends \Podlove\Modules\Base
 
     public function register_hooks()
     {
-        $fyyd_verifycode = $this->get_module_option('fyyd_verifycode');
-        if (!$fyyd_verifycode) {
+        $code = $this->get_module_option('fyyd_verifycode');
+
+        if (!$code) {
             return;
         }
-        add_action('podlove_rss2_head', function ($feed) use ($fyyd_verifycode) {
-            echo "\n\t".sprintf('<fyyd:verify xmlns:fyyd="https://fyyd.de/fyyd-ns/">%s</fyyd:verify>'."\n\t", $fyyd_verifycode);
+
+        add_filter('podlove_rss_channel', function ($channel) use ($code) {
+            $channel[\Podlove\RSS\Generator::NS_FYYD.'verify'] = $code;
+
+            return $channel;
         });
     }
 }

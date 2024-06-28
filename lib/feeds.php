@@ -15,7 +15,8 @@ function register_podcast_feeds()
 {
     foreach (Model\Feed::all() as $feed) {
         if ($feed->slug) {
-            add_feed($feed->slug, '\\Podlove\\Feeds\\generate_podcast_feed');
+            add_feed($feed->slug.'-legacy', '\\Podlove\\Feeds\\generate_podcast_feed');
+            add_feed($feed->slug, '\\Podlove\\Feeds\\generate_sparkling_podcast_feed');
         }
     }
 }
@@ -168,6 +169,13 @@ function generate_podcast_feed()
     remove_podPress_hooks();
     remove_powerPress_hooks();
     RSS::render();
+}
+
+function generate_sparkling_podcast_feed()
+{
+    $generator = new \Podlove\RSS\Generator();
+    $generator->generate();
+    exit;
 }
 
 function check_for_and_do_compression($content_type = 'application/rss+xml')
