@@ -59,9 +59,13 @@ class OnboardingPage
       <style>
         #publisher-iframe {
           width: 100%;
-          height: calc(100vh - 32px);
+          height: 100vh;
           position: absolute;
           top: 0;
+        }
+
+        .update-message {
+          display: none;
         }
 
         #wpbody {
@@ -70,7 +74,12 @@ class OnboardingPage
 
         #wpcontent {
           padding-left: 0;
+          padding-bottom: 0;
           height: 100%;
+        }
+
+        #wpfooter {
+          display: none;
         }
       </style>
     EOD;
