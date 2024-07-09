@@ -52,7 +52,7 @@ define('ASSET_STATUS_ERROR', '<i class="clickable podlove-icon-remove"></i>');
 						</td>
 					<?php } ?>
 					<td>
-						<?php echo $episode->post_status; ?>
+						<?php echo get_post_status($episode->post_id); ?>
 					</td>
 				</tr>
 			<?php } ?>

@@ -9,6 +9,9 @@ class Contributors extends Tab
 {
     private $page;
 
+    public $object;
+    public $table;
+
     public function get_slug()
     {
         return 'contributors';

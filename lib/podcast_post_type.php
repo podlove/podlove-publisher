@@ -150,7 +150,7 @@ class Podcast_Post_Type
         }
 
         $episode = \Podlove\Model\Episode::find_or_create_by_post_id($post->ID);
-        $excerpt = strlen($episode->summary) > 0 ? $episode->summary : $excerpt;
+        $excerpt = strlen($episode->summary || '') > 0 ? $episode->summary : $excerpt;
 
         return apply_filters('wp_trim_excerpt', $excerpt);
     }

@@ -383,8 +383,7 @@ class Podcast implements Licensable
 
             $sql = '
 				SELECT
-                	e.*,
-                    p.post_status
+				  e.*
 				FROM
 					'.Episode::table_name().' e
 					INNER JOIN '.$wpdb->posts.' p ON e.post_id = p.ID

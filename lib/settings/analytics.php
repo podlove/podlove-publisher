@@ -10,6 +10,7 @@ class Analytics
     use \Podlove\HasPageDocumentationTrait;
 
     public static $pagehook;
+    public $table;
 
     public function __construct($handle)
     {

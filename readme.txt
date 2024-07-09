@@ -118,6 +118,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 = 4.1.12 =
 
 * new: when selecting a file for Auphonic, its name is suggested to be used as episode slug
+* fix: PHP deprecation warnings
 
 = 4.1.11 =
 

@@ -220,6 +220,10 @@ class License
 
         $license_attributions = '';
 
+        if (empty($license['version'])) {
+          return '';
+        }
+
         if ($license['version'] == 'pdmark') {
             return 'Public Domain Mark License';
         }

@@ -13,6 +13,8 @@ use Podlove\Model\Episode;
  */
 class ContributionGenderStatistics
 {
+    public $contributions;
+    
     public function __construct()
     {
         global $wpdb;
