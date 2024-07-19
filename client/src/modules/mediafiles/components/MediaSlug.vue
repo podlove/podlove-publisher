@@ -57,6 +57,10 @@ export default defineComponent({
     assetPrefix(): string {
       let url = this.state.baseUri?.replace(/https?:\/\//i, '').trim()
 
+      if (!url) {
+        return ''
+      }
+
       const lastSlashPos = url.trim().replace(/\/+$/g, '').lastIndexOf('/')
 
       if (url.length > 30 && lastSlashPos > -1) {
