@@ -115,6 +115,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 4.1.13 =
+
+* add transcripts to import/export
+
 = 4.1.12 =
 
 * new: when selecting a file for Auphonic, its name is suggested to be used as episode slug
