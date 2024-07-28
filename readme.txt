@@ -115,6 +115,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2024-07-28 =
+
+* add transcripts to import/export
+
 = 2024-03-26 =
 
 * bring beta up to date with stable release 4.1.6

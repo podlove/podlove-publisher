@@ -35,6 +35,9 @@ class Transcripts extends \Podlove\Modules\Base
 
         add_action('wp', [$this, 'serve_transcript_file']);
 
+        add_action('podlove_xml_export', [$this, 'expandExportFile']);
+        add_filter('podlove_import_jobs', [$this, 'expandImport']);
+
         // external assets
         add_action('podlove_asset_assignment_form', [$this, 'add_asset_assignment_form'], 10, 2);
         add_action('podlove_media_file_content_has_changed', [$this, 'handle_changed_media_file']);
@@ -515,11 +518,34 @@ class Transcripts extends \Podlove\Modules\Base
         $this->transcript_import_from_asset($media_file->episode());
     }
 
+    /**
+     * Expands "Import/Export" module: export logic.
+     */
+    public function expandExportFile(\SimpleXMLElement $xml)
+    {
+        \Podlove\Modules\ImportExport\Export\PodcastExporter::exportTable($xml, 'transcripts', 'transcript', '\Podlove\Modules\Transcripts\Model\Transcript');
+        \Podlove\Modules\ImportExport\Export\PodcastExporter::exportTable($xml, 'voice_assignments', 'voice_assignment', '\Podlove\Modules\Transcripts\Model\VoiceAssignment');
+    }
+
+    /**
+     * Expands "Import/Export" module: import logic.
+     *
+     * @param mixed $jobs
+     */
+    public function expandImport($jobs)
+    {
+        $jobs[] = '\Podlove\Modules\Transcripts\Jobs\ImportTranscriptsJob';
+        $jobs[] = '\Podlove\Modules\Transcripts\Jobs\ImportVoiceAssignmentsJob';
+
+        return $jobs;
+    }
+
     private function print_rss_feed_links($podcast, $episode)
     {
         if ($podcast->feed_transcripts == 'none') {
             return;
-        } else if ($podcast->feed_transcripts == 'generated') {
+        }
+        if ($podcast->feed_transcripts == 'generated') {
             if (!Transcript::exists_for_episode($episode->id)) {
                 return;
             }
@@ -534,7 +560,8 @@ class Transcripts extends \Podlove\Modules\Base
             echo "\n\t\t".'<podcast:transcript url="'.esc_attr($url).'" type="application/json" />';
 
             return;
-        } elseif (preg_match('/^asset_(?<id>\d+)$/', $podcast->feed_transcripts, $matches) === 1) {
+        }
+        if (preg_match('/^asset_(?<id>\d+)$/', $podcast->feed_transcripts, $matches) === 1) {
             $asset_id = $matches['id'];
             $asset = Model\EpisodeAsset::find_by_id($asset_id);
 
