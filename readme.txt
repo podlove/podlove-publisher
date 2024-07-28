@@ -119,6 +119,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 * add transcripts to import/export
 * add confirmation button on modal to input episode image url
+* fix: selecting an episode image updates the preview
 
 = 4.1.12 =
 

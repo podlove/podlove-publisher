@@ -130,14 +130,11 @@ export const reducer = handleActions(
         'license_url',
         'show',
         'number',
+        'episode_poster',
       ]
-      const other = ['image']
-      const todo = ['tags']
 
       if (simple.includes(prop)) {
         return { ...state, [prop]: value }
-      } else if (prop == 'image') {
-        return { ...state, ['episode_poster']: value }
       } else {
         console.debug('todo', prop, value)
         return { ...state }
