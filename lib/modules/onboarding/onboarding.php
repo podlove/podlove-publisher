@@ -3,7 +3,7 @@
 namespace Podlove\Modules\Onboarding;
 
 use Podlove\Modules\Onboarding\Settings\OnboardingPage;
-use Podlove\Api\Admin\WP_REST_PodloveOnboarding_Controller;
+use Podlove\Modules\Onboarding\WP_REST_PodloveOnboarding_Controller;
 
 class Onboarding extends \Podlove\Modules\Base
 {
