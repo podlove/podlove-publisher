@@ -581,7 +581,7 @@ class WP_REST_PodloveEpisode_Controller extends \WP_REST_Controller
             'publicationDate' => mysql2date('c', $post->post_date),
             'recording_date' => $episode->recording_date,
             'poster' => $episode->cover_art_with_fallback()->setWidth(500)->url(),
-            'episode_poster' => $episode->cover,
+            'episode_poster' => $episode->cover_art,
             'link' => get_permalink($episode->post_id),
             'audio' => \podlove_pwp5_audio_files($episode, null),
             'files' => \podlove_pwp5_files($episode, null),
