@@ -184,6 +184,18 @@ class Episode extends Base implements Licensable
         return htmlspecialchars(trim($description));
     }
 
+    /**
+     * Episode slug.
+     *
+     * Including output escaping. Use when displaying the slug anywhere in the
+     * UI. As part of a file URL, use \Podlove\prepare_episode_slug_for_url
+     * instead.
+     */
+    public function slug(): string
+    {
+        return htmlspecialchars($this->slug);
+    }
+
     public function post()
     {
         return $this->with_blog_scope(function () {

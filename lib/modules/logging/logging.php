@@ -221,7 +221,7 @@ $(document).ready(function() {
 			        if ($media_file = Model\MediaFile::find_by_id($data->media_file_id)) {
 			            if ($episode = $media_file->episode()) {
 			                if ($asset = $media_file->episode_asset()) {
-			                    echo sprintf('<a href="%s">%s/%s</a>', get_edit_post_link($episode->post_id), $episode->slug, $asset->title);
+			                    echo sprintf('<a href="%s">%s/%s</a>', get_edit_post_link($episode->post_id), $episode->slug(), $asset->title);
 			                }
 			            }
 			        }

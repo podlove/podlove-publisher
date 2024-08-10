@@ -118,6 +118,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 = 4.1.14 =
 
 * security: add nonces to template actions
+* security: use output escaping for episode slug
 
 = 4.1.13 =
 

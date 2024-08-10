@@ -26,7 +26,7 @@ define('ASSET_STATUS_ERROR', '<i class="clickable podlove-icon-remove"></i>');
                                 echo ' ';
                                 echo __('Slug is missing', 'podlove-podcasting-plugin-for-wordpress');
                             } else {
-                                echo $episode->slug;
+                                echo $episode->slug();
                             }
                             ?>
 						</a>
