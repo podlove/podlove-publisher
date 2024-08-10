@@ -56,6 +56,11 @@ class TemplateController
             Ajax::respond_with_json(['success' => false]);
         }
 
+        if (!\wp_verify_nonce($_REQUEST['nonce'], 'podlove_ajax')) {
+            http_response_code(401);
+            exit;
+        }
+
         $id = filter_input(INPUT_POST, 'id', FILTER_SANITIZE_NUMBER_INT);
         $title = filter_input(INPUT_POST, 'title');
         $content = filter_input(INPUT_POST, 'content');
@@ -85,6 +90,11 @@ class TemplateController
             Ajax::respond_with_json(['success' => false]);
         }
 
+        if (!\wp_verify_nonce($_REQUEST['nonce'], 'podlove_ajax')) {
+            http_response_code(401);
+            exit;
+        }
+
         $template = new Template();
         $template->title = 'new template';
         $template->save();
@@ -96,6 +106,11 @@ class TemplateController
     {
         if (!current_user_can('administrator')) {
             Ajax::respond_with_json(['success' => false]);
+        }
+
+        if (!\wp_verify_nonce($_REQUEST['nonce'], 'podlove_ajax')) {
+            http_response_code(401);
+            exit;
         }
 
         $id = filter_input(INPUT_POST, 'id', FILTER_SANITIZE_NUMBER_INT);

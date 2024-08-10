@@ -109,7 +109,8 @@
 					title: template_title,
 					content: template_content,
                     is_network: isNetwork,
-					action: 'podlove-template-update'
+					action: 'podlove-template-update',
+					nonce: podlove_admin_global.nonce_ajax
 				},
 				success: function(data, status, xhr) {
 					save_button.blur();
@@ -163,7 +164,7 @@
 			$.ajax(ajaxurl, {
 				dataType: 'json',
 				type: 'POST',
-				data: { action: 'podlove-template-create', is_network: isNetwork },
+				data: { action: 'podlove-template-create', is_network: isNetwork, nonce: podlove_admin_global.nonce_ajax },
 				success: function(data, status, xhr) {
 					$("ul", $navigation)
 						.append("<li><a href=\"#\" data-id=\"" + data.id + "\"><span class='filename'>new template</span>&nbsp;</a></li>");
@@ -188,7 +189,8 @@
 					data: {
 						id: template_id,
                         is_network: isNetwork,
-						action: 'podlove-template-delete'
+						action: 'podlove-template-delete',
+						nonce: podlove_admin_global.nonce_ajax
 					},
 					success: function(data, status, xhr) {
 						if (data.success) {

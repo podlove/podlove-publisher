@@ -115,6 +115,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 4.1.14 =
+
+* security: add nonces to template actions
+
 = 4.1.13 =
 
 * add transcripts to import/export
