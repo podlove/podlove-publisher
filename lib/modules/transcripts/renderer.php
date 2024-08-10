@@ -102,6 +102,10 @@ class Renderer
 
         $transcript = Transcript::get_transcript($this->episode->id);
         $transcript = array_map(function ($t) use ($contributors_map) {
+            if (!$t->voice) {
+                return null;
+            }
+
             $contributor = $contributors_map[$t->voice];
 
             if (!$contributor) {
