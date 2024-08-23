@@ -42,6 +42,23 @@ class WP_REST_PodloveOnboarding_Controller extends WP_REST_Controller
         $settings = get_option('podlove_podcast');
         $settings["media_file_base_uri"] = "";
         update_option('podlove_podcast', $settings);
+        // activated contributor module
+        if (isset($request['contributor'])) {
+            $contributor = $request['contributor'];
+            if (!\Podlove\Modules\Base::is_active('contributors') && $contributor) {
+                \Podlove\Modules\Base::activate('contributors');
+            }
+        }
+        // activated transcript module
+        if (isset($request['transcript'])) {
+            $transcript = $request['transcript'];
+            if (!\Podlove\Modules\Base::is_active('transcripts') && $transcript) {
+                \Podlove\Modules\Base::activate('transcripts');
+            }
+        }
+        return new \Podlove\Api\Response\OkResponse([
+            'status' => 'ok'
+        ]);
     }
 
     public function update_permissions_check($request)
