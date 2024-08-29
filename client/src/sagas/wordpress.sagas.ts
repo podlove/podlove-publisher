@@ -36,7 +36,9 @@ function* wordpressGutenbergUpdate() {
   yield put(
     wordpressStore.update({
       prop: 'title',
-      value: wordpress.store.select('core/editor').getEditedPostAttribute('title'),
+      value: wordpress.htmlEntities.decodeEntities(
+        wordpress.store.select('core/editor').getEditedPostAttribute('title')
+      ),
     })
   )
 }
