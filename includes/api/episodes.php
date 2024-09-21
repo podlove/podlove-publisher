@@ -764,11 +764,21 @@ class WP_REST_PodloveEpisode_Controller extends \WP_REST_Controller
 
         if (isset($request['explicit'])) {
             $explicit = $request['explicit'];
-            $explicit_lowercase = strtolower($explicit);
-            if ($explicit_lowercase == 'false') {
-                $episode->explicit = 0;
-            } elseif ($explicit_lowercase == 'true') {
-                $episode->explicit = 1;
+            if (is_string($explicit)) {
+                $explicit_lowercase = strtolower($explicit);
+                if ($explicit_lowercase == 'true') {
+                    $episode->explicit = 1;
+                } elseif ($explicit_lowercase == 'false') {
+                    $episode->explicit = 0;
+                }
+            }
+            else {
+                if ($explicit) {
+                    $episode->explicit = 1;
+                }
+                else {
+                    $episode->explicit = 0;
+                }
             }
         }
 
