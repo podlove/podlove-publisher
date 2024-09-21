@@ -131,6 +131,7 @@ export const reducer = handleActions(
         'show',
         'number',
         'episode_poster',
+        'explicit',
       ]
 
       if (simple.includes(prop)) {
