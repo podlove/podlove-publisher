@@ -115,6 +115,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 4.1.15 =
+
+* security: disable unsafe Twig Template filters "filter", "map" and "reduce"
+
 = 4.1.14 =
 
 * security: add nonces to template actions
