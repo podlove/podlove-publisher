@@ -1,144 +1,141 @@
-var PODLOVE = PODLOVE || {};
+window.PODLOVE = window.PODLOVE || {}
 
 /**
  * Handles all logic in Create/Edit Episode screen.
- * 
+ *
  * @todo investigate: looks like there is trouble when a second UARJob is started while the first is still running.
  */
-(function($){
+;(function ($) {
+  window.PODLOVE.Jobs = function () {}
 
-    PODLOVE.Jobs = function() {};
+  window.PODLOVE.Jobs.create = function (name, args, callback) {
+    $.post(
+      ajaxurl,
+      {
+        action: 'podlove-job-create',
+        name: name,
+        args: args,
+        nonce: podlove_admin_global.nonce_ajax,
+      },
+      'json'
+    ).done(function (job) {
+      // console.log("create job done", job);
 
-    PODLOVE.Jobs.create = function(name, args, callback) {
-        $.post(ajaxurl, {
-            action: 'podlove-job-create',
-            name: name,
-            args: args,
-            nonce: podlove_admin_global.nonce_ajax
-        }, 'json').done(function(job) {
-            // console.log("create job done", job);
-
-            if (callback) {
-                callback(job);
-            }
-        });
-    };
-
-    PODLOVE.Jobs.getStatus = function(job_id, callback) {
-        $.getJSON(ajaxurl, {
-            action: 'podlove-job-get',
-            job_id: job_id
-        }).done(function(status) {
-            // console.log("job status", job);
-
-            if (callback) {
-                callback(status);
-            }
-        });
-    }
-
-    PODLOVE.Jobs.Tools = function() {};
-
-    PODLOVE.Jobs.Tools.init = function() {
-        var wrapper = $(this)
-        var job_name = wrapper.data('job')
-        var button_text = wrapper.data('button-text')
-        var job_id = null;
-        var recent_job_id = wrapper.data('recent-job-id')
-        var job_args = wrapper.data('args') || {}
-        var timer = null;
-
-        var spinner = $("<i class=\"podlove-icon-spinner rotate\"></i>");
-        var button = $("<button>")
-            .addClass('button')
-            .html(button_text)
-        
-        var renderStatus = function(status) {
-
-            if (status.error) {
-                wrapper.html(status.error);
-                return;
-            }
-
-            var percent = 100 * (status.steps_progress / status.steps_total);
-
-            percent = Math.round(percent * 10) / 10;
-
-            if (!percent && status.steps_total > 0) {
-                wrapper
-                    .html(" starting…")
-                    .prepend(spinner.clone());
-            } else if (percent < 100 && status.steps_total > 0) {
-                wrapper
-                    .html(" " + percent + "%")
-                    .prepend(spinner.clone());
-            } else {
-                var t, datetime;
-
-                try {
-                    // try our best to parse the time but don't sweat if it fails
-                    t = status.updated_at.match(/^(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})/);
-                    datetime = (new Date(Date.UTC(t[1], t[2]-1, t[3], t[4], t[5], t[6]))).toISOString();
-                } catch (e) {
-                   datetime = "";
-                }
-
-                wrapper
-                    .empty()
-                    .append("<small class=\"podlove-recent-job-info\">Finished in " + Math.round(status.active_run_time) + " seconds <time class=\"timeago\" datetime=\"" + datetime + "\"></time></small>.")
-
-                $("time.timeago").timeago();
-                renderButton();
-            }
-        };
-
-        var renderButton = function () {
-            var button_clone = button.clone();
-            wrapper.prepend(button_clone);
-            button_clone.on('click', btnClickHandler);
-        }
-
-        var update = function() {
-            PODLOVE.Jobs.getStatus(job_id, function(status) {
-                renderStatus(status);
-
-                if (status.error) {
-                    console.error("job error", job_id, status.error);
-                    return;
-                }
-
-                // stop when done
-                if (parseInt(status.steps_progress, 10) >= parseInt(status.steps_total, 10))
-                    return;
-
-                timer = window.setTimeout(update, 3500);
-            });
-        };
-
-        var btnClickHandler = function(e) {
-            var job_spinner = spinner.clone();
-
-            PODLOVE.Jobs.create(job_name.split("-").join("\\"), job_args, function(job) {
-                job_id = job.job_id;
-                update();
-            });
-
-            wrapper
-                .empty()
-                .append(spinner.clone());
-        };
-
-        if (recent_job_id) {
-            job_id = recent_job_id;
-            update();
-        } else {
-            renderButton();
-        }
-    }
-
-    $(document).ready(function() {
-        $(".podlove-job").each(PODLOVE.Jobs.Tools.init);
+      if (callback) {
+        callback(job)
+      }
     })
+  }
 
-}(jQuery));
+  window.PODLOVE.Jobs.getStatus = function (job_id, callback) {
+    $.getJSON(ajaxurl, {
+      action: 'podlove-job-get',
+      job_id: job_id,
+    }).done(function (status) {
+      // console.log("job status", job);
 
+      if (callback) {
+        callback(status)
+      }
+    })
+  }
+
+  window.PODLOVE.Jobs.Tools = function () {}
+
+  window.PODLOVE.Jobs.Tools.init = function () {
+    var wrapper = $(this)
+    var job_name = wrapper.data('job')
+    var button_text = wrapper.data('button-text')
+    var job_id = null
+    var recent_job_id = wrapper.data('recent-job-id')
+    var job_args = wrapper.data('args') || {}
+    var timer = null
+
+    var spinner = $('<i class="podlove-icon-spinner rotate"></i>')
+    var button = $('<button>').addClass('button').html(button_text)
+
+    var renderStatus = function (status) {
+      if (status.error) {
+        wrapper.html(status.error)
+        return
+      }
+
+      var percent = 100 * (status.steps_progress / status.steps_total)
+
+      percent = Math.round(percent * 10) / 10
+
+      if (!percent && status.steps_total > 0) {
+        wrapper.html(' starting…').prepend(spinner.clone())
+      } else if (percent < 100 && status.steps_total > 0) {
+        wrapper.html(' ' + percent + '%').prepend(spinner.clone())
+      } else {
+        var t, datetime
+
+        try {
+          // try our best to parse the time but don't sweat if it fails
+          t = status.updated_at.match(/^(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})/)
+          datetime = new Date(Date.UTC(t[1], t[2] - 1, t[3], t[4], t[5], t[6])).toISOString()
+        } catch (e) {
+          datetime = ''
+        }
+
+        wrapper
+          .empty()
+          .append(
+            '<small class="podlove-recent-job-info">Finished in ' +
+              Math.round(status.active_run_time) +
+              ' seconds <time class="timeago" datetime="' +
+              datetime +
+              '"></time></small>.'
+          )
+
+        $('time.timeago').timeago()
+        renderButton()
+      }
+    }
+
+    var renderButton = function () {
+      var button_clone = button.clone()
+      wrapper.prepend(button_clone)
+      button_clone.on('click', btnClickHandler)
+    }
+
+    var update = function () {
+      window.PODLOVE.Jobs.getStatus(job_id, function (status) {
+        renderStatus(status)
+
+        if (status.error) {
+          console.error('job error', job_id, status.error)
+          return
+        }
+
+        // stop when done
+        if (parseInt(status.steps_progress, 10) >= parseInt(status.steps_total, 10)) return
+
+        timer = window.setTimeout(update, 3500)
+      })
+    }
+
+    var btnClickHandler = function (e) {
+      var job_spinner = spinner.clone()
+
+      window.PODLOVE.Jobs.create(job_name.split('-').join('\\'), job_args, function (job) {
+        job_id = job.job_id
+        update()
+      })
+
+      wrapper.empty().append(spinner.clone())
+    }
+
+    if (recent_job_id) {
+      job_id = recent_job_id
+      update()
+    } else {
+      renderButton()
+    }
+  }
+
+  $(document).ready(function () {
+    $('.podlove-job').each(window.PODLOVE.Jobs.Tools.init)
+  })
+})(jQuery)

@@ -10,22 +10,22 @@
 </template>
 
 <script>
-import ShownotesTopic from "./shownotes/topic";
-import ShownotesLink from "./shownotes/link";
+import ShownotesTopic from './shownotes/topic.vue'
+import ShownotesLink from './shownotes/link.vue'
 
 export default {
-  props: ["entry"],
+  props: ['entry'],
   data() {
-    return {};
+    return {}
   },
   computed: {
     isHidden: function () {
-      return this.entry.hidden === "1";
+      return this.entry.hidden === '1'
     },
   },
   components: {
-    "shownotes-topic": ShownotesTopic,
-    "shownotes-link": ShownotesLink,
+    'shownotes-topic': ShownotesTopic,
+    'shownotes-link': ShownotesLink,
   },
-};
+}
 </script>

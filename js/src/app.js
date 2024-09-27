@@ -1,49 +1,24 @@
-import Vue from 'vue'
+import { createApp } from 'vue'
 
-import axios from 'axios'
-import VueAxios from 'vue-axios'
-
-Vue.use(VueAxios, axios)
-
-import JobsDashboard from './components/JobsDashboard'
-import AnalyticsDatePicker from './components/AnalyticsDatePicker'
-import Slacknotes from './components/Slacknotes'
-import Shownotes from './components/Shownotes'
-import ShownotesEntry from './components/ShownotesEntry'
+import JobsDashboard from './components/JobsDashboard.vue'
+import AnalyticsDatePicker from './components/AnalyticsDatePicker.vue'
+import Slacknotes from './components/Slacknotes.vue'
+import Shownotes from './components/Shownotes.vue'
+import ShownotesEntry from './components/ShownotesEntry.vue'
 import Draggable from 'vuedraggable'
 
-Vue.component('analytics-date-picker', AnalyticsDatePicker)
-Vue.component('jobs-dashboard', JobsDashboard)
-Vue.component('slacknotes', Slacknotes)
-Vue.component('shownotes', Shownotes)
-Vue.component('shownotes-entry', ShownotesEntry)
-Vue.component('draggable', Draggable)
+createApp(JobsDashboard).mount('#podlove-tools-dashboard')
+createApp(Slacknotes).mount('#slacknotes-app')
+createApp(Shownotes).mount('#podlove-shownotes-app')
 
 import 'v2-datepicker/lib/index.css'
 import V2Datepicker from 'v2-datepicker'
 
-Vue.use(V2Datepicker)
+const analyticsApp = createApp(AnalyticsDatePicker)
+analyticsApp.use(V2Datepicker)
+analyticsApp.mount('#podlove-analytics-app')
 
-if (document.getElementById('podlove-tools-dashboard')) {
-  const toolsDashboard = new Vue({
-    el: '#podlove-tools-dashboard',
-  })
-}
+// vue.component('shownotes-entry', ShownotesEntry)
+// vue.component('draggable', Draggable)
 
-if (document.getElementById('slacknotes-app')) {
-  window.slacknotes = new Vue({
-    el: '#slacknotes-app',
-  })
-}
-
-if (document.getElementById('podlove-shownotes-app')) {
-  window.shownotes = new Vue({
-    el: '#podlove-shownotes-app',
-  })
-}
-
-if (document.getElementById('podlove-analytics-app')) {
-  window.analyticsApp = new Vue({
-    el: '#podlove-analytics-app',
-  })
-}
+// TODO: check every "app" that it works

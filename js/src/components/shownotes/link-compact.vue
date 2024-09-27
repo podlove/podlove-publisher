@@ -5,12 +5,7 @@
         <icon-menu htmlClass="w-5 h-5 flex-shrink-0 cursor-move drag-handle" />
         <div class="truncate">
           <div class="flex items-center gap-1">
-            <img
-              v-if="entry && entry.icon"
-              :src="icon"
-              width="16"
-              height="16"
-            />
+            <img v-if="entry && entry.icon" :src="icon" width="16" height="16" />
             <div v-else style="width: 16px; height: 16px"></div>
 
             <span class="text-sm truncate text-gray-800 font-bold">
@@ -43,23 +38,23 @@
 </template>
 
 <script>
-import Menu from "../icons/Menu";
-import Edit from "../icons/Edit";
-import Eye from "../icons/Eye";
-import EyeOff from "../icons/EyeOff";
-import SNCard from "./sn-card.vue";
+import Menu from '../icons/Menu.vue'
+import Edit from '../icons/Edit.vue'
+import Eye from '../icons/Eye.vue'
+import EyeOff from '../icons/EyeOff.vue'
+import SNCard from './sn-card.vue'
 
 export default {
-  props: ["isHidden", "entry", "icon"],
+  props: ['isHidden', 'entry', 'icon'],
   data() {
-    return {};
+    return {}
   },
   components: {
-    "icon-menu": Menu,
-    "icon-edit": Edit,
-    "icon-eye": Eye,
-    "icon-eye-off": EyeOff,
-    "sn-card": SNCard,
+    'icon-menu': Menu,
+    'icon-edit': Edit,
+    'icon-eye': Eye,
+    'icon-eye-off': EyeOff,
+    'sn-card': SNCard,
   },
-};
+}
 </script>
