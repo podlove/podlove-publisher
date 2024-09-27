@@ -30,7 +30,7 @@
     "@podlove/utils": "5.12.2",
     "@podlove/web-player": "5.12.3",
     "@popperjs/core": "2.11.4",
-    "axios": "1.7.2",
+    "axios": "1.7.7",
     "lodash": "4.17.21",
     "redux": "4.1.2",
     "redux-actions": "2.6.5",
