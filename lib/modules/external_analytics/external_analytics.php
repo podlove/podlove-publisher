@@ -18,7 +18,6 @@ class External_Analytics extends \Podlove\Modules\Base
 				'.'<li><a href="https://op3.dev/" target="_blank">Open Podcast Prefix Project (OP3)</a>: https://op3.dev/e/</li>
 				'.'<li><a href="https://publisher.podtrac.com" target="_blank">Podtrac</a>: https://dts.podtrac.com/redirect.mp3/</li>
 				'.'<li><a href="https://stats.blubrry.com" target="_blank">Blubrry</a>: http://media.blubrry.com/{blubrry_id}/</li>
-				'.'<li><a href="https://chartable.com/publishers" target="_blank">Chartable</a>: https://chtbl.com/track/{chtbl_id}/</li>
 				<li>'.__('etc.', 'podlove-podcasting-plugin-for-wordpress').'</li>
 				'.'</ul>
                 ',
