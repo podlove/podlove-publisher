@@ -9,16 +9,23 @@ import Draggable from 'vuedraggable'
 
 createApp(JobsDashboard).mount('#podlove-tools-dashboard')
 createApp(Slacknotes).mount('#slacknotes-app')
-createApp(Shownotes).mount('#podlove-shownotes-app')
+
+// FIXME: draggable does not work
+// FIXME: everything is displayed multiple times
+const shownotesApp = createApp({})
+
+shownotesApp.component('shownotes', Shownotes)
+shownotesApp.component('shownotes-entry', ShownotesEntry)
+shownotesApp.component('draggable', Draggable)
+shownotesApp.mount('#podlove-shownotes-app')
 
 import 'v2-datepicker/lib/index.css'
 import V2Datepicker from 'v2-datepicker'
 
-const analyticsApp = createApp(AnalyticsDatePicker)
+// FIXME: Datepicker not working yet
+const analyticsApp = createApp({})
 analyticsApp.use(V2Datepicker)
+analyticsApp.component('analytics-date-picker', AnalyticsDatePicker)
 analyticsApp.mount('#podlove-analytics-app')
-
-// vue.component('shownotes-entry', ShownotesEntry)
-// vue.component('draggable', Draggable)
 
 // TODO: check every "app" that it works

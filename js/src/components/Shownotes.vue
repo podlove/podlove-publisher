@@ -34,6 +34,7 @@
     </div>
     <div v-else id="shownotes-main">
       <draggable
+        item-key="id"
         v-model="shownotes"
         @update="onDragEnd"
         @end="onDragEnded"
@@ -43,14 +44,16 @@
         handle=".drag-handle"
         :animation="100"
       >
-        <shownotes-entry
-          :entry="entry"
-          v-on:update:entry="onUpdateEntry"
-          v-on:delete:entry="onDeleteEntry"
-          v-show="ready"
-          v-for="entry in visibleShownotes"
-          :key="entry.id"
-        ></shownotes-entry>
+        <template #item="{ element }">
+          <shownotes-entry
+            :entry="element"
+            v-on:update:entry="onUpdateEntry"
+            v-on:delete:entry="onDeleteEntry"
+            v-show="ready"
+            v-for="element in visibleShownotes"
+            :key="element.id"
+          ></shownotes-entry>
+        </template>
       </draggable>
 
       <div class="p-expand" v-if="isTruncatedView">

@@ -1,6 +1,5 @@
 window.PODLOVE = window.PODLOVE || {}
 import './admin/podlove_data_table.js'
-import './admin/episode.js'
 import './admin/jobs.js'
 import './admin/dashboard_asset_validation.js'
 import './admin/episode_asset_settings.js'
@@ -234,10 +233,6 @@ jQuery(function ($) {
 
   $('#asset_validation').each(function () {
     window.PODLOVE.DashboardAssetValidation($(this))
-  })
-
-  $('#podlove_podcast').each(function () {
-    window.PODLOVE.Episode($(this))
   })
 
   $('#podlove_episode_assets, table.episode_assets').each(function () {
