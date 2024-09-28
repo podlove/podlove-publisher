@@ -3,30 +3,14 @@
     <draggable
       v-if="moveModalVisible && topics.length > 0"
       id="podlove-shownotes-topic-modal"
-      class="
-        move-modal
-        w-[350px]
-        bg-[#000d]
-        text-white text-base
-        rounded-md
-        p-2
-      "
+      class="move-modal w-[350px] bg-[#000d] text-white text-base rounded-md p-2"
       :sort="false"
       :group="{ name: 'foo', pull: false }"
     >
       <div
         v-for="(topic, index) in topics"
         :key="topic.id"
-        class="
-          flex
-          my-.5
-          py-.5
-          px-2
-          rounded
-          cursor-pointer
-          hover:bg-[#4f9cff]
-          sortable-chosen
-        "
+        class="flex my-.5 py-.5 px-2 rounded cursor-pointer hover:bg-[#4f9cff] sortable-chosen"
       >
         <div class="w-5 mr-1">{{ index }}</div>
         <div>{{ topic.title }}</div>
@@ -42,10 +26,7 @@
             </div>
           </div>
           <div class="content">
-            <slacknotes
-              mode="import"
-              v-on:import:entries="onImportEntries"
-            ></slacknotes>
+            <slacknotes mode="import" v-on:import:entries="onImportEntries"></slacknotes>
           </div>
         </div>
       </div>
@@ -53,6 +34,7 @@
     </div>
     <div v-else id="shownotes-main">
       <draggable
+        item-key="id"
         v-model="shownotes"
         @update="onDragEnd"
         @end="onDragEnded"
@@ -62,21 +44,23 @@
         handle=".drag-handle"
         :animation="100"
       >
-        <shownotes-entry
-          :entry="entry"
-          v-on:update:entry="onUpdateEntry"
-          v-on:delete:entry="onDeleteEntry"
-          v-show="ready"
-          v-for="entry in visibleShownotes"
-          :key="entry.id"
-        ></shownotes-entry>
+        <template #item="{ element }">
+          <shownotes-entry
+            :entry="element"
+            v-on:update:entry="onUpdateEntry"
+            v-on:delete:entry="onDeleteEntry"
+            v-show="ready"
+            v-for="element in visibleShownotes"
+            :key="element.id"
+          ></shownotes-entry>
+        </template>
       </draggable>
 
       <div class="p-expand" v-if="isTruncatedView">
         <sn-button
           :onClick="
             () => {
-              isTruncatedView = false;
+              isTruncatedView = false
             }
           "
           >Expand to view all Shownotes</sn-button
@@ -89,21 +73,11 @@
             <h3 style="margin-top: 0px">Add new Entry</h3>
             <div class="p-entry-type-selector">
               <span>
-                <input
-                  type="radio"
-                  id="entry-type-url"
-                  value="link"
-                  v-model="newEntryType"
-                />
+                <input type="radio" id="entry-type-url" value="link" v-model="newEntryType" />
                 <label for="entry-type-url">Link</label>
               </span>
               <span>
-                <input
-                  type="radio"
-                  id="entry-type-topic"
-                  value="topic"
-                  v-model="newEntryType"
-                />
+                <input type="radio" id="entry-type-topic" value="topic" v-model="newEntryType" />
                 <label for="entry-type-topic">Topic</label>
               </span>
             </div>
@@ -117,15 +91,7 @@
                 placeholder="https://example.com"
                 :disabled="mode == 'create-waiting'"
                 v-focus
-                class="
-                    w-full
-                    shadow-sm
-                    focus:ring-blue-500 focus:border-blue-500
-                    block
-                    sm:text-sm
-                    border border-gray-300
-                    rounded-md
-                "
+                class="w-full shadow-sm focus:ring-blue-500 focus:border-blue-500 block sm:text-sm border border-gray-300 rounded-md"
               />
               <button
                 type="button"
@@ -145,15 +111,7 @@
                 placeholder="Topic, Subheading"
                 :disabled="mode == 'create-waiting'"
                 v-focus
-                class="
-                    w-full
-                    shadow-sm
-                    focus:ring-blue-500 focus:border-blue-500
-                    block
-                    sm:text-sm
-                    border border-gray-300
-                    rounded-md
-              "
+                class="w-full shadow-sm focus:ring-blue-500 focus:border-blue-500 block sm:text-sm border border-gray-300 rounded-md"
               />
               <button
                 type="button"
@@ -172,8 +130,8 @@
         <sn-button
           :onClick="
             () => {
-              isTruncatedView = false;
-              mode = 'create';
+              isTruncatedView = false
+              mode = 'create'
             }
           "
           v-if="mode != 'create'"
@@ -234,352 +192,328 @@
 </template>
 
 <script>
-const $ = jQuery;
-import Close from "./icons/Close";
-import { saveAs } from "file-saver";
-import { createPopper } from "@popperjs/core";
-import SNButton from "./shownotes/sn-button.vue";
-import SNCard from "./shownotes/sn-card.vue";
+const $ = jQuery
+import Close from './icons/Close.vue'
+import { saveAs } from 'file-saver'
+import { createPopper } from '@popperjs/core'
+import SNButton from './shownotes/sn-button.vue'
+import SNCard from './shownotes/sn-card.vue'
 
 export default {
-  props: ["episodeid"],
+  props: ['episodeid'],
   data() {
     return {
       shownotes: [],
       ready: false,
-      mode: "idle",
-      newUrl: "",
-      newTopic: "",
+      mode: 'idle',
+      newUrl: '',
+      newTopic: '',
       isTruncatedView: true,
       truncatedThreshold: 10,
-      newEntryType: "link",
+      newEntryType: 'link',
       moveModalVisible: false,
-    };
+    }
   },
   components: {
-    "icon-close": Close,
-    "sn-button": SNButton,
-    "sn-card": SNCard,
+    'icon-close': Close,
+    'sn-button': SNButton,
+    'sn-card': SNCard,
   },
   methods: {
     createEntry: function (url, type, data) {
-      let payload = { type: type, data: data, episode_id: this.episodeid };
-      this.mode = "create-waiting";
+      let payload = { type: type, data: data, episode_id: this.episodeid }
+      this.mode = 'create-waiting'
 
-      if (type == "link") {
-        payload.original_url = url;
+      if (type == 'link') {
+        payload.original_url = url
       }
 
-      if (type == "topic") {
-        payload.title = url;
+      if (type == 'topic') {
+        payload.title = url
       }
 
-      $.post(podlove_vue.rest_url + "podlove/v1/shownotes", payload)
+      $.post(podlove_vue.rest_url + 'podlove/v1/shownotes', payload)
         .done((result) => {
-          this.addIfNew(result);
-          this.newUrl = "";
-          this.mode = "idle";
+          this.addIfNew(result)
+          this.newUrl = ''
+          this.mode = 'idle'
         })
         .fail(({ responseJSON }) => {
-          console.error("could not create entry:", responseJSON.message);
-          this.mode = "idle";
-        });
+          console.error('could not create entry:', responseJSON.message)
+          this.mode = 'idle'
+        })
     },
     addIfNew: function (entry) {
       const isNewLink =
-        entry.type == "link" &&
-        this.shownotes.find((e) => e.original_url == entry.original_url) ===
-          undefined;
-      const isTopic = entry.type == "topic";
+        entry.type == 'link' &&
+        this.shownotes.find((e) => e.original_url == entry.original_url) === undefined
+      const isTopic = entry.type == 'topic'
 
-      if (isNewLink || isTopic) this.shownotes.push(entry);
+      if (isNewLink || isTopic) this.shownotes.push(entry)
     },
     onCreateEntry: function () {
-      if (this.newEntryType == "link") {
-        if (!this.newUrl) return;
+      if (this.newEntryType == 'link') {
+        if (!this.newUrl) return
 
-        this.createEntry(this.newUrl, "link");
-        this.newUrl = "";
+        this.createEntry(this.newUrl, 'link')
+        this.newUrl = ''
       }
 
-      if (this.newEntryType == "topic") {
-        if (!this.newTopic) return;
+      if (this.newEntryType == 'topic') {
+        if (!this.newTopic) return
 
-        this.createEntry(this.newTopic, "topic");
-        this.newTopic = "";
+        this.createEntry(this.newTopic, 'topic')
+        this.newTopic = ''
       }
     },
     onUpdateEntry: function (entry) {
       const start = this.shownotes.findIndex((e) => {
-        return e.id == entry.id;
-      });
-      this.shownotes.splice(start, 1, entry);
+        return e.id == entry.id
+      })
+      this.shownotes.splice(start, 1, entry)
     },
     onDeleteEntry: function (entry) {
       const start = this.shownotes.findIndex((e) => {
-        return e.id == entry.id;
-      });
-      this.shownotes.splice(start, 1);
+        return e.id == entry.id
+      })
+      this.shownotes.splice(start, 1)
     },
     onImportEntries: function (entries) {
-      this.mode = "idle";
+      this.mode = 'idle'
 
-      console.log("slack import", entries);
+      console.log('slack import', entries)
 
-      let orderNumber = 0;
+      let orderNumber = 0
       entries.forEach(({ url: url, data: data }) => {
-        orderNumber++;
-        data.orderNumber = orderNumber;
-        this.createEntry(url, "link", data);
-      });
+        orderNumber++
+        data.orderNumber = orderNumber
+        this.createEntry(url, 'link', data)
+      })
     },
     // onTopicDragEnd: function (e) {
     //   console.log("onTopicDragEnd", e);
     // },
     onClone: function (e) {
-      if (document.getElementById("podlove-shownotes-app").offsetWidth < 1100) {
+      if (document.getElementById('podlove-shownotes-app').offsetWidth < 1100) {
         // hide quicksort UI on small screens
-        return;
+        return
       }
 
-      this.moveModalVisible = true;
+      this.moveModalVisible = true
 
       window.setTimeout(() => {
         // init popper thing
-        const tooltip = document.getElementById(
-          "podlove-shownotes-topic-modal"
-        );
+        const tooltip = document.getElementById('podlove-shownotes-topic-modal')
 
-        createPopper(e.item.querySelector(".drag-handle"), tooltip, {
-          placement: "right",
+        createPopper(e.item.querySelector('.drag-handle'), tooltip, {
+          placement: 'right',
           modifiers: [
             {
-              name: "offset",
+              name: 'offset',
               options: {
                 offset: [0, 750],
               },
             },
           ],
-        });
+        })
         // console.log("onClone", { e });
         // console.log("onClone", e.clone);
-      });
+      })
     },
     onDragEnded: function (e) {
       const findTopicIndex = (topic) => {
         return this.shownotes.findIndex(
-          (entry) => entry.type == "topic" && entry.title == topic.title
-        );
-      };
+          (entry) => entry.type == 'topic' && entry.title == topic.title
+        )
+      }
 
       const getNewPosition = (newIndex) => {
         if (newIndex < 1) {
           // sort before first topic
-          const nextTopic = this.topics[0];
-          const nextTopicIndex = findTopicIndex(nextTopic);
-          const lastEntryInTopic = this.shownotes[nextTopicIndex - 1];
+          const nextTopic = this.topics[0]
+          const nextTopicIndex = findTopicIndex(nextTopic)
+          const lastEntryInTopic = this.shownotes[nextTopicIndex - 1]
 
           if (lastEntryInTopic) {
             // if there are already items:
-            return (
-              (parseFloat(lastEntryInTopic.position) +
-                parseFloat(nextTopic.position)) /
-              2.0
-            );
+            return (parseFloat(lastEntryInTopic.position) + parseFloat(nextTopic.position)) / 2.0
           } else {
             // if it's the first item:
-            return parseFloat(nextTopic.position) / 2.0;
+            return parseFloat(nextTopic.position) / 2.0
           }
         } else {
           // sort to a topic
-          const nextTopic = this.topics[newIndex];
+          const nextTopic = this.topics[newIndex]
 
           if (nextTopic) {
-            const nextTopicIndex = findTopicIndex(nextTopic);
-            const lastEntryInTopic = this.shownotes[nextTopicIndex - 1];
+            const nextTopicIndex = findTopicIndex(nextTopic)
+            const lastEntryInTopic = this.shownotes[nextTopicIndex - 1]
 
-            return (
-              (parseFloat(lastEntryInTopic.position) +
-                parseFloat(nextTopic.position)) /
-              2.0
-            );
+            return (parseFloat(lastEntryInTopic.position) + parseFloat(nextTopic.position)) / 2.0
           } else {
             // if it's the last topic:
-            return this.shownotes[this.shownotes.length - 1].position + 1;
+            return this.shownotes[this.shownotes.length - 1].position + 1
           }
         }
-      };
-
-      this.moveModalVisible = false;
-
-      if (e.to.id !== "podlove-shownotes-topic-modal") {
-        return;
       }
 
-      const newPosition = getNewPosition(e.newIndex);
-      this.shownotes[e.oldIndex].position = newPosition;
+      this.moveModalVisible = false
 
-      const entry_id = this.shownotes[e.oldIndex].id;
-      $.post(podlove_vue.rest_url + "podlove/v1/shownotes/" + entry_id, {
+      if (e.to.id !== 'podlove-shownotes-topic-modal') {
+        return
+      }
+
+      const newPosition = getNewPosition(e.newIndex)
+      this.shownotes[e.oldIndex].position = newPosition
+
+      const entry_id = this.shownotes[e.oldIndex].id
+      $.post(podlove_vue.rest_url + 'podlove/v1/shownotes/' + entry_id, {
         id: entry_id,
         position: newPosition,
       }).fail(({ responseJSON }) => {
-        console.error("could not update entry:", responseJSON.message);
-      });
+        console.error('could not update entry:', responseJSON.message)
+      })
     },
     onDragEnd: function (e) {
-      let newPosition = null;
-      let prevEl = null;
-      let nextEl = null;
+      let newPosition = null
+      let prevEl = null
+      let nextEl = null
 
       if (e.oldIndex == e.newIndex) {
-        return;
+        return
       }
 
       if (e.newIndex == 0) {
-        newPosition = this.shownotes[0].position - 1;
+        newPosition = this.shownotes[0].position - 1
       } else if (e.newIndex == this.shownotes.length - 1) {
-        newPosition =
-          parseFloat(this.shownotes[this.shownotes.length - 1].position) + 1;
+        newPosition = parseFloat(this.shownotes[this.shownotes.length - 1].position) + 1
       } else {
         if (e.newIndex > e.oldIndex) {
-          prevEl = this.shownotes[e.newIndex];
-          nextEl = this.shownotes[e.newIndex + 1];
+          prevEl = this.shownotes[e.newIndex]
+          nextEl = this.shownotes[e.newIndex + 1]
         } else {
-          prevEl = this.shownotes[e.newIndex - 1];
-          nextEl = this.shownotes[e.newIndex];
+          prevEl = this.shownotes[e.newIndex - 1]
+          nextEl = this.shownotes[e.newIndex]
         }
 
-        newPosition =
-          (parseFloat(prevEl.position) + parseFloat(nextEl.position)) / 2.0;
+        newPosition = (parseFloat(prevEl.position) + parseFloat(nextEl.position)) / 2.0
       }
 
-      newPosition = parseFloat(newPosition);
-      this.shownotes[e.oldIndex].position = newPosition;
+      newPosition = parseFloat(newPosition)
+      this.shownotes[e.oldIndex].position = newPosition
 
-      const entry_id = this.shownotes[e.oldIndex].id;
-      $.post(podlove_vue.rest_url + "podlove/v1/shownotes/" + entry_id, {
+      const entry_id = this.shownotes[e.oldIndex].id
+      $.post(podlove_vue.rest_url + 'podlove/v1/shownotes/' + entry_id, {
         id: entry_id,
         position: newPosition,
       }).fail(({ responseJSON }) => {
-        console.error("could not update entry:", responseJSON.message);
-      });
+        console.error('could not update entry:', responseJSON.message)
+      })
     },
     importOsfShownotes: function () {
-      $.post(podlove_vue.rest_url + "podlove/v1/shownotes/osf", {
+      $.post(podlove_vue.rest_url + 'podlove/v1/shownotes/osf', {
         post_id: podlove_vue.post_id,
       })
         .done((result) => {
-          this.init(true);
+          this.init(true)
         })
         .fail(({ responseJSON }) => {
-          console.error("could not import osf:", responseJSON.message);
-        });
+          console.error('could not import osf:', responseJSON.message)
+        })
     },
     importHTML: function () {
-      $.post(podlove_vue.rest_url + "podlove/v1/shownotes/html", {
+      $.post(podlove_vue.rest_url + 'podlove/v1/shownotes/html', {
         post_id: podlove_vue.post_id,
       })
         .done((result) => {
-          this.init();
+          this.init()
         })
         .fail(({ responseJSON }) => {
-          console.error("could not import html:", responseJSON.message);
-        });
+          console.error('could not import html:', responseJSON.message)
+        })
     },
     deleteAllEntries: function () {
-      if (window.confirm("Permanently delete all shownotes entries?")) {
+      if (window.confirm('Permanently delete all shownotes entries?')) {
         this.shownotes.forEach((entry) =>
           jQuery.ajax({
-            url: podlove_vue.rest_url + "podlove/v1/shownotes/" + entry.id,
-            method: "DELETE",
-            dataType: "json",
+            url: podlove_vue.rest_url + 'podlove/v1/shownotes/' + entry.id,
+            method: 'DELETE',
+            dataType: 'json',
           })
-        );
-        this.shownotes = [];
+        )
+        this.shownotes = []
       }
     },
     init: function (forceExpand = false) {
-      $.getJSON(
-        podlove_vue.rest_url +
-          "podlove/v1/shownotes?episode_id=" +
-          this.episodeid
-      )
+      $.getJSON(podlove_vue.rest_url + 'podlove/v1/shownotes?episode_id=' + this.episodeid)
         .done((shownotes) => {
-          this.shownotes = shownotes;
-          this.ready = true;
-          this.isTruncatedView =
-            this.shownotes.length > this.truncatedThreshold && !forceExpand;
+          this.shownotes = shownotes
+          this.ready = true
+          this.isTruncatedView = this.shownotes.length > this.truncatedThreshold && !forceExpand
         })
         .fail(({ responseJSON }) => {
-          console.error("could not load shownotes:", responseJSON.message);
-        });
+          console.error('could not load shownotes:', responseJSON.message)
+        })
     },
     exportAsHTML: function () {
-      $.get(podlove_vue.rest_url + "podlove/v1/shownotes/render/html", {
+      $.get(podlove_vue.rest_url + 'podlove/v1/shownotes/render/html', {
         post_id: podlove_vue.post_id,
       })
         .done((result) => {
-          var blob = new Blob([result], { type: "text/html;charset=utf-8" });
-          saveAs(blob, "shownotes.html");
+          var blob = new Blob([result], { type: 'text/html;charset=utf-8' })
+          saveAs(blob, 'shownotes.html')
         })
         .fail(({ responseJSON }) => {
-          console.error("could not generate html:", responseJSON.message);
-        });
+          console.error('could not generate html:', responseJSON.message)
+        })
     },
   },
   computed: {
     topics: function () {
-      return this.shownotes.filter((entry) => entry.type == "topic");
+      return this.shownotes.filter((entry) => entry.type == 'topic')
     },
     visibleShownotes: function () {
-      let shownotes = this.sortedShownotes;
+      let shownotes = this.sortedShownotes
 
       if (this.isTruncatedView) {
-        shownotes = shownotes.slice(0, this.truncatedThreshold);
+        shownotes = shownotes.slice(0, this.truncatedThreshold)
       }
 
-      return shownotes;
+      return shownotes
     },
     unfurlingProgress: function () {
-      const linkEntries = this.shownotes.filter(
-        (entry) => entry.type == "link"
-      );
-      const linkCount = linkEntries.length;
+      const linkEntries = this.shownotes.filter((entry) => entry.type == 'link')
+      const linkCount = linkEntries.length
 
       if (!linkCount) {
-        return 100;
+        return 100
       }
 
-      const unfurlingCount = linkEntries.filter(
-        (entry) => entry.state == "unfurling"
-      ).length;
-      const progressPercent = Math.floor(
-        (100 * (linkCount - unfurlingCount)) / linkCount
-      );
+      const unfurlingCount = linkEntries.filter((entry) => entry.state == 'unfurling').length
+      const progressPercent = Math.floor((100 * (linkCount - unfurlingCount)) / linkCount)
 
-      return progressPercent;
+      return progressPercent
     },
     sortedShownotes: function () {
       return this.shownotes.sort((a, b) => {
-        return a.position - b.position;
-      });
+        return a.position - b.position
+      })
     },
     osf_active: function () {
-      return podlove_vue.osf_active;
+      return podlove_vue.osf_active
     },
   },
   directives: {
     focus: {
       inserted: function (el) {
-        el.focus();
+        el.focus()
       },
     },
   },
   mounted: function () {
-    this.init();
+    this.init()
   },
-};
+}
 </script>
 
 <style>
@@ -1067,14 +1001,14 @@ export default {
 
 #podlove_podcast_shownotes .shadow {
   --tw-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px 0 rgb(0 0 0 / 0.06);
-  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000),
-    var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000),
+    var(--tw-shadow);
 }
 
 #podlove_podcast_shownotes .shadow-sm {
   --tw-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000),
-    var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000),
+    var(--tw-shadow);
 }
 
 .line-clamp-4 {
@@ -1115,12 +1049,11 @@ export default {
 }
 
 .focus\:ring-2:focus {
-  --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0
-    var(--tw-ring-offset-width) var(--tw-ring-offset-color);
-  --tw-ring-shadow: var(--tw-ring-inset) 0 0 0
-    calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);
-  box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow),
-    var(--tw-shadow, 0 0 #0000);
+  --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width)
+    var(--tw-ring-offset-color);
+  --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width))
+    var(--tw-ring-color);
+  box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
 }
 
 .focus\:ring-blue-500:focus {

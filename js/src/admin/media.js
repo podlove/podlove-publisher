@@ -1,154 +1,156 @@
-var PODLOVE = PODLOVE || {};
-PODLOVE.media = PODLOVE.media || {};
+import('crypto-js/md5').then((md5) => {
+  ;(function ($) {
+    window.PODLOVE = window.PODLOVE || {}
+    window.PODLOVE.media = window.PODLOVE.media || {}
+    var args
 
-(function($) {
-	"use strict";
+    window.PODLOVE.media.init = function () {
+      $('.podlove-media-upload-wrap').each(function () {
+        window.PODLOVE.media.init_field($(this))
+      })
+    }
 
-	var args;
+    window.PODLOVE.media.init_field = function (container) {
+      var $upload_link = $('.podlove-media-upload', container),
+        options = $upload_link.data(),
+        params = {
+          frame: options.frame,
+          library: { type: options.type },
+          button: { text: options.button },
+          className: options['class'],
+          title: options.title,
+        }
+      if (typeof options.state != 'undefined') params.state = options.state
 
-	PODLOVE.media.init =  function() {
-		$(".podlove-media-upload-wrap").each(function() {
-			PODLOVE.media.init_field($(this));
-		});
-	};
+      options.input_target = $('#' + options.target)
+      options.container = container
 
-	PODLOVE.media.init_field = function(container) {
-		var $upload_link = $(".podlove-media-upload", container),
-		    options = $upload_link.data(),
-			params  = {
-				frame:   options.frame,
-				library: { type: options.type },
-				button:  { text: options.button },
-				className: options['class'],
-				title: options.title
-			}
-		;
+      if (options.preview) {
+        options.input_target.on('change', function () {
+          window.PODLOVE.media.render_preview(options.container)
+        })
+      }
 
-		if (typeof options.state != "undefined" ) params.state = options.state;
+      // set size that is selected by default
+      if (options.size) {
+        wp.media.view.settings.defaultProps.size = options.size
+      }
 
-		options.input_target = $('#'+options.target);
-		options.container = container;
+      args = options
 
-		if (options.preview) {
-			options.input_target.on("change", function() {
-				PODLOVE.media.render_preview(options.container);
-			});
-		}
+      var file_frame = wp.media(params)
 
-		// set size that is selected by default
-		if (options.size) {
-			wp.media.view.settings.defaultProps.size = options.size;
-		}
+      file_frame.states.add([
+        new wp.media.controller.Library({
+          id: 'podlove_select_single_image',
+          priority: 20,
+          toolbar: 'select',
+          filterable: 'uploaded',
+          // library:    wp.media.query( file_frame.options.library ),
+          multiple: args.multiple,
+          editable: true,
+          displaySettings: true,
+          allowLocalEdits: true,
+        }),
+      ])
 
-		args = options;
+      file_frame.on('select update insert', function () {
+        window.PODLOVE.media.insert(file_frame, options)
+      })
 
-		var file_frame = wp.media(params);
+      $upload_link.on('click', function () {
+        file_frame.open()
+      })
 
-		file_frame.states.add([
-			new wp.media.controller.Library({
-				id:         'podlove_select_single_image',
-				priority:   20,
-				toolbar:    'select',
-				filterable: 'uploaded',
-				// library:    wp.media.query( file_frame.options.library ),
-				multiple:   args.multiple,
-				editable:   true,
-				displaySettings: true,
-				allowLocalEdits: true
-			}),
-		]);
+      container.on(
+        'click',
+        '.podlove_reset_image',
+        { options: options },
+        window.PODLOVE.media.reset
+      )
 
-		file_frame.on('select update insert', function() { PODLOVE.media.insert(file_frame, options); });
+      window.PODLOVE.media.render_preview(container)
+    }
 
-		$upload_link.on('click', function() {
-			file_frame.open();
-		});
+    window.PODLOVE.media.reset = function (e) {
+      var options = e.data.options
 
-		container.on('click', '.podlove_reset_image', {options: options}, PODLOVE.media.reset);
+      options.container.find('.podlove_preview_pic').empty().hide()
+      options.input_target.val('')
+    }
 
-		PODLOVE.media.render_preview(container);
-	}
+    function get_gravatar(email) {
+      if (email.indexOf('@') == -1) {
+        return email
+      } else {
+        return 'https://www.gravatar.com/avatar/' + md5(email) + '&s=400'
+      }
+    }
 
-	PODLOVE.media.reset = function(e) {
-		var options = e.data.options;
+    window.PODLOVE.media.render_preview = function (wrapper) {
+      var preview = $('.podlove_preview_pic', wrapper)[0],
+        $input = $('input', wrapper).first(),
+        url = $input.val()
 
-		options.container.find(".podlove_preview_pic").empty().hide();
-		options.input_target.val("");
-	};
+      if (args.allowGravatar) {
+        url = get_gravatar(url)
+      }
 
-	function get_gravatar(email) {
-		if ( email.indexOf("@") == -1 ) {
-			return email;
-		} else {
-			return 'https://www.gravatar.com/avatar/' + CryptoJS.MD5( email ) + '&s=400';
+      if (!url) {
+        return
+      }
 
-		}
-	}
+      $('.podlove_preview_pic', wrapper).empty().hide()
 
-	PODLOVE.media.render_preview = function(wrapper) {
-		var preview  = $(".podlove_preview_pic", wrapper)[0],
-		    $input   = $("input", wrapper).first(),
-		    url      = $input.val();
+      var image = document.createElement('img')
+      image.width = 300
+      image.src = url
 
-	    if (args.allowGravatar) {
-	    	url = get_gravatar(url);
-	    }
+      var remove = document.createElement('button')
+      remove.className = 'podlove_reset_image button'
+      remove.appendChild(document.createTextNode('remove'))
 
-		if (!url) {
-			return;
-		}
+      preview.appendChild(image)
+      preview.appendChild(remove)
+      preview.style.display = 'block'
+    }
 
-		$(".podlove_preview_pic", wrapper).empty().hide();
+    window.PODLOVE.media.insert = function (file_frame, options) {
+      var state = file_frame.state(),
+        selection = state.get('selection').first().toJSON(),
+        value = selection.id,
+        fetch_val = typeof options.fetch != 'undefined' ? (fetch_val = options.fetch) : false
 
-		var image = document.createElement('img');
-		image.width = 300;
-		image.src = url;
+      /*fetch custom val like url*/
+      if (fetch_val) {
+        value = state.get('selection').map(function (attachment) {
+          var element = attachment.toJSON()
 
-		var remove = document.createElement('button');
-		remove.className = 'podlove_reset_image button';
-		remove.appendChild(document.createTextNode('remove'));
+          if (fetch_val == 'url') {
+            var display = state.display(attachment).toJSON()
 
-		preview.appendChild(image);
-		preview.appendChild(remove);
-		preview.style.display = "block";
-	};
+            if (element.sizes && element.sizes[display.size] && element.sizes[display.size].url) {
+              return element.sizes[display.size].url
+            } else if (element.url) {
+              return element.url
+            }
+          }
+        })
+      }
 
-	PODLOVE.media.insert = function(file_frame , options) {
-		var state		= file_frame.state(),
-			selection	= state.get('selection').first().toJSON(),
-			value		= selection.id,
-			fetch_val   = typeof options.fetch != 'undefined' ? fetch_val = options.fetch : false
+      // change the target input value
+      options.input_target.val(value).trigger('change')
 
-		/*fetch custom val like url*/
-		if (fetch_val) {
-			value = state.get('selection').map( function( attachment ) {
-				var element = attachment.toJSON();
+      document.getElementById(options.target).dispatchEvent(new Event('change', { bubbles: true }))
 
-				if (fetch_val == 'url') {
-					var display = state.display( attachment ).toJSON();
+      // trigger event in case it is necessary (uploads)
+      if (typeof options.trigger != 'undefined') {
+        $('body').trigger(options.trigger, [selection, options])
+      }
+    }
 
-					if (element.sizes && element.sizes[display.size] && element.sizes[display.size].url) {
-						return element.sizes[display.size].url;
-					} else if (element.url) {
-						return element.url;
-					}
-				}
-			});
-		}
-
-		// change the target input value
-		options.input_target.val(value).trigger('change')
-
-        document.getElementById(options.target).dispatchEvent(new Event('change', { 'bubbles': true }))
-
-		// trigger event in case it is necessary (uploads)
-		if (typeof options.trigger != "undefined") {
-			$("body").trigger(options.trigger, [selection, options]);
-		}
-	}
-
-	$(document).ready(function () {
-		PODLOVE.media.init();
-	});
-
-})(jQuery);
+    $(document).ready(function () {
+      window.PODLOVE.media.init()
+    })
+  })(jQuery)
+})

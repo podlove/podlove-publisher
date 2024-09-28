@@ -2,8 +2,10 @@
 
 function add_type_attribute($tag, $handle, $src)
 {
+    $module_handles = ['podlove-episode-vue-apps', 'podlove-vue-app-client', 'podlove_admin'];
+
     // if not your script, do nothing and return original $tag
-    if ('podlove-vue-app-client' !== $handle) {
+    if (!in_array($handle, $module_handles)) {
         return $tag;
     }
 
@@ -101,8 +103,19 @@ add_action('admin_enqueue_scripts', function () {
         wp_enqueue_style('podlove-admin-chosen', \Podlove\PLUGIN_URL.'/js/admin/chosen/chosen.min.css', [], $version);
         wp_enqueue_style('podlove-admin-image-chosen', \Podlove\PLUGIN_URL.'/js/admin/chosen/chosenImage.css', [], $version);
 
+        wp_register_script('podlove-clipboard', \Podlove\PLUGIN_URL.'/js/node_modules/clipboard/dist/clipboard.js', []);
+        wp_register_script('podlove-chosen', \Podlove\PLUGIN_URL.'/js/admin/chosen/chosen.jquery.min.js', ['jquery']);
+        wp_register_script('podlove-chosen-image', \Podlove\PLUGIN_URL.'/js/admin/chosen/chosenImage.jquery.js', ['jquery']);
+        wp_register_script('podlove-timeago', \Podlove\PLUGIN_URL.'/js/src/admin/timeago.jquery.js', ['jquery']);
+        wp_register_script('podlove-count-characters', \Podlove\PLUGIN_URL.'/js/src/admin/jquery.count_characters.js', ['jquery']);
+
         wp_enqueue_script('podlove_admin', \Podlove\PLUGIN_URL.'/js/dist/podlove-admin.js', [
             'jquery', 'jquery-ui-sortable', 'jquery-ui-datepicker',
+            'podlove-clipboard',
+            'podlove-chosen',
+            'podlove-chosen-image',
+            'podlove-timeago',
+            'podlove-count-characters',
         ], $version);
 
         wp_enqueue_style('jquery-ui-style', \Podlove\PLUGIN_URL.'/js/admin/jquery-ui/css/smoothness/jquery-ui.css');

@@ -19,9 +19,7 @@
                 transform="scale(1,-1)"
               />
             </svg>
-            <div
-              class="w-[300px] h-4 rounded-md bg-gray-300 animate-pulse"
-            ></div>
+            <div class="w-[300px] h-4 rounded-md bg-gray-300 animate-pulse"></div>
           </div>
         </div>
       </div>
@@ -34,17 +32,17 @@
 </template>
 
 <script>
-import SNCard from "./sn-card.vue";
-import Menu from "../icons/Menu";
-import Eye from "../icons/Eye";
-import Edit from "../icons/Edit";
+import SNCard from './sn-card.vue'
+import Menu from '../icons/Menu.vue'
+import Eye from '../icons/Eye.vue'
+import Edit from '../icons/Edit.vue'
 
 export default {
   components: {
-    "icon-menu": Menu,
-    "icon-edit": Edit,
-    "icon-eye": Eye,
-    "sn-card": SNCard,
+    'icon-menu': Menu,
+    'icon-edit': Edit,
+    'icon-eye': Eye,
+    'sn-card': SNCard,
   },
-};
+}
 </script>
