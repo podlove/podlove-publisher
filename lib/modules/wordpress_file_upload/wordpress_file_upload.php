@@ -12,6 +12,7 @@ class Wordpress_File_Upload extends \Podlove\Modules\Base
 
     public function load()
     {
+        add_action('init', [$this, 'register_public_hooks']);
         add_action('admin_init', [$this, 'register_hooks']);
         // FIXME: this is huge. admin_init is not run for REST calls? what else might this affect?
         add_action('rest_api_init', [$this, 'register_hooks']);
@@ -50,11 +51,15 @@ class Wordpress_File_Upload extends \Podlove\Modules\Base
         }
     }
 
+    public function register_public_hooks()
+    {
+        add_filter('podlove_media_file_base_uri', [$this, 'set_media_file_base_uri']);
+    }
+
     public function register_hooks()
     {
         add_filter('upload_dir', [$this, 'custom_media_upload_dir']);
         add_filter('podlove_media_file_base_uri_form', [$this, 'set_form_placeholder']);
-        add_filter('podlove_media_file_base_uri', [$this, 'set_media_file_base_uri']);
     }
 
     public function set_media_file_base_uri($uri)
