@@ -922,9 +922,7 @@ class Ajax
             exit;
         }
 
-        if (\podlove_is_onboarding_active()) {
-            Onboarding::set_banner_hide('true');
-        }
+        Onboarding::set_banner_hide('true');
     }
 
     public function get_license_url()

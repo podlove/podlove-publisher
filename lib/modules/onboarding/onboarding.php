@@ -13,17 +13,15 @@ class Onboarding extends \Podlove\Modules\Base
 
   public function load()
   {
-    if (\podlove_is_onboarding_active()) {
-      add_action('admin_enqueue_scripts', [$this, 'add_scripts_and_styles']);
-      add_action('admin_notices', [$this, 'onboarding_banner']);
-      add_action('admin_menu', [$this, 'add_onboarding_menu'], 20);
-      add_action('rest_api_init', [$this, 'api_init']);
-    }
+    add_action('admin_enqueue_scripts', [$this, 'add_scripts_and_styles']);
+    add_action('admin_notices', [$this, 'onboarding_banner']);
+    add_action('admin_menu', [$this, 'add_onboarding_menu'], 20);
+    add_action('rest_api_init', [$this, 'api_init']);
   }
 
   public static function is_visible()
   {
-    return \podlove_is_onboarding_active();
+    return true;
   }
 
   public function onboarding_banner()

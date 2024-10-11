@@ -1,15 +1,17 @@
 <?php
 
-function podlove_is_onboarding_active()
-{
-  return (bool) defined('PODLOVE_ONBOARDING') && PODLOVE_ONBOARDING;
+// default service URL
+// If you want to host and use your own service, set the constant in your wp-config.php
+// define('PODLOVE_ONBOARDING', 'https://self-hosted-services.example.com/onboarding');
+if (!defined('PODLOVE_ONBOARDING')) {
+    define('PODLOVE_ONBOARDING', 'https://services.podlove.org/onboarding');
 }
 
 function podlove_get_onboarding_include()
 {
-  if (podlove_is_onboarding_active() && is_string(PODLOVE_ONBOARDING)) {
-    return PODLOVE_ONBOARDING;
-  } else {
+    if (is_string(PODLOVE_ONBOARDING)) {
+        return PODLOVE_ONBOARDING;
+    }
+
     return null;
-  }
 }
