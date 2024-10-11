@@ -97,7 +97,7 @@ class Image
             if ($file->isDir()) {
                 rmdir($file->getRealPath());
             } else {
-                unlink($file->getRealPath());
+                wp_delete_file($file->getRealPath());
             }
         }
         rmdir($dir);
@@ -369,7 +369,7 @@ class Image
         $source_url = $this->source_url;
         $current_url = $this->source_url;
 
-        $source_domain = parse_url($source_url, PHP_URL_HOST);
+        $source_domain = wp_parse_url($source_url, PHP_URL_HOST);
         $current_domain = explode(':', $_SERVER['HTTP_HOST'])[0];
 
         // if domains match, see if the image is part of the Publisher
@@ -428,7 +428,7 @@ class Image
                 sprintf(__('Podlove Image Cache: Downloaded file is not an image.')),
                 ['url' => $this->source_url]
             );
-            @unlink($temp_file);
+            wp_delete_file($temp_file);
 
             return;
         }
@@ -436,7 +436,7 @@ class Image
         $this->create_basedir();
         $this->save_cache_data($response);
         $this->move_as_original_file($temp_file);
-        @unlink($temp_file);
+        wp_delete_file($temp_file);
         $this->add_donotbackup_dotfile();
     }
 
@@ -517,13 +517,13 @@ class Image
         $response = wp_safe_remote_get($url, $args);
 
         if (is_wp_error($response)) {
-            unlink($tmpfname);
+            wp_delete_file($tmpfname);
 
             return $response;
         }
 
         if (200 != wp_remote_retrieve_response_code($response)) {
-            unlink($tmpfname);
+            wp_delete_file($tmpfname);
 
             return new \WP_Error('http_404', trim(wp_remote_retrieve_response_message($response)));
         }
@@ -643,7 +643,7 @@ class Image
 
     private function extract_file_extension()
     {
-        $url = parse_url($this->source_url);
+        $url = wp_parse_url($this->source_url);
 
         return pathinfo($url['path'], PATHINFO_EXTENSION);
     }

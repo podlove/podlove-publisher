@@ -64,12 +64,12 @@ class Widget extends \WP_Widget
 
         $subscribebutton = Podcast::get(); ?>
 		<p>
-			<label for="<?php echo $this->get_field_id('title'); ?>"><?php _e('Title', 'podlove-podcasting-plugin-for-wordpress'); ?></label> 
+			<label for="<?php echo $this->get_field_id('title'); ?>"><?php _e('Title', 'podlove-podcasting-plugin-for-wordpress'); ?></label>
 			<input class="widefat" id="<?php echo $this->get_field_id('title'); ?>" name="<?php echo $this->get_field_name('title'); ?>" value="<?php echo $title; ?>" />
 		</p>
 
 		<p>
-			<label for="<?php echo $this->get_field_id('color'); ?>"><?php _e('Color', 'podlove-podcasting-plugin-for-wordpress'); ?></label> 
+			<label for="<?php echo $this->get_field_id('color'); ?>"><?php _e('Color', 'podlove-podcasting-plugin-for-wordpress'); ?></label>
 			<input type="text" id="<?php echo $this->get_field_id('color'); ?>" name="<?php echo $this->get_field_name('color'); ?>" class="podlove_subscribe_color" value="<?php echo $color; ?>" />
 		</p>
 
@@ -79,7 +79,7 @@ class Widget extends \WP_Widget
 		</style>
 
 		<p>
-			<label for="<?php echo $this->get_field_id('size'); ?>"><?php _e('Size', 'podlove-podcasting-plugin-for-wordpress'); ?></label> 
+			<label for="<?php echo $this->get_field_id('size'); ?>"><?php _e('Size', 'podlove-podcasting-plugin-for-wordpress'); ?></label>
 			<select class="widefat" id="<?php echo $this->get_field_id('size'); ?>" name="<?php echo $this->get_field_name('size'); ?>">
 			<?php foreach (Subscribe_Button::sizes() as $size_key => $size_name) { ?>
 				<option value="<?php echo $size_key; ?>" <?php selected($size, $size_key); ?>><?php echo $size_name; ?></option>
@@ -88,7 +88,7 @@ class Widget extends \WP_Widget
 		</p>
 
 		<p>
-			<label for="<?php echo $this->get_field_id('format'); ?>"><?php _e('Format', 'podlove-podcasting-plugin-for-wordpress'); ?></label> 
+			<label for="<?php echo $this->get_field_id('format'); ?>"><?php _e('Format', 'podlove-podcasting-plugin-for-wordpress'); ?></label>
 			<select class="widefat" id="<?php echo $this->get_field_id('format'); ?>" name="<?php echo $this->get_field_name('format'); ?>">
 			<?php foreach (Subscribe_Button::formats() as $format_key => $format_name) { ?>
 				<option value="<?php echo $format_key; ?>" <?php selected($format, $format_key); ?>><?php echo $format_name; ?></option>
@@ -97,7 +97,7 @@ class Widget extends \WP_Widget
 		</p>
 
 		<p>
-			<label for="<?php echo $this->get_field_id('style'); ?>"><?php _e('Style', 'podlove-podcasting-plugin-for-wordpress'); ?></label> 
+			<label for="<?php echo $this->get_field_id('style'); ?>"><?php _e('Style', 'podlove-podcasting-plugin-for-wordpress'); ?></label>
 			<select class="widefat" id="<?php echo $this->get_field_id('style'); ?>" name="<?php echo $this->get_field_name('style'); ?>">
 			<?php foreach (Subscribe_Button::styles() as $style_key => $style_name) { ?>
 				<option value="<?php echo $style_key; ?>" <?php selected($style, $style_key); ?>><?php echo $style_name; ?></option>
@@ -110,7 +110,7 @@ class Widget extends \WP_Widget
 			<label for="<?php echo $this->get_field_id('autowidth'); ?>"><?php _e('Auto-adjust width', 'podlove-podcasting-plugin-for-wordpress'); ?></label><br />
 		</p>
 		<p>
-			<label for="<?php echo $this->get_field_id('infotext'); ?>"><?php _e('Content', 'podlove-podcasting-plugin-for-wordpress'); ?></label> 
+			<label for="<?php echo $this->get_field_id('infotext'); ?>"><?php _e('Content', 'podlove-podcasting-plugin-for-wordpress'); ?></label>
 			<textarea class="widefat" rows="10" id="<?php echo $this->get_field_id('infotext'); ?>" name="<?php echo $this->get_field_name('infotext'); ?>"><?php echo $infotext; ?></textarea>
 			<em>This text will be shown below the subscribe button.</em>
 		</p>
@@ -123,12 +123,12 @@ class Widget extends \WP_Widget
     {
         $instance = [];
         $instance['infotext'] = (!empty($new_instance['infotext'])) ? $new_instance['infotext'] : '';
-        $instance['title'] = (!empty($new_instance['title'])) ? strip_tags($new_instance['title']) : '';
-        $instance['size'] = (!empty($new_instance['size'])) ? strip_tags($new_instance['size']) : '';
-        $instance['format'] = (!empty($new_instance['format'])) ? strip_tags($new_instance['format']) : '';
-        $instance['style'] = (!empty($new_instance['style'])) ? strip_tags($new_instance['style']) : '';
-        $instance['autowidth'] = (!empty($new_instance['autowidth'])) ? strip_tags($new_instance['autowidth']) : 0;
-        $instance['button'] = (!empty($new_instance['button'])) ? strip_tags($new_instance['button']) : '';
+        $instance['title'] = (!empty($new_instance['title'])) ? wp_strip_all_tags($new_instance['title']) : '';
+        $instance['size'] = (!empty($new_instance['size'])) ? wp_strip_all_tags($new_instance['size']) : '';
+        $instance['format'] = (!empty($new_instance['format'])) ? wp_strip_all_tags($new_instance['format']) : '';
+        $instance['style'] = (!empty($new_instance['style'])) ? wp_strip_all_tags($new_instance['style']) : '';
+        $instance['autowidth'] = (!empty($new_instance['autowidth'])) ? wp_strip_all_tags($new_instance['autowidth']) : 0;
+        $instance['button'] = (!empty($new_instance['button'])) ? wp_strip_all_tags($new_instance['button']) : '';
         $instance['color'] = (!empty($new_instance['color'])) ? $new_instance['color'] : '';
 
         return apply_filters('podlove_subscribe_button_widget_settings_update', $instance, $new_instance, $old_instance);

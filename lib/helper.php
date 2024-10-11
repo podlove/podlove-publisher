@@ -407,7 +407,7 @@ function download_external_image_to_media($url, $name, $curl_args = [])
 
     // unlink file if there were download errors
     if (\is_wp_error($tmp)) {
-        @unlink($file_array['tmp_name']);
+        wp_delete_file($file_array['tmp_name']);
 
         return $tmp;
     }
@@ -418,7 +418,7 @@ function download_external_image_to_media($url, $name, $curl_args = [])
     $id = \media_handle_sideload($file_array, $post_id);
 
     if (\is_wp_error($id)) {
-        @unlink($file_array['tmp_name']);
+        wp_delete_file($file_array['tmp_name']);
 
         return $id;
     }

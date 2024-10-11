@@ -17,6 +17,8 @@ class MediaFile extends Base
      * Fetches file size if necessary.
      *
      * @override Base::save()
+     *
+     * @param mixed $determine_size
      */
     public function save($determine_size = true)
     {
@@ -76,7 +78,7 @@ class MediaFile extends Base
 
     public static function find_or_create_by_episode_id_and_episode_asset_id($episode_id, $episode_asset_id)
     {
-        if (!$file = self::find_by_episode_id_and_episode_asset_id($episode_id, $episode_asset_id)) {
+        if (!$file = self::find_any_by_episode_id_and_episode_asset_id($episode_id, $episode_asset_id)) {
             $file = new MediaFile();
             $file->episode_id = $episode_id;
             $file->episode_asset_id = $episode_asset_id;
@@ -87,7 +89,32 @@ class MediaFile extends Base
         return $file;
     }
 
+    /**
+     * Finds an active media file for given episode and asset.
+     *
+     * TODO: Maybe rename to include the `active` condition in the function name.
+     *
+     * @param mixed $episode_id
+     * @param mixed $episode_asset_id
+     */
     public static function find_by_episode_id_and_episode_asset_id($episode_id, $episode_asset_id)
+    {
+        $where = sprintf(
+            'episode_id = "%s" AND episode_asset_id = "%s" AND active = 1',
+            $episode_id,
+            $episode_asset_id
+        );
+
+        return MediaFile::find_one_by_where($where);
+    }
+
+    /**
+     * Finds a media file for given episode and asset, no matter if it is active or not.
+     *
+     * @param mixed $episode_id
+     * @param mixed $episode_asset_id
+     */
+    public static function find_any_by_episode_id_and_episode_asset_id($episode_id, $episode_asset_id)
     {
         $where = sprintf(
             'episode_id = "%s" AND episode_asset_id = "%s"',
@@ -277,7 +304,7 @@ class MediaFile extends Base
                 $this->size = 1;
             }
         } elseif ($http_code >= 400) {
-          $this->size = 0;
+            $this->size = 0;
         }
 
         if ($this->size <= 0) {

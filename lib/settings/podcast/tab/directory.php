@@ -124,9 +124,8 @@ class Directory extends Tab
 
             $wrapper->select('explicit', [
                 'label' => __('Explicit Content?', 'podlove-podcasting-plugin-for-wordpress'),
-                'description' => __('', 'podlove-podcasting-plugin-for-wordpress'),
-                'type' => 'checkbox',
-                'options' => [0 => 'no', 1 => 'yes', 2 => 'clean'],
+                'description' => __('True: If you specify true, indicating the presence of explicit content, directories may display an Explicit parental advisory graphic for your podcast. False: If you specify false, indicating that your podcast does not contain explicit language or adult content, directories may display a Clean parental advisory graphic for your podcast.', 'podlove-podcasting-plugin-for-wordpress'),
+                'options' => [0 => 'false', 1 => 'true'],
             ]);
 
             $wrapper->checkbox('complete', [

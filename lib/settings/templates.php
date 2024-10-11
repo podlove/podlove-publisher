@@ -83,11 +83,11 @@ $this->view_template(); ?>
 				You can use %sShortcodes%s as well as %sPublisher Template Tags%s to customize your episodes.<br>
 				Please read the %sTemplating Guide%s to get started.
 				', 'podlove-podcasting-plugin-for-wordpress'),
-            '<a href="http://docs.podlove.org/ref/shortcodes.html" target="_blank">',
+            '<a href="https://docs.podlove.org/podlove-publisher/reference/shortcodes" target="_blank">',
             '</a>',
-            '<a href="http://docs.podlove.org/reference/template-tags/" target="_blank">',
+            '<a href="https://docs.podlove.org/podlove-publisher/reference/templates/template-tags/podcast" target="_blank">',
             '</a>',
-            '<a href="http://docs.podlove.org/guides/understanding-templates/" target="_blank">',
+            '<a href="https://docs.podlove.org/podlove-publisher/guides/templates" target="_blank">',
             '</a>'
         ); ?>
 		<div id="template-editor">

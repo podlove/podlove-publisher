@@ -20,7 +20,7 @@ window.addEventListener('load', () => {
 
     provideStore({ store, app })
 
-    app.use(translationPlugin, { domain: 'podlove-podcasting-plugin-for-wordpress' })
+    app.use(translationPlugin)
     app.mount(elem)
   });
 });

@@ -300,7 +300,7 @@ class Social extends \Podlove\Modules\Base
 			<table class="podlove_alternating" border="0" cellspacing="0">
 				<thead>
 					<tr>
-						
+
 						<th><?php _e('Service', 'podlove-podcasting-plugin-for-wordpress'); ?></th>
 						<th><?php _e('Account/URL', 'podlove-podcasting-plugin-for-wordpress'); ?></th>
 						<th><?php _e('Title', 'podlove-podcasting-plugin-for-wordpress'); ?></th>
@@ -321,7 +321,7 @@ class Social extends \Podlove\Modules\Base
 
 			<script type="text/template" id="service-row-template-<?php echo $category; ?>">
 			<tr class="media_file_row podlove-service-table" data-service-id="{{service-id}}">
-				
+
 				<td class="podlove-service-column">
 					<select name="<?php echo $form_base_name; ?>[{{id}}][{{service-id}}][id]" class="chosen-image podlove-service-dropdown">
 						<option value=""><?php echo __('Choose Service', 'podlove-podcasting-plugin-for-wordpress'); ?></option>
@@ -351,8 +351,8 @@ class Social extends \Podlove\Modules\Base
 				var PODLOVE = PODLOVE || {};
 				PODLOVE.Social = PODLOVE.Social || {};
 				PODLOVE.Social.<?php echo $category; ?> = {
-					existing_services: <?php echo json_encode($converted_services); ?>,
-					services: <?php echo json_encode(array_values($cjson)); ?>,
+					existing_services: <?php echo wp_json_encode($converted_services); ?>,
+					services: <?php echo wp_json_encode(array_values($cjson)); ?>,
 					form_base_name: "<?php echo $form_base_name; ?>"
 				};
 

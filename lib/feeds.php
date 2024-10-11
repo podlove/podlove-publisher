@@ -152,7 +152,7 @@ function maybe_redirect_to_canonical_url()
 
     $feed_url = $feed->get_subscribe_url();
     $request_url = 'http'.(is_ssl() ? 's' : '').'://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
-    $url = parse_url($request_url);
+    $url = wp_parse_url($request_url);
 
     if (
         !\Podlove\PHP\ends_with($url['path'], '/') && \Podlove\PHP\ends_with($feed_url, '/')

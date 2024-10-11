@@ -1657,6 +1657,16 @@ function run_migrations_for_version($version)
         case 157:
             $podcast = Model\Podcast::get();
 
+            // update deprecated "clean" value to "false"
+            if ($podcast->explicit == 2) {
+                $podcast->explicit = 0;
+                $podcast->save();
+            }
+
+            break;
+        case 158:
+            $podcast = Model\Podcast::get();
+
             if (!$podcast->guid) {
                 $podcast->guid = \Ramsey\Uuid\Uuid::uuid4();
                 $podcast->save();

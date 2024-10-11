@@ -1,8 +1,8 @@
 === Podlove Podcast Publisher ===
 Contributors: eteubert
 Donate link: https://opencollective.com/podlove
-Tags: podlove, podcast, publishing, rss, feed, audio, mp3, m4a, player, webplayer, iTunes, radio
-Tested up to: 6.4.3
+Tags: podlove, podcast, publishing, rss, audio
+Tested up to: 6.6.1
 Stable tag: 4.2.0
 Requires at least: 4.9.6
 Requires PHP: 8.0
@@ -114,6 +114,11 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 6. Includes the Podlove Web Player. One more thing: you can manage and present all contributors easily.
 
 == Changelog ==
+
+= 2024-10-11 =
+
+* bring beta up to date with stable release 4.1.15
+* enable onboarding module
 
 = 2024-07-28 =
 

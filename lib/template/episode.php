@@ -213,7 +213,7 @@ class Episode extends Wrapper
     /**
      * Explicit status.
      *
-     * "yes", "no" or "clean"
+     * "true" or "false"
      *
      * @accessor
      */

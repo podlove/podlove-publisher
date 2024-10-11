@@ -186,7 +186,7 @@ class Feed extends Base
 			FROM
 				'.$wpdb->posts.' p
 				INNER JOIN '.Episode::table_name().' e ON e.post_id = p.ID
-				INNER JOIN '.MediaFile::table_name().' mf ON mf.`episode_id` = e.id
+				INNER JOIN '.MediaFile::table_name().' mf ON mf.`episode_id` = e.id AND mf.active = 1
 				INNER JOIN '.EpisodeAsset::table_name().' a ON a.id = mf.`episode_asset_id`
 			WHERE
 				a.id = %d

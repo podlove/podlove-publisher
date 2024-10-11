@@ -105,7 +105,7 @@ class Geo_Ip
         }
 
         if (file_exists(self::TAR_NAME)) {
-            unlink(self::TAR_NAME);
+          wp_delete_file(self::TAR_NAME);
         }
 
         try {
@@ -116,7 +116,7 @@ class Geo_Ip
             // unarchive from the tar
             $phar = new \PharData($file->getPath());
             $phar->extractTo(self::get_upload_file_dir(), null, true);
-            unlink($tmpFile);
+            wp_delete_file($tmpFile);
         } catch (Exception $e) {
             exit($e->getMessage());
         } catch (PharException $e) {

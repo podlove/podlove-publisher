@@ -1,9 +1,13 @@
 <template>
   <div v-if="state.voices.length > 0">
-    <podlove-button variant="secondary" size="small" @click="openVoices()">{{ __('Voices', 'podlove-podcasting-plugin-for-wordpress') }}</podlove-button>
+    <podlove-button variant="secondary" size="small" @click="openVoices()">{{
+      __('Voices', 'podlove-podcasting-plugin-for-wordpress')
+    }}</podlove-button>
     <modal :open="modalOpen" @close="closeVoices()">
       <div class="border-gray-200 border-b pb-2 px-4 -mx-6 mb-4">
-        <h3 class="text-lg leading-6 font-medium text-gray-900">{{ __('Transcript Voices', 'podlove-podcasting-plugin-for-wordpress') }}</h3>
+        <h3 class="text-lg leading-6 font-medium text-gray-900">
+          {{ __('Transcript Voices', 'podlove-podcasting-plugin-for-wordpress') }}
+        </h3>
       </div>
       <div
         v-for="(voice, vindex) in state.voices"
@@ -16,24 +20,12 @@
         }}</label>
         <select
           :value="voice.contributor"
-          class="
-            mt-1
-            block
-            w-full
-            py-2
-            px-3
-            border border-gray-300
-            bg-white
-            rounded-md
-            shadow-sm
-            focus:outline-none focus:ring-indigo-500 focus:border-indigo-500
-            sm:text-sm
-          "
+          class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
           @change="updateContributor(voice.voice, $event)"
         >
           <option value="0"></option>
           <option
-            v-for="(contributor, kindex) in state.contributors"
+            v-for="(contributor, kindex) in sortedContributors"
             :key="`voice-${vindex}-contributor-${kindex}`"
             :value="contributor.id"
           >
@@ -52,6 +44,7 @@ import selectors from '@store/selectors'
 import { updateVoice } from '@store/transcripts.store'
 import Modal from '@components/modal/Modal.vue'
 import PodloveButton from '@components/button/Button.vue'
+import { PodloveContributor } from '../../../types/contributors.types'
 
 export default defineComponent({
   components: {
@@ -71,6 +64,16 @@ export default defineComponent({
       }),
       dispatch: injectStore().dispatch,
     }
+  },
+
+  computed: {
+    sortedContributors(): PodloveContributor[] {
+      return this.state.contributors.sort((a: PodloveContributor, b: PodloveContributor) => {
+        const aName = a.publicname || a.realname || a.nickname
+        const bName = b.publicname || b.realname || b.nickname
+        return aName.localeCompare(bName)
+      })
+    },
   },
 
   methods: {

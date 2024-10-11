@@ -26,7 +26,7 @@ class Html5Printer implements \Podlove\Modules\PodloveWebPlayer\PlayerPrinterInt
 
         if ($style == 'inline') { // inline players are not embeddable
             return '
-			<script>window.'.$this->config_var_name().' = '.json_encode(self::config($this->episode, $context)).'</script>
+			<script>window.'.$this->config_var_name().' = '.wp_json_encode(self::config($this->episode, $context)).'</script>
 			<script class="podigee-podcast-player" src="'.$src.'" data-configuration="'.$this->config_var_name().'"></script>';
         }
 

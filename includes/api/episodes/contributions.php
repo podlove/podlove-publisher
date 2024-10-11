@@ -144,7 +144,7 @@ class WP_REST_PodloveEpisodeContributions_Controller extends WP_REST_Controller
       ];
     }, EpisodeContribution::find_all_by_episode_id($id));
 
-    $results_clean = array_filter($results, "self::isEmpty");
+    $results_clean = array_filter($results, fn($item) => $this->isNotEmpty($item));
 
     return new \Podlove\Api\Response\OkResponse([
       '_version' => 'v2',
@@ -426,7 +426,7 @@ class WP_REST_PodloveEpisodeContributions_Controller extends WP_REST_Controller
     return $contributor && $contributor->visibility > 0;
   }
 
-  private function isEmpty($var)
+  private function isNotEmpty($var)
   {
     return ($var !== NULL && $var !== "");
   }

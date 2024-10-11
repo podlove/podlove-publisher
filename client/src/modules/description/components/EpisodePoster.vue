@@ -2,7 +2,9 @@
   <div>
     <modal size="medium" :open="modalOpen" @close="closeModal()">
       <div class="border-gray-200 border-b pb-2 px-4 -mx-6 mb-4">
-        <h3 class="text-lg leading-6 font-medium text-gray-900">{{ __('Episode Poster', 'podlove-podcasting-plugin-for-wordpress') }}</h3>
+        <h3 class="text-lg leading-6 font-medium text-gray-900">
+          {{ __('Episode Poster', 'podlove-podcasting-plugin-for-wordpress') }}
+        </h3>
       </div>
       <div class="relative">
         <input
@@ -23,13 +25,21 @@
       <p class="mt-2 text-sm text-gray-500">
         {{
           __(
-            'Enter URL or select image from media library. Apple/iTunes recommends 3000 x 3000 pixel JPG or PNG', 'podlove-podcasting-plugin-for-wordpress'
+            'Enter URL or select image from media library. Apple/iTunes recommends 3000 x 3000 pixel JPG or PNG',
+            'podlove-podcasting-plugin-for-wordpress'
           )
         }}
       </p>
+      <p class="mt-2 flex justify-end">
+        <podlove-button variant="primary" @click="closeModal()">{{
+          __('Use this URL', 'podlove-podcasting-plugin-for-wordpress')
+        }}</podlove-button>
+      </p>
     </modal>
 
-    <label class="block text-sm font-medium text-gray-700">{{ __('Poster', 'podlove-podcasting-plugin-for-wordpress') }}</label>
+    <label class="block text-sm font-medium text-gray-700">{{
+      __('Poster', 'podlove-podcasting-plugin-for-wordpress')
+    }}</label>
     <div
       class="border shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block relative w-44 h-44 sm:text-sm border-gray-300 rounded-md mt-1 overflow-hidden bg-cover bg-no-repeat bg-center"
       :style="posterStyle"
@@ -45,17 +55,23 @@
         v-if="state.asset === 'manual'"
       >
         <podlove-button @click="openModal()" class="w-32 mb-2"
-          ><span class="w-full text-center">{{ __('URL', 'podlove-podcasting-plugin-for-wordpress') }}</span></podlove-button
+          ><span class="w-full text-center">{{
+            __('URL', 'podlove-podcasting-plugin-for-wordpress')
+          }}</span></podlove-button
         >
         <podlove-button class="w-32 text-center mb-2" @click="selectImage()"
-          ><span class="w-full text-center">{{ __('Media', 'podlove-podcasting-plugin-for-wordpress') }}</span></podlove-button
+          ><span class="w-full text-center">{{
+            __('Media', 'podlove-podcasting-plugin-for-wordpress')
+          }}</span></podlove-button
         >
         <podlove-button
           variant="danger"
           class="w-32 text-center"
           :disabled="state.episodePoster === null"
           @click="updatePoster(null)"
-          ><span class="w-full text-center">{{ __('Reset', 'podlove-podcasting-plugin-for-wordpress') }}</span></podlove-button
+          ><span class="w-full text-center">{{
+            __('Reset', 'podlove-podcasting-plugin-for-wordpress')
+          }}</span></podlove-button
         >
       </div>
     </div>
@@ -64,7 +80,7 @@
 
 <script lang="ts">
 import { injectStore, mapState } from 'redux-vuex'
-import { defineComponent } from 'vue'
+import { StyleValue, defineComponent } from 'vue'
 import { selectors } from '@store'
 import { PencilIcon, XMarkIcon as XIcon } from '@heroicons/vue/24/outline'
 import { update as updateEpisode, selectPoster as selectEpisodePoster } from '@store/episode.store'
@@ -100,7 +116,7 @@ export default defineComponent({
   },
 
   computed: {
-    posterStyle(): object {
+    posterStyle(): StyleValue {
       const url = this.state.episodePoster || this.state.poster
 
       if (url === null) {

@@ -8,6 +8,8 @@ class ContributorSettings
 {
     public static $pagehook;
 
+    public $tabs;
+
     public function __construct($handle)
     {
         ContributorSettings::$pagehook = add_submenu_page(

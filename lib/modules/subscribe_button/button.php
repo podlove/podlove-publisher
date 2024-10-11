@@ -77,7 +77,7 @@ class Button
             return bin2hex(openssl_random_pseudo_bytes(7));
         }
 
-        return dechex(mt_rand());
+        return dechex(wp_rand());
     }
 
     /**
@@ -150,7 +150,7 @@ class Button
         $script_data_tag = $dom->createElement('script');
         $script_data_tag->appendChild(
             $dom->createTextNode(
-                sprintf("window.{$dataAccessor} = %s;", json_encode($this->args['data']))
+                sprintf("window.{$dataAccessor} = %s;", wp_json_encode($this->args['data']))
             )
         );
 

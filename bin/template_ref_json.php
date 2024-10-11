@@ -150,5 +150,5 @@ foreach ($classes as $class) {
         'methods' => array_values($parsedMethods),
     ];
 
-    file_put_contents($output_dir.'/'.$templatetag.'.json', json_encode($classdoc), LOCK_EX);
+    file_put_contents($output_dir.'/'.$templatetag.'.json', wp_json_encode($classdoc), LOCK_EX);
 }

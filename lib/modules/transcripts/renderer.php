@@ -43,7 +43,7 @@ class Renderer
      */
     public function as_json($mode = 'flat')
     {
-        return json_encode($this->get_data($mode));
+        return wp_json_encode($this->get_data($mode));
     }
 
     /**
@@ -64,7 +64,7 @@ class Renderer
             ];
         }, $this->get_data());
 
-        return json_encode(['version' => '1.0.0', 'segments' => $data]);
+        return wp_json_encode(['version' => '1.0.0', 'segments' => $data]);
     }
 
     public function as_xml()
@@ -102,6 +102,10 @@ class Renderer
 
         $transcript = Transcript::get_transcript($this->episode->id);
         $transcript = array_map(function ($t) use ($contributors_map) {
+            if (!$t->voice) {
+                return null;
+            }
+
             $contributor = $contributors_map[$t->voice];
 
             if (!$contributor) {

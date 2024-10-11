@@ -49,7 +49,7 @@ function podlove_maybe_override_rss_post_titles($original_title)
             $episode = Episode::find_one_by_post_id($post_id);
 
             if ($episode && $episode->title) {
-                return trim(strip_tags($episode->title));
+                return trim(wp_strip_all_tags($episode->title));
             }
 
             return $original_title;
@@ -93,10 +93,10 @@ function podlove_get_episode_title_by_template($post_id, $template)
     }
 
     $title = $template;
-    $title = str_replace('%mnemonic%', strip_tags(podlove_get_mnemonic($post_id)), $title);
+    $title = str_replace('%mnemonic%', wp_strip_all_tags(podlove_get_mnemonic($post_id)), $title);
     $title = str_replace('%episode_number%', $episode->number_padded(), $title);
 
-    $episode_title = trim(strip_tags((string) $episode->title));
+    $episode_title = trim(wp_strip_all_tags((string) $episode->title));
 
     if (!$episode_title) {
         $episode_title = get_post($post_id)->post_title;
@@ -127,7 +127,7 @@ function podlove_override_post_title_script()
     ?>
 <script type="text/javascript">
 var PODLOVE = PODLOVE || {};
-PODLOVE.override_post_title = <?php echo json_encode($data); ?>;
+PODLOVE.override_post_title = <?php echo wp_json_encode($data); ?>;
 </script>
 <?php
 }

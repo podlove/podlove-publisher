@@ -6,6 +6,8 @@ use Podlove\Settings\Expert\Tab;
 
 class Defaults extends Tab
 {
+    public $object;
+
     public function get_slug()
     {
         return 'defaults';

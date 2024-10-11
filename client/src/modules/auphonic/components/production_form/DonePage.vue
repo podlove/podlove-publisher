@@ -6,7 +6,7 @@
           <ClipboardCheckIcon class="h-5 w-5 text-green-400" aria-hidden="true" />
         </div>
         <div class="ml-3">
-          <h3 class="text-sm font-medium text-green-800">{{ __('Done') }}</h3>
+          <h3 class="text-sm font-medium text-green-800">{{ __('Done', 'podlove-podcasting-plugin-for-wordpress') }}</h3>
           <div class="mt-2 text-sm text-green-700">
             <p>
               <a
@@ -68,7 +68,7 @@
                     aria-label="Import from Auphonic"
                   >
                     <!-- TODO: needs better translation support, see https://github.com/podlove/podlove-publisher/issues/1337 -->
-                    {{ __('Import')
+                    {{ __('Import', 'podlove-podcasting-plugin-for-wordpress')
                     }}<span class="hidden sm:inline">&nbsp;{{ __('from Auphonic', 'podlove-podcasting-plugin-for-wordpress') }}</span>
                   </button>
                 </div>
@@ -153,7 +153,7 @@ export default defineComponent({
           const there = entry.there
             .map((chapter: AuphonicChapter) => {
               return (
-                Math.round((chapter.start_sec || 0) * 1000) +
+                Math.round((chapter.start_output_sec || 0) * 1000) +
                 (chapter.title || '') +
                 (chapter.url || '') +
                 (chapter.image || '')
@@ -187,7 +187,7 @@ export default defineComponent({
           const auphonicChapters: AuphonicChapter[] = value
           const chapters: PodloveChapter[] = auphonicChapters.map((chapter) => {
             return {
-              start: Math.round((chapter.start_sec || 0) * 1000),
+              start: Math.round((chapter.start_output_sec || 0) * 1000),
               title: chapter.title || '',
               href: chapter.url || '',
               // FIXME: chapter.image is an Auphonic URL which we can't use. We

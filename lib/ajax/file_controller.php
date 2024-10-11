@@ -32,6 +32,7 @@ class FileController
 
         $result = [];
         $result['file_url'] = $file->get_file_url();
+        $result['active'] = (bool) $file->active;
         $result['file_id'] = $file_id;
         $result['reachable'] = podlove_is_resolved_and_reachable_http_status($info['http_code']);
         $result['file_size'] = $file->size;

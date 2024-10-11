@@ -35,7 +35,7 @@ class oembed extends \Podlove\Modules\Base
         switch (strtoupper($_GET['format'])) {
             case 'JSON':
                 header('Content-Type: application/json; charset=utf-8');
-                print_r(json_encode($episode));
+                print_r(wp_json_encode($episode));
                 exit;
 
                 break;

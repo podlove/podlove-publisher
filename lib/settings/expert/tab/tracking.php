@@ -56,8 +56,8 @@ class Tracking extends Tab
 							<?php echo sprintf(
                     '<div><strong>%s</strong><br>%s</div>',
                     __('Tracking URL Parameters &amp; Analytics', 'podlove-podcasting-plugin-for-wordpress'),
-                    __('Instead of the original file URLs, users and clients see a link that points to Podlove Publisher. 
-									Podlove Publisher logs the download intent and redirects the user to the original file. 
+                    __('Instead of the original file URLs, users and clients see a link that points to Podlove Publisher.
+									Podlove Publisher logs the download intent and redirects the user to the original file.
 									That way Podlove Publisher is able to generate download statistics. ', 'podlove-podcasting-plugin-for-wordpress')
                 ); ?>
 						</div>
@@ -73,8 +73,8 @@ class Tracking extends Tab
 							<?php echo sprintf(
                     '<div><strong>%s</strong><br>%s</div>',
                     __('Tracking URL Parameters', 'podlove-podcasting-plugin-for-wordpress'),
-                    __('Original file URLs are extended by tracking parameters before presenting them to users and clients. 
-									This is useful if you are using your server log files for download analytics. 
+                    __('Original file URLs are extended by tracking parameters before presenting them to users and clients.
+									This is useful if you are using your server log files for download analytics.
 									No download-data is tracked.', 'podlove-podcasting-plugin-for-wordpress')
                 ); ?>
 						</div>
@@ -95,7 +95,7 @@ class Tracking extends Tab
 						</div>
 					</div>
 				</label>
-				
+
 				<?php
             },
             // $page
@@ -119,7 +119,7 @@ class Tracking extends Tab
 				<p class="description" style="margin-bottom: 15px;">
 				  <?php echo sprintf(
                     __('A request counts as identical when the same IP and user agent are used to access the same file in a certain time window.
-					Podlove Publisher has traditionally used an hourly time window but IAB recommends daily. Beware: Once changed you need to 
+					Podlove Publisher has traditionally used an hourly time window but IAB recommends daily. Beware: Once changed you need to
 					do a full Download Intent Cleanup and Download Aggregation for the change to take effect. Do this at the %stools page%s.'),
                     '<a href="'.admin_url('admin.php?page=podlove_tools_settings_handle#the_tools_section').'">',
                     '</a>'
@@ -178,7 +178,7 @@ class Tracking extends Tab
 				<div>
 				  <input class="large-text" type="text" name="podlove_tracking[ga]" value="<?php echo \Podlove\get_setting('tracking', 'ga'); ?> " />
 				</div>
-				<div> 
+				<div>
 				<?php
                 echo __('Google Analytics Tracking ID. If entered, Podlove Publisher will log download intents to GA. Leave blank to deactivate GA reporting.', 'podlove-podcasting-plugin-for-wordpress'); ?>
 				</div>
@@ -210,7 +210,7 @@ class Tracking extends Tab
 						<code><?php echo $file; ?></code>
 					</p>
 					<p>
-						<?php echo __('Last modified', 'podlove-podcasting-plugin-for-wordpress'); ?>: 
+						<?php echo __('Last modified', 'podlove-podcasting-plugin-for-wordpress'); ?>:
 						<?php echo date(get_option('date_format').' '.get_option('time_format'), filemtime($file)); ?>
 					</p>
 					<p>
@@ -267,7 +267,7 @@ class Tracking extends Tab
 							<b><?php echo __('Please Change Permalink Structure', 'podlove-podcasting-plugin-for-wordpress'); ?></b>
 							<?php
                             echo sprintf(
-                        __('You are using the default WordPress permalink structure. 
+                        __('You are using the default WordPress permalink structure.
 								This may cause problems with some podcast clients when you activate tracking.
 								Go to %s and set it to anything but default (for example "Post name") before activating Tracking.', 'podlove-podcasting-plugin-for-wordpress'),
                         '<a href="'.admin_url('options-permalink.php').'">'.__('Permalink Settings').'</a>'
@@ -289,21 +289,21 @@ class Tracking extends Tab
 
                 $public_url = $media_file->get_public_file_url('debug');
                 $actual_url = $media_file->get_file_url(); ?>
-				<h4><?php __('Example Episode', 'podlove-podcasting-plugin-for-wordpress'); ?></h4>
+				<h4><?php _e('Example Episode', 'podlove-podcasting-plugin-for-wordpress'); ?></h4>
 				<p>
 					<?php echo $episode->full_title(); ?>
 				</p>
-				<h4><?php __('Media File', 'podlove-podcasting-plugin-for-wordpress'); ?></h4>
+				<h4><?php _e('Media File', 'podlove-podcasting-plugin-for-wordpress'); ?></h4>
 				<p>
-					<h5><?php __('Actual Location', 'podlove-podcasting-plugin-for-wordpress'); ?></h5>
+					<h5><?php _e('Actual Location', 'podlove-podcasting-plugin-for-wordpress'); ?></h5>
 					<code><?php echo $actual_url; ?></code>
 				</p>
 				<p>
-					<h5><?php __('Public URL', 'podlove-podcasting-plugin-for-wordpress'); ?></h5>
+					<h5><?php _e('Public URL', 'podlove-podcasting-plugin-for-wordpress'); ?></h5>
 					<code><?php echo $public_url; ?></code>
 				</p>
 				<p>
-					<h5><?php __('Validations', 'podlove-podcasting-plugin-for-wordpress'); ?></h5>
+					<h5><?php _e('Validations', 'podlove-podcasting-plugin-for-wordpress'); ?></h5>
 					<ul>
 						<li>
 							<!-- check rewrite rules -->

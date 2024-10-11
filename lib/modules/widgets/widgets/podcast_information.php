@@ -45,7 +45,7 @@ class PodcastInformation extends \WP_Widget
         $show_subtitle = isset($instance['show_subtitle']) ? $instance['show_subtitle'] : '';
         $show_summary = isset($instance['show_summary']) ? $instance['show_summary'] : ''; ?>
 		<p>
-			<label for="<?php echo $this->get_field_id('title'); ?>"><?php _e('Title', 'podlove-podcasting-plugin-for-wordpress'); ?></label> 
+			<label for="<?php echo $this->get_field_id('title'); ?>"><?php _e('Title', 'podlove-podcasting-plugin-for-wordpress'); ?></label>
 			<input class="widefat" id="<?php echo $this->get_field_id('title'); ?>" name="<?php echo $this->get_field_name('title'); ?>" value="<?php echo $title; ?>" placeholder="<?php echo $podcast->title; ?>" />
 		</p>
 		<p>
@@ -64,10 +64,10 @@ class PodcastInformation extends \WP_Widget
     public function update($new_instance, $old_instance)
     {
         $instance = [];
-        $instance['title'] = (!empty($new_instance['title'])) ? strip_tags($new_instance['title']) : '';
-        $instance['show_image'] = (!empty($new_instance['show_image'])) ? strip_tags($new_instance['show_image']) : '';
-        $instance['show_subtitle'] = (!empty($new_instance['show_subtitle'])) ? strip_tags($new_instance['show_subtitle']) : '';
-        $instance['show_summary'] = (!empty($new_instance['show_summary'])) ? strip_tags($new_instance['show_summary']) : '';
+        $instance['title'] = (!empty($new_instance['title'])) ? wp_strip_all_tags($new_instance['title']) : '';
+        $instance['show_image'] = (!empty($new_instance['show_image'])) ? wp_strip_all_tags($new_instance['show_image']) : '';
+        $instance['show_subtitle'] = (!empty($new_instance['show_subtitle'])) ? wp_strip_all_tags($new_instance['show_subtitle']) : '';
+        $instance['show_summary'] = (!empty($new_instance['show_summary'])) ? wp_strip_all_tags($new_instance['show_summary']) : '';
 
         return $instance;
     }

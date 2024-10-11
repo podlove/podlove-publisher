@@ -60,7 +60,7 @@ class Message
 
     public static function get_short_domain_from_url($url)
     {
-        $host = parse_url($url)['host'];
+        $host = wp_parse_url($url)['host'];
 
         return preg_replace('/^www\\./', '', $host);
     }

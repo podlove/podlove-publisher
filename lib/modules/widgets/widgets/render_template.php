@@ -35,10 +35,10 @@ class RenderTemplate extends \WP_Widget
         $selected_template = isset($instance['template']) ? $instance['template'] : '';
         $autop = isset($instance['autop']) ? $instance['autop'] : ''; ?>
 		<p>
-			<label for="<?php echo $this->get_field_id('title'); ?>"><?php _e('Title', 'podlove-podcasting-plugin-for-wordpress'); ?></label> 
+			<label for="<?php echo $this->get_field_id('title'); ?>"><?php _e('Title', 'podlove-podcasting-plugin-for-wordpress'); ?></label>
 			<input class="widefat" id="<?php echo $this->get_field_id('title'); ?>" name="<?php echo $this->get_field_name('title'); ?>" value="<?php echo $title; ?>" />
 
-			<label for="<?php echo $this->get_field_id('template'); ?>"><?php _e('Template', 'podlove-podcasting-plugin-for-wordpress'); ?></label> 
+			<label for="<?php echo $this->get_field_id('template'); ?>"><?php _e('Template', 'podlove-podcasting-plugin-for-wordpress'); ?></label>
 			<select class="widefat" id="<?php echo $this->get_field_id('template'); ?>" name="<?php echo $this->get_field_name('template'); ?>">
 				<?php
                     foreach ($templates as $template) {
@@ -57,9 +57,9 @@ class RenderTemplate extends \WP_Widget
     public function update($new_instance, $old_instance)
     {
         $instance = [];
-        $instance['title'] = (!empty($new_instance['title'])) ? strip_tags($new_instance['title']) : '';
-        $instance['template'] = (!empty($new_instance['template'])) ? strip_tags($new_instance['template']) : '';
-        $instance['autop'] = (!empty($new_instance['autop'])) ? strip_tags($new_instance['autop']) : '';
+        $instance['title'] = (!empty($new_instance['title'])) ? wp_strip_all_tags($new_instance['title']) : '';
+        $instance['template'] = (!empty($new_instance['template'])) ? wp_strip_all_tags($new_instance['template']) : '';
+        $instance['autop'] = (!empty($new_instance['autop'])) ? wp_strip_all_tags($new_instance['autop']) : '';
 
         return $instance;
     }

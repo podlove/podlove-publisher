@@ -523,7 +523,7 @@ class Ajax
         header('Cache-Control: no-cache, must-revalidate');
         header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
         header('Content-type: application/json');
-        echo json_encode($result);
+        echo wp_json_encode($result);
 
         exit;
     }
@@ -859,9 +859,11 @@ class Ajax
 
         $file_url = $_REQUEST['file_url'];
 
-        $info = \Podlove\Model\MediaFile::curl_get_header_for_url($file_url);
-        $header = $info['header'];
-        $reachable = $header['http_code'] >= 200 && $header['http_code'] < 300;
+        $r = wp_remote_head($file_url);
+
+        $response_code = $r['response']['code'];
+        $reachable = $response_code >= 200 && $response_code < 300;
+        $content_length = $r['http_response']->get_headers()['content-length'];
 
         $validation_cache = get_option('podlove_migration_validation_cache', []);
         $validation_cache[$file_url] = $reachable;
@@ -870,7 +872,7 @@ class Ajax
         self::respond_with_json([
             'file_url' => $file_url,
             'reachable' => $reachable,
-            'file_size' => $header['download_content_length'],
+            'file_size' => $content_length,
         ]);
     }
 

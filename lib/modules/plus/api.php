@@ -65,7 +65,7 @@ class API
 
     public function push_feeds($feeds)
     {
-        $payload = json_encode(['feeds' => $feeds]);
+        $payload = wp_json_encode(['feeds' => $feeds]);
 
         $curl = new Http\Curl();
         $curl->request($this->module::base_url().'/api/rest/v1/feeds', $this->params([
@@ -95,7 +95,7 @@ class API
 
     public function create_image_preset($template_name, $modifications = [])
     {
-        $payload = json_encode(['template' => $template_name, 'modifications' => $modifications]);
+        $payload = wp_json_encode(['template' => $template_name, 'modifications' => $modifications]);
 
         $curl = new Http\Curl();
         $curl->request($this->module::base_url().'/api/rest/v1/image/preset', $this->params([

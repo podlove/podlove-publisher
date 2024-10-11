@@ -55,7 +55,7 @@
         </div>
         <div class="mb-5">
           <label for="chapter-href" class="block text-sm font-medium text-gray-700"
-            >Url <span class="text-xs">{{ __('(optional)') }}</span></label
+            >Url <span class="text-xs">{{ __('(optional)', 'podlove-podcasting-plugin-for-wordpress') }}</span></label
           >
           <div class="mt-1">
             <input

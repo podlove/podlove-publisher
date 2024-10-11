@@ -30,7 +30,9 @@
               Upload
               <span class="text-sm font-normal">{{ filenameSelectedForUpload }}</span>
             </div>
-            <div class="sm:mt-1" v-else>{{ __('Upload a file', 'podlove-podcasting-plugin-for-wordpress') }}</div>
+            <div class="sm:mt-1" v-else>
+              {{ __('Upload a file', 'podlove-podcasting-plugin-for-wordpress') }}
+            </div>
             <input
               :id="file_key + 'file-upload'"
               name="file-upload"
@@ -77,6 +79,19 @@
           </div>
           <div v-else>...</div>
         </div>
+        <div v-if="shouldSuggestSlug" class="mt-3">
+          <button
+            @click="() => setEpisodeSlug(slugCandidate)"
+            type="button"
+            class="relative text-xs inline-flex items-center rounded-md bg-white px-3 py-2 font-medium text-gray-500 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+          >
+            <DocumentCheckIcon class="-ml-0.5 mr-1.5 h-4 w-4 text-gray-400" aria-hidden="true" />
+            <span
+              >{{ __('Use as Episode Slug:', 'podlove-podcasting-plugin-for-wordpress') }}
+              <span class="font-mono">{{ slugCandidate }}</span></span
+            >
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -89,6 +104,8 @@ import { selectors } from '@store'
 import { injectStore, mapState } from 'redux-vuex'
 import * as auphonic from '@store/auphonic.store'
 import { Service } from '@store/auphonic.store'
+import { update as updateEpisode } from '@store/episode.store'
+import { disableSlugAutogen } from '@store/mediafiles.store'
 
 import {
   Listbox,
@@ -99,6 +116,8 @@ import {
 } from '@headlessui/vue'
 import { CheckIcon, ChevronUpDownIcon as SelectorIcon } from '@heroicons/vue/24/solid'
 import { get } from 'lodash'
+
+import { DocumentCheckIcon } from '@heroicons/vue/24/outline'
 
 export default defineComponent({
   props: ['file_key', 'track_index'],
@@ -111,6 +130,7 @@ export default defineComponent({
     ListboxOptions,
     CheckIcon,
     SelectorIcon,
+    DocumentCheckIcon,
   },
 
   setup() {
@@ -118,6 +138,7 @@ export default defineComponent({
       services: selectors.auphonic.incomingServices,
       serviceFiles: selectors.auphonic.serviceFiles,
       fileSelections: selectors.auphonic.fileSelections,
+      episodeSlug: selectors.episode.slug,
     })
 
     return {
@@ -163,6 +184,10 @@ export default defineComponent({
     handleServiceSelection(event: Event): void {
       this.set('currentServiceSelection', (event.target as HTMLSelectElement).value)
     },
+    setEpisodeSlug(slug: String | null) {
+      this.dispatch(updateEpisode({ prop: 'slug', value: slug }))
+      this.dispatch(disableSlugAutogen())
+    },
   },
 
   computed: {
@@ -189,6 +214,23 @@ export default defineComponent({
     },
     externalFileFieldValue(): string {
       return this.fileSelection.fileSelection
+    },
+    slugCandidate(): string | null {
+      if (this.currentServiceSelection == 'url') {
+        if (this.urlFieldValue) {
+          return this.urlFieldValue.split('/').reverse()[0].split('.')[0]
+        }
+      }
+
+      if (this.currentServiceSelection == 'file') {
+        const filename = this.filenameSelectedForUpload
+        return filename ? filename.split('.')[0] : null
+      }
+
+      return null
+    },
+    shouldSuggestSlug(): boolean {
+      return this.slugCandidate != null && this.slugCandidate != this.state.episodeSlug
     },
   },
 })

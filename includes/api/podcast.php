@@ -95,7 +95,7 @@ class WP_REST_Podlove_Controller extends WP_REST_Controller
                         'description' => __('Copyright notice for content in the channel.', 'podlove-podcasting-plugin-for-wordpress'),
                         'type' => 'string',
                     ],
-                    'expicit' => [
+                    'explicit' => [
                         'description' => __('Is the overall content of the podcast explicit?', 'podlove-podcasting-plugin-for-wordpress'),
                         'type' => 'boolean',
                     ],
@@ -170,7 +170,7 @@ class WP_REST_Podlove_Controller extends WP_REST_Controller
             $res['copyright'] = $podcast->default_copyright_claim();
         else
             $res['copyright'] = $podcast->copyright;
-        $res['expicit'] = $explicit;
+        $res['explicit'] = $explicit;
         $res['category'] = $this->getCategoryName($podcast->category_1);
         $res['language'] = $this->getLanguageName($podcast->language);
         $res['license_url'] = $podcast->license_url;
@@ -266,7 +266,7 @@ class WP_REST_Podlove_Controller extends WP_REST_Controller
         ]);
     }
 
-    private function getCategoryKey($category) 
+    private function getCategoryKey($category)
     {
         $categories = \Podlove\Itunes\categories(false);
         foreach($categories as $key => $val) {
@@ -276,7 +276,7 @@ class WP_REST_Podlove_Controller extends WP_REST_Controller
         }
     }
 
-    private function getCategoryName($category_key) 
+    private function getCategoryName($category_key)
     {
         $categories = \Podlove\Itunes\categories(true);
         foreach($categories as $key => $val) {

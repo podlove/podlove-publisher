@@ -10,7 +10,7 @@ class EpisodeFactory
         $this->factory = $factory;
         $this->defaults = [
             'enable' => 1,
-            'slug' => 'episode'.mt_rand(1, 10000),
+            'slug' => 'episode'.wp_rand(1, 10000),
         ];
     }
 

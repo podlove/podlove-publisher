@@ -21,6 +21,11 @@ class Builder
     public $object_key;
     public $arguments;
 
+    public $field_name;
+    public $field_id;
+    public $field_value;
+    public $html_attributes;
+
     public function __construct($object, $context)
     {
         $this->object = $object;

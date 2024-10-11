@@ -155,6 +155,16 @@ class TwigFilter
         $twig->addFilter($padLeftFilter);
         $twig->addFilter($wpautopFilter);
 
+        // disable unsafe functions
+        // There may be ways to sanitize the passed callback, but I don't think it's worth the trouble.
+        $disabled_filters = ['filter', 'map', 'reduce'];
+        foreach ($disabled_filters as $filter_name) {
+            $filter = new Twig\TwigFilter($filter_name, function () use ($filter_name) {
+                return '[Twig function disabled: '.$filter_name.']';
+            });
+            $twig->addFilter($filter);
+        }
+
         // add functions
         foreach (self::$template_tags as $tag) {
             $func = new Twig\TwigFunction($tag, function () use ($tag) {

@@ -108,7 +108,7 @@ class Tools
 			<div
 				class="podlove-job"
 				data-job="Podlove-Jobs-DownloadTimedAggregatorJob"
-				data-args="<?php echo esc_attr(json_encode(['force' => true])); ?>"
+				data-args="<?php echo esc_attr(wp_json_encode(['force' => true])); ?>"
 				data-button-text="<?php echo sprintf(__('Start %s', 'podlove-podcasting-plugin-for-wordpress'), $job_class::title()); ?>"
 				data-recent-job-id="<?php echo $recent_job_id; ?>"
 				>

@@ -7,6 +7,7 @@ export interface PodloveContributor {
   gender: string
   jobtitle: string
   mail: string
+  publicname: string
   realname: string
   nickname: string
   organisation: string

@@ -32,7 +32,7 @@ class PodcastLicense extends \WP_Widget
     {
         $title = isset($instance['title']) ? $instance['title'] : ''; ?>
 		<p>
-			<label for="<?php echo $this->get_field_id('title'); ?>"><?php _e('Title', 'podlove-podcasting-plugin-for-wordpress'); ?></label> 
+			<label for="<?php echo $this->get_field_id('title'); ?>"><?php _e('Title', 'podlove-podcasting-plugin-for-wordpress'); ?></label>
 			<input class="widefat" id="<?php echo $this->get_field_id('title'); ?>" name="<?php echo $this->get_field_name('title'); ?>" value="<?php echo $title; ?>" />
 		</p>
 		<?php
@@ -41,7 +41,7 @@ class PodcastLicense extends \WP_Widget
     public function update($new_instance, $old_instance)
     {
         $instance = [];
-        $instance['title'] = (!empty($new_instance['title'])) ? strip_tags($new_instance['title']) : '';
+        $instance['title'] = (!empty($new_instance['title'])) ? wp_strip_all_tags($new_instance['title']) : '';
 
         return $instance;
     }
