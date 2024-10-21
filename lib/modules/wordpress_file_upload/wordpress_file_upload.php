@@ -26,7 +26,7 @@ class Wordpress_File_Upload extends \Podlove\Modules\Base
             ],
         ]);
 
-        $podlove_subdir = trim($this->get_module_option('upload_subdir'));
+        $podlove_subdir = trim($this->get_module_option('upload_subdir') ?? '');
         if (!$podlove_subdir) {
             add_action('admin_notices', function () {
                 ?>
