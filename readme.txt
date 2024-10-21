@@ -118,6 +118,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 = 4.1.16 =
 
 * fix: plugin crash on setup when default WordPress roles do not exist
+* feat: add API route to clear caches: `DELETE podlove/v2/tools/clear-caches`
 
 = 4.1.15 =
 
