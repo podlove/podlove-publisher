@@ -115,6 +115,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 4.1.16 =
+
+* fix: plugin crash on setup when default WordPress roles do not exist
+
 = 4.1.15 =
 
 * security: disable unsafe Twig Template filters "filter", "map" and "reduce"
