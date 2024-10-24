@@ -76,7 +76,9 @@ class TwigFilter
             } catch (Twig\Error\Error $e) {
                 $message = $e->getRawMessage();
                 $line = $e->getTemplateLine();
-                $template = $e->getSourceContext();
+                $template = $e->getSourceContext()->getName();
+
+                $result = 'Twig Error: '.$message.' (in template "'.$template.'" line '.$line.')';
 
                 \Podlove\Log::get()->addError($message, [
                     'type' => 'twig',
@@ -157,9 +159,7 @@ class TwigFilter
 
         // add functions
         foreach (self::$template_tags as $tag) {
-            $func = new Twig\TwigFunction($tag, function () use ($tag) {
-                return $tag();
-            });
+            $func = new Twig\TwigFunction($tag, $tag);
             $twig->addFunction($func);
         }
 
@@ -190,6 +190,45 @@ class TwigFilter
         $twig->addFunction(new Twig\TwigFunction('_nx', function ($single, $plural, $number, $context, $domain = 'default') {
             return \_x($single, $plural, $number, $context, $domain);
         }));
+
+        $allowed_custom_function_names = [
+            'get_the_post_thumbnail_url',
+            'shortcode_exists',
+            '__',
+            '_x',
+            '_n',
+            '_nx'
+        ];
+
+        $allowed_custom_filters = [
+            'formatBytes',
+            'padLeft',
+            'wpautop',
+        ];
+
+        // BEGIN security
+
+        $tags = ['if', 'set', 'for'];
+        $filters = array_merge(
+            ['default', 'sort'],
+            $allowed_custom_filters
+        );
+        $methods = [
+            'Podlove\Template\Episode' => ['player', 'contributors'],
+            'Podlove\Modules\Contributors\Template\Contributor' => ['visible', 'image', 'name', 'comment', 'services'],
+            'Podlove\Modules\Social\Template\Service' => ['title', 'profileurl', 'image'],
+            'Podlove\Template\Image' => ['html']
+        ];
+        $properties = [];
+        $functions = array_merge(
+            self::$template_tags,
+            $allowed_custom_function_names
+        );
+        $policy = new Twig\Sandbox\SecurityPolicy($tags, $filters, $methods, $properties, $functions);
+
+        $twig->addExtension(new Twig\Extension\SandboxExtension($policy, true));
+
+        // END security
 
         return $twig;
     }
