@@ -11,6 +11,7 @@ use Podlove\Template\Wrapper;
  * Requires the "Contributor" module.
  *
  * @deprecated since 2.2.0
+ *
  * @templatetag avatar
  */
 class Avatar extends Wrapper

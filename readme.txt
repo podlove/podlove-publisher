@@ -115,8 +115,11 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+
 = 4.1.16 =
 
+* security: use Twig in Sandbox mode
+* change: reenable recently disabled Twig Template filters "filter", "map" and "reduce"
 * fix: plugin crash on setup when default WordPress roles do not exist
 
 = 4.1.15 =

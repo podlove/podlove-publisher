@@ -176,6 +176,7 @@ class TwigSandbox
             '\Podlove\Template\Tag',
             '\Podlove\Template\Category',
             '\Podlove\Template\Image',
+            '\Podlove\Modules\Contributors\Template\Avatar',
             '\Podlove\Modules\Contributors\Template\Contributor',
             '\Podlove\Modules\Contributors\Template\ContributorGroup',
             '\Podlove\Modules\Seasons\Template\Season',
