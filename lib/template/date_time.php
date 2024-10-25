@@ -21,7 +21,9 @@ class DateTime extends Wrapper
     // /////////
 
     /**
-     * $format parameter is @deprecated, use DateTime.format instead.
+     * Get date and time in default format.
+     *
+     * @accessor
      */
     public function __toString()
     {

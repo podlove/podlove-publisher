@@ -20,6 +20,11 @@ class EpisodeTitle extends Wrapper
     // Accessors
     // /////////
 
+    /**
+     * Get image URL.
+     *
+     * @accessor
+     */
     public function __toString()
     {
         if ($this->clean()) {
