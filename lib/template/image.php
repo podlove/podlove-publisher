@@ -23,6 +23,11 @@ class Image extends Wrapper
     // Accessors
     // /////////
 
+    /**
+     * Get image URL.
+     *
+     * @accessor
+     */
     public function __toString()
     {
         $url = $this->image->url();
