@@ -76,7 +76,9 @@ class TwigFilter
             } catch (Twig\Error\Error $e) {
                 $message = $e->getRawMessage();
                 $line = $e->getTemplateLine();
-                $template = $e->getSourceContext();
+                $template = $e->getSourceContext()->getName();
+
+                $result = 'Twig Error: '.$message.' (in template "'.$template.'" line '.$line.')';
 
                 \Podlove\Log::get()->addError($message, [
                     'type' => 'twig',
@@ -155,21 +157,9 @@ class TwigFilter
         $twig->addFilter($padLeftFilter);
         $twig->addFilter($wpautopFilter);
 
-        // disable unsafe functions
-        // There may be ways to sanitize the passed callback, but I don't think it's worth the trouble.
-        $disabled_filters = ['filter', 'map', 'reduce'];
-        foreach ($disabled_filters as $filter_name) {
-            $filter = new Twig\TwigFilter($filter_name, function () use ($filter_name) {
-                return '[Twig function disabled: '.$filter_name.']';
-            });
-            $twig->addFilter($filter);
-        }
-
         // add functions
         foreach (self::$template_tags as $tag) {
-            $func = new Twig\TwigFunction($tag, function () use ($tag) {
-                return $tag();
-            });
+            $func = new Twig\TwigFunction($tag, $tag);
             $twig->addFunction($func);
         }
 
@@ -200,6 +190,9 @@ class TwigFilter
         $twig->addFunction(new Twig\TwigFunction('_nx', function ($single, $plural, $number, $context, $domain = 'default') {
             return \_x($single, $plural, $number, $context, $domain);
         }));
+
+        $policy = TwigSandbox::getSecurityPolicy();
+        $twig->addExtension(new Twig\Extension\SandboxExtension($policy, true));
 
         return $twig;
     }

@@ -20,6 +20,11 @@ class Duration extends Wrapper
     // Accessors
     // /////////
 
+    /**
+     * Get default duration display.
+     *
+     * @accessor
+     */
     public function __toString()
     {
         if (!$this->totalMilliseconds()) {

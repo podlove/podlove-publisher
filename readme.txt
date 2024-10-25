@@ -115,6 +115,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 2024-10-26 =
+
+* security: use Twig in Sandbox mode
+
 = 2024-10-11 =
 
 * bring beta up to date with stable release 4.1.15
