@@ -142,6 +142,30 @@ class TwigSandbox
         'timezone_names',
     ];
 
+    public static $wp_post_props = ['WP_Post' => [
+        'ID',
+        'post_author',
+        'post_date',
+        'post_date_gmt',
+        'post_content',
+        'post_title',
+        'post_excerpt',
+        'post_status',
+        'comment_status',
+        'ping_status',
+        'post_name',
+        'to_ping',
+        'pinged',
+        'post_modified',
+        'post_modified_gmt',
+        'post_parent',
+        'guid',
+        'menu_order',
+        'post_type',
+        'post_mime_type',
+        'comment_count'
+    ]];
+
     public static function getSecurityPolicy()
     {
         $filters = array_merge(
@@ -149,7 +173,7 @@ class TwigSandbox
             self::$allowed_custom_filters
         );
         $methods = self::get_podlove_template_methods();
-        $properties = [];
+        $properties = self::$wp_post_props;
         $functions = array_merge(
             self::$twig_functions,
             TwigFilter::$template_tags,
