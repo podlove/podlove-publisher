@@ -115,6 +115,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= unreleased =
+
+* remove old "Migration Assistant" module
+
 = 2024-10-26 =
 
 * security: use Twig in Sandbox mode
