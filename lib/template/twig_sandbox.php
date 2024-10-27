@@ -220,6 +220,7 @@ class TwigSandbox
             '\Podlove\Modules\Social\TemplateExtensions',
             '\Podlove\Modules\SubscribeButton\TemplateExtensions',
             '\Podlove\Modules\Transcripts\TemplateExtensions',
+            '\Podlove\Modules\Shownotes\TemplateExtensions'
         ];
 
         $dynamicAccessors = [];
