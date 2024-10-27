@@ -252,13 +252,16 @@ class TwigSandbox
                     'episode' => 'Podlove\Template\Episode',
                     'podcast' => 'Podlove\Template\Podcast',
                     'contributor' => 'Podlove\Modules\Contributors\Template\Contributor',
+                    default => null
                 };
 
-                if (!isset($dynamicAccessors[$class])) {
-                    $dynamicAccessors[$class] = [];
-                }
+                if ($class) {
+                    if (!isset($dynamicAccessors[$class])) {
+                        $dynamicAccessors[$class] = [];
+                    }
 
-                $dynamicAccessors[$class][] = $method['methodname'];
+                    $dynamicAccessors[$class][] = $method['methodname'];
+                }
             }
         }
 
