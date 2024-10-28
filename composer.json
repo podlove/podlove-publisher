@@ -5,7 +5,6 @@
   "require": {
     "php": "^8.0",
     "podlove/podlove-timeline": "2.*",
-    "podlove/comment-introspection": "dev-master",
     "monolog/monolog": "2.9.*",
     "symfony/yaml": "6.0.*",
     "symfony/polyfill-mbstring": "1.27.*",
