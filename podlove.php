@@ -2,8 +2,7 @@
 /**
  * Plugin Name: Podlove Podcast Publisher
  * Plugin URI:  https://podlove.org/podlove-podcast-publisher/
- * Description: The one and only next generation podcast publishing system. Seriously. It's magical and sparkles a lot.
- * Version: 4.1.15
+ * Version: 4.1.16
  * Requires at least: 4.9.6
  * Requires PHP: 8.0
  * Author:      Podlove
@@ -11,6 +10,7 @@
  * License:     MIT
  * License URI: license.txt
  * Text Domain: podlove-podcasting-plugin-for-wordpress
+ * Description: The one and only next generation podcast publishing system. Seriously. It's magical and sparkles a lot.
  */
 function load_podlove_podcast_publisher()
 {
