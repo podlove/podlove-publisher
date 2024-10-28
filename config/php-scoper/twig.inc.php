@@ -56,6 +56,14 @@ return [
                 );
             }
 
+            if (stristr($filePath, 'CaptureNode.php')) {
+                $content = str_replace(
+                    '\\\\Twig',
+                    $prefix.'\\\\Twig',
+                    $content
+                );
+            }            
+
             if (stristr($filePath, 'IncludeNode.php') || stristr($filePath, 'WithNode.php')) {
                 $content = str_replace(
                     'twig_array_merge(',
