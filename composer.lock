@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8ff4d121ffa215b1fdb4584b8c036abf",
+    "content-hash": "420d65dd297f6bfec111ac1504ce38e3",
     "packages": [
         {
             "name": "brick/math",
@@ -809,51 +809,6 @@
                 }
             ],
             "time": "2020-10-26T13:16:10+00:00"
-        },
-        {
-            "name": "podlove/comment-introspection",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/podlove/podlove-comment-introspection.git",
-                "reference": "012600c3023a5667c6f5c8658c9c66cdd9e57c2f"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/podlove/podlove-comment-introspection/zipball/012600c3023a5667c6f5c8658c9c66cdd9e57c2f",
-                "reference": "012600c3023a5667c6f5c8658c9c66cdd9e57c2f",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.4.0"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "3.7.*"
-            },
-            "default-branch": true,
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "Podlove\\Comment": "lib/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "description": "PHP library providing a toolkit to parse class and method comments.",
-            "keywords": [
-                "comment",
-                "introspection",
-                "parser",
-                "podlove",
-                "reflection"
-            ],
-            "support": {
-                "issues": "https://github.com/podlove/podlove-comment-introspection/issues",
-                "source": "https://github.com/podlove/podlove-comment-introspection/tree/master"
-            },
-            "time": "2014-01-04T16:27:27+00:00"
         },
         {
             "name": "podlove/normalplaytime",
@@ -3486,7 +3441,6 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "podlove/comment-introspection": 20,
         "pear/pear_exception": 20
     },
     "prefer-stable": false,
