@@ -32,7 +32,7 @@ class TemplateExtensions
      *
      * @accessor
      *
-     * @dynamicAccessor episode.transcriptGrouped
+     * @dynamicAccessor episode.transcript
      *
      * @param mixed $return
      * @param mixed $method_name
