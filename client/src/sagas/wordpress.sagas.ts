@@ -32,11 +32,34 @@ function* wordpressSaga(): any {
   }
 }
 
+function getFeaturedImageIdFromEditor() {
+  const editor = wordpress.store.select('core/editor')
+  return editor.getEditedPostAttribute('featured_media')
+}
+
+function getTitleFromEditor() {
+  const editor = wordpress.store.select('core/editor')
+  return editor.getEditedPostAttribute('title')
+}
+
 function* wordpressGutenbergUpdate() {
+  const title: string = getTitleFromEditor()
+  const imgId: number = getFeaturedImageIdFromEditor()
+  const media = imgId ? wordpress.store.select('core').getMedia(imgId) : null
+
+  // TODO: [perf] only send updates on value change, not on EVERY gutenberg update
+
   yield put(
     wordpressStore.update({
       prop: 'title',
-      value: wordpress.store.select('core/editor').getEditedPostAttribute('title'),
+      value: title,
+    })
+  )
+
+  yield put(
+    wordpressStore.update({
+      prop: 'featured_media',
+      value: media,
     })
   )
 }

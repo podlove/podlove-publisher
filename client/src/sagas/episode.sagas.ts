@@ -24,6 +24,7 @@ function* episodeSaga(): any {
   yield takeEvery(episode.SAVED, maybeMarkSlugAsChanged)
   yield takeEvery(episode.SELECT_POSTER, selectImageFromLibrary)
   yield takeEvery(episode.SET_POSTER, updatePoster)
+  yield takeEvery(wordpress.UPDATE, updatePosterFromGutenberg)
   yield takeEvery(episode.SET, updateAuphonicWebhookConfig)
 }
 
@@ -85,6 +86,23 @@ function* selectImageFromLibrary() {
 
 function* updatePoster(action: Action) {
   yield put(episode.update({ prop: 'episode_poster', value: get(action, ['payload']) }))
+}
+
+function* updatePosterFromGutenberg(action: { type: string; payload: object }) {
+  const poster_setting: string = yield select(selectors.settings.imageAsset)
+
+  // only apply if the featured media is used for the episode cover
+  if (poster_setting != 'post-thumbnail') {
+    return
+  }
+
+  // only apply if the current event is about featured_media
+  if (get(action, ['payload', 'prop']) != 'featured_media') {
+    return
+  }
+
+  const img_url = get(action, ['payload', 'value', 'source_url'])
+  yield put(episode.update({ prop: 'poster', value: img_url }))
 }
 
 export default function () {
