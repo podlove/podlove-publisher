@@ -1,5 +1,6 @@
 import * as auphonic from '@store/auphonic.store'
 import * as episode from '@store/episode.store'
+import * as progress from '@store/progress.store'
 import { takeFirst } from '../sagas/helper'
 import {
   delay,
@@ -34,6 +35,8 @@ function* auphonicSaga(): any {
 
 function* initialize(api: PodloveApiClient) {
   const { result }: { result: string } = yield api.get(`auphonic/token`)
+
+  // yield put(progress.setProgress({ key: 'singletrack', progress: 43 }))
 
   if (result) {
     yield put(auphonic.setToken(result))
@@ -417,8 +420,8 @@ function* watchProgressChannel(progressChannel) {
   try {
     while (true) {
       // Take progress events from the channel and dispatch them to Redux
-      const progress = yield take(progressChannel)
-      yield put(episode.update({ prop: 'number', value: progress }))
+      const value = yield take(progressChannel)
+      yield put(progress.setProgress({ key: 'singletrack', progress: value }))
       // yield put(uploadProgress(progress));
     }
   } finally {
