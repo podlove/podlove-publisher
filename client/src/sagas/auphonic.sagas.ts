@@ -419,10 +419,8 @@ function getSaveProductionPayload(state: State): object {
 function* watchProgressChannel(progressChannel) {
   try {
     while (true) {
-      // Take progress events from the channel and dispatch them to Redux
       const value = yield take(progressChannel)
       yield put(progress.setProgress({ key: 'singletrack', progress: value }))
-      // yield put(uploadProgress(progress));
     }
   } finally {
     if (yield cancelled()) {
