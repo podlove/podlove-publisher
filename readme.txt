@@ -115,6 +115,12 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= unreleased =
+
+* fix: when using the "Post Thumbnail" setting for episode images, the chosen
+image is now immediately shown in the "Episode Description" box and it is sent
+to Auphonic when saving a production.
+
 = 4.1.19 =
 
 * fix some templates by allowing `service.name` (but it's deprecated, so you should change your templates to use `service.title` instead)
