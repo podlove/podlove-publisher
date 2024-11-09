@@ -135,6 +135,7 @@ const runtime = {
 const post = {
   id: createSelector(root.post, postStore.selectors.id),
   title: createSelector(root.post, postStore.selectors.title),
+  featuredMedia: createSelector(root.post, postStore.selectors.featured_media),
 }
 
 const transcripts = {

@@ -47,21 +47,26 @@ function* wordpressGutenbergUpdate() {
   const imgId: number = getFeaturedImageIdFromEditor()
   const media = imgId ? wordpress.store.select('core').getMedia(imgId) : null
 
-  // TODO: [perf] only send updates on value change, not on EVERY gutenberg update
+  const oldTitle: string | null = yield select(selectors.post.title)
+  const oldMedia: object | null = yield select(selectors.post.featuredMedia)
 
-  yield put(
-    wordpressStore.update({
-      prop: 'title',
-      value: title,
-    })
-  )
+  if (oldTitle != title) {
+    yield put(
+      wordpressStore.update({
+        prop: 'title',
+        value: title,
+      })
+    )
+  }
 
-  yield put(
-    wordpressStore.update({
-      prop: 'featured_media',
-      value: media,
-    })
-  )
+  if (get(oldMedia, ['id']) != get(media, ['id'])) {
+    yield put(
+      wordpressStore.update({
+        prop: 'featured_media',
+        value: media,
+      })
+    )
+  }
 }
 
 function* postTitleUpdate(title: String) {
