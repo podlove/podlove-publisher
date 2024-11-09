@@ -1,7 +1,18 @@
 import * as auphonic from '@store/auphonic.store'
 import * as episode from '@store/episode.store'
 import { takeFirst } from '../sagas/helper'
-import { delay, put, take, fork, takeEvery, select, all, call, race } from 'redux-saga/effects'
+import {
+  delay,
+  put,
+  take,
+  fork,
+  takeEvery,
+  select,
+  all,
+  call,
+  race,
+  cancelled,
+} from 'redux-saga/effects'
 import { createApi } from '../sagas/api'
 import { createApi as createAuphonicApi } from '../sagas/auphonic.api'
 import { PodloveApiClient } from '@lib/api'
@@ -11,6 +22,8 @@ import { v4 as uuidv4 } from 'uuid'
 import { State } from '../store'
 import { get } from 'lodash'
 import Timestamp from '@lib/timestamp'
+import { AxiosProgressEvent } from 'axios'
+import { channel } from 'redux-saga'
 
 function* auphonicSaga(): any {
   const apiClient: PodloveApiClient = yield createApi()
@@ -400,6 +413,21 @@ function getSaveProductionPayload(state: State): object {
   }
 }
 
+function* watchProgressChannel(progressChannel) {
+  try {
+    while (true) {
+      // Take progress events from the channel and dispatch them to Redux
+      const progress = yield take(progressChannel)
+      yield put(episode.update({ prop: 'number', value: progress }))
+      // yield put(uploadProgress(progress));
+    }
+  } finally {
+    if (yield cancelled()) {
+      progressChannel.close()
+    }
+  }
+}
+
 function* handleSaveProduction(
   auphonicApi: AuphonicApiClient,
   action: { type: string; payload: any }
@@ -425,9 +453,26 @@ function* handleSaveProduction(
   // FIXME: only upload when changed, see multitrack logic
   const input_file = productionPayload.input_file
   if (typeof input_file == 'object') {
-    yield auphonicApi.upload(`production/${uuid}/upload.json`, {
-      file: input_file,
-    })
+    const progressChannel = yield call(channel)
+    const watchProgress = yield fork(watchProgressChannel, progressChannel)
+
+    const handleProgress = (progressEvent: AxiosProgressEvent) => {
+      if (progressEvent.total) {
+        const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total)
+
+        progressChannel.put(percentCompleted)
+      }
+    }
+
+    yield call(
+      auphonicApi.upload,
+      `production/${uuid}/upload.json`,
+      { file: input_file },
+      {
+        callback: handleProgress,
+      }
+    )
+
     delete productionPayload.input_file
   }
 
