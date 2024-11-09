@@ -6,11 +6,13 @@ import * as wordpressStore from './wordpress.store'
 export type State = {
   id: string | null
   title: string | null
+  featured_media: object | null
 }
 
 export const initialState: State = {
   id: null,
   title: null,
+  featured_media: null,
 }
 
 export const reducer = handleActions(
@@ -19,18 +21,20 @@ export const reducer = handleActions(
       ...state,
       id: get(action, ['payload', 'post', 'id'], null),
       title: get(action, ['payload', 'post', 'title'], null),
+      featured_media: get(action, ['payload', 'post', 'featured_media'], null),
     }),
     [wordpressStore.UPDATE]: (
       state: State,
       action: { type: string; payload: { prop: string; value: any } }
     ): State => {
-      if (action.payload.prop !== 'title') {
-        return state
-      }
+      const prop = get(action, ['payload', 'prop'])
+      const value = get(action, ['payload', 'value'], null)
+      const allowed_props = ['title', 'featured_media']
 
-      return {
-        ...state,
-        title: action.payload.value,
+      if (allowed_props.includes(prop)) {
+        return { ...state, [prop]: value }
+      } else {
+        return { ...state }
       }
     },
   },
@@ -40,4 +44,5 @@ export const reducer = handleActions(
 export const selectors = {
   id: (state: State) => state.id,
   title: (state: State) => state.title,
+  featured_media: (state: State) => state.featured_media,
 }
