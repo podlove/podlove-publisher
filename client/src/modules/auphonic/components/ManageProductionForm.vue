@@ -426,6 +426,9 @@ export default defineComponent({
     handleUpdateIdentifier(event: Event, index: number): void {
       this.updateTrack('identifier_new', (event.target as HTMLInputElement).value, index)
     },
+    uploadProgress(key: string): string | null {
+      return this.state.progress[key] || null
+    },
   },
 
   computed: {
@@ -434,9 +437,6 @@ export default defineComponent({
     },
     isSaving(): boolean {
       return this.state.isSaving
-    },
-    uploadProgress(key: string) {
-      return this.state.progress[key] || null
     },
     showProcessingScreen(): boolean {
       return [1, 4, 5, 6, 7, 8, 12, 13, 14].includes(this.production.status)

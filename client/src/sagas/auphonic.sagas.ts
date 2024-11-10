@@ -416,11 +416,16 @@ function getSaveProductionPayload(state: State): object {
   }
 }
 
+type ProgressPayload = {
+  key: string
+  progress: number
+}
+
 function* watchProgressChannel(progressChannel) {
   try {
     while (true) {
-      const value = yield take(progressChannel)
-      yield put(progress.setProgress({ key: 'singletrack', progress: value }))
+      const payload: ProgressPayload = yield take(progressChannel)
+      yield put(progress.setProgress(payload))
     }
   } finally {
     if (yield cancelled()) {
@@ -460,8 +465,9 @@ function* handleSaveProduction(
     const handleProgress = (progressEvent: AxiosProgressEvent) => {
       if (progressEvent.total) {
         const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total)
+        const payload: ProgressPayload = { key: 'singletrack', progress: percentCompleted }
 
-        progressChannel.put(percentCompleted)
+        progressChannel.put(payload)
       }
     }
 
