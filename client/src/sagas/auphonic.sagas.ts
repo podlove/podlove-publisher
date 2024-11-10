@@ -36,8 +36,6 @@ function* auphonicSaga(): any {
 function* initialize(api: PodloveApiClient) {
   const { result }: { result: string } = yield api.get(`auphonic/token`)
 
-  // yield put(progress.setProgress({ key: 'singletrack', progress: 43 }))
-
   if (result) {
     yield put(auphonic.setToken(result))
     yield fork(initializeAuphonicApi)
