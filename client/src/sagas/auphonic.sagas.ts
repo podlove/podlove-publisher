@@ -224,7 +224,12 @@ function* handleStartProduction(
   yield put(auphonic.startPolling())
 }
 
-function* handleSaveTrack(auphonicApi: AuphonicApiClient, uuid: String, trackWrapper: any) {
+function* handleSaveTrack(
+  auphonicApi: AuphonicApiClient,
+  uuid: String,
+  trackWrapper: any,
+  handleProgress: any
+) {
   let payload = trackWrapper.payload
 
   const id_old = payload.id
@@ -235,11 +240,15 @@ function* handleSaveTrack(auphonicApi: AuphonicApiClient, uuid: String, trackWra
   delete payload.id_new
   payload.id = id_new
 
+  const progressHandler = handleProgress(payload.id)
+
   switch (trackWrapper.state) {
     case 'edited':
       yield auphonicApi.post(`production/${uuid}/multi_input_files/${id_old}.json`, payload)
       if (needs_upload) {
-        yield auphonicApi.upload(`production/${uuid}/upload.json`, trackWrapper.upload)
+        yield auphonicApi.upload(`production/${uuid}/upload.json`, trackWrapper.upload, {
+          callback: progressHandler,
+        })
       }
       break
     case 'new':
@@ -247,7 +256,9 @@ function* handleSaveTrack(auphonicApi: AuphonicApiClient, uuid: String, trackWra
         multi_input_files: [trackWrapper.payload],
       })
       if (needs_upload) {
-        yield auphonicApi.upload(`production/${uuid}/upload.json`, trackWrapper.upload)
+        yield auphonicApi.upload(`production/${uuid}/upload.json`, trackWrapper.upload, {
+          callback: progressHandler,
+        })
       }
       break
   }
@@ -453,11 +464,6 @@ function* handleSaveProduction(
   //@ts-ignore
   yield auphonicApi.delete(`production/${uuid}/chapters.json`)
 
-  // save multi_input_files by saving/updating each track individually
-  yield all(
-    tracksPayload.map((trackWrapper: any) => call(handleSaveTrack, auphonicApi, uuid, trackWrapper))
-  )
-
   const progressChannel = yield call(channel)
   const watchProgress = yield fork(watchProgressChannel, progressChannel)
 
@@ -469,6 +475,13 @@ function* handleSaveProduction(
       progressChannel.put(payload)
     }
   }
+
+  // save multi_input_files by saving/updating each track individually
+  yield all(
+    tracksPayload.map((trackWrapper: any) =>
+      call(handleSaveTrack, auphonicApi, uuid, trackWrapper, handleProgress)
+    )
+  )
 
   // handle single track if input_file is set
   // FIXME: only upload when changed, see multitrack logic
