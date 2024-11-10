@@ -129,6 +129,9 @@
                           {{ __('Uploaded File:', 'podlove-podcasting-plugin-for-wordpress') }}
                           {{ track.input_file_name }}
                         </div>
+                        <div v-if="uploadProgress(track.identifier) != null">
+                          {{ uploadProgress(track.identifier) }}%
+                        </div>
                       </div>
                     </div>
                   </div>
