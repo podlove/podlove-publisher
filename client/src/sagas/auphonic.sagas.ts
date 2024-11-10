@@ -425,6 +425,9 @@ function* watchProgressChannel(progressChannel) {
   try {
     while (true) {
       const payload: ProgressPayload = yield take(progressChannel)
+
+      // TODO: reset when selecting a file
+      // TODO: reset when using the source picker
       yield put(progress.setProgress(payload))
     }
   } finally {
@@ -455,29 +458,27 @@ function* handleSaveProduction(
     tracksPayload.map((trackWrapper: any) => call(handleSaveTrack, auphonicApi, uuid, trackWrapper))
   )
 
+  const progressChannel = yield call(channel)
+  const watchProgress = yield fork(watchProgressChannel, progressChannel)
+
+  const handleProgress = (key: string) => (progressEvent: AxiosProgressEvent) => {
+    if (progressEvent.total) {
+      const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total)
+      const payload: ProgressPayload = { key, progress: percentCompleted }
+
+      progressChannel.put(payload)
+    }
+  }
+
   // handle single track if input_file is set
   // FIXME: only upload when changed, see multitrack logic
   const input_file = productionPayload.input_file
   if (typeof input_file == 'object') {
-    const progressChannel = yield call(channel)
-    const watchProgress = yield fork(watchProgressChannel, progressChannel)
-
-    const handleProgress = (progressEvent: AxiosProgressEvent) => {
-      if (progressEvent.total) {
-        const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total)
-        const payload: ProgressPayload = { key: 'singletrack', progress: percentCompleted }
-
-        progressChannel.put(payload)
-      }
-    }
-
     yield call(
       auphonicApi.upload,
       `production/${uuid}/upload.json`,
       { file: input_file },
-      {
-        callback: handleProgress,
-      }
+      { callback: handleProgress('singletrack') }
     )
 
     delete productionPayload.input_file
@@ -493,9 +494,11 @@ function* handleSaveProduction(
       const filename = 'image.' + ext
       const image_file = new File([blob], filename, { type: blob.type })
 
-      let r = auphonicApi.upload(`production/${uuid}/upload.json`, {
-        image: image_file,
-      })
+      auphonicApi.upload(
+        `production/${uuid}/upload.json`,
+        { image: image_file },
+        { callback: handleProgress('poster') }
+      )
     })
 
   delete productionPayload.image
