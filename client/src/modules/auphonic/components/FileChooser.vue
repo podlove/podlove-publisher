@@ -24,15 +24,19 @@
         <div v-if="currentService.type === 'file'">
           <label
             :for="file_key + 'file-upload'"
-            class="relative cursor-pointer bg-white rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500"
+            class="relative flex items-center gap-2 cursor-pointer bg-white rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none"
           >
-            <div class="sm:mt-1" v-if="filenameSelectedForUpload">
-              Upload
-              <span class="text-sm font-normal">{{ filenameSelectedForUpload }}</span>
+            <div
+              class="sm:mt-1 rounded-md bg-indigo-50 px-3 py-2 text-sm font-semibold text-indigo-600 shadow-sm hover:bg-indigo-100"
+            >
+              {{ __('Choose File', 'podlove-podcasting-plugin-for-wordpress') }}
             </div>
-            <div class="sm:mt-1" v-else>
-              {{ __('Upload a file', 'podlove-podcasting-plugin-for-wordpress') }}
+
+            <div class="sm:mt-1 text-sm font-normal" v-if="filenameSelectedForUpload">
+              {{ __('Selected for Upload:', 'podlove-podcasting-plugin-for-wordpress') }}
+              <span>{{ filenameSelectedForUpload }}</span>
             </div>
+
             <input
               :id="file_key + 'file-upload'"
               name="file-upload"

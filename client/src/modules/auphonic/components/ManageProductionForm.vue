@@ -125,12 +125,28 @@
                           :track_index="index"
                           :file_key="`${production.uuid}_t${index}`"
                         />
-                        <div v-if="track.input_file_name" class="mt-1 text-sm text-gray-700">
+                        <div
+                          v-if="track.input_file_name"
+                          class="mt-2 px-3 py-2 bg-gray-100 rounded-md text-sm text-gray-700 break-all"
+                        >
                           {{ __('Uploaded File:', 'podlove-podcasting-plugin-for-wordpress') }}
                           {{ track.input_file_name }}
                         </div>
+
                         <div v-if="uploadProgress(track.identifier) != null">
-                          {{ uploadProgress(track.identifier) }}%
+                          <div class="mt-2" aria-hidden="true">
+                            <div class="overflow-hidden rounded-full bg-gray-100">
+                              <div
+                                class="h-2 rounded-full bg-indigo-600"
+                                :style="{ width: uploadProgress(track.identifier) + '%' }"
+                              ></div>
+                            </div>
+                            <div
+                              class="mt-1 hidden grid-cols-4 text-sm font-medium text-gray-600 sm:grid"
+                            >
+                              <div>{{ uploadProgress(track.identifier) }}%</div>
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -272,12 +288,29 @@
             </legend>
             <div class="mt-2">
               <FileChooser :file_key="production.uuid" />
-              <div v-if="production.input_file" class="mt-1 text-sm text-gray-700">
-                {{ __('Uploaded File:', 'podlove-podcasting-plugin-for-wordpress') }}
-                {{ production.input_file }}
+
+              <div
+                v-if="production.input_file"
+                class="mt-2 px-3 py-2 bg-gray-100 rounded-md text-sm text-gray-700 break-all"
+              >
+                <span>
+                  {{ __('Uploaded File:', 'podlove-podcasting-plugin-for-wordpress') }}
+                  {{ production.input_file }}
+                </span>
               </div>
+
               <div v-if="uploadProgress('singletrack') != null">
-                {{ uploadProgress('singletrack') }}%
+                <div class="mt-2" aria-hidden="true">
+                  <div class="overflow-hidden rounded-full bg-gray-100">
+                    <div
+                      class="h-2 rounded-full bg-indigo-600"
+                      :style="{ width: uploadProgress('singletrack') + '%' }"
+                    ></div>
+                  </div>
+                  <div class="mt-1 hidden grid-cols-4 text-sm font-medium text-gray-600 sm:grid">
+                    <div>{{ uploadProgress('singletrack') }}%</div>
+                  </div>
+                </div>
               </div>
             </div>
           </fieldset>
