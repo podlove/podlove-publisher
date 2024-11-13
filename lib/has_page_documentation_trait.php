@@ -49,7 +49,7 @@ trait HasPageDocumentationTrait
         foreach ($this->get_help_tabs() as $id => $tab) {
             get_current_screen()->add_help_tab([
                 'id' => $id,
-                'title' => __($tab['title'], 'some_textdomain'),
+                'title' => $tab['title'],
                 'callback' => function ($screen, $tab) {
                     echo $this->get_help_tabs()[$tab['id']]['content'];
                 },
