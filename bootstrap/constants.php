@@ -34,7 +34,3 @@ function get_plugin_header($tag_name)
 
     return $plugin_data[$tag_name];
 }
-
-define('Podlove\PLUGIN_NAME', get_plugin_header('Name'));
-define('Podlove\TEXTDOMAIN', strtolower(str_replace(' ', '-', PLUGIN_NAME)));
-load_plugin_textdomain(TEXTDOMAIN, false, TEXTDOMAIN.'/languages');
