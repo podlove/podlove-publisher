@@ -16,14 +16,14 @@ class Wordpress_File_Upload extends \Podlove\Modules\Base
         // FIXME: this is huge. admin_init is not run for REST calls? what else might this affect?
         add_action('rest_api_init', [$this, 'register_hooks']);
 
-        $this->register_option('upload_subdir', 'string', [
+        add_action('init', fn () => $this->register_option('upload_subdir', 'string', [
             'label' => __('Upload subdirectory', 'podlove-podcasting-plugin-for-wordpress'),
             'description' => __('Directory relative to WordPress upload directory where files will be stored.', 'podlove-podcasting-plugin-for-wordpress'),
             'html' => [
                 'class' => 'regular-text podlove-check-input',
                 'placeholder' => self::DEFAULT_DIR
             ],
-        ]);
+        ]));
 
         $podlove_subdir = trim($this->get_module_option('upload_subdir'));
         if (!$podlove_subdir) {

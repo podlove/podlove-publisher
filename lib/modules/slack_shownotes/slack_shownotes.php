@@ -16,7 +16,7 @@ class Slack_Shownotes extends \Podlove\Modules\Base
 
         add_action('rest_api_init', [$this, 'api_init']);
 
-        $this->register_settings();
+        add_action('init', [$this, 'register_settings']);
     }
 
     public function api_init()
