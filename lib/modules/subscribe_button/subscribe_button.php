@@ -55,7 +55,7 @@ class Subscribe_Button extends \Podlove\Modules\Base
             }
         );
 
-        $this->register_option('use_cdn', 'radio', [
+        add_action('init', fn () => $this->register_option('use_cdn', 'radio', [
             'label' => __('Use CDN?', 'podlove-podcasting-plugin-for-wordpress'),
             'description' => '<p>'.__('Use our CDN (https://cdn.podlove.org) to always have the current version of the button on your site. Alternatively deliver the button with your own WordPress instance with the disadvantage of not using the most recent version all the time.', 'podlove-podcasting-plugin-for-wordpress').'</p>',
             'default' => '1',
@@ -63,7 +63,7 @@ class Subscribe_Button extends \Podlove\Modules\Base
                 1 => __('yes, use CDN', 'podlove-podcasting-plugin-for-wordpress').' ('.__('recommended', 'podlove-podcasting-plugin-for-wordpress').')',
                 0 => __('no, deliver with WordPress', 'podlove-podcasting-plugin-for-wordpress'),
             ],
-        ]);
+        ]));
 
         \Podlove\Template\Podcast::add_accessor(
             'subscribeButton',
