@@ -121,6 +121,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 image is now immediately shown in the "Episode Description" box and it is sent
 to Auphonic when saving a production.
 * fix: Auphonic status polling now only gets called when appropriate, instead of on every page load
+* fix: improve WordPress 6.7 compatibility (related to translation api)
 
 = 4.1.19 =
 
