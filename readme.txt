@@ -2,8 +2,8 @@
 Contributors: eteubert
 Donate link: https://opencollective.com/podlove
 Tags: podlove, podcast, publishing, rss, audio
-Tested up to: 6.6.2
-Stable tag: 4.1.19
+Tested up to: 6.7
+Stable tag: 4.1.20
 Requires at least: 4.9.6
 Requires PHP: 8.0
 License: MIT
@@ -115,7 +115,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
-= unreleased =
+= 4.1.20 =
 
 * fix: when using the "Post Thumbnail" setting for episode images, the chosen
 image is now immediately shown in the "Episode Description" box and it is sent
