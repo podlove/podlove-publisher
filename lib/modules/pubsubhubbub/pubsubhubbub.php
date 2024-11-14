@@ -13,16 +13,7 @@ class Pubsubhubbub extends \Podlove\Modules\Base
     public function load()
     {
         add_action('init', [$this, 'register_hooks']);
-
-        $this->register_option('hub_url', 'string', [
-            'label' => __('Hub URL', 'podlove-podcasting-plugin-for-wordpress'),
-            'description' => __('Use hub URL for all feeds.', 'podlove-podcasting-plugin-for-wordpress'),
-            'html' => [
-                'class' => 'regular-text podlove-check-input',
-                'data-podlove-input-type' => 'url',
-                'placeholder' => 'http://<your-hub-name>.superfeedr.com/',
-            ],
-        ]);
+        add_action('init', [$this, 'register_module_option']);
     }
 
     /**
@@ -41,6 +32,19 @@ class Pubsubhubbub extends \Podlove\Modules\Base
         });
 
         add_action('save_post', [$this, 'announce_feed_changes'], 10, 2);
+    }
+
+    public function register_module_option()
+    {
+        $this->register_option('hub_url', 'string', [
+            'label' => __('Hub URL', 'podlove-podcasting-plugin-for-wordpress'),
+            'description' => __('Use hub URL for all feeds.', 'podlove-podcasting-plugin-for-wordpress'),
+            'html' => [
+                'class' => 'regular-text podlove-check-input',
+                'data-podlove-input-type' => 'url',
+                'placeholder' => 'http://<your-hub-name>.superfeedr.com/',
+            ],
+        ]);
     }
 
     /**
