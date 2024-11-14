@@ -115,6 +115,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= unreleased =
+
+* fix: encode tracking urls and their redirected urls
+
 = 4.1.20 =
 
 * fix: when using the "Post Thumbnail" setting for episode images, the chosen

@@ -205,7 +205,7 @@ class MediaFile extends Base
             $path .= "/c/{$params['context']}";
         }
 
-        $path .= '/'.$this->get_download_file_name();
+        $path .= '/'.urlencode($this->get_download_file_name());
 
         return $path;
     }
@@ -223,11 +223,11 @@ class MediaFile extends Base
 
         // add params to path
         foreach ($params as $param_name => $value) {
-            $path .= $connector($path).'ptm_'.$param_name.'='.$value;
+            $path .= $connector($path).'ptm_'.$param_name.'='.urlencode($value);
         }
 
         // at last, add file param, so wget users get the right extension
-        $path .= $connector($path).'ptm_file='.$this->get_download_file_name();
+        $path .= $connector($path).'ptm_file='.urlencode($this->get_download_file_name());
 
         return $path;
     }
@@ -416,7 +416,7 @@ class MediaFile extends Base
         do_action('podlove_media_file_content_has_changed', $this->id);
 
         // verify HTTP header
-        if (!preg_match('/^[23]\\d\\d$/', $header['http_code'])) {
+        if (!preg_match('/^[23]\d\d$/', $header['http_code'])) {
             Log::get()->addError(
                 'Unexpected http response when trying to access remote media file.',
                 ['media_file_id' => $this->id, 'http_code' => $header['http_code']]
