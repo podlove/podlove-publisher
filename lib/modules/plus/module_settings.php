@@ -15,7 +15,7 @@ class ModuleSettings
 
     public function init()
     {
-        $this->register_settings();
+        add_action('init', [$this, 'register_settings']);
     }
 
     public function register_settings()
