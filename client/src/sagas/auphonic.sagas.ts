@@ -24,7 +24,7 @@ import { State } from '../store'
 import { get } from 'lodash'
 import Timestamp from '@lib/timestamp'
 import { AxiosProgressEvent } from 'axios'
-import { channel } from 'redux-saga'
+import { Channel, channel } from 'redux-saga'
 
 function* auphonicSaga(): any {
   const apiClient: PodloveApiClient = yield createApi()
@@ -430,7 +430,12 @@ type ProgressPayload = {
   progress: number
 }
 
-function* watchProgressChannel(progressChannel) {
+interface ProgressData {
+  key: string
+  progress: number
+}
+
+function* watchProgressChannel(progressChannel: Channel<ProgressData>) {
   try {
     while (true) {
       const payload: ProgressPayload = yield take(progressChannel)
@@ -440,7 +445,7 @@ function* watchProgressChannel(progressChannel) {
       yield put(progress.setProgress(payload))
     }
   } finally {
-    if (yield cancelled()) {
+    if ((yield cancelled()) as boolean) {
       progressChannel.close()
     }
   }
@@ -462,8 +467,8 @@ function* handleSaveProduction(
   //@ts-ignore
   yield auphonicApi.delete(`production/${uuid}/chapters.json`)
 
-  const progressChannel = yield call(channel)
-  const watchProgress = yield fork(watchProgressChannel, progressChannel)
+  const progressChannel: Channel<ProgressData> = yield call(channel)
+  yield fork(watchProgressChannel, progressChannel)
 
   const handleProgress = (key: string) => (progressEvent: AxiosProgressEvent) => {
     if (progressEvent.total) {

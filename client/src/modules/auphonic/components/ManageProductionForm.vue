@@ -349,7 +349,7 @@ import { defineComponent } from 'vue'
 import PodloveButton from '@components/button/Button.vue'
 import FileChooser from './FileChooser.vue'
 
-import { selectors } from '@store'
+import { State, selectors } from '@store'
 
 import { injectStore, mapState } from 'redux-vuex'
 import * as auphonic from '@store/auphonic.store'
@@ -408,7 +408,7 @@ export default defineComponent({
         production: selectors.auphonic.production,
         tracks: selectors.auphonic.tracks,
         isSaving: selectors.auphonic.isSaving,
-        progress: (state) => state.progress,
+        progress: (state: State) => state.progress,
       }),
       dispatch: injectStore().dispatch,
     }
