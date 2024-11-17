@@ -32,13 +32,41 @@ function* wordpressSaga(): any {
   }
 }
 
+function getFeaturedImageIdFromEditor() {
+  const editor = wordpress.store.select('core/editor')
+  return editor.getEditedPostAttribute('featured_media')
+}
+
+function getTitleFromEditor() {
+  const editor = wordpress.store.select('core/editor')
+  return editor.getEditedPostAttribute('title')
+}
+
 function* wordpressGutenbergUpdate() {
-  yield put(
-    wordpressStore.update({
-      prop: 'title',
-      value: wordpress.store.select('core/editor').getEditedPostAttribute('title'),
-    })
-  )
+  const title: string = getTitleFromEditor()
+  const imgId: number = getFeaturedImageIdFromEditor()
+  const media = imgId ? wordpress.store.select('core').getMedia(imgId) : null
+
+  const oldTitle: string | null = yield select(selectors.post.title)
+  const oldMedia: object | null = yield select(selectors.post.featuredMedia)
+
+  if (oldTitle != title) {
+    yield put(
+      wordpressStore.update({
+        prop: 'title',
+        value: title,
+      })
+    )
+  }
+
+  if (get(oldMedia, ['id']) != get(media, ['id'])) {
+    yield put(
+      wordpressStore.update({
+        prop: 'featured_media',
+        value: media,
+      })
+    )
+  }
 }
 
 function* postTitleUpdate(title: String) {

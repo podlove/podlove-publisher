@@ -49,12 +49,11 @@ class Image
      * optimized image dimensions.
      *
      * @param string $url       Remote image URL
-     * @param string $name      (optional) image file name prefix
      * @param mixed  $file_name
      */
     public function __construct($url, $file_name = '')
     {
-        $this->source_url = trim($url);
+        $this->source_url = trim($url ?? '');
         $this->file_name = sanitize_title($file_name);
 
         // manually remove troublemaking characters

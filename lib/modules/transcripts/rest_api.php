@@ -6,8 +6,6 @@ use Podlove\Model\Episode;
 use Podlove\Modules\Contributors\Model\Contributor;
 use Podlove\Modules\Transcripts\Model\Transcript;
 use Podlove\Modules\Transcripts\Model\VoiceAssignment;
-use WP_REST_Controller;
-use WP_REST_Server;
 
 class REST_API
 {
@@ -91,7 +89,7 @@ class REST_API
     }
 }
 
-class WP_REST_PodloveTranscripts_Controller extends WP_REST_Controller
+class WP_REST_PodloveTranscripts_Controller extends \WP_REST_Controller
 {
     public function __construct()
     {
@@ -124,7 +122,7 @@ class WP_REST_PodloveTranscripts_Controller extends WP_REST_Controller
                         'type' => 'string',
                     ]
                 ],
-                'methods' => WP_REST_Server::READABLE,
+                'methods' => \WP_REST_Server::READABLE,
                 'callback' => [$this, 'get_items'],
                 'permission_callback' => [$this, 'get_item_permissions_check'],
             ],
@@ -136,7 +134,7 @@ class WP_REST_PodloveTranscripts_Controller extends WP_REST_Controller
                         'required' => 'true'
                     ]
                 ],
-                'methods' => WP_REST_Server::CREATABLE,
+                'methods' => \WP_REST_Server::CREATABLE,
                 'callback' => [$this, 'create_item'],
                 'permission_callback' => [$this, 'create_item_permissions_check'],
             ],
@@ -148,12 +146,12 @@ class WP_REST_PodloveTranscripts_Controller extends WP_REST_Controller
                         'required' => 'true'
                     ]
                 ],
-                'methods' => WP_REST_Server::EDITABLE,
+                'methods' => \WP_REST_Server::EDITABLE,
                 'callback' => [$this, 'update_item'],
                 'permission_callback' => [$this, 'update_item_permissions_check'],
             ],
             [
-                'methods' => WP_REST_Server::DELETABLE,
+                'methods' => \WP_REST_Server::DELETABLE,
                 'callback' => [$this, 'delete_item'],
                 'permission_callback' => [$this, 'delete_item_permissions_check'],
             ]
@@ -167,7 +165,7 @@ class WP_REST_PodloveTranscripts_Controller extends WP_REST_Controller
                 ],
             ],
             [
-                'methods' => WP_REST_Server::READABLE,
+                'methods' => \WP_REST_Server::READABLE,
                 'callback' => [$this, 'get_item_voices'],
                 'permission_callback' => [$this, 'get_item_permissions_check'],
             ],
@@ -182,7 +180,7 @@ class WP_REST_PodloveTranscripts_Controller extends WP_REST_Controller
                         'type' => 'integer',
                     ]
                 ],
-                'methods' => WP_REST_Server::EDITABLE,
+                'methods' => \WP_REST_Server::EDITABLE,
                 'callback' => [$this, 'update_item_voices'],
                 'permission_callback' => [$this, 'update_item_permissions_check'],
             ]
@@ -214,7 +212,7 @@ class WP_REST_PodloveTranscripts_Controller extends WP_REST_Controller
                         'type' => 'string',
                     ]
                 ],
-                'methods' => WP_REST_Server::READABLE,
+                'methods' => \WP_REST_Server::READABLE,
                 'callback' => [$this, 'get_item_transcripts'],
                 'permission_callback' => [$this, 'get_item_permissions_check'],
             ],
@@ -236,13 +234,13 @@ class WP_REST_PodloveTranscripts_Controller extends WP_REST_Controller
                     ]
                 ],
                 'description' => __('Edit a chaption of the transcript', 'podlove-podcasting-plugin-for-wordpress'),
-                'methods' => WP_REST_Server::EDITABLE,
+                'methods' => \WP_REST_Server::EDITABLE,
                 'callback' => [$this, 'update_item_transcripts'],
                 'permission_callback' => [$this, 'update_item_permissions_check'],
             ],
             [
                 'description' => __('Delete a chaption of the transcript', 'podlove-podcasting-plugin-for-wordpress'),
-                'methods' => WP_REST_Server::DELETABLE,
+                'methods' => \WP_REST_Server::DELETABLE,
                 'callback' => [$this, 'delete_item_transcripts'],
                 'permission_callback' => [$this, 'delete_item_permissions_check'],
             ]
@@ -535,10 +533,12 @@ class WP_REST_PodloveTranscripts_Controller extends WP_REST_Controller
         $cid = 0;
 
         if (isset($request['contributor_id'])) {
-            $cid = $request['contributor_id'];
-            $contributor = Contributor::find_by_id($cid);
-            if (!$contributor) {
-                return new \Podlove\Api\Error\NotFound('not_found', 'Contributor is not found');
+            $cid = (int) $request['contributor_id'];
+            if ($cid > 0) {
+                $contributor = Contributor::find_by_id($cid);
+                if (!$contributor) {
+                    return new \Podlove\Api\Error\NotFound('not_found', 'Contributor is not found');
+                }
             }
         }
 

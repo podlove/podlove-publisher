@@ -36,7 +36,7 @@ class Auphonic extends \Podlove\Modules\Base
             add_action('admin_bar_init', [$this, 'check_code']);
         }
 
-        $this->register_settings();
+        add_action('init', [$this, 'register_settings']);
     }
 
     public function api_init()
@@ -255,7 +255,7 @@ class Auphonic extends \Podlove\Modules\Base
             $preset_list = [];
 
             $raw_list = $presets->data;
-            usort($raw_list, function($a, $b) {
+            usort($raw_list, function ($a, $b) {
                 return $a->preset_name <=> $b->preset_name;
             });
 

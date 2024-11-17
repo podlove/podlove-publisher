@@ -36,6 +36,7 @@ export type State = {
   mnemonic: string | null
   explicit: boolean | null
   auphonic_production_id: 'string' | null
+  is_auphonic_production_running: boolean
   auphonic_webhook_config: object | null
   soundbite_start: number | null
   soundbite_duration: number | null
@@ -60,6 +61,7 @@ export const initialState: State = {
   mnemonic: null,
   explicit: null,
   auphonic_production_id: null,
+  is_auphonic_production_running: false,
   auphonic_webhook_config: null,
   soundbite_start: null,
   soundbite_duration: null,
@@ -87,6 +89,7 @@ export const set = createAction<{
   explicit?: boolean
   contributions?: object
   auphonic_production_id?: string
+  is_auphonic_production_running?: boolean
   auphonic_webhook_config?: object
   soundbite_start?: string
   soundbite_duration?: string
@@ -123,6 +126,7 @@ export const reducer = handleActions(
         'duration',
         'slug',
         'auphonic_webhook_config',
+        'is_auphonic_production_running',
         'soundbite_start',
         'soundbite_duration',
         'soundbite_title',
@@ -131,6 +135,7 @@ export const reducer = handleActions(
         'show',
         'number',
         'episode_poster',
+        'poster',
         'explicit',
       ]
 
@@ -158,6 +163,11 @@ export const reducer = handleActions(
         action,
         ['payload', 'auphonic_production_id'],
         state.auphonic_production_id
+      ),
+      is_auphonic_production_running: get(
+        action,
+        ['payload', 'is_auphonic_production_running'],
+        state.is_auphonic_production_running
       ),
       auphonic_webhook_config: get(
         action,
@@ -259,6 +269,7 @@ export const selectors = {
   mnemonic: (state: State) => state.mnemonic,
   explicit: (state: State) => state.explicit,
   auphonicProductionId: (state: State) => state.auphonic_production_id,
+  isAuphonicProductionRunning: (state: State) => state.is_auphonic_production_running,
   auphonicWebhookConfig: (state: State) => state.auphonic_webhook_config,
   soundbite_start: (state: State) => state.soundbite_start,
   soundbite_duration: (state: State) => state.soundbite_duration,

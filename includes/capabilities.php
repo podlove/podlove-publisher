@@ -26,7 +26,9 @@ function podlove_init_capabilities()
  */
 function podlove_add_capability_to_roles($capability, $roles = [])
 {
-    foreach ($roles as $role) {
-        get_role($role)->add_cap($capability);
+    foreach ($roles as $role_name) {
+        if ($role = get_role($role_name)) {
+            $role->add_cap($capability);
+        }
     }
 }

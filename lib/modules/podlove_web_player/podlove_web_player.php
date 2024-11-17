@@ -27,7 +27,7 @@ class Podlove_Web_Player extends \Podlove\Modules\Base
                 break;
         }
 
-        $this->register_option('use_cdn', 'radio', [
+        add_action('init', fn () => $this->register_option('use_cdn', 'radio', [
             'label' => __('Use CDN?', 'podlove-podcasting-plugin-for-wordpress'),
             'description' => '<p>'.__('Use our CDN (https://cdn.podlove.org) to always have the current version of the player on your site. Alternatively deliver the player with your own WordPress instance with the disadvantage of not using the most recent version all the time. This setting only applies to Podlove Web Player 4.', 'podlove-podcasting-plugin-for-wordpress').'</p>',
             'default' => '1',
@@ -35,7 +35,7 @@ class Podlove_Web_Player extends \Podlove\Modules\Base
                 1 => __('yes, use CDN', 'podlove-podcasting-plugin-for-wordpress').' ('.__('recommended', 'podlove-podcasting-plugin-for-wordpress').')',
                 0 => __('no, deliver with WordPress', 'podlove-podcasting-plugin-for-wordpress'),
             ],
-        ]);
+        ]));
 
         // this must _always_ be on, otherwise embedded players on other sites will stop working
         Podigee\Module::register_config_url_route();

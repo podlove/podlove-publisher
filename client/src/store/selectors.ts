@@ -97,6 +97,10 @@ const episode = {
   soundbite_duration: createSelector(root.episode, episodeStore.selectors.soundbite_duration),
   soundbite_title: createSelector(root.episode, episodeStore.selectors.soundbite_title),
   auphonicProductionId: createSelector(root.episode, episodeStore.selectors.auphonicProductionId),
+  isAuphonicProductionRunning: createSelector(
+    root.episode,
+    episodeStore.selectors.isAuphonicProductionRunning
+  ),
   auphonicWebhookConfig: createSelector(root.episode, episodeStore.selectors.auphonicWebhookConfig),
   license_name: createSelector(root.episode, episodeStore.selectors.license_name),
   license_url: createSelector(root.episode, episodeStore.selectors.license_url),
@@ -137,6 +141,7 @@ const runtime = {
 const post = {
   id: createSelector(root.post, postStore.selectors.id),
   title: createSelector(root.post, postStore.selectors.title),
+  featuredMedia: createSelector(root.post, postStore.selectors.featured_media),
 }
 
 const transcripts = {

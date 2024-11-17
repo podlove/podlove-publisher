@@ -33,6 +33,10 @@ function* initialize(api: PodloveApiClient) {
     yield takeEvery(auphonic.DESELECT_PRODUCTION, forgetSelectedProduction, api)
 
     yield takeEvery(auphonic.SET_PRESET, memorizeSelectedPreset)
+
+    yield takeEvery(auphonic.START_PRODUCTION, markProductionAsRunning, api)
+    yield takeEvery(auphonic.STOP_POLLING, markProductionAsNotRunning, api)
+    yield takeEvery(auphonic.DESELECT_PRODUCTION, markProductionAsNotRunning, api)
   }
 }
 
@@ -93,15 +97,19 @@ function* initializeAuphonicApi() {
 
   // poll production updates while production is running
   // TODO: start polling when loading a production that is in production
-  yield takeEvery(auphonic.startProduction, function* () {
-    yield put(auphonic.startPolling())
-  })
   yield call(pollWatcherSaga, auphonicApi)
 }
 
 function* pollWatcherSaga(auphonicApi: AuphonicApiClient) {
-  // immediately start polling once on init, in case the production is already running on page load
-  yield race([call(pollProductionSaga, auphonicApi), take(auphonic.STOP_POLLING)])
+  let isAuphonicProductionRunning: boolean = yield select(
+    selectors.episode.isAuphonicProductionRunning
+  )
+
+  // Start polling on page load if the production is already running
+  if (isAuphonicProductionRunning) {
+    yield race([call(pollProductionSaga, auphonicApi), take(auphonic.STOP_POLLING)])
+  }
+
   while (true) {
     yield take(auphonic.START_POLLING)
     yield race([call(pollProductionSaga, auphonicApi), take(auphonic.STOP_POLLING)])
@@ -196,6 +204,8 @@ function* handleStartProduction(
   } else {
     console.warn(response.error.error_message)
   }
+
+  yield put(auphonic.startPolling())
 }
 
 function* handleSaveTrack(auphonicApi: AuphonicApiClient, uuid: String, trackWrapper: any) {
@@ -579,6 +589,16 @@ function* forgetSelectedProduction(api: PodloveApiClient) {
   const episodeId: string = yield select(selectors.episode.id)
 
   yield api.put(`episodes/${episodeId}`, { auphonic_production_id: '' })
+}
+
+function* markProductionAsRunning(api: PodloveApiClient) {
+  const episodeId: string = yield select(selectors.episode.id)
+  yield api.put(`episodes/${episodeId}`, { is_auphonic_production_running: true })
+}
+
+function* markProductionAsNotRunning(api: PodloveApiClient) {
+  const episodeId: string = yield select(selectors.episode.id)
+  yield api.put(`episodes/${episodeId}`, { is_auphonic_production_running: false })
 }
 
 function* maybeRestoreProductionSelection() {

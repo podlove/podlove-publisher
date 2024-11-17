@@ -28,7 +28,7 @@ function get_description()
 function override_feed_title($feed)
 {
     add_filter('podlove_feed_title', function ($title) use ($feed) {
-        return htmlspecialchars($feed->get_title());
+        return htmlspecialchars($feed->get_title() ?? '');
     });
 }
 
@@ -85,7 +85,7 @@ function get_xml_text_node($tag_name, $content)
 {
     $doc = new \DOMDocument();
     $node = $doc->createElement($tag_name);
-    $text = $doc->createTextNode($content);
+    $text = $doc->createTextNode($content ?? '');
     $node->appendChild($text);
 
     return $doc->saveXML($node);
@@ -95,7 +95,7 @@ function get_xml_cdata_node($tag_name, $content)
 {
     $doc = new \DOMDocument();
     $node = $doc->createElement($tag_name);
-    $text = $doc->createCDATASection($content);
+    $text = $doc->createCDATASection($content ?? '');
     $node->appendChild($text);
 
     return $doc->saveXML($node);
@@ -172,7 +172,7 @@ function add_itunes_category($category_html, $categories, $category_id)
                 PHP_EOL
             );
         } else {
-            if ($categories[$category_id]) {
+            if (isset($categories[$category_id])) {
                 $category_html .= sprintf(
                     '<itunes:category text="%s"><itunes:category text="%s"></itunes:category></itunes:category>%s',
                     htmlspecialchars($categories[$cat.'-00']),

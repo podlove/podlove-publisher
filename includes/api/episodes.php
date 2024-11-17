@@ -9,26 +9,26 @@ use Podlove\Model\Podcast;
 use Podlove\Modules\Seasons;
 use Podlove\Modules\Shows;
 
-add_action('rest_api_init', __NAMESPACE__.'\\api_init');
+add_action('rest_api_init', __NAMESPACE__.'\api_init');
 
 function api_init()
 {
     register_rest_route('podlove/v1', 'episodes', [
         'methods' => 'GET',
-        'callback' => __NAMESPACE__.'\\list_api',
+        'callback' => __NAMESPACE__.'\list_api',
         'permission_callback' => '__return_true',
     ]);
 
     register_rest_route('podlove/v1', 'episodes/(?P<id>[\d]+)', [
         'methods' => 'GET',
-        'callback' => __NAMESPACE__.'\\episodes_api',
+        'callback' => __NAMESPACE__.'\episodes_api',
         'permission_callback' => '__return_true',
     ]);
 
     register_rest_route('podlove/v1', 'episodes/(?P<id>[\d]+)', [
         'methods' => \WP_REST_Server::EDITABLE,
-        'callback' => __NAMESPACE__.'\\episodes_update_api',
-        'permission_callback' => __NAMESPACE__.'\\update_episode_permission_check',
+        'callback' => __NAMESPACE__.'\episodes_update_api',
+        'permission_callback' => __NAMESPACE__.'\update_episode_permission_check',
     ]);
 }
 
@@ -293,6 +293,10 @@ class WP_REST_PodloveEpisode_Controller extends \WP_REST_Controller
                     'auphonic_production_id' => [
                         'description' => 'Auphonic Production ID',
                         'type' => 'string'
+                    ],
+                    'is_auphonic_production_running' => [
+                        'description' => 'Tracks if Auphonic production is running',
+                        'type' => 'boolean'
                     ],
                     'auphonic_webhook_config' => [
                         'description' => 'Auphonic Webhook after Production is done',
@@ -594,6 +598,7 @@ class WP_REST_PodloveEpisode_Controller extends \WP_REST_Controller
             'license_name' => $episode->license_name,
             'license_url' => $episode->license_url,
             'auphonic_production_id' => get_post_meta($episode->post_id, 'auphonic_production_id', true),
+            'is_auphonic_production_running' => get_post_meta($episode->post_id, 'is_auphonic_production_running', true),
             'show' => $show
         ];
 
@@ -792,12 +797,10 @@ class WP_REST_PodloveEpisode_Controller extends \WP_REST_Controller
                 } elseif ($explicit_lowercase == 'false') {
                     $episode->explicit = 0;
                 }
-            }
-            else {
+            } else {
                 if ($explicit) {
                     $episode->explicit = 1;
-                }
-                else {
+                } else {
                     $episode->explicit = 0;
                 }
             }
@@ -856,6 +859,10 @@ class WP_REST_PodloveEpisode_Controller extends \WP_REST_Controller
 
         if (isset($request['auphonic_production_id'])) {
             update_post_meta($episode->post_id, 'auphonic_production_id', $request['auphonic_production_id']);
+        }
+
+        if (isset($request['is_auphonic_production_running'])) {
+            update_post_meta($episode->post_id, 'is_auphonic_production_running', $request['is_auphonic_production_running']);
         }
 
         if (isset($request['show'])) {

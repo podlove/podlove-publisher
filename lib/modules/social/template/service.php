@@ -49,6 +49,18 @@ class Service extends Wrapper
     }
 
     /**
+     * Service title.
+     *
+     * Deprecated. Use `service.title` instead.
+     *
+     * @accessor
+     */
+    public function name()
+    {
+        return $this->title();
+    }
+
+    /**
      * Service type.
      *
      * @accessor
@@ -105,6 +117,7 @@ class Service extends Wrapper
      * Image.
      *
      * @see  image
+     *
      * @accessor
      */
     public function image()

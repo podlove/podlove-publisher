@@ -2,7 +2,7 @@
 Contributors: eteubert
 Donate link: https://opencollective.com/podlove
 Tags: podlove, podcast, publishing, rss, audio
-Tested up to: 6.6.1
+Tested up to: 6.7
 Stable tag: 4.2.0
 Requires at least: 4.9.6
 Requires PHP: 8.0
@@ -115,8 +115,9 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
-= unreleased =
+= 2024-11-17 =
 
+* bring beta up to date with stable release 4.1.22
 * remove old "Migration Assistant" module
 
 = 2024-10-26 =

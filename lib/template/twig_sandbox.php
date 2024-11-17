@@ -210,6 +210,7 @@ class TwigSandbox
             '\Podlove\Modules\Networks\Template\PodcastList',
             '\Podlove\Modules\Transcripts\Template\Line',
             '\Podlove\Modules\Transcripts\Template\Group',
+            '\Podlove\Modules\Shownotes\Template\Entry'
         ];
 
         $dynamicAccessorClasses = [
