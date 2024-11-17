@@ -535,10 +535,12 @@ class WP_REST_PodloveTranscripts_Controller extends WP_REST_Controller
         $cid = 0;
 
         if (isset($request['contributor_id'])) {
-            $cid = $request['contributor_id'];
-            $contributor = Contributor::find_by_id($cid);
-            if (!$contributor) {
-                return new \Podlove\Api\Error\NotFound('not_found', 'Contributor is not found');
+            $cid = (int) $request['contributor_id'];
+            if ($cid > 0) {
+                $contributor = Contributor::find_by_id($cid);
+                if (!$contributor) {
+                    return new \Podlove\Api\Error\NotFound('not_found', 'Contributor is not found');
+                }
             }
         }
 
