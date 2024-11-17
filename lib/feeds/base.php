@@ -172,7 +172,7 @@ function add_itunes_category($category_html, $categories, $category_id)
                 PHP_EOL
             );
         } else {
-            if ($categories[$category_id]) {
+            if (isset($categories[$category_id])) {
                 $category_html .= sprintf(
                     '<itunes:category text="%s"><itunes:category text="%s"></itunes:category></itunes:category>%s',
                     htmlspecialchars($categories[$cat.'-00']),
