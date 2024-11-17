@@ -115,6 +115,12 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= unreleased =
+
+* fix: empty vtt transcripts (when no voices were assigned to contributors)
+* fix: error when unsetting a transcript voice assignment
+* fix: PHP warning while using a deprecated podcast category
+
 = 4.1.21 =
 
 * fix: encode tracking urls and their redirected urls
