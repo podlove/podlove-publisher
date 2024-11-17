@@ -100,29 +100,28 @@ class Renderer
             $contributors_map[$voice->voice] = Contributor::find_by_id($voice->contributor_id);
         }
 
-        $transcript = Transcript::get_transcript($this->episode->id);
-        $transcript = array_map(function ($t) use ($contributors_map) {
-            if (!$t->voice) {
-                return null;
+        $pretty_voice = function ($voice) use ($contributors_map) {
+            $contributor = $contributors_map[$voice];
+            $voice_title = ($contributor && $contributor->getName()) ? $contributor->getName() : $voice;
+
+            if ($voice_title) {
+                return "<v {$voice_title}>";
             }
 
-            $contributor = $contributors_map[$t->voice];
-
-            if (!$contributor) {
-                return null;
+            if ($voice) {
+                return "<v {$voice}>";
             }
 
-            $voice_title = ($contributor && $contributor->getName()) ? $contributor->getName() : $t->voice;
-            $voice = $t->voice ? "<v {$voice_title}>" : '';
+            return '';
+        };
 
-            return sprintf(
-                "%s --> %s\n%s%s",
-                self::format_time($t->start),
-                self::format_time($t->end),
-                $voice,
-                $t->content
-            );
-        }, $transcript);
+        $transcript = array_map(fn ($entry) => sprintf(
+            "%s --> %s\n%s%s",
+            $entry['start'],
+            $entry['end'],
+            $pretty_voice($entry['voice']),
+            $entry['text']
+        ), $this->get_data());
 
         $transcript = array_filter($transcript);
 
