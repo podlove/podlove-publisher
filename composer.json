@@ -17,6 +17,7 @@
     "dariuszp/cli-progress-bar": "^1.0",
     "league/csv": "9.8.0",
     "gajus/dindent": "^2.0",
+    "ramsey/uuid": "^4.7",
     "symfony/deprecation-contracts": "^3.0"
   },
   "require-dev": {
