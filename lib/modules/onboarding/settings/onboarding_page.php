@@ -6,57 +6,59 @@ use Podlove\Authentication;
 
 class OnboardingPage
 {
-  public static $pagehook;
+    public static $pagehook;
 
-  public function __construct($handle)
-  {
-    OnboardingPage::$pagehook = add_submenu_page(
-      // $parent_slug
-      $handle,
-      // $page_title
-      'Onboarding',
-      // $menu_title
-      'Onboarding',
-      // $capability
-      'administrator',
-      // $menu_slug
-      'podlove_settings_onboarding_handle',
-      // $function
-      [$this, 'page']
-    );
-  }
-
-  public static function get_page_link()
-  {
-    return admin_url('admin.php?page=podlove_settings_onboarding_handle');
-  }
-
-  public function page()
-  {
-    $onboardingInclude = \podlove_get_onboarding_include();
-
-    if (!$onboardingInclude) {
-      return;
+    public function __construct($handle)
+    {
+        OnboardingPage::$pagehook = add_submenu_page(
+            // $parent_slug
+            $handle,
+            // $page_title
+            'Onboarding',
+            // $menu_title
+            'Onboarding',
+            // $capability
+            'administrator',
+            // $menu_slug
+            'podlove_settings_onboarding_handle',
+            // $function
+            [$this, 'page']
+        );
     }
 
-    $authentication = Authentication::application_password();
+    public static function get_page_link()
+    {
+        return admin_url('admin.php?page=podlove_settings_onboarding_handle');
+    }
 
-    $site = urlencode(rtrim(get_site_url(), '/'));
-    $user = $authentication['name'];
-    $password = $authentication['password'];
-    $userLang = explode("_", get_locale())[0];
+    public function page()
+    {
+        $onboardingInclude = \podlove_get_onboarding_include();
 
-    $iframeSrc = "$onboardingInclude?site_url=$site&user_login=$user&password=$password&lang=$userLang";
-    $acknowledgeHeadline = __('Onboarding Assistant 👋', 'podlove-podcasting-plugin-for-wordpress');
-    $acknowledgeDescription = __('To be able to offer you this service, we have to run the onboarding assistant on our external server. We have done everything in our power to make the service as privacy friendly as possible. We do not store any of your entered data, everything is saved in your browser 🤞. However, it is important to us that you are aware of this fact before you use the onboarding service.', 'podlove-podcasting-plugin-for-wordpress');
-    $acknowledgeButton = __('All right, I\'ve got it', 'podlove-podcasting-plugin-for-wordpress');
+        if (!$onboardingInclude) {
+            return;
+        }
 
-    echo <<<EOD
+        $authentication = Authentication::application_password();
+
+        $site = urlencode(rtrim(get_site_url(), '/'));
+        $user = $authentication['name'];
+        $password = $authentication['password'];
+        $userLang = explode('_', get_locale())[0];
+
+        $iframeSrc = "{$onboardingInclude}?site_url={$site}&user_login={$user}&password={$password}&lang={$userLang}";
+        $acknowledgeHeadline = __('Onboarding Assistant 👋', 'podlove-podcasting-plugin-for-wordpress');
+        $acknowledgeDescription = __('To be able to offer you this service, we have to run the onboarding assistant on our external server. We have done everything in our power to make the service as privacy friendly as possible. We do not store any of your entered data, everything is saved in your browser 🤞. However, it is important to us that you are aware of this fact before you use the onboarding service.', 'podlove-podcasting-plugin-for-wordpress');
+        $acknowledgeButton = __('All right, I\'ve got it', 'podlove-podcasting-plugin-for-wordpress');
+
+        echo <<<EOD
       <iframe id="onboarding-assistant" class="hidden"></iframe>
       <div id="onboarding-acknowledge">
-        <h1 class="onboarding-headline">{$acknowledgeHeadline}</h1>
-        <p class="onboarding-description">{$acknowledgeDescription}</p>
-        <button id="acknowledge-button" class="onboarding-button">{$acknowledgeButton}</button>
+        <div id="onboarding-acknowledge-message">
+          <h1 class="onboarding-headline">{$acknowledgeHeadline}</h1>
+          <p class="onboarding-description">{$acknowledgeDescription}</p>
+          <button id="acknowledge-button" class="onboarding-button">{$acknowledgeButton}</button>
+        </div>
       </div>
 
       <script type="module">
@@ -92,33 +94,44 @@ class OnboardingPage
         }
 
         #onboarding-acknowledge {
-          background: rgba(128, 128, 128, 0.3);
-          display: flex;
-          align-items: center;
-          flex-direction: column;
+          padding-top: 50px;
+          background: rgb(243 244 246);
+          font-size: 0.875rem;
+          line-height: 1.25rem;
+        }
+
+        #onboarding-acknowledge-message {
+          background: white;
+          padding: 20px;
+          box-sizing: border-box;
+          max-width: 700px;
+          margin-left: auto;
+          margin-right: auto;
+          border-radius: 0.5rem;
+          --tw-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+          --tw-shadow-colored: 0 1px 3px 0 var(--tw-shadow-color), 0 1px 2px -1px var(--tw-shadow-color);
+          box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+        }
+
+        .onboarding-headline {
+          font-size: 1rem;
+          line-height: 1.5rem;
+          margin: 0;
+          padding: 0;
+        }
+
+
+        .onboarding-description {
+          color: rgb(107 114 128);
         }
 
         .update-message {
           display: none;
         }
 
-        .onboarding-headline {
-          margin-top: 80px;
-          margin-bottom: 25px;
-          padding: 0;
-        }
-
-        .onboarding-description {
-          width: 50%;
-          text-center;
-          margin-bottom: 25px;
-        }
-
         .onboarding-button {
           color: white;
-          font-size: 0.875em;
           padding: 0.5rem 0.75rem;
-          line-height: 1rem;
           font-weight: 500;
           border-color: transparent;
           background-color: rgb(79 70 229);
