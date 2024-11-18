@@ -905,27 +905,33 @@ class WP_REST_PodloveEpisode_Controller extends \WP_REST_Controller
     {
         $asset_id = $request['asset_id'];
         $episode = $this->get_episode_from_request($request);
-
+    
         if (is_wp_error($episode)) {
             return $episode;
         }
-
+    
         $file = MediaFile::find_by_episode_id_and_episode_asset_id($episode->id, $asset_id);
         if ($file) {
             $file->active = false;
             $file->save();
+        } else {
+            // Handle case where file is null
+            return new \Podlove\Api\Response\OkResponse([
+                'status' => 'ok',
+                'message' => 'File not found for the given episode and asset ID.',
+            ]);
         }
-
+    
         \podlove_clear_feed_cache_for_post($episode->post_id);
-
+    
         return new \Podlove\Api\Response\OkResponse([
             'status' => 'ok',
-            'file_size' => $file->size,
-            'file_url' => $file->get_file_url(),
-            'active' => $file->active,
+            'file_size' => $file->size ?? null,
+            'file_url' => $file->get_file_url() ?? null,
+            'active' => $file->active ?? false,
         ]);
     }
-
+    
     public function update_item_media_verify($request)
     {
         $asset_id = $request['asset_id'];
