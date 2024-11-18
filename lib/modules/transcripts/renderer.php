@@ -95,26 +95,33 @@ class Renderer
     {
         $voices = Transcript::get_voices_for_episode_id($this->episode->id);
         $contributors_map = [];
-
+    
+        // Map voices to contributors
         foreach ($voices as $voice) {
             $contributors_map[$voice->voice] = Contributor::find_by_id($voice->contributor_id);
         }
-
+    
+        // Function to format the voice information
         $pretty_voice = function ($voice) use ($contributors_map) {
+            // Handle missing contributor gracefully
+            if (!isset($contributors_map[$voice])) {
+                // Log a debug message about the missing mapping
+                error_log(sprintf(
+                    'Podlove Debug: Missing contributor mapping for voice "%s" in episode "%s".',
+                    $voice,
+                    $this->episode->title()
+                ));
+                // Return just the voice name if mapping is missing
+                return $voice ? "<v {$voice}>" : '';
+            }
+    
             $contributor = $contributors_map[$voice];
             $voice_title = ($contributor && $contributor->getName()) ? $contributor->getName() : $voice;
-
-            if ($voice_title) {
-                return "<v {$voice_title}>";
-            }
-
-            if ($voice) {
-                return "<v {$voice}>";
-            }
-
-            return '';
+    
+            return $voice_title ? "<v {$voice_title}>" : '';
         };
-
+    
+        // Generate the transcript content
         $transcript = array_map(fn ($entry) => sprintf(
             "%s --> %s\n%s%s",
             $entry['start'],
@@ -122,9 +129,11 @@ class Renderer
             $pretty_voice($entry['voice']),
             $entry['text']
         ), $this->get_data());
-
+    
+        // Filter out empty entries
         $transcript = array_filter($transcript);
-
+    
+        // Add metadata note at the top of the transcript
         $note = "NOTE\n";
         $note .= 'Podcast: '.Podcast::get()->title."\n";
         $note .= 'Episode: '.$this->episode->title()."\n";
@@ -132,10 +141,11 @@ class Renderer
         $note .= 'Podcast URL: '.Podcast::get()->landing_page_url()."\n";
         $note .= 'Episode URL: '.get_permalink($this->episode->post_id)."\n";
         $note .= "\n";
-
+    
+        // Return the final WEBVTT content
         return "WEBVTT\n\n".$note.implode("\n\n", $transcript)."\n";
     }
-
+    
     public static function format_time($time_ms)
     {
         $ms = $time_ms % 1000;
