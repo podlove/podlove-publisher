@@ -643,7 +643,12 @@ class Image
     private function extract_file_extension()
     {
         $url = wp_parse_url($this->source_url);
-
-        return pathinfo($url['path'], PATHINFO_EXTENSION);
+    
+        if (isset($url['path'])) {
+            return pathinfo($url['path'], PATHINFO_EXTENSION);
+        }
+    
+        // Return an empty string or a default value if the path key is missing
+        return '';
     }
 }
