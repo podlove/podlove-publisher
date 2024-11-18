@@ -95,23 +95,40 @@ class ImageGenerator
     public function get_or_create_preset_id($template_name)
     {
         $presets = get_option('podlove_plus_image_presets');
-
+    
         if (!$presets) {
             $presets = [];
         }
-
+    
         if (!isset($presets[$template_name])) {
             $response = $this->api->create_image_preset($template_name);
-
+    
             if (is_wp_error($response)) {
+                error_log("API Error: " . $response->get_error_message());
                 return null;
             }
-
+    
+            if (!isset($response['body'])) {
+                error_log("API Error: Missing response body for template '$template_name'.");
+                return null;
+            }
+    
             $preset = json_decode($response['body']);
+    
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                error_log("JSON Decode Error: " . json_last_error_msg() . " in response body: " . $response['body']);
+                return null;
+            }
+    
+            if (!isset($preset->id)) {
+                error_log("API Response Error: Preset ID missing in response for template '$template_name'. Response body: " . $response['body']);
+                return null;
+            }
+    
             $presets[$template_name] = $preset->id;
             update_option('podlove_plus_image_presets', $presets);
         }
-
+    
         return $presets[$template_name];
     }
 }
