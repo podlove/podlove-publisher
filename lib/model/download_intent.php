@@ -13,20 +13,20 @@ class DownloadIntent extends Base
     public function add_geo_data($ip_string)
     {
         $geoip_file = \Podlove\Geo_Ip::get_upload_file_path();
-
+    
         try {
             $reader = new \GeoIp2\Database\Reader($geoip_file);
         } catch (\Exception $e) {
             return $this;
         }
-
+    
         try {
             // geo ip lookup
             $record = $reader->city($ip_string);
-
+    
             $this->lat = $record->location->latitude;
             $this->lng = $record->location->longitude;
-
+    
             /**
              * Get most specific area for given record, beginning at the given area-type.
              *
@@ -41,51 +41,51 @@ class DownloadIntent extends Base
                     switch ($type) {
                         case 'city':
                             return $get_area($record, 'subdivision');
-
-                            break;
                         case 'subdivision':
                             return $get_area($record, 'country');
-
-                            break;
                         case 'country':
                             return $get_area($record, 'continent');
-
-                            break;
                         case 'continent':
                             // has no parent
-                            break;
+                            return null;
                     }
-
+    
                     return null;
                 };
-
+    
                 $subRecord = $record->{$type == 'subdivision' ? 'mostSpecificSubdivision' : $type};
-
+    
                 if (!$subRecord->geonameId) {
                     return $get_parent_area($type);
                 }
-
+    
                 if ($area = GeoArea::find_one_by_property('geoname_id', $subRecord->geonameId)) {
                     return $area;
                 }
-
+    
                 $area = new GeoArea();
                 $area->geoname_id = $subRecord->geonameId;
                 $area->type = $type;
-
+    
                 if (isset($subRecord->code)) {
                     $area->code = $subRecord->code;
                 } elseif (isset($subRecord->isoCode)) {
                     $area->code = $subRecord->isoCode;
                 }
-
+    
                 if ($area->type != 'continent') {
                     $parent_area = $get_parent_area($area->type);
-                    $area->parent_id = $parent_area->id;
+    
+                    // Check if $parent_area is null before accessing its properties
+                    if ($parent_area !== null) {
+                        $area->parent_id = $parent_area->id;
+                    } else {
+                        error_log("Parent area not found for type: " . $area->type);
+                    }
                 }
-
+    
                 $area->save();
-
+    
                 // save name and translations
                 foreach ($subRecord->names as $lang => $name) {
                     $n = new GeoAreaName();
@@ -94,20 +94,19 @@ class DownloadIntent extends Base
                     $n->name = $name;
                     $n->save();
                 }
-
+    
                 return $area;
             };
-
+    
             $area = $get_area($record, 'city');
-
+    
             $this->geo_area_id = $area->id;
         } catch (\Exception $e) {
             // geo lookup might fail, but that's not grave
         }
-
+    
         return $this;
-    }
-}
+    }}
 
 DownloadIntent::property('id', 'INT NOT NULL AUTO_INCREMENT PRIMARY KEY');
 DownloadIntent::property('user_agent_id', 'INT');
