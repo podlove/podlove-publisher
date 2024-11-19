@@ -42,8 +42,16 @@ class oembed extends \Podlove\Modules\Base
             case 'XML':
                 header('Content-Type: application/xml; charset=utf-8');
                 $xml_source = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8" '.'standalone="yes"?><oembed/>');
-                $episode = array_flip($episode);
-                array_walk_recursive($episode, [$xml_source, 'addChild']);
+            
+                // Escape special characters in the episode data before adding to XML
+                $episode = array_map(function ($value) {
+                    return htmlspecialchars($value, ENT_QUOTES | ENT_XML1, 'UTF-8');
+                }, $episode);
+            
+                array_walk_recursive($episode, function ($value, $key) use ($xml_source) {
+                    $xml_source->addChild($key, $value);
+                });
+            
                 echo $xml_source->asXML();
                 exit;
 
