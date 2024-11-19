@@ -26,10 +26,11 @@ class UserAgent extends Base
         $user_agent_data = json_decode($data_raw);
         $user_agent_data = apply_filters('podlove_useragent_opawg_data', $user_agent_data);
 
+        // Check if the OPAWG data is valid
         if (!$user_agent_data) {
             error_log('[Podlove Publisher] OPAWG data file is invalid JSON');
 
-            // Fallback to DeviceDetector parser
+            // Fallback to DeviceDetector parser if OPAWG data is invalid
             return $this->parse_by_device_detector();
         }
 
@@ -38,11 +39,18 @@ class UserAgent extends Base
         // Match user agent with OPAWG data
         $user_agent_match = array_reduce($user_agent_data, function ($agg, $item) use ($user_agent_string) {
             if ($agg !== null) {
-                return $agg;
+                return $agg; // Stop if a match is already found
             }
 
             foreach ($item->user_agents as $regex) {
+                // Escape and validate regex pattern
                 $compiled_regex = str_replace('/', '\/', $regex);
+                if (@preg_match("/{$compiled_regex}/", null) === false) {
+                    error_log("[Podlove Publisher] Invalid regex pattern in OPAWG data: {$regex}");
+                    continue; // Skip invalid patterns
+                }
+
+                // Check if the regex matches the user agent string
                 if (preg_match("/{$compiled_regex}/", $user_agent_string) === 1) {
                     return $item;
                 }
@@ -52,6 +60,7 @@ class UserAgent extends Base
         }, null);
 
         if ($user_agent_match) {
+            // Set client name if available
             $this->client_name = isset($user_agent_match->app) ? $user_agent_match->app : '';
 
             // Check if the 'os' property exists before accessing it
@@ -62,6 +71,7 @@ class UserAgent extends Base
                 error_log('[Podlove Publisher] Missing "os" property in user agent match: ' . json_encode($user_agent_match));
             }
 
+            // Set bot flag if the user agent is a bot
             if (isset($user_agent_match->bot) && $user_agent_match->bot) {
                 $this->bot = 1;
             }
@@ -69,7 +79,7 @@ class UserAgent extends Base
             return $this;
         }
 
-        // Fallback to DeviceDetector parser
+        // Fallback to DeviceDetector parser if no match is found in OPAWG data
         return $this->parse_by_device_detector();
     }
 
