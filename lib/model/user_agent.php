@@ -20,8 +20,8 @@ class UserAgent extends Base
      */
     public function parse()
     {
-        // parse with opawg
-        $data_file = \Podlove\PLUGIN_DIR.'data/opawg.json';
+        // Parse with OPAWG
+        $data_file = \Podlove\PLUGIN_DIR . 'data/opawg.json';
         $data_raw = file_get_contents($data_file);
         $user_agent_data = json_decode($data_raw);
         $user_agent_data = apply_filters('podlove_useragent_opawg_data', $user_agent_data);
@@ -29,14 +29,15 @@ class UserAgent extends Base
         if (!$user_agent_data) {
             error_log('[Podlove Publisher] OPAWG data file is invalid JSON');
 
-            // fallback to DeviceDetector parser
+            // Fallback to DeviceDetector parser
             return $this->parse_by_device_detector();
         }
 
         $user_agent_string = $this->user_agent;
 
+        // Match user agent with OPAWG data
         $user_agent_match = array_reduce($user_agent_data, function ($agg, $item) use ($user_agent_string) {
-            if ($agg != null) {
+            if ($agg !== null) {
                 return $agg;
             }
 
@@ -52,7 +53,14 @@ class UserAgent extends Base
 
         if ($user_agent_match) {
             $this->client_name = isset($user_agent_match->app) ? $user_agent_match->app : '';
-            $this->os_name = self::normalizeOS($user_agent_match->os);
+
+            // Check if the 'os' property exists before accessing it
+            if (isset($user_agent_match->os)) {
+                $this->os_name = self::normalizeOS($user_agent_match->os);
+            } else {
+                $this->os_name = ''; // Default to an empty string if 'os' is missing
+                error_log('[Podlove Publisher] Missing "os" property in user agent match: ' . json_encode($user_agent_match));
+            }
 
             if (isset($user_agent_match->bot) && $user_agent_match->bot) {
                 $this->bot = 1;
@@ -61,7 +69,7 @@ class UserAgent extends Base
             return $this;
         }
 
-        // fallback to DeviceDetector parser
+        // Fallback to DeviceDetector parser
         return $this->parse_by_device_detector();
     }
 
