@@ -80,8 +80,9 @@ class DownloadIntent extends Base
                 }
 
                 if ($area->type != 'continent') {
-                    $parent_area = $get_parent_area($area->type);
-                    $area->parent_id = $parent_area->id;
+                    if ($parent_area = $get_parent_area($area->type)) {
+                        $area->parent_id = $parent_area->id;
+                    }
                 }
 
                 $area->save();
