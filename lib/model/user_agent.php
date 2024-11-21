@@ -36,7 +36,7 @@ class UserAgent extends Base
         $user_agent_string = $this->user_agent;
 
         $user_agent_match = array_reduce($user_agent_data, function ($agg, $item) use ($user_agent_string) {
-            if ($agg != null) {
+            if ($agg !== null) {
                 return $agg;
             }
 
@@ -52,7 +52,7 @@ class UserAgent extends Base
 
         if ($user_agent_match) {
             $this->client_name = isset($user_agent_match->app) ? $user_agent_match->app : '';
-            $this->os_name = self::normalizeOS($user_agent_match->os);
+            $this->os_name = isset($user_agent_match->os) ? self::normalizeOS($user_agent_match->os) : '';
 
             if (isset($user_agent_match->bot) && $user_agent_match->bot) {
                 $this->bot = 1;
