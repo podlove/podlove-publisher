@@ -2,15 +2,13 @@
 
 namespace Podlove\Api\Error;
 
-use WP_Error;
-
-class ForbiddenAccess extends WP_Error
+class ForbiddenAccess extends \WP_Error
 {
     /**
      * Constructor.
      *
-     * @param $code
-     * @param $message
+     * @param mixed $code
+     * @param mixed $message
      */
     public function __construct($code = '', $message = '')
     {
@@ -24,13 +22,13 @@ class ForbiddenAccess extends WP_Error
     }
 }
 
-class NotFound extends WP_Error
+class NotFound extends \WP_Error
 {
     /**
      * Constructor.
      *
-     * @param $code
-     * @param $message
+     * @param mixed $code
+     * @param mixed $message
      */
     public function __construct($code = '', $message = '')
     {
@@ -44,13 +42,12 @@ class NotFound extends WP_Error
     }
 }
 
-class NotFoundEpisode extends WP_Error
+class NotFoundEpisode extends \WP_Error
 {
     /**
      * Constructor.
      *
-     * @param $code
-     * @param $message
+     * @param mixed $episode_id
      */
     public function __construct($episode_id)
     {
@@ -59,14 +56,13 @@ class NotFoundEpisode extends WP_Error
     }
 }
 
-
-class NotSupported extends WP_Error
+class NotSupported extends \WP_Error
 {
     /**
      * Constructor.
      *
-     * @param $code
-     * @param $message
+     * @param mixed $code
+     * @param mixed $message
      */
     public function __construct($code = '', $message = '')
     {
@@ -80,13 +76,13 @@ class NotSupported extends WP_Error
     }
 }
 
-class InternalServerError extends WP_Error
+class InternalServerError extends \WP_Error
 {
     /**
      * Constructor.
      *
-     * @param $code
-     * @param $message
+     * @param mixed $code
+     * @param mixed $message
      */
     public function __construct($code = '', $message = '')
     {
