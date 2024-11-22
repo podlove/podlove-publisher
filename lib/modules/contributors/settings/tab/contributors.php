@@ -87,6 +87,22 @@ class Contributors extends Tab
     private function contributor_form($form_args, $contributor, $action)
     {
         $general_fields = [
+            'privateemail' => [
+                'field_type' => 'string',
+                'field_options' => [
+                    'label' => __('Contact email', 'podlove-podcasting-plugin-for-wordpress'),
+                    'description' => __('The provided email will be used for internal purposes only.', 'podlove-podcasting-plugin-for-wordpress'),
+                    'html' => ['class' => 'podlove-contributor-field podlove-check-input', 'data-podlove-input-type' => 'email'],
+                ],
+            ],
+            'guid' => [
+                'field_type' => 'string',
+                'field_options' => [
+                    'label' => __('URI', 'podlove-podcasting-plugin-for-wordpress'),
+                    'description' => __('A globally unique identifier to match contributors across podcasts on the internet, <br/> e.g. URL of contributor’s personal home page or social media profile.', 'podlove-podcasting-plugin-for-wordpress'),
+                    'html' => ['class' => 'podlove-check-input podlove-contributor-field', 'data-podlove-input-type' => 'url'],
+                ],
+            ],
             'realname' => [
                 'field_type' => 'string',
                 'field_options' => [
@@ -113,22 +129,14 @@ class Contributors extends Tab
                 'field_type' => 'select',
                 'field_options' => [
                     'label' => __('Gender', 'podlove-podcasting-plugin-for-wordpress'),
-                    'options' => ['female' => 'Female', 'male' => 'Male', 'none' => 'Not attributed'],
-                ],
-            ],
-            'privateemail' => [
-                'field_type' => 'string',
-                'field_options' => [
-                    'label' => __('Contact email', 'podlove-podcasting-plugin-for-wordpress'),
-                    'description' => __('The provided email will be used for internal purposes only.', 'podlove-podcasting-plugin-for-wordpress'),
-                    'html' => ['class' => 'podlove-contributor-field podlove-check-input', 'data-podlove-input-type' => 'email'],
+                    'options' => ['female' => 'Female', 'male' => 'Male', 'other' => 'Other', 'none' => 'Not attributed'],
                 ],
             ],
             'avatar' => [
                 'field_type' => 'upload',
                 'field_options' => [
                     'label' => __('Avatar', 'podlove-podcasting-plugin-for-wordpress'),
-                    'description' => __('Either a Gravatar email adress or a URL.', 'podlove-podcasting-plugin-for-wordpress'),
+                    'description' => __('Either a Gravatar email address or a URL.', 'podlove-podcasting-plugin-for-wordpress'),
                     'html' => [
                         'class' => 'podlove-contributor-field podlove-check-input',
                         'data-podlove-input-type' => 'avatar',
@@ -139,17 +147,9 @@ class Contributors extends Tab
             'identifier' => [
                 'field_type' => 'string',
                 'field_options' => [
-                    'label' => __('ID', 'podlove-podcasting-plugin-for-wordpress'),
+                    'label' => __('Template ID', 'podlove-podcasting-plugin-for-wordpress'),
                     'description' => __('The ID will be used as in internal identifier for e.g. shortcodes.', 'podlove-podcasting-plugin-for-wordpress'),
                     'html' => ['class' => 'podlove-check-input required podlove-contributor-field'],
-                ],
-            ],
-            'guid' => [
-                'field_type' => 'string',
-                'field_options' => [
-                    'label' => __('URI', 'podlove-podcasting-plugin-for-wordpress'),
-                    'description' => __('An URI acts as a globally unique ID to identify contributors across podcasts on the internet.', 'podlove-podcasting-plugin-for-wordpress'),
-                    'html' => ['class' => 'podlove-check-input podlove-contributor-field'],
                 ],
             ],
             'visibility' => [
