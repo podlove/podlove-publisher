@@ -408,7 +408,7 @@ export default defineComponent({
         production: selectors.auphonic.production,
         tracks: selectors.auphonic.tracks,
         isSaving: selectors.auphonic.isSaving,
-        progress: (state: State) => state.progress,
+        progress: (state: State) => (key: string) => selectors.progress.progress(state, key),
       }),
       dispatch: injectStore().dispatch,
     }
@@ -463,7 +463,7 @@ export default defineComponent({
       this.updateTrack('identifier_new', (event.target as HTMLInputElement).value, index)
     },
     uploadProgress(key: string): string | null {
-      return this.state.progress[key] || null
+      return this.state.progress(key) || null
     },
   },
 
