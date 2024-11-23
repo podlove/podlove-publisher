@@ -20,6 +20,7 @@ import { State as contributorsState } from './contributors.store'
 import { State as settingsState } from './settings.store'
 import { State as podcastState } from './podcast.store'
 import { State as auphonicState } from './auphonic.store'
+import { State as progressState } from './progress.store'
 import { State as mediafilesState } from './mediafiles.store'
 import { State as relatedEpisodesState } from './relatedEpisodes.store'
 import { State as showsState } from './shows.store'
@@ -48,6 +49,7 @@ export interface State {
   settings: settingsState
   podcast: podcastState
   auphonic: auphonicState
+  progress: progressState
   mediafiles: mediafilesState
   relatedEpisodes: relatedEpisodesState
   shows: showsState
