@@ -20,7 +20,9 @@ class Plus extends \Podlove\Modules\Base
         (new GlobalFeedSettings($this, $this->api))->init();
         (new FeedPusher($this, $this->api))->init();
         (new FeedProxy($this, $this->api))->init();
-        (new ImageGenerator($this, $this->api))->init();
+
+        // disabling unfinished feature
+        // (new ImageGenerator($this, $this->api))->init();
     }
 
     public static function base_url()
