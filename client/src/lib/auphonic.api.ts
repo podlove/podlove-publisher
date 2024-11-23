@@ -1,5 +1,5 @@
 import { curry } from 'lodash'
-import axios from 'axios'
+import axios, { AxiosProgressEvent } from 'axios'
 import { addQuery, responseParser, ApiOptions } from './api'
 
 // TODO: replace fetch with axios
@@ -76,6 +76,10 @@ const deleteApi =
     }).then(responseParser(errorHandler))
   }
 
+function defaultProgressHandler(e: AxiosProgressEvent) {
+  console.log('default progress', e)
+}
+
 const uploadApi =
   ({
     errorHandler,
@@ -86,8 +90,9 @@ const uploadApi =
     bearer?: string
     urlProcessor?: (url: string) => string
   }) =>
-  (url: string, data: any, { query }: ApiOptions = {}) => {
+  (url: string, data: any, { query, hooks }: ApiOptions = {}) => {
     const formData = new FormData()
+    const onUploadProgress = hooks?.onUploadProgress || defaultProgressHandler
 
     // audio file upload
     if (data.file) {
@@ -105,7 +110,7 @@ const uploadApi =
       headers: {
         ...authHeaders({ bearer }),
       },
-      onUploadProgress: (e) => console.log('progress', e),
+      onUploadProgress: onUploadProgress,
     })
   }
 
