@@ -914,6 +914,8 @@ class WP_REST_PodloveEpisode_Controller extends \WP_REST_Controller
         if ($file) {
             $file->active = false;
             $file->save();
+        } else {
+            return new \Podlove\Api\Error\NotFound();
         }
 
         \podlove_clear_feed_cache_for_post($episode->post_id);

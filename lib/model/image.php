@@ -644,6 +644,10 @@ class Image
     {
         $url = wp_parse_url($this->source_url);
 
-        return pathinfo($url['path'], PATHINFO_EXTENSION);
+        if (isset($url['path'])) {
+            return pathinfo($url['path'], PATHINFO_EXTENSION);
+        }
+
+        return '';
     }
 }
