@@ -90,9 +90,9 @@ const uploadApi =
     bearer?: string
     urlProcessor?: (url: string) => string
   }) =>
-  (url: string, data: any, { query, callback }: ApiOptions = {}) => {
+  (url: string, data: any, { query, hooks }: ApiOptions = {}) => {
     const formData = new FormData()
-    const onUploadProgress = callback || defaultProgressHandler
+    const onUploadProgress = hooks?.onUploadProgress || defaultProgressHandler
 
     // audio file upload
     if (data.file) {

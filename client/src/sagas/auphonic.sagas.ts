@@ -245,7 +245,7 @@ function* handleSaveTrack(
       yield auphonicApi.post(`production/${uuid}/multi_input_files/${id_old}.json`, payload)
       if (needs_upload) {
         yield auphonicApi.upload(`production/${uuid}/upload.json`, trackWrapper.upload, {
-          callback: progressHandler,
+          hooks: { onUploadProgress: progressHandler },
         })
       }
       break
@@ -255,7 +255,7 @@ function* handleSaveTrack(
       })
       if (needs_upload) {
         yield auphonicApi.upload(`production/${uuid}/upload.json`, trackWrapper.upload, {
-          callback: progressHandler,
+          hooks: { onUploadProgress: progressHandler },
         })
       }
       break
@@ -494,7 +494,7 @@ function* handleSaveProduction(
       auphonicApi.upload,
       `production/${uuid}/upload.json`,
       { file: input_file },
-      { callback: handleProgress('singletrack') }
+      { hooks: { onUploadProgress: handleProgress('singletrack') } }
     )
 
     delete productionPayload.input_file
@@ -513,7 +513,7 @@ function* handleSaveProduction(
       auphonicApi.upload(
         `production/${uuid}/upload.json`,
         { image: image_file },
-        { callback: handleProgress('poster') }
+        { hooks: { onUploadProgress: handleProgress('poster') } }
       )
     })
 
