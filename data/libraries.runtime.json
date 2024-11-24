@@ -1,0 +1,239 @@
+{
+  "entries": [
+    {
+      "name": "AIOHTTP",
+      "pattern": "^Python/\\d.*aiohttp/\\d",
+      "category": "bot"
+    },
+    {
+      "name": "AndroidDownloadManager",
+      "pattern": "^AndroidDownloadManager"
+    },
+    {
+      "name": "Apache HttpClient",
+      "pattern": "Apache-HttpClient",
+      "category": "bot"
+    },
+    {
+      "name": "AppleCoreMedia",
+      "pattern": "^AppleCoreMedia/1"
+    },
+    {
+      "name": "aria2",
+      "pattern": "^aria2/",
+      "category": "bot"
+    },
+    {
+      "name": "Armadillo",
+      "pattern": "^Armadillo/1"
+    },
+    {
+      "name": "Async Http Client (java)",
+      "pattern": "^AHC/\\d+\\.\\d+",
+      "category": "bot"
+    },
+    {
+      "name": "Axios (Node)",
+      "pattern": "^axios/",
+      "category": "bot"
+    },
+    {
+      "name": "Bubble (no-code)",
+      "pattern": "^Bubble$"
+    },
+    {
+      "name": "Bun",
+      "pattern": "^Bun/\\d",
+      "category": "bot"
+    },
+    {
+      "name": "CarrierWave (ruby)",
+      "pattern": "^CarrierWave/",
+      "category": "bot"
+    },
+    {
+      "name": "Colly",
+      "pattern": "github\\.com/gocolly",
+      "category": "bot"
+    },
+    {
+      "name": "Dalvik",
+      "pattern": "^Dalvik[/ ]"
+    },
+    {
+      "name": "Dart",
+      "pattern": "^Dart/",
+      "category": "bot"
+    },
+    {
+      "name": "Deno",
+      "pattern": "^Deno/",
+      "category": "bot"
+    },
+    {
+      "name": "Down (ruby)",
+      "pattern": "^Down/\\d",
+      "category": "bot"
+    },
+    {
+      "name": "ffmpeg",
+      "pattern": "^Lavf/",
+      "category": "bot"
+    },
+    {
+      "name": "FileDownloader (Android)",
+      "pattern": "^FileDownloader/"
+    },
+    {
+      "name": "git-annex",
+      "pattern": "^git-annex",
+      "category": "bot"
+    },
+    {
+      "name": "Go Http Client",
+      "pattern": "^Go-http-client",
+      "category": "bot"
+    },
+    {
+      "name": "Got (node)",
+      "pattern": "^got(/| \\()",
+      "category": "bot"
+    },
+    {
+      "name": "GStreamer",
+      "pattern": "^GStreamer|GStreamer/"
+    },
+    {
+      "name": "Guzzle",
+      "pattern": "^GuzzleHttp",
+      "category": "bot"
+    },
+    {
+      "name": "gvfs",
+      "pattern": "^gvfs"
+    },
+    {
+      "name": "hackney (elixir)",
+      "pattern": "^hackney/\\d",
+      "category": "bot"
+    },
+    {
+      "name": "HTTP:Tiny",
+      "pattern": "^HTTP-Tiny/",
+      "category": "bot"
+    },
+    {
+      "name": "http.rb",
+      "pattern": "^http\\.rb/[\\d.]+",
+      "category": "bot"
+    },
+    {
+      "name": "Just Audio",
+      "pattern": "^just_audio/"
+    },
+    {
+      "name": "KaiOS Downloader",
+      "pattern": "KaiOS Downloader"
+    },
+    {
+      "name": "libsoup",
+      "pattern": "^libsoup/"
+    },
+    {
+      "name": "lua-resty-http",
+      "pattern": "^lua-resty-http/\\d",
+      "category": "bot"
+    },
+    {
+      "name": "Android License Verification Library",
+      "pattern": "^Android\\.LVLDM$"
+    },
+    {
+      "name": "node-fetch",
+      "pattern": "^node-fetch(/.*)?$",
+      "category": "bot"
+    },
+    {
+      "name": "okhttp",
+      "pattern": "okhttp",
+      "category": "bot"
+    },
+    {
+      "name": "PRDownloader",
+      "pattern": "^PRDownloader$"
+    },
+    {
+      "name": "python-httpx",
+      "pattern": "^python-httpx/",
+      "category": "bot"
+    },
+    {
+      "name": "react-native-track-player",
+      "pattern": "^react-native-track-player/"
+    },
+    {
+      "name": "Request (node)",
+      "pattern": "request\\.js",
+      "category": "bot"
+    },
+    {
+      "name": "reqwest (rust)",
+      "pattern": "^reqwest/\\d"
+    },
+    {
+      "name": "resty (go)",
+      "pattern": "^go-resty/\\d",
+      "category": "bot"
+    },
+    {
+      "name": "resty-requests (lua)",
+      "pattern": "^resty-requests",
+      "category": "bot"
+    },
+    {
+      "name": "ruby",
+      "pattern": "^Ruby"
+    },
+    {
+      "name": "rest-client (ruby)",
+      "pattern": "^rest-client/.*ruby/",
+      "category": "bot"
+    },
+    {
+      "name": "Safari View Service (SFSafariViewController)",
+      "pattern": "^SafariViewService/"
+    },
+    {
+      "name": "Scrapy (python)",
+      "pattern": "^Scrapy/",
+      "category": "bot"
+    },
+    {
+      "name": "stagefright",
+      "pattern": "stagefright/"
+    },
+    {
+      "name": "Symfony (php)",
+      "pattern": "^Symfony HttpClient[/ ]",
+      "category": "bot"
+    },
+    {
+      "name": "undici (node)",
+      "pattern": "^undici$",
+      "category": "bot"
+    },
+    {
+      "name": "urllib (python)",
+      "pattern": "^(Python-urllib|python-urllib3)/",
+      "category": "bot"
+    },
+    {
+      "name": "ExoPlayer (Android)",
+      "pattern": " ExoPlayerLib/"
+    },
+    {
+      "name": "ESP32 HTTP Client",
+      "pattern": "^ESP32 HTTP Client/"
+    }
+  ]
+}
