@@ -37,7 +37,10 @@ class WP_REST_PodloveOnboarding_Controller extends WP_REST_Controller
             \Podlove\Modules\Base::activate('wordpress_file_upload');
         }
         $upload_modul = Wordpress_File_Upload::instance();
-        $upload_modul->update_module_option('upload_subdir', 'podlove-media');
+        $upload_modul_dir = $upload_modul->get_module_option('upload_subdir');
+        if (empty($upload_modul_dir)) {
+            $upload_modul->update_module_option('upload_subdir', 'podlove-media');
+        }
         // set upload loaction to emty
         $settings = get_option('podlove_podcast');
         $settings["media_file_base_uri"] = "";
