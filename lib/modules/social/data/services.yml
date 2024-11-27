@@ -20,6 +20,13 @@
   logo: 'bitbucket.png'
   url_scheme: 'https://bitbucket.org/%account-placeholder%'
 
+- title: 'Bluesky'
+  name: 'bluesky'
+  category: 'social'
+  description: 'Bluesky Account'
+  logo: 'bluesky.svg'
+  url_scheme: 'https://bsky.app/profile/%account-placeholder%'
+
 - title: 'DeviantART'
   name: 'deviantart'
   category: 'social'
