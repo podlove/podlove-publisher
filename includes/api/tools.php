@@ -3,11 +3,11 @@
 namespace Podlove\Api\Tools;
 
 add_action('rest_api_init', function () {
-    $controller = new WP_REST_Podlove_Controller();
+    $controller = new WP_REST_Podlove_Tools_Controller();
     $controller->register_routes();
 });
 
-class WP_REST_Podlove_Controller extends \WP_REST_Controller
+class WP_REST_Podlove_Tools_Controller extends \WP_REST_Controller
 {
     public function __construct()
     {

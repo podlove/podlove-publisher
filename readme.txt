@@ -115,6 +115,8 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+* feat: add API route to clear caches: `DELETE podlove/v2/tools/clear-caches`
+
 = 4.1.23 =
 
 * new: Auphonic file uploads display their upload progress
@@ -158,7 +160,6 @@ to Auphonic when saving a production.
 * security: use Twig in Sandbox mode
 * change: reenable recently disabled Twig Template filters "filter", "map" and "reduce"
 * fix: plugin crash on setup when default WordPress roles do not exist
-* feat: add API route to clear caches: `DELETE podlove/v2/tools/clear-caches`
 
 = 4.1.15 =
 
