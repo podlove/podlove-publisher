@@ -115,6 +115,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+* security: XSS vulnerability in episode assets title
 * feat: add API route to clear caches: `DELETE podlove/v2/tools/clear-caches`
 
 = 4.1.23 =

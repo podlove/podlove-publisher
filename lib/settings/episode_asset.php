@@ -280,7 +280,7 @@ class EpisodeAsset
             foreach ($episode_assets as $episode_asset) {
                 $file_type = $episode_asset->file_type();
                 if ($file_type && $file_type->type === 'image') {
-                    $artwork_options[$episode_asset->id] = sprintf(__('Asset: %s', 'podlove-podcasting-plugin-for-wordpress'), $episode_asset->title);
+                    $artwork_options[$episode_asset->id] = sprintf(__('Asset: %s', 'podlove-podcasting-plugin-for-wordpress'), esc_html($episode_asset->title));
                 }
             }
 
@@ -297,7 +297,7 @@ class EpisodeAsset
             foreach ($episode_assets as $episode_asset) {
                 $file_type = $episode_asset->file_type();
                 if ($file_type && $file_type->type === 'chapters') {
-                    $chapter_file_options[$episode_asset->id] = sprintf(__('Asset: %s', 'podlove-podcasting-plugin-for-wordpress'), $episode_asset->title);
+                    $chapter_file_options[$episode_asset->id] = sprintf(__('Asset: %s', 'podlove-podcasting-plugin-for-wordpress'), esc_html($episode_asset->title));
                 }
             }
             $wrapper->select('chapters', [
@@ -431,7 +431,7 @@ class EpisodeAsset
     private function edit_template()
     {
         $episode_asset = \Podlove\Model\EpisodeAsset::find_by_id($_REQUEST['episode_asset']);
-        echo '<h3>'.sprintf(__('Edit Episode Asset: %s', 'podlove-podcasting-plugin-for-wordpress'), $episode_asset->title).'</h3>';
+        echo '<h3>'.sprintf(__('Edit Episode Asset: %s', 'podlove-podcasting-plugin-for-wordpress'), esc_html($episode_asset->title)).'</h3>';
         $this->form_template($episode_asset, 'save');
     }
 }
