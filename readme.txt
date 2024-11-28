@@ -115,6 +115,8 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+* feat: add API route to clear caches: `DELETE podlove/v2/tools/clear-caches`
+
 = 4.1.23 =
 
 * new: Auphonic file uploads display their upload progress
