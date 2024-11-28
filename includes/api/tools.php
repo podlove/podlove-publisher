@@ -36,7 +36,7 @@ class WP_REST_Podlove_Tools_Controller extends \WP_REST_Controller
 
     public function clear_caches_permission_check()
     {
-        if (!current_user_can('administrator')) {
+        if (!current_user_can('edit_posts')) {
             return new \Podlove\Api\Error\ForbiddenAccess();
         }
 
