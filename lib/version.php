@@ -42,7 +42,7 @@ namespace Podlove;
 
 use Podlove\Jobs\CronJobRunner;
 
-define('Podlove\DATABASE_VERSION', 157);
+define('Podlove\DATABASE_VERSION', 158);
 
 add_action('admin_init', '\Podlove\maybe_run_database_migrations');
 add_action('admin_init', '\Podlove\run_database_migrations', 5);
@@ -1659,8 +1659,15 @@ function run_migrations_for_version($version)
 
             // update deprecated "clean" value to "false"
             if ($podcast->explicit == 2) {
-              $podcast->explicit = 0;
-              $podcast->save();
+                $podcast->explicit = 0;
+                $podcast->save();
+            }
+
+            break;
+        case 158:
+            if (Modules\Social\Model\Service::table_exists()) {
+                Modules\Social\Social::update_existing_services();
+                Modules\Social\Social::build_missing_services();
             }
 
             break;
