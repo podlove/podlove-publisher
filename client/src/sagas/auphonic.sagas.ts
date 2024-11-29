@@ -13,6 +13,7 @@ import {
   call,
   race,
   cancelled,
+  spawn,
 } from 'redux-saga/effects'
 import { createApi } from '../sagas/api'
 import { createApi as createAuphonicApi } from '../sagas/auphonic.api'
@@ -468,7 +469,7 @@ function* handleSaveProduction(
   yield auphonicApi.delete(`production/${uuid}/chapters.json`)
 
   const progressChannel: Channel<ProgressData> = yield call(channel)
-  yield fork(watchProgressChannel, progressChannel)
+  yield spawn(watchProgressChannel, progressChannel)
 
   const handleProgress = (key: string) => (progressEvent: AxiosProgressEvent) => {
     if (progressEvent.total) {
