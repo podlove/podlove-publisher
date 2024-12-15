@@ -216,6 +216,7 @@ require_once \Podlove\PLUGIN_DIR.'includes/downloads.php';
 require_once \Podlove\PLUGIN_DIR.'includes/episode_number_column.php';
 require_once \Podlove\PLUGIN_DIR.'includes/episode_number_quick_edit_form.php';
 require_once \Podlove\PLUGIN_DIR.'includes/extras.php';
+require_once \Podlove\PLUGIN_DIR.'includes/feature.php';
 require_once \Podlove\PLUGIN_DIR.'includes/feed_discovery.php';
 require_once \Podlove\PLUGIN_DIR.'includes/frontend_styles.php';
 require_once \Podlove\PLUGIN_DIR.'includes/http.php';

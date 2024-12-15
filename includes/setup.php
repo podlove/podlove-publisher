@@ -6,6 +6,8 @@
 use Podlove\Model;
 use Podlove\Model\AssetAssignment;
 
+use Ramsey\Uuid\Uuid as UUID;
+
 function podlove_setup_database_tables()
 {
     Model\Feed::build();
@@ -69,10 +71,16 @@ function podlove_setup_file_types()
 function podlove_setup_podcast()
 {
     $podcast = Model\Podcast::get();
+
     if (!$podcast->limit_items) {
         $podcast->limit_items = Model\Feed::ITEMS_NO_LIMIT;
         $podcast->feed_transcripts = 'generated';
     }
+
+    if (!$podcast->guid) {
+        $podcast->guid = UUID::uuid4();
+    }
+
     $podcast->save();
 }
 
@@ -91,7 +99,8 @@ function podlove_setup_modules()
         // 'feed_validation',
         'import_export',
         'subscribe_button',
-        'automatic_numbering'
+        'automatic_numbering',
+        'onboarding'
     ];
 
     foreach ($default_modules as $module) {

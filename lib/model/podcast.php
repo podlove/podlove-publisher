@@ -492,3 +492,4 @@ Podcast::property('plus_enable_proxy');
 Podcast::property('funding_url');
 Podcast::property('funding_label');
 Podcast::property('copyright');
+Podcast::property('guid');

@@ -4,6 +4,7 @@ namespace Podlove\AJAX;
 
 use League\Csv\Writer;
 use Podlove\Model;
+use Podlove\Modules\Onboarding\Onboarding;
 
 class Ajax
 {
@@ -21,6 +22,7 @@ class Ajax
             'update-feed-position',
             'podcast',
             'hide-teaser',
+            'banner-hide',
             'get-license-url',
             'get-license-name',
             'get-license-parameters-from-url',
@@ -913,6 +915,16 @@ class Ajax
     public function hide_teaser()
     {
         update_option('_podlove_hide_teaser', true);
+    }
+
+    public function banner_hide()
+    {
+        if (!wp_verify_nonce($_REQUEST['_podlove_nonce'], 'podlove_onboarding')) {
+            http_response_code(401);
+            exit;
+        }
+
+        Onboarding::set_banner_hide('true');
     }
 
     public function get_license_url()

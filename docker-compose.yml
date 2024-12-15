@@ -1,0 +1,34 @@
+services:
+  db:
+    image: mysql:latest
+    container_name: db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: wordpress
+      MYSQL_ROOT_PASSWORD: wordpress
+      MYSQL_USER: wordpress
+      MYSQL_PASSWORD: wordpress
+    expose:
+      - 3306
+    networks:
+      - app-network
+
+  wordpress:
+    build: .
+
+    ports:
+      - 8080:80
+    restart: always
+    depends_on:
+      - db
+    environment:
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: wordpress
+      WORDPRESS_DB_NAME: wordpress
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge

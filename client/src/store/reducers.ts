@@ -13,6 +13,7 @@ import * as progressStore from './progress.store'
 import * as mediafilesStore from './mediafiles.store'
 import * as relatedEpisodesStore from './relatedEpisodes.store'
 import * as showsStore from './shows.store'
+import * as adminStore from './admin.store'
 
 export default combineReducers({
   lifecycle: lifecycleStore.reducer,
@@ -29,4 +30,5 @@ export default combineReducers({
   mediafiles: mediafilesStore.reducer,
   relatedEpisodes: relatedEpisodesStore.reducer,
   shows: showsStore.reducer,
+  admin: adminStore.reducer,
 })

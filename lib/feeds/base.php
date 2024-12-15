@@ -253,6 +253,12 @@ function override_feed_head($hook, $podcast, $feed, $format)
     add_action($hook, function () use ($podcast, $feed, $format) {
         echo PHP_EOL;
 
+        if ($podcast->guid) {
+            $guid = "\t".get_xml_text_node('podcast:guid', $podcast->guid);
+            echo apply_filters('podlove_feed_guid', $guid);
+            echo PHP_EOL;
+        }
+
         $copyright = "\t".get_xml_text_node('copyright', $podcast->copyright ?? $podcast->default_copyright_claim());
         echo apply_filters('podlove_feed_copyright', $copyright);
         echo PHP_EOL;

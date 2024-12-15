@@ -12,6 +12,7 @@ class Wordpress_File_Upload extends \Podlove\Modules\Base
 
     public function load()
     {
+        add_action('init', [$this, 'register_public_hooks']);
         add_action('admin_init', [$this, 'register_hooks']);
         // FIXME: this is huge. admin_init is not run for REST calls? what else might this affect?
         add_action('rest_api_init', [$this, 'register_hooks']);
@@ -25,7 +26,7 @@ class Wordpress_File_Upload extends \Podlove\Modules\Base
             ],
         ]));
 
-        $podlove_subdir = trim($this->get_module_option('upload_subdir'));
+        $podlove_subdir = trim($this->get_module_option('upload_subdir') ?? '');
         if (!$podlove_subdir) {
             add_action('admin_notices', function () {
                 ?>
@@ -50,11 +51,15 @@ class Wordpress_File_Upload extends \Podlove\Modules\Base
         }
     }
 
+    public function register_public_hooks()
+    {
+        add_filter('podlove_media_file_base_uri', [$this, 'set_media_file_base_uri']);
+    }
+
     public function register_hooks()
     {
         add_filter('upload_dir', [$this, 'custom_media_upload_dir']);
         add_filter('podlove_media_file_base_uri_form', [$this, 'set_form_placeholder']);
-        add_filter('podlove_media_file_base_uri', [$this, 'set_media_file_base_uri']);
     }
 
     public function set_media_file_base_uri($uri)
@@ -93,7 +98,13 @@ class Wordpress_File_Upload extends \Podlove\Modules\Base
         $podlove_subdir = $this->get_subdir();
 
         $id = isset($_REQUEST['post_id']) ? (int) $_REQUEST['post_id'] : 0;
-        $parent = $id ? get_post($id)->post_parent : 0;
+
+        if (isset($_REQUEST['post'])) {
+            // when uploaded via POST /wp/v2/media
+            $parent = (int) $_REQUEST['post'];
+        } else {
+            $parent = $id ? get_post($id)->post_parent : 0;
+        }
 
         if ($force_override || 'podcast' == get_post_type($id) || 'podcast' == get_post_type($parent)) {
             $upload['subdir'] = $podlove_subdir;
