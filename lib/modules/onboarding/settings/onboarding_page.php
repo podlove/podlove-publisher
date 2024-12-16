@@ -6,6 +6,7 @@ use Podlove\Authentication;
 
 class OnboardingPage
 {
+    private const DEFAULT_SERVICE_URL = 'https://services.podlove.org/onboarding';
     public static $pagehook;
 
     public function __construct($handle)
@@ -24,6 +25,26 @@ class OnboardingPage
             // $function
             [$this, 'page']
         );
+
+        if (!defined('PODLOVE_ONBOARDING')) {
+            define('PODLOVE_ONBOARDING', self::DEFAULT_SERVICE_URL);
+        }
+    }
+
+    /**
+     * Get Service URL.
+     *
+     * If you want to host and use your own service, set the constant in your
+     * `wp-config.php`: `define('PODLOVE_ONBOARDING',
+     * 'https://self-hosted-services.example.com/onboarding');`
+     */
+    public static function get_service_url()
+    {
+        if (is_string(PODLOVE_ONBOARDING)) {
+            return PODLOVE_ONBOARDING;
+        }
+
+        return null;
     }
 
     public static function get_page_link()
@@ -33,7 +54,7 @@ class OnboardingPage
 
     public function page()
     {
-        $onboardingInclude = \podlove_get_onboarding_include();
+        $onboardingInclude = self::get_service_url();
 
         if (!$onboardingInclude) {
             return;
