@@ -205,7 +205,7 @@ class MediaFile extends Base
             $path .= "/c/{$params['context']}";
         }
 
-        $path .= '/'.urlencode($this->get_download_file_name());
+        $path .= '/'.$this->urlencode_path_segments($this->get_download_file_name());
 
         return $path;
     }
@@ -223,11 +223,11 @@ class MediaFile extends Base
 
         // add params to path
         foreach ($params as $param_name => $value) {
-            $path .= $connector($path).'ptm_'.$param_name.'='.urlencode($value);
+            $path .= $connector($path).'ptm_'.$param_name.'='.$this->urlencode_path_segments($value);
         }
 
         // at last, add file param, so wget users get the right extension
-        $path .= $connector($path).'ptm_file='.urlencode($this->get_download_file_name());
+        $path .= $connector($path).'ptm_file='.$this->urlencode_path_segments($this->get_download_file_name());
 
         return $path;
     }
@@ -446,6 +446,26 @@ class MediaFile extends Base
                 ['media_file_id' => $this->id, 'mime_type' => $header['content_type'], 'expected_mime_type' => $mime_type]
             );
         }
+    }
+
+    /**
+     * urlencode all segments of a path.
+     *
+     * We need to respect that slugs are allowed to contain slashes. That's why
+     * we need to urlencode the path segments instead of the whole path.
+     *
+     * @param mixed $path
+     */
+    private function urlencode_path_segments($path)
+    {
+        if (empty($path)) {
+            return '';
+        }
+
+        $parts = explode('/', $path);
+        $encoded = array_map('urlencode', $parts);
+
+        return implode('/', $encoded);
     }
 }
 
