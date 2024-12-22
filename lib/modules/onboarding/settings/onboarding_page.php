@@ -63,11 +63,12 @@ class OnboardingPage
         $authentication = Authentication::application_password();
 
         $site = urlencode(rtrim(get_site_url(), '/'));
+        $rest_url = urlencode(rtrim(get_rest_url(), '/'));
         $user = $authentication['name'];
         $password = $authentication['password'];
         $userLang = explode('_', get_locale())[0];
 
-        $iframeSrc = "{$onboardingInclude}?site_url={$site}&user_login={$user}&password={$password}&lang={$userLang}";
+        $iframeSrc = "{$onboardingInclude}?site_url={$site}&rest_url={$rest_url}&user_login={$user}&password={$password}&lang={$userLang}";
         $acknowledgeHeadline = __('Onboarding Assistant 👋', 'podlove-podcasting-plugin-for-wordpress');
         $acknowledgeDescription = __('To be able to offer you this service, we have to run the onboarding assistant on our external server. We have done everything in our power to make the service as privacy friendly as possible. We do not store any of your entered data, everything is saved in your browser 🤞. However, it is important to us that you are aware of this fact before you use the onboarding service.', 'podlove-podcasting-plugin-for-wordpress');
         $acknowledgeButton = __('All right, I\'ve got it', 'podlove-podcasting-plugin-for-wordpress');
