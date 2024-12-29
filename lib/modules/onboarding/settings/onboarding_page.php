@@ -3,6 +3,7 @@
 namespace Podlove\Modules\Onboarding\Settings;
 
 use Podlove\Authentication;
+use Podlove\Modules\Onboarding\Onboarding;
 
 class OnboardingPage
 {
@@ -45,8 +46,10 @@ class OnboardingPage
         $user = $authentication['name'];
         $password = $authentication['password'];
         $userLang = explode('_', get_locale())[0];
+        $nonce = wp_create_nonce("podlove_onboarding_acknowledge");
 
-        $iframeSrc = "{$onboardingInclude}?site_url={$site}&user_login={$user}&password={$password}&lang={$userLang}";
+        $iframeSrc = "{$onboardingInclude}?site_url={$site}&rest_url={$rest_url}&user_login={$user}&password={$password}&lang={$userLang}";
+        $acknowledgeOption = Onboarding::get_acknowlegde_option();
         $acknowledgeHeadline = __('Onboarding Assistant 👋', 'podlove-podcasting-plugin-for-wordpress');
         $acknowledgeDescription = __('To be able to offer you this service, we have to run the onboarding assistant on our external server. We have done everything in our power to make the service as privacy friendly as possible. We do not store any of your entered data, everything is saved in your browser 🤞. However, it is important to us that you are aware of this fact before you use the onboarding service.', 'podlove-podcasting-plugin-for-wordpress');
         $acknowledgeButton = __('All right, I\'ve got it', 'podlove-podcasting-plugin-for-wordpress');
@@ -65,10 +68,9 @@ class OnboardingPage
         const acknowledgeHint = document.getElementById("onboarding-acknowledge");
         const acknowledgeButton = document.getElementById("acknowledge-button");
         const onboardingAssistant = document.getElementById("onboarding-assistant");
-        const onboardingAcknowledged = localStorage.getItem("podlove-pulbisher:onboarding-acknowledged");
+        const onboardingAcknowledged = "{$acknowledgeOption}";
 
         function loadService() {
-          localStorage.setItem("podlove-pulbisher:onboarding-acknowledged", true);
           onboardingAssistant.contentWindow.location.href = "{$iframeSrc}";
           onboardingAssistant.classList.remove("hidden");
           acknowledgeHint.classList.add("hidden");
@@ -78,7 +80,19 @@ class OnboardingPage
           loadService();
         }
 
-        acknowledgeButton.addEventListener("click", loadService);
+        acknowledgeButton.addEventListener("click", function() {
+          fetch(ajaxurl + '?' + new URLSearchParams({
+              action: 'podlove-onboarding-acknowledge',
+              _podlove_nonce: "{$nonce}"
+            }),
+            {
+              method: 'GET'
+          }).then(response => {
+            if (response.ok) {
+              loadService();
+            }
+          })
+        });
       </script>
 
       <style>

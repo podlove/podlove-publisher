@@ -157,6 +157,29 @@ class Onboarding extends \Podlove\Modules\Base
     self::update_options($onboarding_options);
   }
 
+  public static function get_acknowlegde_option()
+  {
+    $onboarding_options = self::get_options();
+    if (isset($onboarding_options['acknowledge'])) {
+      return $onboarding_options['acknowledge'];
+    }
+
+  }
+
+  public static function set_acknowledge_option($option)
+  {
+    $onboarding_options = self::get_options();
+    if (strtolower($option) == 'true') {
+      $onboarding_options['acknowledge'] = true;
+    } else {
+      if (isset($onboarding_options['acknowledge'])) {
+        unset($onboarding_options['acknowledge']);
+      }
+    }
+    self::update_options($onboarding_options);
+  }
+
+
   private static function get_options()
   {
     return get_option('podlove_modules_onboarding', []);
