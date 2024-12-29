@@ -157,6 +157,18 @@ class Onboarding extends \Podlove\Modules\Base
     self::update_options($onboarding_options);
   }
 
+  public static function get_acknowlegde_option($user_id)
+  {
+    $option = get_user_meta($user_id, "podlove_onboarding_acknowledge", true);
+    return $option;
+  }
+
+  public static function set_acknowledge_option($user_id, $option)
+  {
+    update_user_meta($user_id, "podlove_onboarding_acknowledge", $option);
+  }
+
+
   private static function get_options()
   {
     return get_option('podlove_modules_onboarding', []);
