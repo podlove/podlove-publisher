@@ -935,7 +935,8 @@ class Ajax
             exit;
         }
 
-        Onboarding::set_acknowledge_option('true');
+        $user_id = get_current_user_id();
+        Onboarding::set_acknowledge_option($user_id, true);
     }
 
     public function get_license_url()
