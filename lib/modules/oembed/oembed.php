@@ -41,9 +41,12 @@ class oembed extends \Podlove\Modules\Base
                 break;
             case 'XML':
                 header('Content-Type: application/xml; charset=utf-8');
-                $xml_source = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8" '.'standalone="yes"?><oembed/>');
-                $episode = array_flip($episode);
-                array_walk_recursive($episode, [$xml_source, 'addChild']);
+                $xml_source = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8" standalone="yes"?><oembed/>');
+
+                foreach ($episode as $key => $value) {
+                    $xml_source->{$key} = $value;
+                }
+
                 echo $xml_source->asXML();
                 exit;
 

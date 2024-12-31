@@ -401,7 +401,7 @@ class Feed
             $episode_assets = \Podlove\Model\EpisodeAsset::all();
             $assets = [];
             foreach ($episode_assets as $asset) {
-                $assets[$asset->id] = $asset->title;
+                $assets[$asset->id] = esc_html($asset->title);
             }
 
             $wrapper->subheader(__('Basic Settings', 'podlove-podcasting-plugin-for-wordpress'));

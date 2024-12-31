@@ -53,6 +53,7 @@ class Image
      */
     public function __construct($url, $file_name = '')
     {
+        // FIXME: if $file_name is empty, the url will not work. I must not treat this silently!
         $this->source_url = trim($url ?? '');
         $this->file_name = sanitize_title($file_name);
 
@@ -201,6 +202,8 @@ class Image
             $crop = (int) $this->crop;
             $file_name = urlencode($this->file_name);
 
+            // FIXME: some generated urls have an empty $file_name, which leads to the url not resolving
+            // example: (new \Podlove\Model\Image("https://pbs.twimg.com/media/Dz2U-vTXgAATlqd.jpg:large"))->setWidth(100)->url();
             if (get_option('permalink_structure')) {
                 $path = '/podlove/image/'
                     .$source_url
@@ -351,6 +354,12 @@ class Image
             Log::get()->addWarning('Podlove Image Cache: Unable to resize (3). '.$result->get_error_message());
 
             return;
+        }
+
+        // working around WordPress oddities: if WP saves the file under a name
+        // other than the one we want ... rename the file.
+        if ($result['path'] != $this->resized_file()) {
+            @rename($result['path'], $this->resized_file());
         }
 
         // when a new image size is created, Template Cache must be cleared
@@ -644,6 +653,10 @@ class Image
     {
         $url = wp_parse_url($this->source_url);
 
-        return pathinfo($url['path'], PATHINFO_EXTENSION);
+        if (isset($url['path'])) {
+            return pathinfo($url['path'], PATHINFO_EXTENSION);
+        }
+
+        return '';
     }
 }

@@ -454,7 +454,7 @@ class Transcripts extends \Podlove\Modules\Base
             $file_type = $episode_asset->file_type();
             if ($file_type && $file_type->extension === 'vtt') {
                 $transcript_options[$episode_asset->id]
-                = sprintf(__('Asset: %s', 'podlove-podcasting-plugin-for-wordpress'), $episode_asset->title);
+                = sprintf(__('Asset: %s', 'podlove-podcasting-plugin-for-wordpress'), esc_html($episode_asset->title));
             }
         }
 
@@ -474,7 +474,7 @@ class Transcripts extends \Podlove\Modules\Base
         foreach (Model\EpisodeAsset::all() as $asset) {
             $file_type = $asset->file_type();
             if ($file_type && in_array($file_type->extension, ['vtt', 'srt'])) {
-                $options['asset_'.$asset->id] = sprintf(__('Asset: %s', 'podlove-podcasting-plugin-for-wordpress'), $asset->title);
+                $options['asset_'.$asset->id] = sprintf(__('Asset: %s', 'podlove-podcasting-plugin-for-wordpress'), esc_html($asset->title));
             }
         }
 

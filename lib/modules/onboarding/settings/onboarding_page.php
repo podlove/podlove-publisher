@@ -7,6 +7,7 @@ use Podlove\Modules\Onboarding\Onboarding;
 
 class OnboardingPage
 {
+    private const DEFAULT_SERVICE_URL = 'https://services.podlove.org/onboarding';
     public static $pagehook;
 
     public function __construct($handle)
@@ -25,6 +26,26 @@ class OnboardingPage
             // $function
             [$this, 'page']
         );
+
+        if (!defined('PODLOVE_ONBOARDING')) {
+            define('PODLOVE_ONBOARDING', self::DEFAULT_SERVICE_URL);
+        }
+    }
+
+    /**
+     * Get Service URL.
+     *
+     * If you want to host and use your own service, set the constant in your
+     * `wp-config.php`: `define('PODLOVE_ONBOARDING',
+     * 'https://self-hosted-services.example.com/onboarding');`
+     */
+    public static function get_service_url()
+    {
+        if (is_string(PODLOVE_ONBOARDING)) {
+            return PODLOVE_ONBOARDING;
+        }
+
+        return null;
     }
 
     public static function get_page_link()
@@ -34,7 +55,7 @@ class OnboardingPage
 
     public function page()
     {
-        $onboardingInclude = \podlove_get_onboarding_include();
+        $onboardingInclude = self::get_service_url();
 
         if (!$onboardingInclude) {
             return;
@@ -56,6 +77,11 @@ class OnboardingPage
         $acknowledgeHeadline = __('Onboarding Assistant 👋', 'podlove-podcasting-plugin-for-wordpress');
         $acknowledgeDescription = __('To be able to offer you this service, we have to run the onboarding assistant on our external server. We have done everything in our power to make the service as privacy friendly as possible. We do not store any of your entered data, everything is saved in your browser 🤞. However, it is important to us that you are aware of this fact before you use the onboarding service.', 'podlove-podcasting-plugin-for-wordpress');
         $acknowledgeButton = __('All right, I\'ve got it', 'podlove-podcasting-plugin-for-wordpress');
+        $httpsWarningText = __('Warning: Your website is not configured to use https! This usually means that the authentication method the assistant uses is disabled by WordPress for security reasons. Please enable https before continuing.', 'podlove-podcasting-plugin-for-wordpress');
+
+        $httpsWarning = !wp_is_using_https() ? <<<EOD
+          <p class="onboarding-warning">⚠️ {$httpsWarningText}</p>
+        EOD : '';
 
         echo <<<EOD
       <iframe id="onboarding-assistant" class="hidden"></iframe>
@@ -63,6 +89,7 @@ class OnboardingPage
         <div id="onboarding-acknowledge-message">
           <h1 class="onboarding-headline">{$acknowledgeHeadline}</h1>
           <p class="onboarding-description">{$acknowledgeDescription}</p>
+          {$httpsWarning}
           <button id="acknowledge-button" class="onboarding-button">{$acknowledgeButton}</button>
         </div>
       </div>
@@ -140,6 +167,11 @@ class OnboardingPage
 
         .onboarding-description {
           color: rgb(107 114 128);
+        }
+
+        .onboarding-warning {
+          color: rgb(107 114 128);
+          font-weight: bold;
         }
 
         .update-message {

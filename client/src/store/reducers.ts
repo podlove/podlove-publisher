@@ -9,6 +9,7 @@ import * as contributorsStore from './contributors.store'
 import * as settingsStore from './settings.store'
 import * as podcastStore from './podcast.store'
 import * as auphonicStore from './auphonic.store'
+import * as progressStore from './progress.store'
 import * as mediafilesStore from './mediafiles.store'
 import * as relatedEpisodesStore from './relatedEpisodes.store'
 import * as showsStore from './shows.store'
@@ -25,6 +26,7 @@ export default combineReducers({
   settings: settingsStore.reducer,
   podcast: podcastStore.reducer,
   auphonic: auphonicStore.reducer,
+  progress: progressStore.reducer,
   mediafiles: mediafilesStore.reducer,
   relatedEpisodes: relatedEpisodesStore.reducer,
   shows: showsStore.reducer,

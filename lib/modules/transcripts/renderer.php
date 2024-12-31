@@ -101,15 +101,13 @@ class Renderer
         }
 
         $pretty_voice = function ($voice) use ($contributors_map) {
-            $contributor = $contributors_map[$voice];
-            $voice_title = ($contributor && $contributor->getName()) ? $contributor->getName() : $voice;
+            if (isset($contributors_map[$voice])) {
+                $contributor = $contributors_map[$voice];
+                $voice_title = ($contributor && $contributor->getName()) ? $contributor->getName() : $voice;
 
-            if ($voice_title) {
-                return "<v {$voice_title}>";
-            }
-
-            if ($voice) {
-                return "<v {$voice}>";
+                if ($voice_title) {
+                    return "<v {$voice_title}>";
+                }
             }
 
             return '';

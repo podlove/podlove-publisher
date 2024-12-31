@@ -1,6 +1,7 @@
 <?php
 
 use Podlove\Cache\HttpHeaderValidator;
+use Podlove\Log;
 use Podlove\Model\Image;
 use Symfony\Component\Yaml\Yaml;
 
@@ -82,27 +83,38 @@ function podlove_handle_cache_files()
         return;
     }
 
-    // tell WP Super Cache to not cache download links
+    // Tell WP Super Cache to not cache download links
     if (!defined('DONOTCACHEPAGE')) {
         define('DONOTCACHEPAGE', true);
     }
 
-    $image = (new Image($source_url, $file_name));
+    $image = new Image($source_url, $file_name);
 
     if (!$image->source_exists()) {
         $image->download_source();
     }
 
-    // bail if download fails
+    // Bail if download fails
     if (!$image->source_exists()) {
+        Log::get()->error('Download failed for image: '.$image->url());
         status_header(307);
         header('Location: '.$source_url);
         exit;
     }
 
-    // do not try to enlarge images
-    list($orig_width, $orig_height, $type, $attr) = getimagesize($image->original_file());
+    $imageinfo = getimagesize($image->original_file());
 
+    // Bail if we cannot determine image meta
+    if ($imageinfo === false) {
+        Log::get()->error('Image size cannot be determined for file: '.$image->original_file());
+        status_header(307);
+        header('Location: '.$source_url);
+        exit;
+    }
+
+    list($orig_width, $orig_height) = $imageinfo;
+
+    // Do not try to enlarge images
     if ($width > $orig_width) {
         $width = $orig_width;
     }
@@ -123,6 +135,14 @@ function podlove_handle_cache_files()
 
     $file = $image->resized_file();
 
+    // Bail if resize fails
+    if (!file_exists($file)) {
+        Log::get()->error('Image resize failed for file: '.$file);
+        status_header(307);
+        header('Location: '.$source_url);
+        exit;
+    }
+
     $imageInfo = getimagesize($file);
     switch ($imageInfo[2]) {
         case IMAGETYPE_JPEG:
@@ -137,6 +157,11 @@ function podlove_handle_cache_files()
             header('Content-Type: image/png');
 
             break;
+
+        default:
+            Log::get()->error('Unsupported image type for file: '.$file);
+
+            return;
     }
 
     header('Content-Length: '.filesize($file));
@@ -145,10 +170,10 @@ function podlove_handle_cache_files()
 
     $time = filemtime($file);
     $etag = md5($time.$source_url);
-    $last_modified = gmdate('D, d M Y H:i:s \\G\\M\\T', $time);
+    $last_modified = gmdate('D, d M Y H:i:s \G\M\T', $time);
 
-    $if_modified_since = isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) ? $_SERVER['HTTP_IF_MODIFIED_SINCE'] : false;
-    $if_none_match = isset($_SERVER['HTTP_IF_NONE_MATCH']) ? $_SERVER['HTTP_IF_NONE_MATCH'] : false;
+    $if_modified_since = isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) ?? false;
+    $if_none_match = isset($_SERVER['HTTP_IF_NONE_MATCH']) ?? false;
 
     if ((($if_none_match && $if_none_match == $etag) || (!$if_none_match))
         && ($if_modified_since && $if_modified_since == $last_modified)) {

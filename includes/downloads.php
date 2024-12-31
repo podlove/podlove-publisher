@@ -130,7 +130,7 @@ function podlove_handle_media_file_tracking(Podlove\Model\MediaFile $media_file)
     }
 
     // set user agent
-    $ua_string = trim($_SERVER['HTTP_USER_AGENT']);
+    $ua_string = isset($_SERVER['HTTP_USER_AGENT']) ? trim($_SERVER['HTTP_USER_AGENT']) : '';
     if ($agent = Model\UserAgent::find_or_create_by_uastring($ua_string)) {
         $intent->user_agent_id = $agent->id;
     }

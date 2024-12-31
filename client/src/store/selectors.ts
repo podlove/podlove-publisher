@@ -10,6 +10,7 @@ import * as contributorsStore from './contributors.store'
 import * as settingsStore from './settings.store'
 import * as podcastStore from './podcast.store'
 import * as auphonicStore from './auphonic.store'
+import * as progressStore from './progress.store'
 import * as mediafilesStore from './mediafiles.store'
 import * as relatedEpisodesStore from './relatedEpisodes.store'
 import * as showsStore from './shows.store'
@@ -25,6 +26,7 @@ const root = {
   transcripts: (state: State) => state.transcripts,
   contributors: (state: State) => state.contributors,
   auphonic: (state: State) => state.auphonic,
+  progress: (state: State) => state.progress,
   mediafiles: (state: State) => state.mediafiles,
   settings: (state: State) => state.settings,
   relatedEpisodes: (state: State) => state.relatedEpisodes,
@@ -53,6 +55,13 @@ const auphonic = {
   isSaving: createSelector(root.auphonic, auphonicStore.selectors.isSaving),
   isInitializing: createSelector(root.auphonic, auphonicStore.selectors.isInitializing),
   publishWhenDone: createSelector(root.auphonic, auphonicStore.selectors.publishWhenDone),
+}
+
+const progress = {
+  progress: createSelector(
+    [root.progress, (_state: any, key: string) => key],
+    progressStore.selectors.progress
+  ),
 }
 
 const podcast = {
@@ -194,6 +203,7 @@ export default {
   contributors,
   settings,
   auphonic,
+  progress,
   mediafiles,
   relatedEpisodes,
   shows,

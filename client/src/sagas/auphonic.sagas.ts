@@ -1,7 +1,20 @@
 import * as auphonic from '@store/auphonic.store'
 import * as episode from '@store/episode.store'
+import * as progress from '@store/progress.store'
 import { takeFirst } from '../sagas/helper'
-import { delay, put, take, fork, takeEvery, select, all, call, race } from 'redux-saga/effects'
+import {
+  delay,
+  put,
+  take,
+  fork,
+  takeEvery,
+  select,
+  all,
+  call,
+  race,
+  cancelled,
+  spawn,
+} from 'redux-saga/effects'
 import { createApi } from '../sagas/api'
 import { createApi as createAuphonicApi } from '../sagas/auphonic.api'
 import { PodloveApiClient } from '@lib/api'
@@ -11,6 +24,8 @@ import { v4 as uuidv4 } from 'uuid'
 import { State } from '../store'
 import { get } from 'lodash'
 import Timestamp from '@lib/timestamp'
+import { AxiosProgressEvent } from 'axios'
+import { Channel, channel } from 'redux-saga'
 
 function* auphonicSaga(): any {
   const apiClient: PodloveApiClient = yield createApi()
@@ -208,7 +223,12 @@ function* handleStartProduction(
   yield put(auphonic.startPolling())
 }
 
-function* handleSaveTrack(auphonicApi: AuphonicApiClient, uuid: String, trackWrapper: any) {
+function* handleSaveTrack(
+  auphonicApi: AuphonicApiClient,
+  uuid: String,
+  trackWrapper: any,
+  handleProgress: any
+) {
   let payload = trackWrapper.payload
 
   const id_old = payload.id
@@ -219,11 +239,15 @@ function* handleSaveTrack(auphonicApi: AuphonicApiClient, uuid: String, trackWra
   delete payload.id_new
   payload.id = id_new
 
+  const progressHandler = handleProgress(payload.id)
+
   switch (trackWrapper.state) {
     case 'edited':
       yield auphonicApi.post(`production/${uuid}/multi_input_files/${id_old}.json`, payload)
       if (needs_upload) {
-        yield auphonicApi.upload(`production/${uuid}/upload.json`, trackWrapper.upload)
+        yield auphonicApi.upload(`production/${uuid}/upload.json`, trackWrapper.upload, {
+          hooks: { onUploadProgress: progressHandler },
+        })
       }
       break
     case 'new':
@@ -231,7 +255,9 @@ function* handleSaveTrack(auphonicApi: AuphonicApiClient, uuid: String, trackWra
         multi_input_files: [trackWrapper.payload],
       })
       if (needs_upload) {
-        yield auphonicApi.upload(`production/${uuid}/upload.json`, trackWrapper.upload)
+        yield auphonicApi.upload(`production/${uuid}/upload.json`, trackWrapper.upload, {
+          hooks: { onUploadProgress: progressHandler },
+        })
       }
       break
   }
@@ -400,6 +426,32 @@ function getSaveProductionPayload(state: State): object {
   }
 }
 
+type ProgressPayload = {
+  key: string
+  progress: number
+}
+
+interface ProgressData {
+  key: string
+  progress: number
+}
+
+function* watchProgressChannel(progressChannel: Channel<ProgressData>) {
+  try {
+    while (true) {
+      const payload: ProgressPayload = yield take(progressChannel)
+
+      // TODO: reset when selecting a file
+      // TODO: reset when using the source picker
+      yield put(progress.setProgress(payload))
+    }
+  } finally {
+    if ((yield cancelled()) as boolean) {
+      progressChannel.close()
+    }
+  }
+}
+
 function* handleSaveProduction(
   auphonicApi: AuphonicApiClient,
   action: { type: string; payload: any }
@@ -416,18 +468,36 @@ function* handleSaveProduction(
   //@ts-ignore
   yield auphonicApi.delete(`production/${uuid}/chapters.json`)
 
+  const progressChannel: Channel<ProgressData> = yield call(channel)
+  yield spawn(watchProgressChannel, progressChannel)
+
+  const handleProgress = (key: string) => (progressEvent: AxiosProgressEvent) => {
+    if (progressEvent.total) {
+      const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total)
+      const payload: ProgressPayload = { key, progress: percentCompleted }
+
+      progressChannel.put(payload)
+    }
+  }
+
   // save multi_input_files by saving/updating each track individually
   yield all(
-    tracksPayload.map((trackWrapper: any) => call(handleSaveTrack, auphonicApi, uuid, trackWrapper))
+    tracksPayload.map((trackWrapper: any) =>
+      call(handleSaveTrack, auphonicApi, uuid, trackWrapper, handleProgress)
+    )
   )
 
   // handle single track if input_file is set
   // FIXME: only upload when changed, see multitrack logic
   const input_file = productionPayload.input_file
   if (typeof input_file == 'object') {
-    yield auphonicApi.upload(`production/${uuid}/upload.json`, {
-      file: input_file,
-    })
+    yield call(
+      auphonicApi.upload,
+      `production/${uuid}/upload.json`,
+      { file: input_file },
+      { hooks: { onUploadProgress: handleProgress('singletrack') } }
+    )
+
     delete productionPayload.input_file
   }
 
@@ -441,9 +511,11 @@ function* handleSaveProduction(
       const filename = 'image.' + ext
       const image_file = new File([blob], filename, { type: blob.type })
 
-      let r = auphonicApi.upload(`production/${uuid}/upload.json`, {
-        image: image_file,
-      })
+      auphonicApi.upload(
+        `production/${uuid}/upload.json`,
+        { image: image_file },
+        { hooks: { onUploadProgress: handleProgress('poster') } }
+      )
     })
 
   delete productionPayload.image
