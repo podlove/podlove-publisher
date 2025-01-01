@@ -117,7 +117,32 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 = 4.2.0 =
 
-TODO: announcement for setup & import assistant
+This release introduces the all-new **Onboarding Assistant**, enabling you to
+either setup a new podcast or move your existing podcast to Podlove with just
+your RSS Feed URL.
+
+This makes it much easier for potential podcasters to get started, as it makes
+the initial setup process as simple and quick as possible, now only requiring
+the podcaster to define what's really necessary about the podcast, without
+needing to worry about technical details.
+
+And for the first time, you can now move any of your existing podcasts to
+Podlove Publisher. All you need is the RSS feed. Podlove Publisher finds all the
+episode data and metadata like the audio file, title, description, chapters,
+transcript and contributors and imports them automatically.
+
+A huge Thank You goes to the [Prototype
+Fund](https://prototypefund.de/project/podlove-publisher-onboarding-import-assistant/)
+for sponsoring the development of the Onboarding Assistant module.
+
+**Other Changes**
+
+- removes outdated "Migration Wizard"
+- generate a guid for the podcast and use it in the RSS feed `podcast:guid` tag
+- API changes:
+  - episodes: allow filtering by `guid`
+  - podcast: include the following fields in responses: guid, language, feeds
+- fix: respect slashes in file slugs when urlencoding
 
 = 4.1.25 =
 
