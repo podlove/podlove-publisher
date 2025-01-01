@@ -57,7 +57,7 @@ class Feed
     public static function get_action_link($feed, $title, $action = 'edit', $class = 'link')
     {
         return sprintf(
-            '<a href="?page=%s&action=%s&feed=%s&_podlove_nonce=%s" class="%s">'.$title.'</a>',
+            '<a href="?page=%s&action=%s&feed=%s&_podlove_nonce=%s" class="%s">'.esc_html($title).'</a>',
             self::MENU_SLUG,
             $action,
             $feed->id,
@@ -104,7 +104,7 @@ class Feed
 			<div class="updated">
 				<p>
 					<strong>
-						<?php echo sprintf(__('You selected to delete the feed "%s". Please confirm this action.', 'podlove-podcasting-plugin-for-wordpress'), $feed->name); ?>
+						<?php echo sprintf(__('You selected to delete the feed "%s". Please confirm this action.', 'podlove-podcasting-plugin-for-wordpress'), esc_html($feed->name)); ?>
 					</strong>
 				</p>
 				<p>
@@ -261,7 +261,7 @@ class Feed
             if (!strlen(trim($feed->slug))) {
                 $errors[] = sprintf(
                     __('The feed %s has no slug.', 'podlove-podcasting-plugin-for-wordpress'),
-                    '<strong>'.$feed->name.'</strong>'
+                    '<strong>'.esc_html($feed->name).'</strong>'
                 )
                           .\Podlove\get_help_link('podlove_help_feed_slug')
                           .' '.self::get_action_link($feed, __('Go fix it', 'podlove-podcasting-plugin-for-wordpress'));
@@ -269,7 +269,7 @@ class Feed
             if (!$feed->episode_asset_id) {
                 $errors[] = sprintf(
                     __('The feed %s has no assigned asset.', 'podlove-podcasting-plugin-for-wordpress'),
-                    '<strong>'.$feed->name.'</strong>'
+                    '<strong>'.esc_html($feed->name).'</strong>'
                 )
                           .\Podlove\get_help_link('podlove_help_feed_asset')
                           .' '.self::get_action_link($feed, __('Go fix it', 'podlove-podcasting-plugin-for-wordpress'));
@@ -515,7 +515,7 @@ class Feed
     private function edit_template()
     {
         $feed = \Podlove\Model\Feed::find_by_id($_REQUEST['feed']);
-        echo '<h3>'.sprintf(__('Edit Feed: %s', 'podlove-podcasting-plugin-for-wordpress'), $feed->name).'</h3>';
+        echo '<h3>'.sprintf(__('Edit Feed: %s', 'podlove-podcasting-plugin-for-wordpress'), esc_html($feed->name)).'</h3>';
         $this->form_template($feed, 'save');
     }
 }

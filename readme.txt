@@ -143,6 +143,7 @@ for sponsoring the development of the Onboarding Assistant module.
   - episodes: allow filtering by `guid`
   - podcast: include the following fields in responses: guid, language, feeds
 - fix: respect slashes in file slugs when urlencoding
+- security: XSS vulnerability in feed name
 
 = 4.1.25 =
 
