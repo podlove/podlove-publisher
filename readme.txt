@@ -131,8 +131,7 @@ Podlove Publisher. All you need is the RSS feed. Podlove Publisher finds all the
 episode data and metadata like the audio file, title, description, chapters,
 transcript and contributors and imports them automatically.
 
-A huge Thank You goes to the [Prototype
-Fund](https://prototypefund.de/project/podlove-publisher-onboarding-import-assistant/)
+A huge Thank You goes to the [Prototype Fund](https://prototypefund.de/project/podlove-publisher-onboarding-import-assistant/)
 for sponsoring the development of the Onboarding Assistant module.
 
 **Other Changes**
