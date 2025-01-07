@@ -17,7 +17,13 @@
             </div>
 
             <div
-              v-if="isMediaUploadEnabled"
+              v-if="isPlusStorageEnabled"
+              class="sm:grid sm:grid-cols-[175px_auto_auto] sm:items-start sm:gap-4 sm:py-6"
+            >
+              <PlusMediaUpload />
+            </div>
+            <div
+              v-else-if="isMediaUploadEnabled"
               class="sm:grid sm:grid-cols-[175px_auto_auto] sm:items-start sm:gap-4 sm:py-6"
             >
               <MediaUpload />
@@ -45,6 +51,7 @@ import { ArrowPathIcon as RefreshIcon } from '@heroicons/vue/24/outline'
 
 import MediaSlug from './components/MediaSlug.vue'
 import MediaUpload from './components/MediaUpload.vue'
+import PlusMediaUpload from './components/PlusMediaUpload.vue'
 import AssetsTable from './components/AssetsTable.vue'
 
 export default defineComponent({
@@ -53,6 +60,7 @@ export default defineComponent({
     RefreshIcon,
     MediaSlug,
     MediaUpload,
+    PlusMediaUpload,
     AssetsTable,
   },
 
@@ -61,6 +69,7 @@ export default defineComponent({
       state: mapState({
         isInitializing: selectors.mediafiles.isInitializing,
         modules: selectors.settings.modules,
+        plusStorageEnabled: selectors.settings.enablePlusStorage,
       }),
       dispatch: injectStore().dispatch,
     }
@@ -72,6 +81,9 @@ export default defineComponent({
     },
     isMediaUploadEnabled(): boolean {
       return this.state.modules?.includes('wordpress_file_upload')
+    },
+    isPlusStorageEnabled(): boolean {
+      return this.state.plusStorageEnabled
     },
   },
 

@@ -14,11 +14,19 @@ import {
 import * as mediafiles from '@store/mediafiles.store'
 import * as episode from '@store/episode.store'
 import * as wordpress from '@store/wordpress.store'
+import * as progress from '@store/progress.store'
 import { MediaFile } from '@store/mediafiles.store'
-import { takeFirst, channel } from './helper'
+import {
+  createAndWatchProgressChannel,
+  createProgressHandler,
+  ProgressPayload,
+  takeFirst,
+} from './helper'
 import { createApi } from './api'
 import { Action } from 'redux'
 import { get } from 'lodash'
+import axios, { AxiosResponse } from 'axios'
+import { Channel } from 'redux-saga'
 
 function* mediafilesSaga(): any {
   const apiClient: PodloveApiClient = yield createApi()
@@ -49,6 +57,7 @@ function* initialize(api: PodloveApiClient) {
     api
   )
   yield takeEvery(mediafiles.UPLOAD_INTENT, selectMediaFromLibrary)
+  yield takeEvery(mediafiles.PLUS_UPLOAD_INTENT, triggerPlusUpload, api)
   yield takeEvery(mediafiles.SET_UPLOAD_URL, setUploadMedia)
 
   yield put(mediafiles.initDone())
@@ -58,9 +67,80 @@ function* selectMediaFromLibrary() {
   yield put(wordpress.selectMediaFromLibrary({ onSuccess: { type: mediafiles.SET_UPLOAD_URL } }))
 }
 
+/**
+ * Uploads a file to Podlove Plus service
+ *
+ * This saga:
+ * 1. Requests a pre-signed upload URL from the Plus API
+ * 2. Uploads the file directly to the provided URL
+ * 3. Extracts the permanent file URL and dispatches it via setUploadUrl action
+ * 4. Tracks upload progress
+ */
+function* triggerPlusUpload(api: PodloveApiClient, action: Action) {
+  const file = get(action, ['payload'])
+  const progressKey = `plus-upload-${file.name}`
+
+  // Reset any previous progress for this file
+  yield put(progress.resetProgress(progressKey))
+
+  const { result: upload_url } = yield api.post(`plus/create_file_upload`, {
+    filename: file.name,
+  })
+
+  if (!upload_url) {
+    console.error('Failed to get upload URL')
+    return
+  }
+
+  const progressChannel: Channel<ProgressPayload> = yield call(
+    createAndWatchProgressChannel,
+    handleProgressUpdate
+  )
+
+  const handleProgress = createProgressHandler(progressChannel)
+
+  try {
+    const response: AxiosResponse<any> = yield call(axios.put, upload_url, file, {
+      headers: { 'Content-Type': file.type },
+      onUploadProgress: handleProgress(progressKey),
+    })
+
+    const fileUrl = response.config.url?.split('?')[0]
+
+    if (fileUrl) {
+      yield put(mediafiles.setUploadUrl(fileUrl))
+    }
+  } catch (error) {
+    console.error('File upload failed:', error)
+    yield put(
+      progress.setProgressStatus({
+        key: progressKey,
+        status: 'error',
+        message: 'File upload failed',
+      })
+    )
+  }
+}
+
+function* handleProgressUpdate(value: ProgressPayload) {
+  yield put(progress.setProgress(value))
+
+  yield put(
+    progress.setProgressStatus({
+      key: value.key,
+      status: value.progress == 100 ? 'finished' : 'in_progress',
+    })
+  )
+}
+
 function* setUploadMedia(action: Action) {
   const url = get(action, ['payload'])
   const slug = url.split('\\').pop().split('/').pop().split('.').shift()
+
+  // NOTE: maybe the the slug logic should be: if there is no slug, use the
+  // filename. If there is a slug, use the slug (and rename the file on upload).
+  // that would fix the issue of multiple assets and the local files have
+  // different names, like episode-001.mp3 and transcript.txt.
 
   yield put(episode.update({ prop: 'slug', value: slug }))
   yield put(episode.quicksave())
