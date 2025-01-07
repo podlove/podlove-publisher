@@ -123,7 +123,7 @@ export const reducer = handleActions(
         enable_episode_recording_date:
           get(
             action,
-            ['payload', 'expert_settings', 'metadata', 'enable_episode_license'],
+            ['payload', 'expert_settings', 'metadata', 'enable_episode_recording_date'],
             null
           ) === '1',
       },
