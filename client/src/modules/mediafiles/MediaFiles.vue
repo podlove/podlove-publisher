@@ -23,7 +23,12 @@
               <MediaUpload />
             </div>
 
-            <div v-if="isPlusStorageEnabled">Cloud Storage!</div>
+            <div
+              v-if="isPlusStorageEnabled"
+              class="sm:grid sm:grid-cols-[175px_auto_auto] sm:items-start sm:gap-4 sm:py-6"
+            >
+              <PlusMediaUpload />
+            </div>
 
             <div class="sm:grid sm:grid-cols-[175px_auto_auto] sm:items-start sm:gap-4 sm:py-6">
               <AssetsTable />
@@ -47,6 +52,7 @@ import { ArrowPathIcon as RefreshIcon } from '@heroicons/vue/24/outline'
 
 import MediaSlug from './components/MediaSlug.vue'
 import MediaUpload from './components/MediaUpload.vue'
+import PlusMediaUpload from './components/PlusMediaUpload.vue'
 import AssetsTable from './components/AssetsTable.vue'
 
 export default defineComponent({
@@ -55,6 +61,7 @@ export default defineComponent({
     RefreshIcon,
     MediaSlug,
     MediaUpload,
+    PlusMediaUpload,
     AssetsTable,
   },
 

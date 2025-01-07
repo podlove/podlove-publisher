@@ -108,6 +108,34 @@ class API
         return $curl->get_response();
     }
 
+    public function create_file_upload($filename)
+    {
+        // TODO: maybe podcast_id is not the right id here. think about what we
+        // need and what's best suited.
+        $query = http_build_query([
+            'filename' => $filename,
+            'podcast_id' => 1
+        ]);
+
+        $curl = new Http\Curl();
+        $curl->request(
+            $this->module::base_url().'/api/rest/v1/files/upload/new?'.$query,
+            $this->params([
+                'method' => 'POST'
+            ])
+        );
+
+        $response = $curl->get_response();
+
+        if ($curl->isSuccessful()) {
+            $decoded_response = json_decode($response['body']);
+
+            return $decoded_response->url ?? false;
+        }
+
+        return false;
+    }
+
     private function params($params = [])
     {
         return array_merge([

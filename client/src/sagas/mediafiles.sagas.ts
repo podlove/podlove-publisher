@@ -18,7 +18,7 @@ import { MediaFile } from '@store/mediafiles.store'
 import { takeFirst, channel } from './helper'
 import { createApi } from './api'
 import { Action } from 'redux'
-import { get } from 'lodash'
+import { get, result } from 'lodash'
 
 function* mediafilesSaga(): any {
   const apiClient: PodloveApiClient = yield createApi()
@@ -49,6 +49,7 @@ function* initialize(api: PodloveApiClient) {
     api
   )
   yield takeEvery(mediafiles.UPLOAD_INTENT, selectMediaFromLibrary)
+  yield takeEvery(mediafiles.PLUS_UPLOAD_INTENT, triggerPlusUpload, api)
   yield takeEvery(mediafiles.SET_UPLOAD_URL, setUploadMedia)
 
   yield put(mediafiles.initDone())
@@ -56,6 +57,48 @@ function* initialize(api: PodloveApiClient) {
 
 function* selectMediaFromLibrary() {
   yield put(wordpress.selectMediaFromLibrary({ onSuccess: { type: mediafiles.SET_UPLOAD_URL } }))
+}
+
+/**
+ * Uploads a file to Podlove Plus service
+ *
+ * This saga:
+ * 1. Requests a pre-signed upload URL from the Plus API
+ * 2. Uploads the file directly to the provided URL
+ * 3. Extracts the permanent file URL and dispatches it via setUploadUrl action
+ */
+function* triggerPlusUpload(api: PodloveApiClient, action: Action) {
+  const file = get(action, ['payload'])
+
+  const { result: upload_url } = yield api.post(`plus/create_file_upload`, {
+    filename: file.name,
+  })
+
+  if (!upload_url) {
+    console.error('Failed to get upload URL')
+    return
+  }
+
+  try {
+    const formData = new FormData()
+    formData.append('file', file)
+
+    const response: Response = yield call(fetch, upload_url, {
+      method: 'PUT',
+      body: file,
+      headers: { 'Content-Type': file.type },
+    })
+
+    if (!response.ok) {
+      throw new Error(`Upload failed with status: ${response.status}`)
+    }
+
+    const fileUrl = response.url.split('?')[0]
+
+    yield put(mediafiles.setUploadUrl(fileUrl))
+  } catch (error) {
+    console.error('File upload failed:', error)
+  }
 }
 
 function* setUploadMedia(action: Action) {
