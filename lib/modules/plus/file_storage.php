@@ -2,6 +2,8 @@
 
 namespace Podlove\Modules\Plus;
 
+use Podlove\Model\Podcast;
+
 class FileStorage
 {
     private $module;
@@ -17,10 +19,22 @@ class FileStorage
     public function init()
     {
         add_action('podlove_before_assign_assets_settings', [$this, 'settings_card']);
+        add_action('podlove_data_js', [$this, 'extend_data_js']);
 
         if (isset($_REQUEST['page']) && $_REQUEST['page'] == 'podlove_episode_assets_settings_handle' && isset($_REQUEST['update_plus_settings']) && $_REQUEST['update_plus_settings'] == 'true') {
             add_action('admin_bar_init', [$this, 'save_setting']);
         }
+    }
+
+    public function extend_data_js($data)
+    {
+        if (!isset($data['plus'])) {
+            $data['plus'] = [];
+        }
+
+        $data['plus']['storage_enabled'] = Podcast::get()->plus_enable_storage;
+
+        return $data;
     }
 
     public function save_setting()
@@ -53,15 +67,13 @@ class FileStorage
 
         settings_fields(\Podlove\Settings\Podcast::$pagehook);
 
-        $podcast = \Podlove\Model\Podcast::get();
-
         $form_attributes = [
             'context' => 'podlove_podcast',
             'form' => false,
             'nonce' => self::$nonce
         ];
 
-        \Podlove\Form\build_for($podcast, $form_attributes, function ($form) {
+        \Podlove\Form\build_for(Podcast::get(), $form_attributes, function ($form) {
             $wrapper = new \Podlove\Form\Input\TableWrapper($form);
 
             $wrapper->subheader(__('File Storage | Publisher Plus', 'podlove-podcasting-plugin-for-wordpress'));

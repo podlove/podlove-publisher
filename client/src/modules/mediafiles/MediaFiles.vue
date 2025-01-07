@@ -23,6 +23,8 @@
               <MediaUpload />
             </div>
 
+            <div v-if="isPlusStorageEnabled">Cloud Storage!</div>
+
             <div class="sm:grid sm:grid-cols-[175px_auto_auto] sm:items-start sm:gap-4 sm:py-6">
               <AssetsTable />
             </div>
@@ -61,6 +63,7 @@ export default defineComponent({
       state: mapState({
         isInitializing: selectors.mediafiles.isInitializing,
         modules: selectors.settings.modules,
+        plusStorageEnabled: selectors.settings.enablePlusStorage,
       }),
       dispatch: injectStore().dispatch,
     }
@@ -72,6 +75,9 @@ export default defineComponent({
     },
     isMediaUploadEnabled(): boolean {
       return this.state.modules?.includes('wordpress_file_upload')
+    },
+    isPlusStorageEnabled(): boolean {
+      return this.state.plusStorageEnabled
     },
   },
 

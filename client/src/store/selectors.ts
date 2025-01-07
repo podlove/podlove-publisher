@@ -171,6 +171,7 @@ const settings = {
     root.settings,
     settingsStore.selectors.enableEpisodeExplicit
   ),
+  enablePlusStorage: createSelector(root.settings, settingsStore.selectors.enablePlusStorage),
   modules: createSelector(root.settings, settingsStore.selectors.modules),
 }
 
@@ -207,5 +208,5 @@ export default {
   mediafiles,
   relatedEpisodes,
   shows,
-  admin
+  admin,
 }
