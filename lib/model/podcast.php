@@ -488,7 +488,10 @@ Podcast::property('feed_transcripts');
 Podcast::property('language');
 Podcast::property('complete');
 Podcast::property('flattr'); // @deprecated since 2.3.0 (now: wp_option "podlove_flattr")
+// TODO: (Refactoring) manage PLUS options via REST API and store them somewhere else
 Podcast::property('plus_enable_proxy');
+Podcast::property('plus_enable_storage');
+Podcast::property('plus_slug');
 Podcast::property('funding_url');
 Podcast::property('funding_label');
 Podcast::property('copyright');
