@@ -115,6 +115,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 4.2.1 =
+
+- security: XSS vulnerability in podcast summary
+
 = 4.2.0 =
 
 This release introduces the all-new **Onboarding Assistant**, enabling you to
