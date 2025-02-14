@@ -2,8 +2,8 @@
 Contributors: eteubert
 Donate link: https://opencollective.com/podlove
 Tags: podlove, podcast, publishing, rss, audio
-Tested up to: 6.7.1
-Stable tag: 4.2.1
+Tested up to: 6.7.2
+Stable tag: 4.2.2
 Requires at least: 4.9.6
 Requires PHP: 8.0
 License: MIT
