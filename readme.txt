@@ -115,6 +115,14 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 4.2.2 =
+
+Fix GUIDs for shows:
+
+- generate a guid for all existing shows
+- use the guid in the RSS feed, instead of the podcast guid
+- new shows will get a new guid
+
 = 4.2.1 =
 
 - security: XSS vulnerability in podcast summary

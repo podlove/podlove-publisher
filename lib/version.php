@@ -42,7 +42,7 @@ namespace Podlove;
 
 use Podlove\Jobs\CronJobRunner;
 
-define('Podlove\DATABASE_VERSION', 159);
+define('Podlove\DATABASE_VERSION', 160);
 
 add_action('admin_init', '\Podlove\maybe_run_database_migrations');
 add_action('admin_init', '\Podlove\run_database_migrations', 5);
@@ -1675,6 +1675,14 @@ function run_migrations_for_version($version)
             if (!$podcast->guid) {
                 $podcast->guid = \Ramsey\Uuid\Uuid::uuid4();
                 $podcast->save();
+            }
+
+            break;
+        case 160:
+            // Generate GUIDs for all shows that don't have one
+            $shows = \Podlove\Modules\Shows\Model\Show::all();
+            foreach ($shows as $show) {
+                \Podlove\Modules\Shows\Model\Show::generate_guid($show->id);
             }
 
             break;
