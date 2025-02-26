@@ -21,13 +21,7 @@ class Transcripts extends \Podlove\Modules\Base
         add_action('podlove_delete_episode', [$this, 'on_delete_episode']);
         add_action('podlove_module_was_activated_transcripts', [$this, 'was_activated']);
         add_filter('podlove_episode_form_data', [$this, 'extend_episode_form'], 10, 2);
-        add_action('wp_ajax_podlove_transcript_import', [$this, 'ajax_transcript_import']);
-        add_action('wp_ajax_podlove_transcript_asset_import', [$this, 'ajax_transcript_asset_import']);
-        add_action('wp_ajax_podlove_transcript_delete', [$this, 'ajax_transcript_delete']);
-        add_action('wp_ajax_podlove_transcript_get_contributors', [$this, 'ajax_transcript_get_contributors']);
-        add_action('wp_ajax_podlove_transcript_get_voices', [$this, 'ajax_transcript_get_voices']);
 
-        // add_filter('podlove_episode_data_before_save', [$this, 'save_episode_voice_assignments']);
         add_filter('mime_types', [$this, 'ensure_vtt_mime_type_is_known'], 20);
 
         add_filter('podlove_player4_config', [$this, 'add_player_config'], 10, 2);
@@ -135,108 +129,6 @@ class Transcripts extends \Podlove\Modules\Base
         return $form_data;
     }
 
-    public function ajax_transcript_import()
-    {
-        if (!isset($_FILES['transcript'])) {
-            wp_die();
-        }
-
-        // allow vtt uploads
-        add_filter('mime_types', function ($mimes) {
-            $mimes['vtt'] = 'text/vtt';
-            $mimes['webvtt'] = 'text/vtt';
-
-            return $mimes;
-        });
-
-        add_filter('upload_mimes', function ($mimes_types) {
-            $mimes_types['vtt'] = 'text/vtt';
-            $mimes_types['webvtt'] = 'text/vtt';
-
-            return $mimes_types;
-        }, 99);
-
-        add_filter('wp_check_filetype_and_ext', function ($types, $file, $filename, $mimes) {
-            $wp_filetype = wp_check_filetype($filename, $mimes);
-            $ext = $wp_filetype['ext'];
-            $type = $wp_filetype['type'];
-            if (in_array($ext, ['vtt', 'webvtt'])) {
-                $types['ext'] = $ext;
-                $types['type'] = $type;
-            }
-
-            return $types;
-        }, 99, 4);
-
-        // todo: I don't really want it permanently uploaded, so ... delete when done
-        $file = wp_handle_upload($_FILES['transcript'], ['test_form' => false]);
-
-        if (!$file || isset($file['error'])) {
-            $error = 'Could not upload transcript file. Reason: '.$file['error'];
-            \Podlove\Log::get()->addError($error);
-            \Podlove\AJAX\Ajax::respond_with_json(['error' => $error]);
-        }
-
-        if (stripos($file['type'], 'vtt') === false) {
-            $error = 'Transcript file must be webvtt. Is: '.$file['type'];
-            \Podlove\Log::get()->addError($error);
-            \Podlove\AJAX\Ajax::respond_with_json(['error' => $error]);
-        }
-
-        $post_id = intval($_POST['post_id'], 10);
-        $episode = Model\Episode::find_one_by_post_id($post_id);
-
-        if (!$episode) {
-            $error = 'Could not find episode for this post object.';
-            \Podlove\Log::get()->addError($error);
-            \Podlove\AJAX\Ajax::respond_with_json(['error' => $error]);
-        }
-
-        $content = file_get_contents($file['file']);
-
-        self::parse_and_import_webvtt($episode, $content);
-
-        wp_die();
-    }
-
-    public function ajax_transcript_asset_import()
-    {
-        $post_id = intval($_GET['post_id'], 10);
-        $episode = Model\Episode::find_one_by_post_id($post_id);
-
-        if (!$episode) {
-            $error = 'Could not find episode for this post object.';
-            \Podlove\Log::get()->addError($error);
-            \Podlove\AJAX\Ajax::respond_with_json(['error' => $error]);
-        }
-
-        if (($return = $this->transcript_import_from_asset($episode)) !== true) {
-            if (is_array($return) && isset($return['error'])) {
-                \Podlove\Log::get()->addError($return['error']);
-                \Podlove\AJAX\Ajax::respond_with_json($return);
-            }
-        }
-
-        wp_die();
-    }
-
-    public function ajax_transcript_delete()
-    {
-        $post_id = intval($_GET['post_id'], 10);
-        $episode = Model\Episode::find_one_by_post_id($post_id);
-
-        if (!$episode) {
-            $error = 'Could not find episode for this post object.';
-            \Podlove\Log::get()->addError($error);
-            \Podlove\AJAX\Ajax::respond_with_json(['error' => $error]);
-        }
-
-        Transcript::delete_for_episode($episode->id);
-
-        echo 'ok';
-        wp_die();
-    }
-
     /**
      * Import transcript from remote file.
      */
@@ -332,29 +224,6 @@ class Transcripts extends \Podlove\Modules\Base
                 $voice_assignment->save();
             }
         }
-    }
-
-    public function ajax_transcript_get_contributors()
-    {
-        $contributors = Contributor::all();
-        $contributors = array_map(function ($c) {
-            return [
-                'id' => $c->id,
-                'name' => $c->getName(),
-                'identifier' => $c->identifier,
-                'avatar' => $c->avatar()->url(),
-            ];
-        }, $contributors);
-
-        \Podlove\AJAX\Ajax::respond_with_json(['contributors' => $contributors]);
-    }
-
-    public function ajax_transcript_get_voices()
-    {
-        $post_id = intval($_GET['post_id'], 10);
-        $episode = Model\Episode::find_one_by_post_id($post_id);
-        $voices = Transcript::get_voices_for_episode_id($episode->id);
-        \Podlove\AJAX\Ajax::respond_with_json(['voices' => $voices]);
     }
 
     public function serve_transcript_file()

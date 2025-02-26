@@ -115,6 +115,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 4.2.3 =
+
+- security: remove unused code (which contained an XSS vulnerability)
+
 = 4.2.2 =
 
 Fix GUIDs for shows:
