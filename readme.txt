@@ -117,6 +117,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 = 4.2.3 =
 
+- feat: add API route to list public feeds: `GET podlove/v2/feeds`
 - security: remove unused code (which contained an XSS vulnerability)
 
 = 4.2.2 =
