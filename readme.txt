@@ -115,6 +115,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 4.2.4 =
+
+- fix: when upgrading YOAST SEO while the Publisher is active, permalinks do not break any more
+
 = 4.2.3 =
 
 - feat: add API route to list public feeds: `GET podlove/v2/feeds`

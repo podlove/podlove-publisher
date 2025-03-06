@@ -208,6 +208,7 @@ require_once \Podlove\PLUGIN_DIR.'includes/auto_post_titles.php';
 require_once \Podlove\PLUGIN_DIR.'includes/cache.php';
 require_once \Podlove\PLUGIN_DIR.'includes/capabilities.php';
 require_once \Podlove\PLUGIN_DIR.'includes/chapters.php';
+require_once \Podlove\PLUGIN_DIR.'includes/compatibility.php';
 require_once \Podlove\PLUGIN_DIR.'includes/db_migration.php';
 require_once \Podlove\PLUGIN_DIR.'includes/deprecations.php';
 require_once \Podlove\PLUGIN_DIR.'includes/detect_duplicate_slugs.php';
