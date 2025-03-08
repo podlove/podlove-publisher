@@ -78,10 +78,20 @@ class OnboardingPage
         $acknowledgeDescription = __('To be able to offer you this service, we have to run the onboarding assistant on our external server. We have done everything in our power to make the service as privacy friendly as possible. We do not store any of your entered data, everything is saved in your browser 🤞. However, it is important to us that you are aware of this fact before you use the onboarding service.', 'podlove-podcasting-plugin-for-wordpress');
         $acknowledgeButton = __('All right, I\'ve got it', 'podlove-podcasting-plugin-for-wordpress');
         $httpsWarningText = __('Warning: Your website is not configured to use https! This usually means that the authentication method the assistant uses is disabled by WordPress for security reasons. Please enable https before continuing.', 'podlove-podcasting-plugin-for-wordpress');
+        $applicationPasswordWarningText = __('Warning: Application passwords are not available. Maybe a security plugin is blocking them.', 'podlove-podcasting-plugin-for-wordpress');
 
         $httpsWarning = !wp_is_using_https() ? <<<EOD
           <p class="onboarding-warning">⚠️ {$httpsWarningText}</p>
         EOD : '';
+
+        $applicationPasswordWarning = !wp_is_application_passwords_available_for_user(wp_get_current_user()) ? <<<EOD
+          <p class="onboarding-warning">⚠️ {$applicationPasswordWarningText}</p>
+        EOD : '';
+
+        // don't skip intro page if there are warnings
+        if ($httpsWarning || $applicationPasswordWarning) {
+            $acknowledgeOption = false;
+        }
 
         echo <<<EOD
       <iframe id="onboarding-assistant" class="hidden"></iframe>
@@ -90,6 +100,7 @@ class OnboardingPage
           <h1 class="onboarding-headline">{$acknowledgeHeadline}</h1>
           <p class="onboarding-description">{$acknowledgeDescription}</p>
           {$httpsWarning}
+          {$applicationPasswordWarning}
           <button id="acknowledge-button" class="onboarding-button">{$acknowledgeButton}</button>
         </div>
       </div>

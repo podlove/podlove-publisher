@@ -118,6 +118,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 = 4.2.4 =
 
 - fix: when upgrading YOAST SEO while the Publisher is active, permalinks do not break any more
+- onboarding: show warning if application passwords are disabled
 
 = 4.2.3 =
 
