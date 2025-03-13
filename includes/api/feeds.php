@@ -50,6 +50,14 @@ class WP_REST_PodloveFeed_Controller extends \WP_REST_Controller
      */
     public function get_items($request)
     {
+        return new \Podlove\Api\Response\OkResponse([
+            '_version' => 'v2',
+            'results' => self::get_feeds()
+        ]);
+    }
+
+    public static function get_feeds($taxonomy = null, $term_id = null)
+    {
         $feeds = Feed::find_all_by_property('enable', 1);
 
         $results = [];
@@ -66,7 +74,7 @@ class WP_REST_PodloveFeed_Controller extends \WP_REST_Controller
             $result = [
                 'id' => $feed->id,
                 'title' => $feed->get_title(),
-                'url' => $feed->get_subscribe_url(),
+                'url' => $feed->get_subscribe_url($taxonomy, $term_id),
                 'content_type' => $feed->get_content_type()
             ];
 
@@ -81,9 +89,6 @@ class WP_REST_PodloveFeed_Controller extends \WP_REST_Controller
             $results[] = $result;
         }
 
-        return new \Podlove\Api\Response\OkResponse([
-            '_version' => 'v2',
-            'results' => $results,
-        ]);
+        return $results;
     }
 }

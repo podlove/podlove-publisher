@@ -119,6 +119,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 - fix: when upgrading YOAST SEO while the Publisher is active, permalinks do not break any more
 - onboarding: show warning if application passwords are disabled
+- include feeds in `GET podlove/v2/shows` result
 
 = 4.2.3 =
 
