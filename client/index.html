@@ -35,7 +35,18 @@
         const applicationPassword = config.applicationPassword || '';
         const baseUrl = config.baseUrl || 'http://publisher.local';
 
-        fetch(`${baseUrl}/wp-json/podlove/v2/episodes`)
+        // First fetch the JS hook to get the variables
+        fetch(`${baseUrl}/?hook=podlove-js-hook`)
+          .then(response => response.text())
+          .then(jsContent => {
+            // Create and execute the script to set the variables
+            const script = document.createElement('script');
+            script.textContent = jsContent;
+            document.body.appendChild(script);
+
+            // Continue with the episode initialization after variables are set
+            return fetch(`${baseUrl}/wp-json/podlove/v2/episodes`);
+          })
           .then((res) => res.json())
           .then(({ results }) => {
             if (!results.length) {
@@ -49,7 +60,7 @@
           )
           .then((res) => res.json())
           .then(({ id, post_id }) => {
-            window.initPodloveUI({
+            const data = {
               baseUrl: baseUrl,
               api: {
                 base: `${baseUrl}/wp-json/podlove`,
@@ -61,8 +72,14 @@
               episode: {
                 id,
               },
-            })
+            }
+
+            const mergedData = { ...data, ...window.PODLOVE_DATA }
+            window.initPodloveUI(mergedData)
           })
+          .catch(error => {
+            console.error('Error initializing Podlove UI:', error);
+          });
       })
     </script>
   </body>
