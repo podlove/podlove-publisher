@@ -25,13 +25,17 @@
     </div>
 
     <script type="module" src="./src/client.ts"></script>
+    <script src="./config.local.js"></script>
 
     <script>
-      const user = 'admin' // the user name NOT the token name
-      const applicationPassword = `KQEO 27y5 PQEq UCbw Bprx JKdP`
-
       window.addEventListener('load', () => {
-        fetch('http://localhost:3000/wp-json/podlove/v2/episodes')
+        // Use config from external file config.local.js
+        const config = window.devConfig || {};
+        const user = config.user || 'admin';
+        const applicationPassword = config.applicationPassword || '';
+        const baseUrl = config.baseUrl || 'http://publisher.local';
+
+        fetch(`${baseUrl}/wp-json/podlove/v2/episodes`)
           .then((res) => res.json())
           .then(({ results }) => {
             if (!results.length) {
@@ -41,14 +45,14 @@
             return results[0]
           })
           .then((episode) =>
-            fetch(`http://localhost:3000/wp-json/podlove/v2/episodes/${episode.id}`)
+            fetch(`${baseUrl}/wp-json/podlove/v2/episodes/${episode.id}`)
           )
           .then((res) => res.json())
           .then(({ id, post_id }) => {
             window.initPodloveUI({
-              baseUrl: 'http://publisher.local',
+              baseUrl: baseUrl,
               api: {
-                base: 'http://localhost:3000/wp-json/podlove',
+                base: `${baseUrl}/wp-json/podlove`,
                 auth: btoa(`${user}:${applicationPassword}`),
               },
               post: {
