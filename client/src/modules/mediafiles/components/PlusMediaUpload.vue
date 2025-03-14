@@ -12,17 +12,37 @@
       </podlove-button>
 
       <input type="file" name="plus-file-upload" @input="handleFileSelection" />
+
+      <!-- Upload progress bar -->
+      <div v-if="uploadProgress != null">
+        <div class="mt-2" aria-hidden="true">
+          <div class="overflow-hidden rounded-full bg-gray-100">
+            <div
+              class="h-2 rounded-full bg-indigo-600"
+              :style="{ width: uploadProgress + '%' }"
+            ></div>
+          </div>
+          <div class="mt-1 hidden grid-cols-4 text-sm font-medium text-gray-600 sm:grid">
+            <div>{{ uploadProgress }}%</div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
+// TODO: use "choose file" UI from Auphonic
+// TODO: immediately show progress spinner on button click
+// TODO: show error message if upload fails
+
 import { defineComponent } from 'vue'
 import { mapState, injectStore } from 'redux-vuex'
 
 import { plusUploadIntent } from '@store/mediafiles.store'
 import PodloveButton from '@components/button/Button.vue'
 import { CloudArrowUpIcon as UploadIcon } from '@heroicons/vue/24/outline'
+import { State, selectors } from '@store'
 
 export default defineComponent({
   components: {
@@ -34,16 +54,18 @@ export default defineComponent({
   },
   setup() {
     return {
-      state: mapState({}),
+      state: mapState({
+        progress: (state: State) => (key: string) => selectors.progress.progress(state, key),
+      }),
       dispatch: injectStore().dispatch,
     }
   },
 
-  // NOTE: see Auphonic FileChooser for how to deal with file selection/uploads
-
   methods: {
     plusUploadIntent() {
-      this.dispatch(plusUploadIntent(this.file))
+      if (this.file) {
+        this.dispatch(plusUploadIntent(this.file))
+      }
     },
     handleFileSelection(event: Event): void {
       const files = (event.target as HTMLInputElement).files
@@ -51,6 +73,12 @@ export default defineComponent({
     },
   },
 
-  computed: {},
+  computed: {
+    uploadProgress(): number | null {
+      if (!this.file) return null
+      const progressKey = `plus-upload-${this.file.name}`
+      return this.state.progress(progressKey) || null
+    },
+  },
 })
 </script>
