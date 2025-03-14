@@ -17,17 +17,16 @@
             </div>
 
             <div
-              v-if="isMediaUploadEnabled"
-              class="sm:grid sm:grid-cols-[175px_auto_auto] sm:items-start sm:gap-4 sm:py-6"
-            >
-              <MediaUpload />
-            </div>
-
-            <div
               v-if="isPlusStorageEnabled"
               class="sm:grid sm:grid-cols-[175px_auto_auto] sm:items-start sm:gap-4 sm:py-6"
             >
               <PlusMediaUpload />
+            </div>
+            <div
+              v-else-if="isMediaUploadEnabled"
+              class="sm:grid sm:grid-cols-[175px_auto_auto] sm:items-start sm:gap-4 sm:py-6"
+            >
+              <MediaUpload />
             </div>
 
             <div class="sm:grid sm:grid-cols-[175px_auto_auto] sm:items-start sm:gap-4 sm:py-6">

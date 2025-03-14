@@ -6,12 +6,112 @@
   >
   <div class="mt-2 sm:col-span-2 sm:mt-0">
     <div>
-      <podlove-button variant="primary" @click="plusUploadIntent" class="ml-1">
+      <label
+        for="plus-file-upload"
+        class="relative max-w-[400px] flex flex-col gap-2 cursor-pointer bg-white rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none"
+      >
+        <div>
+          <podlove-button v-if="!file" variant="primary">
+            <upload-icon class="-ml-0.5 mr-2 h-4 w-4" aria-hidden="true" />
+            {{ __('Select File for Upload', 'podlove-podcasting-plugin-for-wordpress') }}
+          </podlove-button>
+        </div>
+
+        <!-- File Details Area -->
+        <div v-if="file">
+          <div class="flex items-start space-x-3 p-3 bg-indigo-50 rounded-lg">
+            <!-- File Icon -->
+            <div class="flex-shrink-0">
+              <div class="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center">
+                <svg
+                  class="w-6 h-6 text-indigo-500"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                  ></path>
+                </svg>
+              </div>
+            </div>
+
+            <!-- File Info -->
+            <div class="flex-1 min-w-0">
+              <p id="fileName" class="text-sm font-medium text-gray-900 truncate">
+                {{ file.name }}
+              </p>
+              <p id="fileSize" class="text-xs text-gray-500">
+                {{ (file.size / 1024 / 1024).toFixed(2) }} MB
+              </p>
+
+              <!-- Progress Bar -->
+              <div class="mt-2 w-full bg-gray-200 rounded-full h-1.5">
+                <div
+                  id="progressBar"
+                  class="bg-indigo-600 h-1.5 rounded-full progress-transition"
+                  :style="{ width: (uploadProgress || 0) + '%' }"
+                ></div>
+              </div>
+
+              <!-- Progress Status -->
+              <div class="flex justify-between items-center mt-1">
+                <p id="uploadStatus" class="text-xs text-gray-500">
+                  <span v-if="!uploadProgress">Ready to upload</span>
+                  <span v-else-if="uploadProgress < 100">Uploading...</span>
+                  <span v-else>Done!</span>
+                </p>
+                <p
+                  v-if="uploadProgress"
+                  id="progressPercentage"
+                  class="text-xs font-medium text-indigo-600"
+                >
+                  {{ uploadProgress }}%
+                </p>
+              </div>
+            </div>
+
+            <!-- Remove Button -->
+            <button
+              id="removeBtn"
+              class="flex-shrink-0 text-gray-400 hover:text-gray-600 focus:outline-none"
+              @click="resetFile()"
+            >
+              <svg
+                class="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M6 18L18 6M6 6l12 12"
+                ></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <input
+          id="plus-file-upload"
+          name="plus-file-upload"
+          type="file"
+          class="sr-only"
+          @input="handleFileSelection"
+        />
+      </label>
+
+      <podlove-button v-if="file" variant="primary" @click="plusUploadIntent" class="ml-1 mt-3">
         <upload-icon class="-ml-0.5 mr-2 h-4 w-4" aria-hidden="true" />
         {{ __('Upload Media File', 'podlove-podcasting-plugin-for-wordpress') }}
       </podlove-button>
-
-      <input type="file" name="plus-file-upload" @input="handleFileSelection" />
 
       <!-- Upload progress bar -->
       <div v-if="uploadProgress != null">
@@ -70,6 +170,9 @@ export default defineComponent({
     handleFileSelection(event: Event): void {
       const files = (event.target as HTMLInputElement).files
       this.file = files ? files[0] : null
+    },
+    resetFile() {
+      this.file = null
     },
   },
 
