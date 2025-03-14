@@ -16,22 +16,46 @@ add_filter('podlove_data_js', 'podlove_js_adapter_inject_settings');
 
 function podlove_init_js_adapter()
 {
+    ?>
+    <script>
+    <?php podlove_init_js_content(); ?>
+    window.addEventListener('load', function () {
+      if (window.initPodloveUI) {
+        window.initPodloveUI(window.PODLOVE_DATA);
+      }
+    })
+    </script>
+    <?php
+}
+
+function podlove_init_js_content()
+{
     $data = apply_filters('podlove_data_js', []); ?>
 
-    <script>
-      window.PODLOVE_DATA = window.PODLOVE_DATA || { baseUrl: '<?php echo home_url(); ?>' };
-      <?php foreach ($data as $key => $value) { ?>
-          window.PODLOVE_DATA['<?php echo $key; ?>'] = <?php echo wp_json_encode($value); ?>;
-      <?php } ?>
-
-      window.addEventListener('load', function () {
-        if (window.initPodloveUI) {
-          window.initPodloveUI(window.PODLOVE_DATA);
-        }
-      })
-    </script>
+    window.PODLOVE_DATA = window.PODLOVE_DATA || { baseUrl: '<?php echo home_url(); ?>' };
+    <?php foreach ($data as $key => $value) { ?>
+        window.PODLOVE_DATA['<?php echo $key; ?>'] = <?php echo wp_json_encode($value); ?>;
+    <?php } ?>
 <?php
 }
+
+// in development mode, allow a client to fetch the JS hook
+// we use this in client/index.html
+add_action('init', function () {
+    if (!WP_Site_Health::get_instance()->is_development_environment()) {
+        return;
+    }
+
+    if (isset($_GET['hook']) && $_GET['hook'] === 'podlove-js-hook') {
+        // add CORS headers to allow anything
+        header('Access-Control-Allow-Origin: *');
+        header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
+        header('Access-Control-Allow-Headers: Content-Type');
+
+        podlove_init_js_content();
+        exit;
+    }
+});
 
 function podlove_js_adapter_inject_settings($data)
 {
