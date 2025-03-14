@@ -25,8 +25,7 @@ import {
 import { createApi } from './api'
 import { Action } from 'redux'
 import { get } from 'lodash'
-import axios, { AxiosProgressEvent, AxiosResponse } from 'axios'
-import { store } from '../store'
+import axios, { AxiosResponse } from 'axios'
 import { Channel } from 'redux-saga'
 
 function* mediafilesSaga(): any {
