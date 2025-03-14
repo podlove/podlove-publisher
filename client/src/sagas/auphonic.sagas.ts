@@ -1,7 +1,12 @@
 import * as auphonic from '@store/auphonic.store'
 import * as episode from '@store/episode.store'
 import * as progress from '@store/progress.store'
-import { takeFirst } from '../sagas/helper'
+import {
+  takeFirst,
+  createAndWatchProgressChannel,
+  ProgressPayload,
+  createProgressHandler,
+} from '../sagas/helper'
 import {
   delay,
   put,
@@ -13,7 +18,6 @@ import {
   call,
   race,
   cancelled,
-  spawn,
 } from 'redux-saga/effects'
 import { createApi } from '../sagas/api'
 import { createApi as createAuphonicApi } from '../sagas/auphonic.api'
@@ -24,8 +28,7 @@ import { v4 as uuidv4 } from 'uuid'
 import { State } from '../store'
 import { get } from 'lodash'
 import Timestamp from '@lib/timestamp'
-import { AxiosProgressEvent } from 'axios'
-import { Channel, channel } from 'redux-saga'
+import { Channel } from 'redux-saga'
 
 function* auphonicSaga(): any {
   const apiClient: PodloveApiClient = yield createApi()
@@ -426,32 +429,6 @@ function getSaveProductionPayload(state: State): object {
   }
 }
 
-type ProgressPayload = {
-  key: string
-  progress: number
-}
-
-interface ProgressData {
-  key: string
-  progress: number
-}
-
-function* watchProgressChannel(progressChannel: Channel<ProgressData>) {
-  try {
-    while (true) {
-      const payload: ProgressPayload = yield take(progressChannel)
-
-      // TODO: reset when selecting a file
-      // TODO: reset when using the source picker
-      yield put(progress.setProgress(payload))
-    }
-  } finally {
-    if ((yield cancelled()) as boolean) {
-      progressChannel.close()
-    }
-  }
-}
-
 function* handleSaveProduction(
   auphonicApi: AuphonicApiClient,
   action: { type: string; payload: any }
@@ -468,17 +445,12 @@ function* handleSaveProduction(
   //@ts-ignore
   yield auphonicApi.delete(`production/${uuid}/chapters.json`)
 
-  const progressChannel: Channel<ProgressData> = yield call(channel)
-  yield spawn(watchProgressChannel, progressChannel)
+  const progressChannel: Channel<ProgressPayload> = yield call(
+    createAndWatchProgressChannel,
+    progress.setProgress
+  )
 
-  const handleProgress = (key: string) => (progressEvent: AxiosProgressEvent) => {
-    if (progressEvent.total) {
-      const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total)
-      const payload: ProgressPayload = { key, progress: percentCompleted }
-
-      progressChannel.put(payload)
-    }
-  }
+  const handleProgress = createProgressHandler(progressChannel)
 
   // save multi_input_files by saving/updating each track individually
   yield all(

@@ -14,11 +14,20 @@ import {
 import * as mediafiles from '@store/mediafiles.store'
 import * as episode from '@store/episode.store'
 import * as wordpress from '@store/wordpress.store'
+import * as progress from '@store/progress.store'
 import { MediaFile } from '@store/mediafiles.store'
-import { takeFirst, channel } from './helper'
+import {
+  createAndWatchProgressChannel,
+  createProgressHandler,
+  ProgressPayload,
+  takeFirst,
+} from './helper'
 import { createApi } from './api'
 import { Action } from 'redux'
-import { get, result } from 'lodash'
+import { get } from 'lodash'
+import axios, { AxiosProgressEvent, AxiosResponse } from 'axios'
+import { store } from '../store'
+import { Channel } from 'redux-saga'
 
 function* mediafilesSaga(): any {
   const apiClient: PodloveApiClient = yield createApi()
@@ -66,9 +75,14 @@ function* selectMediaFromLibrary() {
  * 1. Requests a pre-signed upload URL from the Plus API
  * 2. Uploads the file directly to the provided URL
  * 3. Extracts the permanent file URL and dispatches it via setUploadUrl action
+ * 4. Tracks upload progress
  */
 function* triggerPlusUpload(api: PodloveApiClient, action: Action) {
   const file = get(action, ['payload'])
+  const progressKey = `plus-upload-${file.name}`
+
+  // Reset any previous progress for this file
+  yield put(progress.resetProgress(progressKey))
 
   const { result: upload_url } = yield api.post(`plus/create_file_upload`, {
     filename: file.name,
@@ -79,25 +93,29 @@ function* triggerPlusUpload(api: PodloveApiClient, action: Action) {
     return
   }
 
-  try {
-    const formData = new FormData()
-    formData.append('file', file)
+  const progressChannel: Channel<ProgressPayload> = yield call(
+    createAndWatchProgressChannel,
+    progress.setProgress
+  )
 
-    const response: Response = yield call(fetch, upload_url, {
-      method: 'PUT',
-      body: file,
+  const handleProgress = createProgressHandler(progressChannel)
+
+  try {
+    const response: AxiosResponse<any> = yield call(axios.put, upload_url, file, {
       headers: { 'Content-Type': file.type },
+      onUploadProgress: handleProgress(progressKey),
     })
 
-    if (!response.ok) {
-      throw new Error(`Upload failed with status: ${response.status}`)
+    const fileUrl = response.config.url?.split('?')[0]
+
+    if (fileUrl) {
+      yield put(mediafiles.setUploadUrl(fileUrl))
     }
-
-    const fileUrl = response.url.split('?')[0]
-
-    yield put(mediafiles.setUploadUrl(fileUrl))
   } catch (error) {
     console.error('File upload failed:', error)
+  } finally {
+    // Reset progress when complete (whether successful or not)
+    yield put(progress.resetProgress(progressKey))
   }
 }
 
