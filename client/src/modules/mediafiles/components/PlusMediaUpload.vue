@@ -19,10 +19,10 @@
 
         <!-- File Details Area -->
         <div v-if="file">
-          <div class="flex items-start space-x-3 p-3 bg-indigo-50 rounded-lg">
+          <div class="flex items-start space-x-3 p-3 bg-gray-100 rounded-lg">
             <!-- File Icon -->
             <div class="flex-shrink-0">
-              <div class="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center">
+              <div class="w-10 h-10 bg-white rounded-lg flex items-center justify-center">
                 <svg
                   class="w-6 h-6 text-indigo-500"
                   fill="none"
@@ -50,7 +50,7 @@
               </p>
 
               <!-- Progress Bar -->
-              <div class="mt-2 w-full bg-gray-200 rounded-full h-1.5">
+              <div class="mt-2 w-full bg-white rounded-full h-1.5">
                 <div
                   id="progressBar"
                   class="bg-indigo-600 h-1.5 rounded-full progress-transition"
@@ -61,12 +61,13 @@
               <!-- Progress Status -->
               <div class="flex justify-between items-center mt-1">
                 <p id="uploadStatus" class="text-xs text-gray-500">
-                  <span v-if="!uploadProgress">Ready to upload</span>
-                  <span v-else-if="uploadProgress < 100">Uploading...</span>
-                  <span v-else>Done!</span>
+                  <span v-if="uploadStatus == 'init'">Ready to upload</span>
+                  <span v-else-if="uploadStatus == 'in_progress'">Uploading...</span>
+                  <span v-else-if="uploadStatus == 'finished'">Done!</span>
+                  <span v-else-if="uploadStatus == 'error'">Error: {{ uploadMessage }}</span>
                 </p>
                 <p
-                  v-if="uploadProgress"
+                  v-if="uploadStatus == 'in_progress'"
                   id="progressPercentage"
                   class="text-xs font-medium text-indigo-600"
                 >
@@ -77,7 +78,7 @@
 
             <!-- Remove Button -->
             <button
-              v-if="uploadProgress == null"
+              v-if="uploadStatus != 'in_progress'"
               id="removeBtn"
               class="flex-shrink-0 text-gray-400 hover:text-gray-600 focus:outline-none"
               @click="resetFile()"
@@ -111,9 +112,8 @@
       </label>
 
       <podlove-button
-        v-if="file"
-        :variant="uploadProgress ? 'primary-disabled' : 'primary'"
-        :disabled="uploadProgress != null"
+        v-if="file && uploadStatus == 'init'"
+        variant="primary"
         @click="plusUploadIntent"
         class="ml-1 mt-3"
       >
@@ -148,6 +148,8 @@ export default defineComponent({
     return {
       state: mapState({
         progress: (state: State) => (key: string) => selectors.progress.progress(state, key),
+        status: (state: State) => (key: string) => selectors.progress.status(state, key),
+        message: (state: State) => (key: string) => selectors.progress.message(state, key),
       }),
       dispatch: injectStore().dispatch,
     }
@@ -175,10 +177,21 @@ export default defineComponent({
   },
 
   computed: {
+    uploadKey(): string | null {
+      if (!this.file) return null
+      return `plus-upload-${this.file.name}`
+    },
     uploadProgress(): number | null {
       if (!this.file) return null
-      const progressKey = `plus-upload-${this.file.name}`
-      return this.state.progress(progressKey) || null
+      return this.state.progress(this.uploadKey) || null
+    },
+    uploadStatus(): string | null {
+      if (!this.file) return null
+      return this.state.status(this.uploadKey) || null
+    },
+    uploadMessage(): string | null {
+      if (!this.file) return null
+      return this.state.message(this.uploadKey) || null
     },
   },
 })

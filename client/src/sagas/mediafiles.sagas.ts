@@ -94,7 +94,7 @@ function* triggerPlusUpload(api: PodloveApiClient, action: Action) {
 
   const progressChannel: Channel<ProgressPayload> = yield call(
     createAndWatchProgressChannel,
-    progress.setProgress
+    handleProgressUpdate
   )
 
   const handleProgress = createProgressHandler(progressChannel)
@@ -112,10 +112,25 @@ function* triggerPlusUpload(api: PodloveApiClient, action: Action) {
     }
   } catch (error) {
     console.error('File upload failed:', error)
-  } finally {
-    // Reset progress when complete (whether successful or not)
-    yield put(progress.resetProgress(progressKey))
+    yield put(
+      progress.setProgressStatus({
+        key: progressKey,
+        status: 'error',
+        message: 'File upload failed',
+      })
+    )
   }
+}
+
+function* handleProgressUpdate(value: ProgressPayload) {
+  yield put(progress.setProgress(value))
+
+  yield put(
+    progress.setProgressStatus({
+      key: value.key,
+      status: value.progress == 100 ? 'finished' : 'in_progress',
+    })
+  )
 }
 
 function* setUploadMedia(action: Action) {

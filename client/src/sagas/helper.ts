@@ -60,7 +60,16 @@ export function* watchProgressChannel(
 
       // TODO: reset when selecting a file
       // TODO: reset when using the source picker
-      yield put(progressAction(payload))
+      if (progressAction.constructor.name === 'GeneratorFunction') {
+        yield call(function* () {
+          yield* progressAction(payload)
+        })
+      } else {
+        const action = progressAction(payload)
+        if (action) {
+          yield put(action)
+        }
+      }
     }
   } finally {
     if ((yield cancelled()) as boolean) {
