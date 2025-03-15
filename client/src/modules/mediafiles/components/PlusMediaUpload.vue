@@ -11,7 +11,7 @@
         class="relative max-w-[400px] flex flex-col gap-2 cursor-pointer bg-white rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none"
       >
         <div>
-          <podlove-button v-if="!file" variant="primary">
+          <podlove-button v-if="!file" variant="primary" @click.prevent="triggerFileInput">
             <upload-icon class="-ml-0.5 mr-2 h-4 w-4" aria-hidden="true" />
             {{ __('Select File for Upload', 'podlove-podcasting-plugin-for-wordpress') }}
           </podlove-button>
@@ -77,6 +77,7 @@
 
             <!-- Remove Button -->
             <button
+              v-if="uploadProgress == null"
               id="removeBtn"
               class="flex-shrink-0 text-gray-400 hover:text-gray-600 focus:outline-none"
               @click="resetFile()"
@@ -104,35 +105,26 @@
           name="plus-file-upload"
           type="file"
           class="sr-only"
+          ref="fileInput"
           @input="handleFileSelection"
         />
       </label>
 
-      <podlove-button v-if="file" variant="primary" @click="plusUploadIntent" class="ml-1 mt-3">
+      <podlove-button
+        v-if="file"
+        :variant="uploadProgress ? 'primary-disabled' : 'primary'"
+        :disabled="uploadProgress != null"
+        @click="plusUploadIntent"
+        class="ml-1 mt-3"
+      >
         <upload-icon class="-ml-0.5 mr-2 h-4 w-4" aria-hidden="true" />
         {{ __('Upload Media File', 'podlove-podcasting-plugin-for-wordpress') }}
       </podlove-button>
-
-      <!-- Upload progress bar -->
-      <div v-if="uploadProgress != null">
-        <div class="mt-2" aria-hidden="true">
-          <div class="overflow-hidden rounded-full bg-gray-100">
-            <div
-              class="h-2 rounded-full bg-indigo-600"
-              :style="{ width: uploadProgress + '%' }"
-            ></div>
-          </div>
-          <div class="mt-1 hidden grid-cols-4 text-sm font-medium text-gray-600 sm:grid">
-            <div>{{ uploadProgress }}%</div>
-          </div>
-        </div>
-      </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-// TODO: use "choose file" UI from Auphonic
 // TODO: immediately show progress spinner on button click
 // TODO: show error message if upload fails
 
@@ -173,6 +165,12 @@ export default defineComponent({
     },
     resetFile() {
       this.file = null
+    },
+    triggerFileInput() {
+      const fileInput = this.$refs.fileInput as HTMLInputElement
+      if (fileInput) {
+        fileInput.click()
+      }
     },
   },
 
