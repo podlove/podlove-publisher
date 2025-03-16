@@ -125,9 +125,6 @@
 </template>
 
 <script lang="ts">
-// TODO: immediately show progress spinner on button click
-// TODO: show error message if upload fails
-
 import { defineComponent } from 'vue'
 import { mapState, injectStore } from 'redux-vuex'
 

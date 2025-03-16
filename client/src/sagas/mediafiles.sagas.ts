@@ -137,6 +137,11 @@ function* setUploadMedia(action: Action) {
   const url = get(action, ['payload'])
   const slug = url.split('\\').pop().split('/').pop().split('.').shift()
 
+  // NOTE: maybe the the slug logic should be: if there is no slug, use the
+  // filename. If there is a slug, use the slug (and rename the file on upload).
+  // that would fix the issue of multiple assets and the local files have
+  // different names, like episode-001.mp3 and transcript.txt.
+
   yield put(episode.update({ prop: 'slug', value: slug }))
   yield put(episode.quicksave())
 }
