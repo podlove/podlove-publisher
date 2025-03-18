@@ -26,16 +26,35 @@ class FileStorage
         }
     }
 
+    public static function is_enabled()
+    {
+        return Podcast::get()->plus_enable_storage;
+    }
+
     public function extend_data_js($data)
     {
         if (!isset($data['plus'])) {
             $data['plus'] = [];
         }
 
-        $data['plus']['storage_enabled'] = Podcast::get()->plus_enable_storage;
+        $data['plus']['storage_enabled'] = self::is_enabled();
 
         return $data;
     }
+
+    // Then:
+    // - for the public urls, reverse proxy plus.podlove.org/d/<path> to
+    //   whatever the S3 URL is, for example locally
+    //   http://minio:9000/podlove-plus/podlovers%2Flov36.mp3
+    // - for the reverse proxy to work, Publisher needs to know the podcast
+    //   slug. figure out how I communicate that
+    // - which reminds me: check when the podcast is created in PLUS (might be
+    //   tied to feed proxy logic) and make sure it's done as early as possible
+    //   (while hopefully the podcast name is set already and correctly... at
+    //   the end of the assistant is a good spot, but it can't be the only one)
+    // - adjust media location settings page
+    // - adjust url generation centrally
+    // - how do I handle CNAMEs?
 
     public function save_setting()
     {
