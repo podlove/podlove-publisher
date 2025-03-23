@@ -3,6 +3,7 @@
 namespace Podlove\Modules\Plus;
 
 use Podlove\Http;
+use Podlove\Model\Podcast;
 
 class API
 {
@@ -96,11 +97,9 @@ class API
 
     public function create_file_upload($filename)
     {
-        // TODO: maybe podcast_id is not the right id here. think about what we
-        // need and what's best suited.
         $query = http_build_query([
             'filename' => $filename,
-            'podcast_id' => 1
+            'podcast_guid' => (string) Podcast::get()->guid
         ]);
 
         $curl = new Http\Curl();
