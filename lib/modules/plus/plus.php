@@ -40,14 +40,14 @@ class Plus extends \Podlove\Modules\Base
         // date in PLUS because it is used as part of the media download URL.
         add_action('update_option_podlove_podcast', function ($old_value, $new_value) {
             if ($old_value['title'] !== $new_value['title']) {
-                $this->api->upsert_podcast_title($old_value['guid'], $new_value['title']);
+                $this->update_podcast_title_and_slug($old_value['guid'], $new_value['title']);
             }
         }, 10, 2);
 
         add_action('podlove_plus_enable_storage_changed', function ($new_value) {
             if ($new_value) {
                 $podcast = Podcast::get();
-                $this->api->upsert_podcast_title($podcast->guid, $podcast->title);
+                $this->update_podcast_title_and_slug($podcast->guid, $podcast->title);
             }
         });
     }
@@ -59,5 +59,21 @@ class Plus extends \Podlove\Modules\Base
         }
 
         return apply_filters('podlove_plus_base_url', 'https://plus.podlove.org');
+    }
+
+    /**
+     * Updates the podcast title in PLUS and saves the returned slug.
+     *
+     * @param string $guid  Podcast GUID
+     * @param string $title Podcast title
+     */
+    private function update_podcast_title_and_slug(string $guid, string $title)
+    {
+        $response = $this->api->upsert_podcast_title($guid, $title);
+        if ($response && $response->slug) {
+            $podcast = Podcast::get();
+            $podcast->plus_slug = $response->slug;
+            $podcast->save();
+        }
     }
 }
