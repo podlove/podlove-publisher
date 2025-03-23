@@ -24,15 +24,8 @@ class API
     {
         $curl = new Http\Curl();
         $curl->request($this->module::base_url().'/api/rest/v1/me', $this->params());
-        $response = $curl->get_response();
 
-        if ($curl->isSuccessful()) {
-            $decoded_user = json_decode($response['body']);
-
-            return $decoded_user ?? false;
-        }
-
-        return false;
+        return $this->handle_json_response($curl);
     }
 
     public function get_account_id()
@@ -54,13 +47,8 @@ class API
     {
         $curl = new Http\Curl();
         $curl->request($this->module::base_url().'/api/rest/v1/feeds', $this->params());
-        $response = $curl->get_response();
 
-        if ($curl->isSuccessful()) {
-            return json_decode($response['body']) ?? false;
-        }
-
-        return false;
+        return $this->handle_json_response($curl);
     }
 
     public function push_feeds($feeds)
@@ -82,12 +70,10 @@ class API
     {
         $curl = new Http\Curl();
         $curl->request($this->module::base_url().'/api/rest/v1/feeds/proxy_url?url='.urlencode($origin_url), $this->params());
-        $response = $curl->get_response();
 
-        if ($curl->isSuccessful()) {
-            $decoded_response = json_decode($response['body']);
-
-            return $decoded_response->url ?? false;
+        $response = $this->handle_json_response($curl);
+        if ($response) {
+            return $response->url ?? false;
         }
 
         return false;
@@ -125,12 +111,9 @@ class API
             ])
         );
 
-        $response = $curl->get_response();
-
-        if ($curl->isSuccessful()) {
-            $decoded_response = json_decode($response['body']);
-
-            return $decoded_response->url ?? false;
+        $response = $this->handle_json_response($curl);
+        if ($response) {
+            return $response->url ?? false;
         }
 
         return false;
@@ -143,13 +126,8 @@ class API
     {
         $curl = new Http\Curl();
         $curl->request($this->module::base_url().'/api/rest/v1/podcasts', $this->params());
-        $response = $curl->get_response();
 
-        if ($curl->isSuccessful()) {
-            return json_decode($response['body']) ?? false;
-        }
-
-        return false;
+        return $this->handle_json_response($curl);
     }
 
     /**
@@ -162,10 +140,10 @@ class API
         $podcast = $this->get_podcast_by_guid($guid);
 
         if ($podcast) {
-            $this->update_podcast($podcast->id, ['title' => $title]);
-        } else {
-            $this->create_podcast($guid, ['title' => $title]);
+            return $this->update_podcast($podcast->id, ['title' => $title]);
         }
+
+        return $this->create_podcast($guid, ['title' => $title]);
     }
 
     /**
@@ -189,15 +167,8 @@ class API
     {
         $curl = new Http\Curl();
         $curl->request($this->module::base_url().'/api/rest/v1/podcasts/'.$podcast_id, $this->params());
-        $response = $curl->get_response();
 
-        if ($curl->isSuccessful()) {
-            $decoded_podcast = json_decode($response['body']);
-
-            return $decoded_podcast ?? false;
-        }
-
-        return false;
+        return $this->handle_json_response($curl);
     }
 
     public function update_podcast(int $podcast_id, array $data)
@@ -208,7 +179,7 @@ class API
             'body' => wp_json_encode(['podcast' => $data]),
         ]));
 
-        return $curl->get_response();
+        return $this->handle_json_response($curl);
     }
 
     /**
@@ -224,7 +195,25 @@ class API
             'body' => wp_json_encode(['guid' => $guid, 'title' => $data['title']]),
         ]));
 
-        return $curl->get_response();
+        return $this->handle_json_response($curl);
+    }
+
+    /**
+     * Handles common JSON response processing.
+     *
+     * @param Http\Curl $curl The curl object with the executed request
+     *
+     * @return mixed Decoded JSON object or false on failure
+     */
+    private function handle_json_response($curl)
+    {
+        $response = $curl->get_response();
+
+        if ($curl->isSuccessful()) {
+            return json_decode($response['body']) ?? false;
+        }
+
+        return false;
     }
 
     private function params($params = [])
