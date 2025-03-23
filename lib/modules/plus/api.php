@@ -136,6 +136,97 @@ class API
         return false;
     }
 
+    /**
+     * List all podcasts for the connected account in PLUS.
+     */
+    public function list_podcasts()
+    {
+        $curl = new Http\Curl();
+        $curl->request($this->module::base_url().'/api/rest/v1/podcasts', $this->params());
+        $response = $curl->get_response();
+
+        if ($curl->isSuccessful()) {
+            return json_decode($response['body']) ?? false;
+        }
+
+        return false;
+    }
+
+    /**
+     * Update podcast title in PLUS.
+     *
+     * This function will create a podcast if it doesn't exist yet.
+     */
+    public function upsert_podcast_title(string $guid, string $title)
+    {
+        $podcast = $this->get_podcast_by_guid($guid);
+
+        if ($podcast) {
+            $this->update_podcast($podcast->id, ['title' => $title]);
+        } else {
+            $this->create_podcast($guid, ['title' => $title]);
+        }
+    }
+
+    /**
+     * Get PLUS podcast by guid.
+     */
+    public function get_podcast_by_guid(string $guid)
+    {
+        $podcasts = $this->list_podcasts();
+
+        $matching_podcast = array_filter($podcasts, function ($podcast) use ($guid) {
+            return $podcast->guid === $guid;
+        });
+
+        return array_values($matching_podcast)[0] ?? false;
+    }
+
+    /**
+     * Get PLUS podcast by id.
+     */
+    public function get_podcast(int $podcast_id)
+    {
+        $curl = new Http\Curl();
+        $curl->request($this->module::base_url().'/api/rest/v1/podcasts/'.$podcast_id, $this->params());
+        $response = $curl->get_response();
+
+        if ($curl->isSuccessful()) {
+            $decoded_podcast = json_decode($response['body']);
+
+            return $decoded_podcast ?? false;
+        }
+
+        return false;
+    }
+
+    public function update_podcast(int $podcast_id, array $data)
+    {
+        $curl = new Http\Curl();
+        $curl->request($this->module::base_url().'/api/rest/v1/podcasts/'.$podcast_id, $this->params([
+            'method' => 'PUT',
+            'body' => wp_json_encode(['podcast' => $data]),
+        ]));
+
+        return $curl->get_response();
+    }
+
+    /**
+     * Create a podcast in PLUS.
+     *
+     * Currently only supports the required fields: `guid` and `title`.
+     */
+    public function create_podcast(string $guid, array $data)
+    {
+        $curl = new Http\Curl();
+        $curl->request($this->module::base_url().'/api/rest/v1/podcasts', $this->params([
+            'method' => 'POST',
+            'body' => wp_json_encode(['guid' => $guid, 'title' => $data['title']]),
+        ]));
+
+        return $curl->get_response();
+    }
+
     private function params($params = [])
     {
         return array_merge([
