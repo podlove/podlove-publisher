@@ -24,6 +24,20 @@ class FileStorage
         if (isset($_REQUEST['page']) && $_REQUEST['page'] == 'podlove_episode_assets_settings_handle' && isset($_REQUEST['update_plus_settings']) && $_REQUEST['update_plus_settings'] == 'true') {
             add_action('admin_bar_init', [$this, 'save_setting']);
         }
+
+        add_filter('podlove_file_url_template', [$this, 'file_url_template']);
+    }
+
+    // TODO: disable template setting form when enabled
+    public function file_url_template($template)
+    {
+        if (self::is_enabled()) {
+            $base_url = Plus::base_url();
+            $podcast = Podcast::get();
+            $template = $base_url.'/download/'.$podcast->plus_slug.'/%episode_slug%%suffix%.%format_extension%';
+        }
+
+        return $template;
     }
 
     public static function is_enabled()
