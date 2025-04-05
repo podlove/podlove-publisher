@@ -26,6 +26,18 @@ class FileStorage
         }
 
         add_filter('podlove_file_url_template', [$this, 'file_url_template']);
+
+        if (self::is_enabled()) {
+            add_filter('podlove_podcast_settings_tabs', [$this, 'remove_media_tab']);
+        }
+    }
+
+    // the upload location is set automatically when PLUS is enabled
+    public function remove_media_tab($tabs)
+    {
+        $tabs->removeTab('media');
+
+        return $tabs;
     }
 
     // TODO: disable template setting form when enabled
