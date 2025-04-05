@@ -31,6 +31,17 @@ class Tabs
         $this->tabs[] = $tab;
     }
 
+    public function removeTab($slug)
+    {
+        foreach ($this->tabs as $index => $tab) {
+            if ($tab->get_slug() === $slug) {
+                unset($this->tabs[$index]);
+
+                break;
+            }
+        }
+    }
+
     public function getTabsHTML()
     {
         $html = '<h2 class="nav-tab-wrapper">';
