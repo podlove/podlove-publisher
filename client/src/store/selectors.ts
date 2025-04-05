@@ -62,6 +62,14 @@ const progress = {
     [root.progress, (_state: any, key: string) => key],
     progressStore.selectors.progress
   ),
+  status: createSelector(
+    [root.progress, (_state: any, key: string) => key],
+    progressStore.selectors.status
+  ),
+  message: createSelector(
+    [root.progress, (_state: any, key: string) => key],
+    progressStore.selectors.message
+  ),
 }
 
 const podcast = {
@@ -171,6 +179,7 @@ const settings = {
     root.settings,
     settingsStore.selectors.enableEpisodeExplicit
   ),
+  enablePlusStorage: createSelector(root.settings, settingsStore.selectors.enablePlusStorage),
   modules: createSelector(root.settings, settingsStore.selectors.modules),
 }
 
@@ -207,5 +216,5 @@ export default {
   mediafiles,
   relatedEpisodes,
   shows,
-  admin
+  admin,
 }

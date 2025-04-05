@@ -256,7 +256,11 @@ class EpisodeAsset
     {
         $table = new \Podlove\Episode_Asset_List_Table();
         $table->prepare_items();
-        $table->display(); ?>
+        $table->display();
+
+        do_action('podlove_before_assign_assets_settings');
+        ?>
+
 		<h3><?php _e('Assign Assets', 'podlove-podcasting-plugin-for-wordpress'); ?></h3>
 		<form method="post" action="options.php">
 			<?php settings_fields(EpisodeAsset::$pagehook);
