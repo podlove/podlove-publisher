@@ -109,6 +109,17 @@ function* triggerPlusUpload(api: PodloveApiClient, action: Action) {
 
     if (fileUrl) {
       yield put(mediafiles.setUploadUrl(fileUrl))
+
+      // Complete the file upload
+      const { result: completeResult } = yield api.post(`plus/complete_file_upload`, {
+        filename: file.name,
+      })
+
+      console.log('completeResult', completeResult)
+
+      if (!completeResult) {
+        console.error('Failed to complete file upload')
+      }
     }
   } catch (error) {
     console.error('File upload failed:', error)
