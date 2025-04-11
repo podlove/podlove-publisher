@@ -30,6 +30,21 @@ class RestApi extends \WP_REST_Controller
                 ]
             ]
         ]);
+
+        register_rest_route($this->namespace, '/'.$this->rest_base.'/complete_file_upload', [
+            [
+                'methods' => \WP_REST_Server::CREATABLE,
+                'callback' => [$this, 'complete_upload'],
+                'permission_callback' => [$this, 'get_permissions_check'],
+                [
+                    'args' => [
+                        'filename' => [
+                            'type' => 'string'
+                        ]
+                    ]
+                ]
+            ]
+        ]);
     }
 
     public function create_upload_url($request)
@@ -37,6 +52,13 @@ class RestApi extends \WP_REST_Controller
         $filename = $request->get_param('filename');
 
         return $this->api->create_file_upload($filename);
+    }
+
+    public function complete_upload($request)
+    {
+        $filename = $request->get_param('filename');
+
+        return $this->api->complete_file_upload($filename);
     }
 
     public function get_permissions_check($request)

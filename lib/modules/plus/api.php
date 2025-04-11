@@ -118,6 +118,29 @@ class API
         return false;
     }
 
+    public function complete_file_upload($filename)
+    {
+        $query = http_build_query([
+            'filename' => $filename,
+            'podcast_guid' => (string) Podcast::get()->guid
+        ]);
+
+        $curl = new Http\Curl();
+        $curl->request(
+            $this->module::base_url().'/api/rest/v1/files/upload/complete?'.$query,
+            $this->params([
+                'method' => 'POST'
+            ])
+        );
+
+        $response = $this->handle_json_response($curl);
+        if ($response) {
+            return $response->file ?? false;
+        }
+
+        return false;
+    }
+
     /**
      * List all podcasts for the connected account in PLUS.
      */
