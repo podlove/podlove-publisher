@@ -49,6 +49,7 @@ function* initialize(api: PodloveApiClient) {
   yield takeEvery(mediafiles.VERIFY, handleVerify, api)
   yield takeLatest(episode.SLUG_CHANGED, verifyAll, api)
   yield debounce(2000, wordpress.UPDATE, maybeUpdateSlug, api)
+  yield takeEvery(mediafiles.FILE_SELECTED, handleFileSelection, api)
 
   yield throttle(
     2000,
@@ -268,6 +269,50 @@ function* handleVerify(api: PodloveApiClient, action: { type: string; payload: n
   const assetId = action.payload
 
   yield verifyEpisodeAsset(api, episodeId, assetId)
+}
+
+function* handleFileSelection(api: PodloveApiClient, action: Action) {
+  const { file, episodeSlug } = get(action, ['payload'])
+
+  const fileInfo = createFileInfo(file, episodeSlug)
+
+  const { result: fileExists } = yield api.post(`plus/check_file_exists`, {
+    filename: fileInfo.file.name,
+  })
+
+  yield put({
+    type: mediafiles.SET_FILE_INFO,
+    payload: {
+      ...fileInfo,
+      fileExists,
+    },
+  })
+}
+
+/**
+ * Creates a file info object with the original file name and the file name to
+ * be used for the upload if an episode slug is provided.
+ */
+function createFileInfo(file: File, episodeSlug?: string) {
+  if (!episodeSlug) {
+    return {
+      file,
+      originalName: file.name,
+      newName: file.name,
+    }
+  }
+
+  const extension = file.name.split('.').pop()
+  const newFile = new File([file], `${episodeSlug}.${extension}`, {
+    type: file.type,
+    lastModified: file.lastModified,
+  })
+
+  return {
+    file: newFile,
+    originalName: file.name,
+    newName: newFile.name,
+  }
 }
 
 async function loadMeta(audio: HTMLAudioElement) {
