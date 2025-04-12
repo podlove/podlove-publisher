@@ -105,14 +105,33 @@ class API
         $curl = new Http\Curl();
         $curl->request(
             $this->module::base_url().'/api/rest/v1/files/upload/new?'.$query,
-            $this->params([
-                'method' => 'POST'
-            ])
+            $this->params(['method' => 'POST'])
         );
 
         $response = $this->handle_json_response($curl);
         if ($response) {
             return $response->url ?? false;
+        }
+
+        return false;
+    }
+
+    public function check_file_exists($filename)
+    {
+        $query = http_build_query([
+            'filename' => $filename,
+            'podcast_guid' => (string) Podcast::get()->guid
+        ]);
+
+        $curl = new Http\Curl();
+        $curl->request(
+            $this->module::base_url().'/api/rest/v1/files/upload/exists?'.$query,
+            $this->params(['method' => 'GET'])
+        );
+
+        $response = $this->handle_json_response($curl);
+        if ($response) {
+            return $response->exists ?? false;
         }
 
         return false;
@@ -128,9 +147,7 @@ class API
         $curl = new Http\Curl();
         $curl->request(
             $this->module::base_url().'/api/rest/v1/files/upload/complete?'.$query,
-            $this->params([
-                'method' => 'POST'
-            ])
+            $this->params(['method' => 'POST'])
         );
 
         $response = $this->handle_json_response($curl);

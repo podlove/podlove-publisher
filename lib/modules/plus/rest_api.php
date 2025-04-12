@@ -31,6 +31,21 @@ class RestApi extends \WP_REST_Controller
             ]
         ]);
 
+        register_rest_route($this->namespace, '/'.$this->rest_base.'/check_file_exists', [
+            [
+                'methods' => \WP_REST_Server::CREATABLE,
+                'callback' => [$this, 'check_file_exists'],
+                'permission_callback' => [$this, 'get_permissions_check'],
+                [
+                    'args' => [
+                        'filename' => [
+                            'type' => 'string'
+                        ]
+                    ]
+                ]
+            ]
+        ]);
+
         register_rest_route($this->namespace, '/'.$this->rest_base.'/complete_file_upload', [
             [
                 'methods' => \WP_REST_Server::CREATABLE,
@@ -52,6 +67,13 @@ class RestApi extends \WP_REST_Controller
         $filename = $request->get_param('filename');
 
         return $this->api->create_file_upload($filename);
+    }
+
+    public function check_file_exists($request)
+    {
+        $filename = $request->get_param('filename');
+
+        return $this->api->check_file_exists($filename);
     }
 
     public function complete_upload($request)
