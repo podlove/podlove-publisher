@@ -78,6 +78,18 @@
                   {{ uploadProgress }}%
                 </p>
               </div>
+
+              <!-- File Exists Warning -->
+              <div v-if="fileInfo?.fileExists" class="mt-2 flex items-center text-yellow-600">
+                <span class="text-xs">
+                  {{
+                    __(
+                      'A file with this name already exists and will be overwritten.',
+                      'podlove-podcasting-plugin-for-wordpress'
+                    )
+                  }}
+                </span>
+              </div>
             </div>
 
             <!-- Remove Button -->
@@ -136,11 +148,13 @@ import { plusUploadIntent } from '@store/mediafiles.store'
 import PodloveButton from '@components/button/Button.vue'
 import { CloudArrowUpIcon as UploadIcon } from '@heroicons/vue/24/outline'
 import { State, selectors } from '@store'
+import * as mediafiles from '@store/mediafiles.store'
 
 interface FileInfo {
   file: File
   originalName: string
   newName: string
+  fileExists: boolean
 }
 
 export default defineComponent({
@@ -149,9 +163,7 @@ export default defineComponent({
     UploadIcon,
   },
   data() {
-    return {
-      fileInfo: null as FileInfo | null,
-    }
+    return {}
   },
   setup() {
     return {
@@ -160,6 +172,7 @@ export default defineComponent({
         status: (state: State) => (key: string) => selectors.progress.status(state, key),
         message: (state: State) => (key: string) => selectors.progress.message(state, key),
         episodeSlug: (state: State) => selectors.episode.slug(state),
+        fileInfo: (state: State) => selectors.mediafiles.fileInfo(state),
       }),
       dispatch: injectStore().dispatch,
     }
@@ -167,43 +180,24 @@ export default defineComponent({
 
   methods: {
     plusUploadIntent() {
-      if (this.fileInfo) {
-        this.dispatch(plusUploadIntent(this.fileInfo.file))
+      if (this.state.fileInfo) {
+        this.dispatch(plusUploadIntent(this.state.fileInfo.file))
       }
     },
     handleFileSelection(event: Event): void {
       const files = (event.target as HTMLInputElement).files
       if (!files || !files[0]) {
-        this.fileInfo = null
+        this.dispatch({ type: mediafiles.SET_FILE_INFO, payload: null })
         return
       }
 
       const originalFile = files[0]
       const episodeSlug = this.state.episodeSlug
 
-      if (episodeSlug) {
-        // Get the file extension
-        const extension = originalFile.name.split('.').pop()
-        // Create a new File object with the episode slug as the base name
-        const newFile = new File([originalFile], `${episodeSlug}.${extension}`, {
-          type: originalFile.type,
-          lastModified: originalFile.lastModified,
-        })
-        this.fileInfo = {
-          file: newFile,
-          originalName: originalFile.name,
-          newName: newFile.name,
-        }
-      } else {
-        this.fileInfo = {
-          file: originalFile,
-          originalName: originalFile.name,
-          newName: originalFile.name,
-        }
-      }
+      this.dispatch(mediafiles.fileSelected(originalFile, episodeSlug))
     },
     resetFile() {
-      this.fileInfo = null
+      this.dispatch({ type: mediafiles.SET_FILE_INFO, payload: null })
     },
     triggerFileInput() {
       const fileInput = this.$refs.fileInput as HTMLInputElement
@@ -216,6 +210,9 @@ export default defineComponent({
   computed: {
     file(): File | null {
       return this.fileInfo?.file || null
+    },
+    fileInfo(): FileInfo | null {
+      return this.state.fileInfo || null
     },
     uploadKey(): string | null {
       if (!this.fileInfo) return null

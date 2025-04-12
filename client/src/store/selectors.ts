@@ -141,6 +141,7 @@ const episode = {
 const mediafiles = {
   isInitializing: createSelector(root.mediafiles, mediafilesStore.selectors.isInitializing),
   files: createSelector(root.mediafiles, mediafilesStore.selectors.files),
+  fileInfo: createSelector(root.mediafiles, mediafilesStore.selectors.fileInfo),
   slugAutogenerationEnabled: createSelector(
     root.mediafiles,
     mediafilesStore.selectors.slugAutogenerationEnabled

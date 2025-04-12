@@ -13,12 +13,14 @@ export type State = {
   is_initializing: boolean
   slug_autogeneration_enabled: boolean
   files: MediaFile[]
+  fileInfo: { file: File; originalName: string; newName: string } | null
 }
 
 export const initialState: State = {
   is_initializing: true,
   slug_autogeneration_enabled: false,
   files: [],
+  fileInfo: null,
 }
 
 export const INIT = 'podlove/publisher/mediafiles/INIT'
@@ -33,6 +35,8 @@ export const PLUS_UPLOAD_INTENT = 'podlove/publisher/mediafiles/PLUS_UPLOAD_INTE
 export const SET_UPLOAD_URL = 'podlove/publisher/mediafiles/SET_UPLOAD_URL'
 export const ENABLE_SLUG_AUTOGEN = 'podlove/publisher/mediafiles/ENABLE_SLUG_AUTOGEN'
 export const DISABLE_SLUG_AUTOGEN = 'podlove/publisher/mediafiles/DISABLE_SLUG_AUTOGEN'
+export const FILE_SELECTED = 'podlove/publisher/mediafiles/FILE_SELECTED'
+export const SET_FILE_INFO = 'podlove/publisher/mediafiles/SET_FILE_INFO'
 
 export const init = createAction<void>(INIT)
 export const initDone = createAction<void>(INIT_DONE)
@@ -46,6 +50,10 @@ export const plusUploadIntent = createAction<File | null>(PLUS_UPLOAD_INTENT)
 export const setUploadUrl = createAction<string>(SET_UPLOAD_URL)
 export const enableSlugAutogen = createAction<void>(ENABLE_SLUG_AUTOGEN)
 export const disableSlugAutogen = createAction<void>(DISABLE_SLUG_AUTOGEN)
+export const fileSelected = (file: File, episodeSlug: string | null) => ({
+  type: FILE_SELECTED,
+  payload: { file, episodeSlug },
+})
 
 // TODO: enable revalidates I think?
 export const reducer = handleActions(
@@ -96,6 +104,16 @@ export const reducer = handleActions(
       ...state,
       slug_autogeneration_enabled: false,
     }),
+    [SET_FILE_INFO]: (
+      state: State,
+      action: {
+        type: string
+        payload: { file: File; originalName: string; newName: string } | null
+      }
+    ): State => ({
+      ...state,
+      fileInfo: action.payload,
+    }),
   },
   initialState
 )
@@ -104,4 +122,16 @@ export const selectors = {
   isInitializing: (state: State) => state.is_initializing,
   slugAutogenerationEnabled: (state: State) => state.slug_autogeneration_enabled,
   files: (state: State) => state.files,
+  fileInfo: (state: State) => state.fileInfo,
+}
+
+export const actions = {
+  fileSelected: (file: File, episodeSlug: string | null) => ({
+    type: FILE_SELECTED,
+    payload: { file, episodeSlug },
+  }),
+  setFileInfo: (fileInfo: { file: File; originalName: string; newName: string } | null) => ({
+    type: SET_FILE_INFO,
+    payload: fileInfo,
+  }),
 }
