@@ -11,14 +11,14 @@
         class="relative max-w-[400px] flex flex-col gap-2 cursor-pointer bg-white rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none"
       >
         <div>
-          <podlove-button v-if="!file" variant="primary" @click.prevent="triggerFileInput">
+          <podlove-button v-if="!fileInfo" variant="primary" @click.prevent="triggerFileInput">
             <upload-icon class="-ml-0.5 mr-2 h-4 w-4" aria-hidden="true" />
             {{ __('Select File for Upload', 'podlove-podcasting-plugin-for-wordpress') }}
           </podlove-button>
         </div>
 
         <!-- File Details Area -->
-        <div v-if="file">
+        <div v-if="fileInfo">
           <div class="flex items-start space-x-3 p-3 bg-gray-100 rounded-lg">
             <!-- File Icon -->
             <div class="flex-shrink-0">
@@ -43,10 +43,14 @@
             <!-- File Info -->
             <div class="flex-1 min-w-0">
               <p id="fileName" class="text-sm font-medium text-gray-900 truncate">
-                {{ file.name }}
+                {{ fileInfo.file.name }}
+              </p>
+              <p v-if="fileInfo.originalName !== fileInfo.newName" class="text-xs text-gray-500">
+                {{ __('Original name:', 'podlove-podcasting-plugin-for-wordpress') }}
+                {{ fileInfo.originalName }}
               </p>
               <p id="fileSize" class="text-xs text-gray-500">
-                {{ (file.size / 1024 / 1024).toFixed(2) }} MB
+                {{ (fileInfo.file.size / 1024 / 1024).toFixed(2) }} MB
               </p>
 
               <!-- Progress Bar -->
@@ -112,7 +116,7 @@
       </label>
 
       <podlove-button
-        v-if="file && uploadStatus == 'init'"
+        v-if="fileInfo && uploadStatus == 'init'"
         variant="primary"
         @click="plusUploadIntent"
         class="ml-1 mt-3"
@@ -133,13 +137,21 @@ import PodloveButton from '@components/button/Button.vue'
 import { CloudArrowUpIcon as UploadIcon } from '@heroicons/vue/24/outline'
 import { State, selectors } from '@store'
 
+interface FileInfo {
+  file: File
+  originalName: string
+  newName: string
+}
+
 export default defineComponent({
   components: {
     PodloveButton,
     UploadIcon,
   },
   data() {
-    return { file: null as File | null }
+    return {
+      fileInfo: null as FileInfo | null,
+    }
   },
   setup() {
     return {
@@ -147,6 +159,7 @@ export default defineComponent({
         progress: (state: State) => (key: string) => selectors.progress.progress(state, key),
         status: (state: State) => (key: string) => selectors.progress.status(state, key),
         message: (state: State) => (key: string) => selectors.progress.message(state, key),
+        episodeSlug: (state: State) => selectors.episode.slug(state),
       }),
       dispatch: injectStore().dispatch,
     }
@@ -154,16 +167,43 @@ export default defineComponent({
 
   methods: {
     plusUploadIntent() {
-      if (this.file) {
-        this.dispatch(plusUploadIntent(this.file))
+      if (this.fileInfo) {
+        this.dispatch(plusUploadIntent(this.fileInfo.file))
       }
     },
     handleFileSelection(event: Event): void {
       const files = (event.target as HTMLInputElement).files
-      this.file = files ? files[0] : null
+      if (!files || !files[0]) {
+        this.fileInfo = null
+        return
+      }
+
+      const originalFile = files[0]
+      const episodeSlug = this.state.episodeSlug
+
+      if (episodeSlug) {
+        // Get the file extension
+        const extension = originalFile.name.split('.').pop()
+        // Create a new File object with the episode slug as the base name
+        const newFile = new File([originalFile], `${episodeSlug}.${extension}`, {
+          type: originalFile.type,
+          lastModified: originalFile.lastModified,
+        })
+        this.fileInfo = {
+          file: newFile,
+          originalName: originalFile.name,
+          newName: newFile.name,
+        }
+      } else {
+        this.fileInfo = {
+          file: originalFile,
+          originalName: originalFile.name,
+          newName: originalFile.name,
+        }
+      }
     },
     resetFile() {
-      this.file = null
+      this.fileInfo = null
     },
     triggerFileInput() {
       const fileInput = this.$refs.fileInput as HTMLInputElement
@@ -174,20 +214,23 @@ export default defineComponent({
   },
 
   computed: {
+    file(): File | null {
+      return this.fileInfo?.file || null
+    },
     uploadKey(): string | null {
-      if (!this.file) return null
-      return `plus-upload-${this.file.name}`
+      if (!this.fileInfo) return null
+      return `plus-upload-${this.fileInfo.file.name}`
     },
     uploadProgress(): number | null {
-      if (!this.file) return null
+      if (!this.fileInfo) return null
       return this.state.progress(this.uploadKey) || null
     },
     uploadStatus(): string | null {
-      if (!this.file) return null
+      if (!this.fileInfo) return null
       return this.state.status(this.uploadKey) || null
     },
     uploadMessage(): string | null {
-      if (!this.file) return null
+      if (!this.fileInfo) return null
       return this.state.message(this.uploadKey) || null
     },
   },
