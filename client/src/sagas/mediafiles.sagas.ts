@@ -58,7 +58,7 @@ function* initialize(api: PodloveApiClient) {
   )
   yield takeEvery(mediafiles.UPLOAD_INTENT, selectMediaFromLibrary)
   yield takeEvery(mediafiles.PLUS_UPLOAD_INTENT, triggerPlusUpload, api)
-  yield takeEvery(mediafiles.SET_UPLOAD_URL, setUploadMedia)
+  yield takeEvery(mediafiles.SET_UPLOAD_URL, setUploadMedia, api)
 
   yield put(mediafiles.initDone())
 }
@@ -86,6 +86,10 @@ function* triggerPlusUpload(api: PodloveApiClient, action: Action) {
   const { result: upload_url } = yield api.post(`plus/create_file_upload`, {
     filename: file.name,
   })
+
+  // TODO: check (on PLUS side) if the file would override an existing file. If
+  // so, the "upload" button should become a red "upload and override existing
+  // file" button.
 
   if (!upload_url) {
     console.error('Failed to get upload URL')
@@ -144,17 +148,19 @@ function* handleProgressUpdate(value: ProgressPayload) {
   )
 }
 
-function* setUploadMedia(action: Action) {
+function* setUploadMedia(api: PodloveApiClient, action: Action) {
   const url = get(action, ['payload'])
   const slug = url.split('\\').pop().split('/').pop().split('.').shift()
+  const currentSlug: string = yield select(selectors.episode.slug)
 
-  // NOTE: maybe the the slug logic should be: if there is no slug, use the
-  // filename. If there is a slug, use the slug (and rename the file on upload).
-  // that would fix the issue of multiple assets and the local files have
-  // different names, like episode-001.mp3 and transcript.txt.
-
-  yield put(episode.update({ prop: 'slug', value: slug }))
-  yield put(episode.quicksave())
+  if (!currentSlug) {
+    yield put(episode.update({ prop: 'slug', value: slug }))
+    yield put(episode.quicksave())
+  } else {
+    // If slug is already set, verify the media files, which is otherwise a side
+    // effect of saving the episode
+    yield call(verifyAll, api)
+  }
 }
 
 function* maybeUpdateDuration(api: PodloveApiClient) {
