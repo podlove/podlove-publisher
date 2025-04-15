@@ -7,7 +7,7 @@ use Podlove\Model\Podcast;
 class Plus extends \Podlove\Modules\Base
 {
     protected $module_name = 'Publisher PLUS';
-    protected $module_description = 'A Feed Proxy service for subscriber statistics and performance.';
+    protected $module_description = 'Publisher PLUS provides additional features and services for your podcast.';
     protected $module_group = 'external services';
 
     private $api;
@@ -18,7 +18,7 @@ class Plus extends \Podlove\Modules\Base
         $token = defined('PODLOVE_PLUS_TOKEN') ? PODLOVE_PLUS_TOKEN : $this->get_module_option('plus_api_token');
         $this->api = new API($this, $token);
 
-        (new ModuleSettings($this, $this->api))->init();
+        (new SettingsPage($this, $this->api))->init();
         (new GlobalFeedSettings($this, $this->api))->init();
         (new FeedPusher($this, $this->api))->init();
         (new FeedProxy($this, $this->api))->init();
@@ -45,8 +45,8 @@ class Plus extends \Podlove\Modules\Base
         }, 10, 2);
 
         add_action('podlove_plus_enable_storage_changed', function ($new_value) {
-            if ($new_value) {
-                $podcast = Podcast::get();
+            $podcast = Podcast::get();
+            if ($new_value && $podcast->title) {
                 $this->update_podcast_title_and_slug($podcast->guid, $podcast->title);
             }
         });
