@@ -166,7 +166,7 @@ class API
         $curl = new Http\Curl();
         $curl->request($this->module::base_url().'/api/rest/v1/podcasts', $this->params());
 
-        return $this->handle_json_response($curl);
+        return $this->handle_json_response($curl) ?? [];
     }
 
     /**
@@ -231,7 +231,7 @@ class API
         $curl = new Http\Curl();
         $curl->request($this->module::base_url().'/api/rest/v1/podcasts', $this->params([
             'method' => 'POST',
-            'body' => wp_json_encode(['guid' => $guid, 'title' => $data['title']]),
+            'body' => wp_json_encode(['podcast' => ['guid' => $guid, 'title' => $data['title']]]),
         ]));
 
         return $this->handle_json_response($curl);
