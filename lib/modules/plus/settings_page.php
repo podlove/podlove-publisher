@@ -33,7 +33,7 @@ class SettingsPage
 
     public function handle_form_submission()
     {
-        if (isset($_POST['submit']) && check_admin_referer('podlove_plus_settings')) {
+        if (isset($_POST['submit-plus-save-api-token']) && check_admin_referer('podlove_plus_settings')) {
             $api_key = sanitize_text_field($_POST['api_token']);
             $this->module->update_module_option('plus_api_token', $api_key);
 
@@ -90,7 +90,7 @@ class SettingsPage
                             <?php echo $this->render_api_token_description($api_key); ?>
                         </div>
 
-                        <button type="submit" name="submit" class="button button-primary" style="margin-top: 16px;">
+                        <button type="submit" name="submit-plus-save-api-token" class="button button-primary" style="margin-top: 16px;">
                             <?php echo __('Save API Token', 'podlove-podcasting-plugin-for-wordpress'); ?>
                         </button>
                     </div>
