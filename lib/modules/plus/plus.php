@@ -6,6 +6,11 @@ use Podlove\Model\Podcast;
 
 class Plus extends \Podlove\Modules\Base
 {
+    public $settings_page;
+    public $global_feed_settings;
+    public $feed_pusher;
+    public $feed_proxy;
+    public $file_storage;
     protected $module_name = 'Publisher PLUS';
     protected $module_description = 'Publisher PLUS provides additional features and services for your podcast.';
     protected $module_group = 'external services';
@@ -18,11 +23,20 @@ class Plus extends \Podlove\Modules\Base
         $token = defined('PODLOVE_PLUS_TOKEN') ? PODLOVE_PLUS_TOKEN : $this->get_module_option('plus_api_token');
         $this->api = new API($this, $token);
 
-        (new SettingsPage($this, $this->api))->init();
-        (new GlobalFeedSettings($this, $this->api))->init();
-        (new FeedPusher($this, $this->api))->init();
-        (new FeedProxy($this, $this->api))->init();
-        (new FileStorage($this, $this->api))->init();
+        $this->settings_page = new SettingsPage($this, $this->api);
+        $this->settings_page->init();
+
+        $this->global_feed_settings = new GlobalFeedSettings($this, $this->api);
+        $this->global_feed_settings->init();
+
+        $this->feed_pusher = new FeedPusher($this, $this->api);
+        $this->feed_pusher->init();
+
+        $this->feed_proxy = new FeedProxy($this, $this->api);
+        $this->feed_proxy->init();
+
+        $this->file_storage = new FileStorage($this, $this->api);
+        $this->file_storage->init();
 
         // disabling unfinished feature
         // (new ImageGenerator($this, $this->api))->init();
@@ -47,7 +61,7 @@ class Plus extends \Podlove\Modules\Base
         add_action('podlove_plus_enable_storage_changed', function ($new_value) {
             $podcast = Podcast::get();
             if ($new_value && $podcast->title) {
-                $this->update_podcast_title_and_slug($podcast->guid, $podcast->title);
+                $this->update_podcast_title_and_slug($podcast->guid ?? '', $podcast->title);
             }
         });
     }

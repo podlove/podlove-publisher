@@ -270,6 +270,11 @@ class MediaFile extends Base
         });
     }
 
+    public function get_file_name()
+    {
+        return $this->episode()->slug.'.'.$this->episode_asset()->file_type()->extension;
+    }
+
     /**
      * Build file name as it appears when you download the file.
      *
@@ -277,9 +282,7 @@ class MediaFile extends Base
      */
     public function get_download_file_name()
     {
-        $file_name = $this->episode()->slug
-                   .'.'
-                   .$this->episode_asset()->file_type()->extension;
+        $file_name = $this->get_file_name();
 
         return apply_filters('podlove_download_file_name', $file_name, $this);
     }
