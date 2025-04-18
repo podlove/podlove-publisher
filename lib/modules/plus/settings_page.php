@@ -96,6 +96,43 @@ class SettingsPage
                     </div>
                 </div>
             </form>
+
+            <div class="card" style="max-width: 600px; margin-top: 20px; padding: 20px 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+              <div>
+                <h2 style="margin-top: 0; margin-bottom: 16px; font-size: 18px; font-weight: 600;"><?php echo __('File Storage', 'podlove-podcasting-plugin-for-wordpress'); ?></h2>
+
+                <p style="color: #666;">
+                  <?php echo __('Store your podcast files in fast and reliable cloud storage. Don\'t worry about dealing with WordPress performance issues as your podcast grows. Focus on creating great content and let us handle the rest.', 'podlove-podcasting-plugin-for-wordpress'); ?>
+                </p>
+
+                <p style="color: #666;">
+                  <?php echo __('You can enable file storage by clicking the button below. This will automatically upload your podcast files to the cloud and make them available for download.', 'podlove-podcasting-plugin-for-wordpress'); ?>
+                </p>
+
+                <p style="color: #666;">
+                  <?php echo __('If at any point you want to disable file storage, you can do so by disabling the feature here. Then files will be served from your local WordPress or FTP storage again, as you configure it here in the plugin.', 'podlove-podcasting-plugin-for-wordpress'); ?>
+                </p>
+
+                <button type="submit" name="submit" class="button button-primary" style="margin-top: 16px;">
+                  <?php echo __('Enable File Storage', 'podlove-podcasting-plugin-for-wordpress'); ?>
+                </button>
+              </div>
+            </div>
+
+            <div data-client="podlove" style="margin: 15px 0; max-width: 800px; ">
+              <podlove-plus-file-migration></podlove-plus-file-migration>
+            </div>
+
+            <!-- TODO: clicking the button brings the user to a migration UI,
+            listing all files and a button to start transferring them to the cloud.
+            Or maybe just auto-start, since the user already gave their intent
+            by enabling the feature.
+
+            Also handle a fresh podcast where NO files need to be migrated.
+
+            Optional: prevent double uploads, but only if it's easy to do.
+            -->
+
         </div>
         <?php
     }

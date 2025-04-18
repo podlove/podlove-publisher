@@ -25,7 +25,7 @@ class FileStorage
             add_action('admin_bar_init', [$this, 'save_setting']);
         }
 
-        add_filter('podlove_file_url_template', [$this, 'file_url_template']);
+        add_filter('podlove_file_url_template', [self::class, 'file_url_template']);
 
         if (self::is_enabled()) {
             add_filter('podlove_podcast_settings_tabs', [$this, 'remove_media_tab']);
@@ -41,15 +41,29 @@ class FileStorage
     }
 
     // TODO: disable template setting form when enabled
-    public function file_url_template($template)
+    public static function file_url_template($template)
     {
         if (self::is_enabled()) {
             $base_url = Plus::base_url();
             $podcast = Podcast::get();
-            $template = $base_url.'/download/'.$podcast->plus_slug.'/%episode_slug%%suffix%.%format_extension%';
+            $template = trailingslashit($base_url).'download/'.$podcast->plus_slug.'/%episode_slug%%suffix%.%format_extension%';
         }
 
         return $template;
+    }
+
+    public static function get_local_file_url($file)
+    {
+        if (self::is_enabled()) {
+            // Get local URL by temporarily removing the filter
+            remove_filter('podlove_file_url_template', [self::class, 'file_url_template']);
+            $local_url = $file->get_file_url();
+            add_filter('podlove_file_url_template', [self::class, 'file_url_template']);
+
+            return $local_url;
+        }
+
+        return $file->get_file_url();
     }
 
     public static function is_enabled()

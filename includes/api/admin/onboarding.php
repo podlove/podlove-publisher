@@ -3,15 +3,13 @@
 namespace Podlove\Api\Admin;
 
 use Podlove\Modules\Onboarding\Onboarding;
-use WP_REST_Controller;
-use WP_REST_Server;
 
-add_action('rest_api_init', function() {
+add_action('rest_api_init', function () {
     $controller = new WP_REST_PodloveOnboarding_Controller();
     $controller->register_routes();
 });
 
-class WP_REST_PodloveOnboarding_Controller extends WP_REST_Controller
+class WP_REST_PodloveOnboarding_Controller extends \WP_REST_Controller
 {
     /**
      * Constructor.
@@ -27,14 +25,14 @@ class WP_REST_PodloveOnboarding_Controller extends WP_REST_Controller
      */
     public function register_routes()
     {
-        register_rest_route($this->namespace, '/' . $this->rest_base . '/onboarding', [
+        register_rest_route($this->namespace, '/'.$this->rest_base.'/onboarding', [
             [
-                'methods' => WP_REST_Server::READABLE,
+                'methods' => \WP_REST_Server::READABLE,
                 'callback' => [$this, 'get_onboarding_options'],
                 'permission_callback' => [$this, 'get_item_permissions_check'],
             ],
             [
-                'methods' => WP_REST_Server::EDITABLE,
+                'methods' => \WP_REST_Server::EDITABLE,
                 'callback' => [$this, 'update_onboarding_options'],
                 'permission_callback' => [$this, 'update_item_permissions_check'],
                 [
@@ -55,9 +53,10 @@ class WP_REST_PodloveOnboarding_Controller extends WP_REST_Controller
     }
 
     /**
-     * GET route
+     * GET route.
+     *
+     * @param mixed $request
      */
-
     public function get_item_permissions_check($request)
     {
         if (!current_user_can('administrator')) {
@@ -79,9 +78,10 @@ class WP_REST_PodloveOnboarding_Controller extends WP_REST_Controller
     }
 
     /**
-     * PUT/PATCH/POST route
+     * PUT/PATCH/POST route.
+     *
+     * @param mixed $request
      */
-
     public function update_item_permissions_check($request)
     {
         if (!current_user_can('administrator')) {
@@ -107,5 +107,4 @@ class WP_REST_PodloveOnboarding_Controller extends WP_REST_Controller
             'status' => 'ok',
         ]);
     }
-
 }

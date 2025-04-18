@@ -14,6 +14,7 @@ import * as mediafilesStore from './mediafiles.store'
 import * as relatedEpisodesStore from './relatedEpisodes.store'
 import * as showsStore from './shows.store'
 import * as adminStore from './admin.store'
+import * as plusFileMigrationStore from './plusFileMigration.store'
 
 export default combineReducers({
   lifecycle: lifecycleStore.reducer,
@@ -31,4 +32,5 @@ export default combineReducers({
   relatedEpisodes: relatedEpisodesStore.reducer,
   shows: showsStore.reducer,
   admin: adminStore.reducer,
+  plusFileMigration: plusFileMigrationStore.reducer,
 })

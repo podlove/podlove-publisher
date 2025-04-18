@@ -158,6 +158,22 @@ class API
         return false;
     }
 
+    public function migrate_file($filename, $file_url)
+    {
+        // TODO: improvement: check if file exists in PLUS, then skip
+        $presigned_upload_url = $this->create_file_upload($filename);
+
+        if (!$presigned_upload_url) {
+            return false;
+        }
+
+        if (!$this->do_upload($presigned_upload_url, $file_url, $filename)) {
+            return false;
+        }
+
+        return $this->complete_file_upload($filename);
+    }
+
     /**
      * List all podcasts for the connected account in PLUS.
      */
@@ -235,6 +251,89 @@ class API
         ]));
 
         return $this->handle_json_response($curl);
+    }
+
+    private function do_upload($target_url, $origin_url, $filename)
+    {
+        $temp_file = \get_temp_dir().$filename;
+
+        try {
+            // Download to temporary file with streaming
+            $response = wp_remote_get($origin_url, [
+                'timeout' => 300,
+                'stream' => true,
+                'filename' => $temp_file
+            ]);
+
+            if (is_wp_error($response)) {
+                error_log('Download failed: '.$response->get_error_message());
+                @unlink($temp_file);
+
+                return false;
+            }
+
+            // Get file size and content type
+            $file_size = filesize($temp_file);
+            $content_type = wp_remote_retrieve_header($response, 'content-type');
+            if (empty($content_type)) {
+                $content_type = 'application/octet-stream';
+            }
+
+            // Open the temporary file
+            $file_handle = fopen($temp_file, 'r');
+            if (!$file_handle) {
+                error_log("Cannot open temporary file for reading: {$temp_file}");
+                @unlink($temp_file);
+
+                return false;
+            }
+
+            // Initialize cURL for upload
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $target_url);
+            curl_setopt($ch, CURLOPT_PUT, true);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_INFILE, $file_handle);
+            curl_setopt($ch, CURLOPT_INFILESIZE, $file_size);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, [
+                'Content-Type: '.$content_type,
+                'Content-Length: '.$file_size
+            ]);
+
+            // Execute upload
+            $upload_response = curl_exec($ch);
+            $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            $curl_error = curl_error($ch);
+
+            curl_close($ch);
+            fclose($file_handle);
+            @unlink($temp_file);
+
+            if ($curl_error) {
+                error_log("cURL error during upload: {$curl_error}");
+            }
+
+            if ($http_code < 200 || $http_code >= 300) {
+                error_log("Upload failed with HTTP code {$http_code}: {$upload_response}");
+
+                return false;
+            }
+
+            return true;
+        } catch (\Exception $e) {
+            error_log('Exception during file migration: '.$e->getMessage());
+
+            // Cleanup resources
+            if (isset($file_handle) && is_resource($file_handle)) {
+                fclose($file_handle);
+            }
+            if (isset($ch) && is_resource($ch)) {
+                curl_close($ch);
+            }
+            @unlink($temp_file);
+
+            return false;
+        }
     }
 
     /**
