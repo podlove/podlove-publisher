@@ -132,9 +132,6 @@ export default defineComponent({
       dispatch: injectStore().dispatch,
     }
   },
-  created() {
-    this.dispatch(plusFileMigration.init())
-  },
   methods: {
     startMigration() {
       this.dispatch(plusFileMigration.startMigration())

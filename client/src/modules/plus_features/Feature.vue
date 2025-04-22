@@ -1,6 +1,6 @@
 <template>
   <div
-    class="overflow-hidden rounded-lg bg-white border border-gray-200 p-5 transition-shadow duration-200 hover:shadow-sm"
+    class="overflow-hidden rounded-lg bg-white border border-gray-200 transition-shadow duration-200 hover:shadow"
   >
     <div class="px-4 py-5 sm:p-6">
       <div class="mb-3 flex items-center justify-between">
