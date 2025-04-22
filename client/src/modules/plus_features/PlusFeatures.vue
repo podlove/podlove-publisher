@@ -30,6 +30,14 @@
           configure it here in the plugin.
         </p>
 
+        <!-- figure out if a migration is needed. consider a fresh podcast (then
+        there are no files) and an existing podcast with files.
+        - I don't need to show this if there are no files in the database. That
+          part is easy.
+        - existing podcast: I need to keep track if the user has already
+          migrated. In the simplest case, I set a flag. Maybe that's enough.
+          Does not catch all edge cases, but maybe that's good enough.
+      -->
         <template #footer v-if="features.fileStorage">
           <PlusFileMigration />
         </template>
