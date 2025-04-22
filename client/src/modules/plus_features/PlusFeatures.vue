@@ -38,7 +38,7 @@
           migrated. In the simplest case, I set a flag. Maybe that's enough.
           Does not catch all edge cases, but maybe that's good enough.
       -->
-        <template #footer v-if="features.fileStorage">
+        <template #footer v-if="features.fileStorage && needsMigration">
           <PlusFileMigration />
         </template>
       </Feature>
@@ -62,6 +62,7 @@
 import { defineComponent } from 'vue'
 import Feature from './Feature.vue'
 import PlusFileMigration from '../plus_file_migration/PlusFileMigration.vue'
+import * as plusFileMigration from '@store/plusFileMigration.store'
 import { injectStore, mapState } from 'redux-vuex'
 import * as plus from '@store/plus.store'
 import { selectors } from '@store'
@@ -76,12 +77,14 @@ export default defineComponent({
     return {
       state: mapState({
         features: selectors.plus.features,
+        files: selectors.plusFileMigration.episodesWithFiles,
       }),
       dispatch: injectStore().dispatch,
     }
   },
   created() {
     this.dispatch(plus.init())
+    this.dispatch(plusFileMigration.init())
   },
 
   methods: {
@@ -93,6 +96,9 @@ export default defineComponent({
   computed: {
     features() {
       return this.state.features
+    },
+    needsMigration() {
+      return this.state.files && this.state.files.length > 0
     },
   },
 })
