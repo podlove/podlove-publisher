@@ -68,6 +68,22 @@ class RestApi extends \WP_REST_Controller
                 'permission_callback' => [$this, 'get_migration_permissions_check'],
             ]
         ]);
+
+        register_rest_route($this->namespace, '/'.$this->rest_base.'/set_migration_complete', [
+            [
+                'methods' => \WP_REST_Server::CREATABLE,
+                'callback' => [$this, 'set_migration_complete'],
+                'permission_callback' => [$this, 'get_migration_permissions_check'],
+            ]
+        ]);
+
+        register_rest_route($this->namespace, '/'.$this->rest_base.'/get_migration_status', [
+            [
+                'methods' => \WP_REST_Server::READABLE,
+                'callback' => [$this, 'get_migration_status'],
+                'permission_callback' => [$this, 'get_migration_permissions_check'],
+            ]
+        ]);
     }
 
     public function create_upload_url($request)
@@ -115,5 +131,17 @@ class RestApi extends \WP_REST_Controller
         $file_url = $request->get_param('file_url');
 
         return $this->api->migrate_file($filename, $file_url);
+    }
+
+    public function set_migration_complete($request)
+    {
+        return $this->api->set_migration_complete();
+    }
+
+    public function get_migration_status($request)
+    {
+        return [
+            'is_complete' => $this->api->is_migration_complete()
+        ];
     }
 }
