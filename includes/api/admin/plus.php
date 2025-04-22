@@ -3,6 +3,7 @@
 namespace Podlove\Api\Admin;
 
 use Podlove\Model\Episode;
+use Podlove\Model\Podcast;
 use Podlove\Modules\Plus\FileStorage;
 
 add_action('rest_api_init', function () {
@@ -24,6 +25,22 @@ class WP_REST_PodlovePlus_Controller extends \WP_REST_Controller
             [
                 'methods' => \WP_REST_Server::READABLE,
                 'callback' => [$this, 'get_episodes_for_migration'],
+                'permission_callback' => [$this, 'get_item_permissions_check'],
+            ],
+        ]);
+
+        register_rest_route($this->namespace, '/'.$this->rest_base.'/features', [
+            [
+                'methods' => \WP_REST_Server::READABLE,
+                'callback' => [$this, 'get_features'],
+                'permission_callback' => [$this, 'get_item_permissions_check'],
+            ],
+        ]);
+
+        register_rest_route($this->namespace, '/'.$this->rest_base.'/set_feature', [
+            [
+                'methods' => \WP_REST_Server::EDITABLE,
+                'callback' => [$this, 'set_feature'],
                 'permission_callback' => [$this, 'get_item_permissions_check'],
             ],
         ]);
@@ -65,6 +82,41 @@ class WP_REST_PodlovePlus_Controller extends \WP_REST_Controller
         return new \Podlove\Api\Response\OkResponse([
             'episodes' => $episodes_with_files,
         ]);
+    }
+
+    public function get_features($request)
+    {
+        $podcast = Podcast::get();
+
+        return new \Podlove\Api\Response\OkResponse([
+            'file_storage' => $podcast->plus_enable_storage,
+            'feed_proxy' => $podcast->plus_enable_proxy,
+        ]);
+    }
+
+    public function set_feature($request)
+    {
+        $feature = $request->get_param('feature');
+        $value = (bool) $request->get_param('value');
+        $valid_features = ['fileStorage', 'feedProxy'];
+
+        if (!in_array($feature, $valid_features)) {
+            return new \Podlove\Api\Error\ArgumentError(message: 'Invalid feature');
+        }
+
+        $podcast = Podcast::get();
+
+        if ($feature === 'fileStorage') {
+            $podcast->plus_enable_storage = $value;
+        }
+
+        if ($feature === 'feedProxy') {
+            $podcast->plus_enable_proxy = $value;
+        }
+
+        $podcast->save();
+
+        return new \Podlove\Api\Response\OkResponse();
     }
 
     public function get_item_permissions_check($request)
