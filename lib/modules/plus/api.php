@@ -160,7 +160,11 @@ class API
 
     public function migrate_file($filename, $file_url)
     {
-        // TODO: improvement: check if file exists in PLUS, then skip
+        // prevent double uploads
+        if ($this->check_file_exists($filename)) {
+            return true;
+        }
+
         $presigned_upload_url = $this->create_file_upload($filename);
 
         if (!$presigned_upload_url) {
