@@ -48,6 +48,7 @@ export const setCurrentMetadata =
   createAction<{ currentEpisodeName: string; currentFileName: string }>(SET_CURRENT_METADATA)
 export const setFileState = createAction<{ filename: string; state: UploadState }>(SET_FILE_STATE)
 export const setProgress = createAction<{ progress: number }>(SET_PROGRESS)
+
 export const reducer = handleActions(
   {
     [lifecycle.INIT]: (state: State, action: typeof lifecycle.init): State => ({

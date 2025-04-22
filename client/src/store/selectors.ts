@@ -10,6 +10,7 @@ import * as contributorsStore from './contributors.store'
 import * as settingsStore from './settings.store'
 import * as podcastStore from './podcast.store'
 import * as plusFileMigrationStore from './plusFileMigration.store'
+import * as plusStore from './plus.store'
 import * as auphonicStore from './auphonic.store'
 import * as progressStore from './progress.store'
 import * as mediafilesStore from './mediafiles.store'
@@ -34,6 +35,7 @@ const root = {
   shows: (state: State) => state.shows,
   admin: (state: State) => state.admin,
   plusFileMigration: (state: State) => state.plusFileMigration,
+  plus: (state: State) => state.plus,
 }
 
 const lifecycle = {
@@ -221,6 +223,10 @@ const plusFileMigration = {
   ),
 }
 
+const plus = {
+  features: createSelector(root.plus, plusStore.selectors.features),
+}
+
 export default {
   lifecycle,
   podcast,
@@ -238,4 +244,5 @@ export default {
   shows,
   admin,
   plusFileMigration,
+  plus,
 }
