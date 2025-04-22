@@ -99,7 +99,6 @@ class SettingsPage
 
             <div data-client="podlove" style="margin: 15px 0; max-width: 800px; ">
               <podlove-plus-features/>
-              <podlove-plus-file-migration/>
             </div>
 
             <!-- TODO: clicking the button brings the user to a migration UI,

@@ -7,46 +7,53 @@
       </p>
     </div>
 
-    <Feature
-      title="File Storage"
-      :modelValue="features.fileStorage"
-      @update:modelValue="handleFeatureToggle('fileStorage')"
-    >
-      <p class="text-sm text-gray-600 mb-2">
-        Store your podcast files in fast and reliable cloud storage. Don't worry about dealing with
-        WordPress performance issues as your podcast grows. Focus on creating great content and let
-        us handle the rest.
-      </p>
+    <div class="space-y-3">
+      <Feature
+        title="File Storage"
+        :modelValue="features.fileStorage"
+        @update:modelValue="handleFeatureToggle('fileStorage')"
+      >
+        <p class="text-sm text-gray-600 mb-2">
+          Store your podcast files in fast and reliable cloud storage. Don't worry about dealing
+          with WordPress performance issues as your podcast grows. Focus on creating great content
+          and let us handle the rest.
+        </p>
 
-      <p class="text-sm text-gray-600 mb-2">
-        You can enable file storage by clicking the button below. This will automatically upload
-        your podcast files to the cloud and make them available for download.
-      </p>
+        <p class="text-sm text-gray-600 mb-2">
+          You can enable file storage by clicking the button below. This will automatically upload
+          your podcast files to the cloud and make them available for download.
+        </p>
 
-      <p class="text-sm text-gray-600">
-        If at any point you want to disable file storage, you can do so by disabling the feature
-        here. Then files will be served from your local WordPress or FTP storage again, as you
-        configure it here in the plugin.
-      </p>
-    </Feature>
+        <p class="text-sm text-gray-600">
+          If at any point you want to disable file storage, you can do so by disabling the feature
+          here. Then files will be served from your local WordPress or FTP storage again, as you
+          configure it here in the plugin.
+        </p>
 
-    <Feature
-      title="Feed Proxy"
-      :modelValue="features.feedProxy"
-      @update:modelValue="handleFeatureToggle('feedProxy')"
-    >
-      <p class="text-sm text-gray-600">
-        When Feed Proxy is enabled, all feed requests are automatically redirected to the
-        corresponding proxy feed URL. It can be disabled at any time without risk of losing
-        subscribers because a temporary redirect (HTTP 307) is used.
-      </p>
-    </Feature>
+        <template #footer v-if="features.fileStorage">
+          <PlusFileMigration />
+        </template>
+      </Feature>
+
+      <Feature
+        title="Feed Proxy"
+        :modelValue="features.feedProxy"
+        @update:modelValue="handleFeatureToggle('feedProxy')"
+      >
+        <p class="text-sm text-gray-600">
+          When Feed Proxy is enabled, all feed requests are automatically redirected to the
+          corresponding proxy feed URL. It can be disabled at any time without risk of losing
+          subscribers because a temporary redirect (HTTP 307) is used.
+        </p>
+      </Feature>
+    </div>
   </div>
 </template>
 
 <script>
 import { defineComponent } from 'vue'
 import Feature from './Feature.vue'
+import PlusFileMigration from '../plus_file_migration/PlusFileMigration.vue'
 import { injectStore, mapState } from 'redux-vuex'
 import * as plus from '@store/plus.store'
 import { selectors } from '@store'
@@ -54,6 +61,7 @@ import { selectors } from '@store'
 export default defineComponent({
   components: {
     Feature,
+    PlusFileMigration,
   },
 
   setup() {

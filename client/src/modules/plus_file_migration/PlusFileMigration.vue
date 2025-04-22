@@ -1,10 +1,10 @@
 <template>
-  <module name="plusFileMigration" title="Plus File Migration">
-    <section class="bg-white rounded-xl p-8 shadow-md w-full mb-10" v-if="uiState === 'init'">
+  <div class="m-3 rounded-lg bg-white">
+    <section class="bg-white w-full" v-if="uiState === 'init'">
       <div class="text-center">loading...</div>
     </section>
 
-    <section class="bg-white rounded-xl p-8 shadow-md w-full mb-10" v-if="uiState === 'finished'">
+    <section class="bg-white w-full" v-if="uiState === 'finished'">
       <div class="text-center py-10 px-5">
         <div
           class="w-20 h-20 mx-auto mb-5 bg-green-50 rounded-full flex items-center justify-center"
@@ -36,7 +36,7 @@
       </div>
     </section>
 
-    <section class="bg-white rounded-xl p-8 shadow-md w-full mb-10" v-if="uiState === 'ready'">
+    <section class="bg-white w-full" v-if="uiState === 'ready'">
       <div class="text-center py-10 px-5">
         <div
           class="w-20 h-20 mx-auto mb-5 bg-gray-100 rounded-full flex items-center justify-center"
@@ -60,11 +60,8 @@
       </div>
     </section>
 
-    <section
-      class="bg-white rounded-xl p-8 shadow-md w-full mb-10"
-      v-if="uiState === 'in_progress'"
-    >
-      <div class="mb-6">
+    <section class="bg-white w-full" v-if="uiState === 'in_progress'">
+      <div class="py-10 px-5">
         <div class="flex justify-between mb-2 text-sm text-gray-600">
           <span>Progress Uploading Media Files to PLUS Cloud Storage</span>
           <span>{{ progress }}%</span>
@@ -75,15 +72,30 @@
             :style="{ width: progress + '%' }"
           ></div>
         </div>
-      </div>
 
-      <section class="bg-gray-50 p-4 rounded-lg mt-5">
-        <h3 class="text-base font-medium text-gray-800 mb-2">Currently Uploading</h3>
-        <p class="text-gray-600 text-sm mb-1"><strong>Episode:</strong> {{ currentEpisodeName }}</p>
-        <p class="text-gray-600 text-sm"><strong>File:</strong> {{ currentFileName }}</p>
-      </section>
+        <section class="bg-gray-50 my-5 p-5 rounded-lg">
+          <h3 class="text-base font-medium text-gray-800 mb-2">Currently Uploading</h3>
+          <p class="text-gray-600 text-sm mb-1">
+            <strong>Episode:</strong> {{ currentEpisodeName }}
+          </p>
+          <p class="text-gray-600 text-sm"><strong>File:</strong> {{ currentFileName }}</p>
+        </section>
+
+        <div class="border-l-4 border-yellow-400 bg-yellow-50 p-4">
+          <div class="flex">
+            <div class="shrink-0">
+              <ExclamationTriangleIcon class="size-5 text-yellow-400" aria-hidden="true" />
+            </div>
+            <div class="ml-3">
+              <p class="text-sm text-yellow-700">
+                Keep this window open while the upload is in progress.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
     </section>
-  </module>
+  </div>
 </template>
 
 <script lang="ts">
@@ -97,6 +109,8 @@ import PodloveButton from '@components/button/Button.vue'
 
 import { CloudArrowUpIcon as UploadIcon, CheckBadgeIcon } from '@heroicons/vue/24/outline'
 
+import { ExclamationTriangleIcon } from '@heroicons/vue/24/solid'
+
 export default defineComponent({
   name: 'PlusFileMigration',
   components: {
@@ -104,6 +118,7 @@ export default defineComponent({
     PodloveButton,
     UploadIcon,
     CheckBadgeIcon,
+    ExclamationTriangleIcon,
   },
   setup() {
     return {
@@ -143,28 +158,7 @@ export default defineComponent({
     },
     uiState() {
       return this.state.totalState
-      // if (this.state.files.length === 0) {
-      //   return 'init'
-      // } else {
-      //   if (this.state.progress === 100) {
-      //     return 'finished'
-      //   } else if (this.state.progress === 0) {
-      //     return 'ready'
-      //   } else {
-      //     return 'in_progress'
-      //   }
-      // }
     },
   },
 })
-
-// next up:
-// - [x] write dedicated endpoint for fetching all episodes with files
-// - [x] on init, fetch all episodes with files
-// - handle initialization state while fetching
-// - display 0% progress and a button to start the migration
-// - add a dedicated upload endpoint that uploads a single file via backend
-// - display progress bar and current episode & file while migrating
-// - write progress percentage to store after every file upload
-// - think about upload error handling
 </script>
