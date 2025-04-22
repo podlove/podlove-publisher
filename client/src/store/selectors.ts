@@ -221,6 +221,10 @@ const plusFileMigration = {
     root.plusFileMigration,
     plusFileMigrationStore.selectors.episodesWithFiles
   ),
+  isMigrationComplete: createSelector(
+    root.plusFileMigration,
+    plusFileMigrationStore.selectors.isMigrationComplete
+  ),
 }
 
 const plus = {

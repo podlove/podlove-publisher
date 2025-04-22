@@ -128,6 +128,7 @@ export default defineComponent({
         files: selectors.plusFileMigration.episodesWithFiles,
         currentEpisodeName: selectors.plusFileMigration.currentEpisodeName,
         currentFileName: selectors.plusFileMigration.currentFileName,
+        isMigrationComplete: selectors.plusFileMigration.isMigrationComplete,
       }),
       dispatch: injectStore().dispatch,
     }

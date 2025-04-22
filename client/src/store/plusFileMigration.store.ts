@@ -21,6 +21,7 @@ export type State = {
   currentEpisodeName: string
   currentFileName: string
   episodesWithFiles: EpisodeWithFiles[]
+  isMigrationComplete: boolean
 }
 
 export const initialState: State = {
@@ -29,6 +30,7 @@ export const initialState: State = {
   currentEpisodeName: '',
   currentFileName: '',
   episodesWithFiles: [],
+  isMigrationComplete: false,
 }
 
 export const INIT = 'podlove/publisher/plusFileMigration/INIT'
@@ -38,6 +40,7 @@ export const START_MIGRATION = 'podlove/publisher/plusFileMigration/START_MIGRAT
 export const SET_CURRENT_METADATA = 'podlove/publisher/plusFileMigration/SET_CURRENT_METADATA'
 export const SET_FILE_STATE = 'podlove/publisher/plusFileMigration/SET_FILE_STATE'
 export const SET_PROGRESS = 'podlove/publisher/plusFileMigration/SET_PROGRESS'
+export const SET_MIGRATION_COMPLETE = 'podlove/publisher/plusFileMigration/SET_MIGRATION_COMPLETE'
 
 export const init = createAction<void>(INIT)
 export const setEpisodesWithFiles =
@@ -48,6 +51,8 @@ export const setCurrentMetadata =
   createAction<{ currentEpisodeName: string; currentFileName: string }>(SET_CURRENT_METADATA)
 export const setFileState = createAction<{ filename: string; state: UploadState }>(SET_FILE_STATE)
 export const setProgress = createAction<{ progress: number }>(SET_PROGRESS)
+export const setMigrationComplete =
+  createAction<{ isMigrationComplete: boolean }>(SET_MIGRATION_COMPLETE)
 
 export const reducer = handleActions(
   {
@@ -87,6 +92,13 @@ export const reducer = handleActions(
       ...state,
       progress: action.payload.progress,
     }),
+    [SET_MIGRATION_COMPLETE]: (
+      state: State,
+      action: ReturnType<typeof setMigrationComplete>
+    ): State => ({
+      ...state,
+      isMigrationComplete: action.payload.isMigrationComplete,
+    }),
   },
   initialState
 )
@@ -97,4 +109,5 @@ export const selectors = {
   currentEpisodeName: (state: State) => state.currentEpisodeName,
   currentFileName: (state: State) => state.currentFileName,
   episodesWithFiles: (state: State) => state.episodesWithFiles,
+  isMigrationComplete: (state: State) => state.isMigrationComplete,
 }

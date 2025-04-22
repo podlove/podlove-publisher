@@ -257,6 +257,28 @@ class API
         return $this->handle_json_response($curl);
     }
 
+    /**
+     * Sets a flag to indicate that the file migration has been completed.
+     *
+     * @return array Response with success status
+     */
+    public function set_migration_complete()
+    {
+        update_option('podlove_plus_migration_completed', true);
+
+        return ['success' => true];
+    }
+
+    /**
+     * Checks if the migration has been completed.
+     *
+     * @return bool True if migration has been completed, false otherwise
+     */
+    public function is_migration_complete()
+    {
+        return (bool) get_option('podlove_plus_migration_completed');
+    }
+
     private function do_upload($target_url, $origin_url, $filename)
     {
         $temp_file = \get_temp_dir().$filename;

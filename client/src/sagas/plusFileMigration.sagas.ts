@@ -11,8 +11,14 @@ function* plusFileMigrationSaga() {
   yield fork(initialize, apiClient)
 }
 
-function* initialize(api: PodloveApiClient) {
-  // fetch all episodes with files
+function* initialize(api: PodloveApiClient): Generator<any, void, any> {
+  const { result: migrationStatusResult } = yield api.get(`plus/get_migration_status`)
+  yield put(
+    plusFileMigration.setMigrationComplete({
+      isMigrationComplete: migrationStatusResult.is_complete,
+    })
+  )
+
   const { result } = yield api.get(`admin/plus/episodes_for_migration`)
 
   const episodesWithFiles: plusFileMigration.EpisodeWithFiles[] = result.episodes.map(
@@ -105,6 +111,10 @@ function* startMigration(api: PodloveApiClient): Generator<any, void, any> {
       totalState: hasErrors ? 'error' : 'finished',
     })
   )
+
+  if (!hasErrors) {
+    yield api.post('plus/set_migration_complete', {})
+  }
 }
 
 export default function () {
