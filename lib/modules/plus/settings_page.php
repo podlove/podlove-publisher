@@ -64,6 +64,10 @@ class SettingsPage
                 <h1 style="padding: 0;"><?php echo __('Publisher PLUS', 'podlove-podcasting-plugin-for-wordpress'); ?></h1>
             </div>
 
+            <div style="max-width: 800px;">
+              <?php Banner::plus_main(); ?>
+            </div>
+
             <form method="post" action="">
                 <?php wp_nonce_field('podlove_plus_settings'); ?>
                 <div class="card" style="max-width: 600px; margin-top: 20px; padding: 20px 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
