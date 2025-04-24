@@ -81,36 +81,13 @@ class GlobalFeedSettings
         ]);
     }
 
+    // advertise the feed proxy if it is not enabled
     public function global_feed_setting()
     {
-        ?>
-		<div class="podlove-form-card">
-		<form method="post" action="admin.php?page=podlove_feeds_settings_handle&amp;update_plus_settings=true">
-        <?php
-
-        settings_fields(\Podlove\Settings\Podcast::$pagehook);
-
         $podcast = \Podlove\Model\Podcast::get();
 
-        $form_attributes = [
-            'context' => 'podlove_podcast',
-            'form' => false,
-            'nonce' => self::$nonce
-        ];
-
-        \Podlove\Form\build_for($podcast, $form_attributes, function ($form) {
-            $wrapper = new \Podlove\Form\Input\TableWrapper($form);
-
-            $wrapper->subheader(__('Feed Proxy | Publisher Plus', 'podlove-podcasting-plugin-for-wordpress'));
-
-            $wrapper->checkbox('plus_enable_proxy', [
-                'label' => __('Enable Feed Proxy', 'podlove-podcasting-plugin-for-wordpress'),
-                'description' => __('When Feed Proxy is enabled, all feed requests are automatically redirected to the corresponding proxy feed URL. It can be disabled at any time without risk of losing subscribers because a temporary redirect (HTTP 307) is used.', 'podlove-podcasting-plugin-for-wordpress'),
-                'default' => false,
-            ]);
-        }); ?>
-		</form>
-		</div>
-    <?php
+        if (!$podcast->plus_enable_proxy) {
+            Banner::feed_proxy();
+        }
     }
 }

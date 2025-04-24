@@ -117,34 +117,13 @@ class FileStorage
         header('Location: '.get_site_url().'/wp-admin/admin.php?page=podlove_episode_assets_settings_handle');
     }
 
+    // advertise the file storage if it is not enabled
     public function settings_card()
     {
-        ?>
-		<div class="podlove-form-card">
-    <form method="post" action="admin.php?page=podlove_episode_assets_settings_handle&amp;update_plus_settings=true">
-    <?php
+        $podcast = \Podlove\Model\Podcast::get();
 
-        settings_fields(\Podlove\Settings\Podcast::$pagehook);
-
-        $form_attributes = [
-            'context' => 'podlove_podcast',
-            'form' => false,
-            'nonce' => self::$nonce
-        ];
-
-        \Podlove\Form\build_for(Podcast::get(), $form_attributes, function ($form) {
-            $wrapper = new \Podlove\Form\Input\TableWrapper($form);
-
-            $wrapper->subheader(__('File Storage | Publisher Plus', 'podlove-podcasting-plugin-for-wordpress'));
-
-            $wrapper->checkbox('plus_enable_storage', [
-                'label' => __('Enable Storage', 'podlove-podcasting-plugin-for-wordpress'),
-                'description' => __('Put all yo files in da cloud! And serve them from there. Nice man!', 'podlove-podcasting-plugin-for-wordpress'),
-                'default' => false,
-            ]);
-        }); ?>
-    </form>
-    </div>
-    <?php
+        if (!$podcast->plus_enable_storage) {
+            Banner::file_storage();
+        }
     }
 }
