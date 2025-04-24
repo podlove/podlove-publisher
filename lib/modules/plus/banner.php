@@ -87,4 +87,28 @@ class Banner
 
         $banner->render();
     }
+
+    public static function plus_main()
+    {
+        $content = '<p><strong>Tired of fiddling with FTP or overloading your WordPress host when you release an episode?</strong><br>
+ With <strong>Publisher PLUS</strong>, your podcast files are stored in fast, secure cloud storage—no setup required.</p>
+
+<ul class="banner-feature-list">
+  <li>Simple uploads</li>
+  <li>Reliable delivery</li>
+  <li>Optimized for podcasting</li>
+</ul>
+
+ <p><strong>Start your PLUS upgrade today.</strong></p>';
+
+        //  TODO: external links should open in new tab
+        $banner = new self(
+            __('Introducing Publisher PLUS: File Hosting Built for Podcasters', 'podlove-podcasting-plugin-for-wordpress'),
+            $content,
+            __('Get Publisher PLUS &#10140;', 'podlove-podcasting-plugin-for-wordpress'),
+            'https://plus.podlove.org/pricing'
+        );
+
+        $banner->render();
+    }
 }

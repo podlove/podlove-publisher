@@ -853,9 +853,6 @@ section.chart-wrapper div.chart-loading {
 }
 
 .plus-banner-content {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
 }
 
 .plus-banner p {
@@ -901,6 +898,24 @@ section.chart-wrapper div.chart-loading {
 
 .plus-banner .corner-logo .logo-text {
   margin-left: 6px;
+}
+
+.banner-feature-list {
+  margin: 16px 0;
+  padding: 0;
+  list-style: none;
+}
+
+.banner-feature-list li {
+  margin-bottom: 8px;
+  display: flex;
+  align-items: baseline;
+}
+
+.banner-feature-list li::before {
+  content: '★';
+  margin-right: 8px;
+  color: #ffd700;
 }
 
 @media (max-width: 768px) {
