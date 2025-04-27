@@ -97,6 +97,8 @@ class API
 
     public function create_file_upload($filename)
     {
+        $filename = $this->sanitize_filename($filename);
+
         $query = http_build_query([
             'filename' => $filename,
             'podcast_guid' => (string) Podcast::get()->guid
@@ -118,6 +120,8 @@ class API
 
     public function check_file_exists($filename)
     {
+        $filename = $this->sanitize_filename($filename);
+
         $query = http_build_query([
             'filename' => $filename,
             'podcast_guid' => (string) Podcast::get()->guid
@@ -139,6 +143,8 @@ class API
 
     public function complete_file_upload($filename)
     {
+        $filename = $this->sanitize_filename($filename);
+
         $query = http_build_query([
             'filename' => $filename,
             'podcast_guid' => (string) Podcast::get()->guid
@@ -160,6 +166,8 @@ class API
 
     public function migrate_file($filename, $file_url)
     {
+        $filename = $this->sanitize_filename($filename);
+
         // prevent double uploads
         if ($this->check_file_exists($filename)) {
             return true;
@@ -281,6 +289,7 @@ class API
 
     private function do_upload($target_url, $origin_url, $filename)
     {
+        $filename = $this->sanitize_filename($filename);
         $temp_file = \get_temp_dir().$filename;
 
         try {
@@ -388,5 +397,17 @@ class API
                 'Authorization' => 'Bearer '.$this->token,
             ],
         ], $params);
+    }
+
+    /**
+     * Sanitizes filenames by replacing slashes with dashes to prevent path traversal issues.
+     *
+     * @param string $filename The filename to sanitize
+     *
+     * @return string The sanitized filename
+     */
+    private function sanitize_filename($filename)
+    {
+        return str_replace('/', '-', $filename);
     }
 }
