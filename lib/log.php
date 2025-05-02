@@ -89,7 +89,7 @@ class Log
     public function get_log_level()
     {
         if (defined('PODLOVE_LOG_LEVEL')) {
-            return PODLOVE_LOG_LEVEL;
+            return constant('PODLOVE_LOG_LEVEL');
         }
 
         return $this->is_debug_enabled() ? Logger::DEBUG : Logger::INFO;
@@ -97,6 +97,6 @@ class Log
 
     public function is_debug_enabled()
     {
-        return defined('PODLOVE_LOGGER_DEBUG') && PODLOVE_LOGGER_DEBUG;
+        return defined('PODLOVE_LOGGER_DEBUG') && constant('PODLOVE_LOGGER_DEBUG');
     }
 }
