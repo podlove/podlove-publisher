@@ -397,7 +397,10 @@ class MediaFile extends Base
         if ($response['error']) {
             Log::get()->addError(
                 'Curl Error: '.$response['error'],
-                ['media_file_id' => $this->id]
+                [
+                    'media_file_id' => $this->id,
+                    'header' => $header
+                ]
             );
         }
 
