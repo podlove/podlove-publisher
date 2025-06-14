@@ -154,6 +154,9 @@ function download(name: string, data: any) {
 
 // Import handling
 function* handleImport(action: { type: string; payload: string }) {
+  // Clear all existing chapters before importing new ones
+  yield put(chapters.parsed([]))
+
   const parser: ((text: string) => PodloveChapter[])[] = [
     parseMp4Chapters,
     parseAudacityChapters,
