@@ -1,0 +1,7 @@
+---
+description:
+globs: *.vue,*.ts
+alwaysApply: false
+---
+- use Heroicons for SVG Icons
+- keep state in the redux store
