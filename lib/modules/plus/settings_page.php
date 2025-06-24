@@ -15,7 +15,6 @@ class SettingsPage
 
     public function init()
     {
-        add_action('admin_init', [$this, 'handle_form_submission']);
         add_action('admin_menu', [$this, 'add_admin_menu'], 275);
     }
 
@@ -31,25 +30,8 @@ class SettingsPage
         );
     }
 
-    public function handle_form_submission()
-    {
-        if (isset($_POST['submit-plus-save-api-token']) && check_admin_referer('podlove_plus_settings')) {
-            $api_key = sanitize_text_field($_POST['api_token']);
-            $this->module->update_module_option('plus_api_token', $api_key);
-
-            wp_redirect(add_query_arg('settings-updated', 'true', menu_page_url('publisher_plus_settings', false)));
-            exit;
-        }
-    }
-
     public function render_settings_page()
     {
-        $api_key = $this->module->get_module_option('plus_api_token');
-
-        if (isset($_GET['settings-updated']) && $_GET['settings-updated'] === 'true') {
-            echo '<div class="notice notice-success"><p>'.__('API Token updated.', 'podlove-podcasting-plugin-for-wordpress').'</p></div>';
-        }
-
         ?>
         <div class="wrap">
             <div style="display: flex; align-items: center; gap: 1rem;">
@@ -68,74 +50,15 @@ class SettingsPage
               <?php Banner::plus_main(); ?>
             </div>
 
-            <form method="post" action="">
-                <?php wp_nonce_field('podlove_plus_settings'); ?>
-                <div class="card" style="max-width: 600px; margin-top: 20px; padding: 20px 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
-                    <div>
-                        <h2 style="margin-top: 0; margin-bottom: 16px; font-size: 18px; font-weight: 600;"><?php echo __('API Token', 'podlove-podcasting-plugin-for-wordpress'); ?></h2>
-
-                        <p style="margin-bottom: 16px; color: #666;">
-                            <?php echo __('Publisher PLUS provides additional features and services for your podcast. Enter your API token below to activate these features.', 'podlove-podcasting-plugin-for-wordpress'); ?>
-                        </p>
-
-                        <div class="form-field" style="margin-bottom: 16px;">
-                            <label for="api_token" style="display: block; margin-bottom: 8px; font-weight: 600;">
-                                <?php echo __('API Token', 'podlove-podcasting-plugin-for-wordpress'); ?>
-                            </label>
-                            <input type="text"
-                                   id="api_token"
-                                   name="api_token"
-                                   class="regular-text"
-                                   value="<?php echo esc_attr($api_key); ?>"
-                                   style="width: 100%; padding: 8px;">
-                        </div>
-
-                        <div>
-                            <?php echo $this->render_api_token_description($api_key); ?>
-                        </div>
-
-                        <button type="submit" name="submit-plus-save-api-token" class="button button-primary" style="margin-top: 16px;">
-                            <?php echo __('Save API Token', 'podlove-podcasting-plugin-for-wordpress'); ?>
-                        </button>
-                    </div>
-                </div>
-            </form>
+            <div data-client="podlove" style="margin: 15px 0; max-width: 800px; ">
+              <podlove-plus-token/>
+            </div>
 
             <div data-client="podlove" style="margin: 15px 0; max-width: 800px; ">
               <podlove-plus-features/>
             </div>
 
-            <!-- TODO: clicking the button brings the user to a migration UI,
-            listing all files and a button to start transferring them to the cloud.
-            Or maybe just auto-start, since the user already gave their intent
-            by enabling the feature.
-
-            Also handle a fresh podcast where NO files need to be migrated.
-
-            Optional: prevent double uploads, but only if it's easy to do.
-            -->
-
         </div>
         <?php
-    }
-
-    private function render_api_token_description($api_key)
-    {
-        if ($api_key && ($user = $this->api->get_me())) {
-            $description = '<span class="dashicons dashicons-yes" style="color: #46b450;"></span> '.sprintf(
-                __('You are logged in as %s.', 'podlove-podcasting-plugin-for-wordpress'),
-                '<strong>'.$user->email.'</strong>'
-            );
-        } else {
-            $auth_url = $this->module::base_url();
-            $description = __('You need to allow Podlove Publisher to access the PLUS API.', 'podlove-podcasting-plugin-for-wordpress')
-            .'<br><a href="'.$auth_url.'" target="_blank">'.__('Get Token', 'podlove-podcasting-plugin-for-wordpress').'</a>';
-
-            if ($api_key) {
-                $description = '<span class="dashicons dashicons-no" style="color: #dc3232;"></span> '.__('Invalid API token', 'podlove-podcasting-plugin-for-wordpress').'<br>'.$description;
-            }
-        }
-
-        return $description;
     }
 }
