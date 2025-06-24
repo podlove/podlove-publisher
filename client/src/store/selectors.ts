@@ -229,6 +229,10 @@ const plusFileMigration = {
 
 const plus = {
   features: createSelector(root.plus, plusStore.selectors.features),
+  token: createSelector(root.plus, plusStore.selectors.token),
+  user: createSelector(root.plus, plusStore.selectors.user),
+  isLoading: createSelector(root.plus, plusStore.selectors.isLoading),
+  isSaving: createSelector(root.plus, plusStore.selectors.isSaving),
 }
 
 export default {

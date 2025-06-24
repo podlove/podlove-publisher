@@ -44,6 +44,30 @@ class WP_REST_PodlovePlus_Controller extends \WP_REST_Controller
                 'permission_callback' => [$this, 'get_item_permissions_check'],
             ],
         ]);
+
+        register_rest_route($this->namespace, '/'.$this->rest_base.'/token', [
+            [
+                'methods' => \WP_REST_Server::READABLE,
+                'callback' => [$this, 'get_token'],
+                'permission_callback' => [$this, 'get_item_permissions_check'],
+            ],
+        ]);
+
+        register_rest_route($this->namespace, '/'.$this->rest_base.'/validate_token', [
+            [
+                'methods' => \WP_REST_Server::READABLE,
+                'callback' => [$this, 'validate_token'],
+                'permission_callback' => [$this, 'get_item_permissions_check'],
+            ],
+        ]);
+
+        register_rest_route($this->namespace, '/'.$this->rest_base.'/save_token', [
+            [
+                'methods' => \WP_REST_Server::EDITABLE,
+                'callback' => [$this, 'save_token'],
+                'permission_callback' => [$this, 'get_item_permissions_check'],
+            ],
+        ]);
     }
 
     public function get_episodes_for_migration($request)
@@ -117,6 +141,56 @@ class WP_REST_PodlovePlus_Controller extends \WP_REST_Controller
         $podcast->save();
 
         return new \Podlove\Api\Response\OkResponse();
+    }
+
+    public function get_token($request)
+    {
+        $plus_module = \Podlove\Modules\Plus\Plus::instance();
+        $token = $plus_module->get_module_option('plus_api_token');
+
+        return new \Podlove\Api\Response\OkResponse([
+            'token' => $token ?: ''
+        ]);
+    }
+
+    public function validate_token($request)
+    {
+        $plus_module = \Podlove\Modules\Plus\Plus::instance();
+        $token = $plus_module->get_module_option('plus_api_token');
+
+        if (!$token) {
+            return new \Podlove\Api\Response\OkResponse([
+                'user' => null
+            ]);
+        }
+
+        $api = new \Podlove\Modules\Plus\API($plus_module, $token);
+        $user = $api->get_me();
+
+        if ($user && isset($user->email)) {
+            return new \Podlove\Api\Response\OkResponse([
+                'user' => [
+                    'email' => $user->email
+                ]
+            ]);
+        }
+
+        return new \Podlove\Api\Response\OkResponse([
+            'user' => null
+        ]);
+    }
+
+    public function save_token($request)
+    {
+        $token = $request->get_param('token');
+        $token = sanitize_text_field($token);
+
+        $plus_module = \Podlove\Modules\Plus\Plus::instance();
+        $plus_module->update_module_option('plus_api_token', $token);
+
+        return new \Podlove\Api\Response\OkResponse([
+            'success' => true
+        ]);
     }
 
     public function get_item_permissions_check($request)
