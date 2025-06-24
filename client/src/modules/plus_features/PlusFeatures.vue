@@ -50,7 +50,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { defineComponent } from 'vue'
 import Feature from './Feature.vue'
 import PlusFileMigration from '../plus_file_migration/PlusFileMigration.vue'
@@ -81,7 +81,7 @@ export default defineComponent({
   },
 
   methods: {
-    handleFeatureToggle(featureKey) {
+    handleFeatureToggle(featureKey: string) {
       this.dispatch(plus.setFeature({ feature: featureKey, value: !this.features[featureKey] }))
     },
   },
