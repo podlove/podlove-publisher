@@ -88,10 +88,6 @@ function* triggerPlusUpload(api: PodloveApiClient, action: Action) {
     filename: file.name,
   })
 
-  // TODO: check (on PLUS side) if the file would override an existing file. If
-  // so, the "upload" button should become a red "upload and override existing
-  // file" button.
-
   if (!upload_url) {
     console.error('Failed to get upload URL')
     return
