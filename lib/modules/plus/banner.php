@@ -15,6 +15,7 @@ class Banner
     private $button_text;
     private $button_url;
     private $logo_text;
+    private $external;
 
     /**
      * Constructor.
@@ -24,14 +25,16 @@ class Banner
      * @param string $button_text Button text
      * @param string $button_url  Button URL
      * @param string $logo_text   Logo text
+     * @param bool   $external    Whether the link should open in a new tab
      */
-    public function __construct($title, $content, $button_text, $button_url, $logo_text = 'A Publisher PLUS Feature')
+    public function __construct($title, $content, $button_text, $button_url, $logo_text = 'A Publisher PLUS Feature', $external = false)
     {
         $this->title = $title;
         $this->content = $content;
         $this->button_text = $button_text;
         $this->button_url = $button_url;
         $this->logo_text = $logo_text;
+        $this->external = $external;
     }
 
     /**
@@ -45,6 +48,7 @@ class Banner
             'button_text' => $this->button_text,
             'button_url' => $this->button_url,
             'logo_text' => $this->logo_text,
+            'external' => $this->external,
         ]);
 
         include __DIR__.'/banner.html.php';
@@ -101,12 +105,13 @@ class Banner
 
  <p><strong>Start your PLUS upgrade today.</strong></p>';
 
-        //  TODO: external links should open in new tab
         $banner = new self(
             __('Introducing Publisher PLUS: File Hosting Built for Podcasters', 'podlove-podcasting-plugin-for-wordpress'),
             $content,
             __('Get Publisher PLUS &#10140;', 'podlove-podcasting-plugin-for-wordpress'),
-            'https://plus.podlove.org/pricing'
+            'https://plus.podlove.org/pricing',
+            'A Publisher PLUS Feature',
+            true
         );
 
         $banner->render();

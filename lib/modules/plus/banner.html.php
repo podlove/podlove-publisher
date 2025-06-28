@@ -7,6 +7,7 @@
  * @param string $button_text Button text
  * @param string $button_url  Button URL
  * @param string $logo_text   Logo text
+ * @param bool   $external    Whether the link should open in a new tab
  */
 
 // Prevent direct file access
@@ -20,7 +21,7 @@ if (!defined('ABSPATH')) {
       <?php echo wp_kses_post($content); ?>
   </div>
   <div class="plus-banner-footer">
-    <a href="<?php echo esc_url($button_url); ?>" class="btn"><?php echo esc_html($button_text); ?></a>
+    <a href="<?php echo esc_url($button_url); ?>" class="btn"<?php echo $external ? ' target="_blank" rel="noopener"' : ''; ?>><?php echo esc_html($button_text); ?></a>
     <div class="corner-logo">
       <svg class="logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 99.32 160.81" style="width: 18px; height: 24px;">
         <path fill="#ffffff" d="M78.119 9c6.728 0 12.201 5.474 12.201 12.202V139.61c0 6.728-5.474 12.201-12.201 12.201H21.2c-6.727 0-12.2-5.473-12.2-12.201V21.202C9 14.474 14.473 9 21.2 9zm0-9H21.2C9.493 0 0 9.493 0 21.202V139.61c0 11.708 9.493 21.201 21.2 21.201h56.919c11.71 0 21.201-9.492 21.201-21.201V21.202C99.32 9.493 89.829 0 78.119 0z"/>
