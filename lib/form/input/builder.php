@@ -105,7 +105,7 @@ class Builder
     {
         $this->build_input_values($object_key, $arguments); ?>
 		<div>
-			<textarea name="<?php echo $this->field_name; ?>" id="<?php echo $this->field_id; ?>" <?php echo $this->html_attributes; ?>><?php echo $this->field_value; ?></textarea><span class="podlove-input-status" data-podlove-input-status-for="<?php echo $this->field_id; ?>"></span>
+			<textarea name="<?php echo $this->field_name; ?>" id="<?php echo $this->field_id; ?>" <?php echo $this->html_attributes; ?>><?php echo esc_html($this->field_value); ?></textarea><span class="podlove-input-status" data-podlove-input-status-for="<?php echo $this->field_id; ?>"></span>
 		</div>
 		<?php
     }

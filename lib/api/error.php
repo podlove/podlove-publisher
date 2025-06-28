@@ -2,15 +2,13 @@
 
 namespace Podlove\Api\Error;
 
-use WP_Error;
-
-class ForbiddenAccess extends WP_Error
+class ForbiddenAccess extends \WP_Error
 {
     /**
      * Constructor.
      *
-     * @param $code
-     * @param $message
+     * @param mixed $code
+     * @param mixed $message
      */
     public function __construct($code = '', $message = '')
     {
@@ -24,13 +22,13 @@ class ForbiddenAccess extends WP_Error
     }
 }
 
-class NotFound extends WP_Error
+class NotFound extends \WP_Error
 {
     /**
      * Constructor.
      *
-     * @param $code
-     * @param $message
+     * @param mixed $code
+     * @param mixed $message
      */
     public function __construct($code = '', $message = '')
     {
@@ -38,35 +36,33 @@ class NotFound extends WP_Error
             $code = 'rest_not_found';
         }
         if (strlen($message) == 0) {
-            $message = esc_html__('sorry, we do not found the requested resource');
+            $message = esc_html__('sorry, we did not find the requested resource');
         }
         parent::__construct($code, $message, ['status' => 404]);
     }
 }
 
-class NotFoundEpisode extends WP_Error
+class NotFoundEpisode extends \WP_Error
 {
     /**
      * Constructor.
      *
-     * @param $code
-     * @param $message
+     * @param mixed $episode_id
      */
     public function __construct($episode_id)
     {
-        $message = 'sorry, we do not found the episode with ID '.$episode_id;
+        $message = 'sorry, we did not find the episode with ID '.$episode_id;
         parent::__construct('not_found', esc_html__($message), ['status' => 404]);
     }
 }
 
-
-class NotSupported extends WP_Error
+class NotSupported extends \WP_Error
 {
     /**
      * Constructor.
      *
-     * @param $code
-     * @param $message
+     * @param mixed $code
+     * @param mixed $message
      */
     public function __construct($code = '', $message = '')
     {
@@ -80,13 +76,13 @@ class NotSupported extends WP_Error
     }
 }
 
-class InternalServerError extends WP_Error
+class InternalServerError extends \WP_Error
 {
     /**
      * Constructor.
      *
-     * @param $code
-     * @param $message
+     * @param mixed $code
+     * @param mixed $message
      */
     public function __construct($code = '', $message = '')
     {

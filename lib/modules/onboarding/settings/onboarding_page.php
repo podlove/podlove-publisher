@@ -3,9 +3,11 @@
 namespace Podlove\Modules\Onboarding\Settings;
 
 use Podlove\Authentication;
+use Podlove\Modules\Onboarding\Onboarding;
 
 class OnboardingPage
 {
+    private const DEFAULT_SERVICE_URL = 'https://services.podlove.org/onboarding';
     public static $pagehook;
 
     public function __construct($handle)
@@ -24,6 +26,26 @@ class OnboardingPage
             // $function
             [$this, 'page']
         );
+
+        if (!defined('PODLOVE_ONBOARDING')) {
+            define('PODLOVE_ONBOARDING', self::DEFAULT_SERVICE_URL);
+        }
+    }
+
+    /**
+     * Get Service URL.
+     *
+     * If you want to host and use your own service, set the constant in your
+     * `wp-config.php`: `define('PODLOVE_ONBOARDING',
+     * 'https://self-hosted-services.example.com/onboarding');`
+     */
+    public static function get_service_url()
+    {
+        if (is_string(PODLOVE_ONBOARDING)) {
+            return PODLOVE_ONBOARDING;
+        }
+
+        return null;
     }
 
     public static function get_page_link()
@@ -33,7 +55,7 @@ class OnboardingPage
 
     public function page()
     {
-        $onboardingInclude = \podlove_get_onboarding_include();
+        $onboardingInclude = self::get_service_url();
 
         if (!$onboardingInclude) {
             return;
@@ -42,14 +64,34 @@ class OnboardingPage
         $authentication = Authentication::application_password();
 
         $site = urlencode(rtrim(get_site_url(), '/'));
+        $rest_url = urlencode(rtrim(get_rest_url(), '/'));
         $user = $authentication['name'];
         $password = $authentication['password'];
         $userLang = explode('_', get_locale())[0];
 
-        $iframeSrc = "{$onboardingInclude}?site_url={$site}&user_login={$user}&password={$password}&lang={$userLang}";
+        $nonce = wp_create_nonce('podlove_onboarding_acknowledge');
+        $wp_user_id = get_current_user_id();
+        $acknowledgeOption = Onboarding::get_acknowlegde_option($wp_user_id);
+
+        $iframeSrc = "{$onboardingInclude}?site_url={$site}&rest_url={$rest_url}&user_login={$user}&password={$password}&lang={$userLang}";
         $acknowledgeHeadline = __('Onboarding Assistant 👋', 'podlove-podcasting-plugin-for-wordpress');
         $acknowledgeDescription = __('To be able to offer you this service, we have to run the onboarding assistant on our external server. We have done everything in our power to make the service as privacy friendly as possible. We do not store any of your entered data, everything is saved in your browser 🤞. However, it is important to us that you are aware of this fact before you use the onboarding service.', 'podlove-podcasting-plugin-for-wordpress');
         $acknowledgeButton = __('All right, I\'ve got it', 'podlove-podcasting-plugin-for-wordpress');
+        $httpsWarningText = __('Warning: Your website is not configured to use https! This usually means that the authentication method the assistant uses is disabled by WordPress for security reasons. Please enable https before continuing.', 'podlove-podcasting-plugin-for-wordpress');
+        $applicationPasswordWarningText = __('Warning: Application passwords are not available. Maybe a security plugin is blocking them.', 'podlove-podcasting-plugin-for-wordpress');
+
+        $httpsWarning = !wp_is_using_https() ? <<<EOD
+          <p class="onboarding-warning">⚠️ {$httpsWarningText}</p>
+        EOD : '';
+
+        $applicationPasswordWarning = !wp_is_application_passwords_available_for_user(wp_get_current_user()) ? <<<EOD
+          <p class="onboarding-warning">⚠️ {$applicationPasswordWarningText}</p>
+        EOD : '';
+
+        // don't skip intro page if there are warnings
+        if ($httpsWarning || $applicationPasswordWarning) {
+            $acknowledgeOption = false;
+        }
 
         echo <<<EOD
       <iframe id="onboarding-assistant" class="hidden"></iframe>
@@ -57,6 +99,8 @@ class OnboardingPage
         <div id="onboarding-acknowledge-message">
           <h1 class="onboarding-headline">{$acknowledgeHeadline}</h1>
           <p class="onboarding-description">{$acknowledgeDescription}</p>
+          {$httpsWarning}
+          {$applicationPasswordWarning}
           <button id="acknowledge-button" class="onboarding-button">{$acknowledgeButton}</button>
         </div>
       </div>
@@ -65,10 +109,9 @@ class OnboardingPage
         const acknowledgeHint = document.getElementById("onboarding-acknowledge");
         const acknowledgeButton = document.getElementById("acknowledge-button");
         const onboardingAssistant = document.getElementById("onboarding-assistant");
-        const onboardingAcknowledged = localStorage.getItem("podlove-pulbisher:onboarding-acknowledged");
+        const onboardingAcknowledged = "{$acknowledgeOption}";
 
         function loadService() {
-          localStorage.setItem("podlove-pulbisher:onboarding-acknowledged", true);
           onboardingAssistant.contentWindow.location.href = "{$iframeSrc}";
           onboardingAssistant.classList.remove("hidden");
           acknowledgeHint.classList.add("hidden");
@@ -78,7 +121,19 @@ class OnboardingPage
           loadService();
         }
 
-        acknowledgeButton.addEventListener("click", loadService);
+        acknowledgeButton.addEventListener("click", function() {
+          fetch(ajaxurl + '?' + new URLSearchParams({
+              action: 'podlove-onboarding-acknowledge',
+              _podlove_nonce: "{$nonce}"
+            }),
+            {
+              method: 'GET'
+          }).then(response => {
+            if (response.ok) {
+              loadService();
+            }
+          })
+        });
       </script>
 
       <style>
@@ -123,6 +178,11 @@ class OnboardingPage
 
         .onboarding-description {
           color: rgb(107 114 128);
+        }
+
+        .onboarding-warning {
+          color: rgb(107 114 128);
+          font-weight: bold;
         }
 
         .update-message {

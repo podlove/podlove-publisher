@@ -130,17 +130,29 @@ class Podcast_Post_Type
     public function enable_tag_and_category_search($query)
     {
         // @see https://github.com/podlove/podlove-publisher/issues/1017
-        if (defined('PODLOVE_DISABLE_TAG_AND_CATEGORY_SEARCH') && PODLOVE_DISABLE_TAG_AND_CATEGORY_SEARCH) {
+        if (defined('PODLOVE_DISABLE_TAG_AND_CATEGORY_SEARCH') && constant('PODLOVE_DISABLE_TAG_AND_CATEGORY_SEARCH')) {
+            return $query;
+        }
+
+        // Only modify main queries on the frontend
+        if (!$query->is_main_query() || is_admin()) {
             return $query;
         }
 
         if ((is_category() || is_tag()) && empty($query->query_vars['suppress_filters'])) {
             $post_type = $query->get('post_type');
 
-            $query->set('post_type', $post_type ? $post_type : get_post_types());
+            // Ensure post_type is an array with 'podcast' included
+            $post_type = empty($post_type) ? ['post'] : (array) $post_type;
 
-            return $query;
+            if (!in_array('podcast', $post_type)) {
+                $post_type[] = 'podcast';
+            }
+
+            $query->set('post_type', $post_type);
         }
+
+        return $query;
     }
 
     public function default_excerpt_to_episode_summary($excerpt, $post)

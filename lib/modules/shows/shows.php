@@ -23,6 +23,7 @@ class Shows extends \Podlove\Modules\Base
         add_action('admin_print_styles', [$this, 'scripts_and_styles']);
 
         add_filter('podlove_feed_title', [$this, 'override_feed_title'], 20);
+        add_filter('podlove_feed_guid', [$this, 'override_feed_guid'], 20);
         add_filter('podlove_feed_itunes_subtitle', [$this, 'override_feed_subtitle'], 5);
         add_filter('podlove_feed_itunes_summary', [$this, 'override_feed_summary'], 5);
         add_filter('podlove_rss_feed_description', [$this, 'override_feed_description'], 20);
@@ -198,6 +199,11 @@ class Shows extends \Podlove\Modules\Base
         return self::get_feed_modification($title, 'title');
     }
 
+    public function override_feed_guid($guid)
+    {
+        return self::get_feed_modification($guid, 'guid');
+    }
+
     public function override_feed_subtitle($subtitle)
     {
         return self::get_feed_modification($subtitle, 'subtitle');
@@ -238,7 +244,7 @@ class Shows extends \Podlove\Modules\Base
      */
     public function episode_show_meta_box()
     {
-      ?>
+        ?>
       <div data-client="podlove">
         <podlove-show-select></podlove-show-select>
       </div>
@@ -259,15 +265,18 @@ class Shows extends \Podlove\Modules\Base
         );
     }
 
-    public static function set_show_for_episode($post_id, $show_slug) {
-      if (self::is_valid_existing_slug($show_slug)) {
-        wp_set_object_terms($post_id, $show_slug, 'shows');
-      }
+    public static function set_show_for_episode($post_id, $show_slug)
+    {
+        if (self::is_valid_existing_slug($show_slug)) {
+            wp_set_object_terms($post_id, $show_slug, 'shows');
+        }
     }
 
-    public static function is_valid_existing_slug($slug) {
-      $valid_slugs = array_map(function($show) { return $show->slug; }, Show::all());
-      return in_array($slug, $valid_slugs);
+    public static function is_valid_existing_slug($slug)
+    {
+        $valid_slugs = array_map(function ($show) { return $show->slug; }, Show::all());
+
+        return in_array($slug, $valid_slugs);
     }
 
     /*
@@ -328,6 +337,10 @@ class Shows extends \Podlove\Modules\Base
                     break;
                 case 'category':
                     return $show->category;
+                case 'guid':
+                    if ($show->guid) {
+                        return \Podlove\Feeds\get_xml_text_node('podcast:guid', $show->guid);
+                    }
 
                     break;
             }

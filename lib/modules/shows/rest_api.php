@@ -21,8 +21,8 @@ class REST_API
         ]);
 
         register_rest_route(self::api_namespace, self::api_base.'/next_episode_number', [
-          [
-              'args' => [
+            [
+                'args' => [
                     'show' => [
                         'description' => 'show slug',
                         'type' => 'string'
@@ -39,15 +39,22 @@ class REST_API
     {
         $shows = Show::all();
 
+        $shows = array_map(function ($show) {
+            $show = (array) $show;
+            $show['feeds'] = \Podlove\Api\Feeds\WP_REST_PodloveFeed_Controller::get_feeds('shows', $show['id']);
+
+            return $show;
+        }, $shows);
+
         return rest_ensure_response($shows);
     }
 
     public function get_next_episode_number($request)
     {
-      $slug = $request->get_param('show');
-      $show = $slug ? Show::find_one_term_by_property('slug', $slug) : null;
+        $slug = $request->get_param('show');
+        $show = $slug ? Show::find_one_term_by_property('slug', $slug) : null;
 
-      return Episode::get_next_episode_number($show ? $show->slug : null);
+        return Episode::get_next_episode_number($show ? $show->slug : null);
     }
 
     public function permission_check()
