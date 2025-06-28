@@ -3,7 +3,7 @@ Contributors: eteubert
 Donate link: https://opencollective.com/podlove
 Tags: podlove, podcast, publishing, rss, audio
 Tested up to: 6.7.2
-Stable tag: 4.2.4
+Stable tag: 4.3.0-beta1
 Requires at least: 4.9.6
 Requires PHP: 8.0
 License: MIT
@@ -114,6 +114,19 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 6. Includes the Podlove Web Player. One more thing: you can manage and present all contributors easily.
 
 == Changelog ==
+
+= Unreleased =
+
+Reworked and extended the Publisher PLUS service.
+
+Highlight: The "File Storage" feature allows to conveniently upload media files to PLUS.
+There is a migration tool to copy existing media files to PLUS.
+
+Feature management moved. There is now a "Publisher PLUS" settings page for token management and feature toggles.
+
+If certain features are not enabled, banners explain their usefulness.
+
+"Publisher PLUS" is a module and can be disabled. This also disables all related banners.
 
 = 4.2.4 =
 
