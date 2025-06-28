@@ -20,7 +20,7 @@
         </p>
 
         <p class="text-sm text-gray-600 mb-2">
-          You can enable file storage by clicking the button below. This will automatically upload
+          You can enable file storage by using the feature switch here. This will automatically upload
           your podcast files to the cloud and make them available for download.
         </p>
 
