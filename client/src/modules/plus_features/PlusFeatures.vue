@@ -58,6 +58,7 @@ import * as plusFileMigration from '@store/plusFileMigration.store'
 import { injectStore, mapState } from 'redux-vuex'
 import * as plus from '@store/plus.store'
 import { selectors } from '@store'
+import type { PlusFeatures } from '@store/plus.store'
 
 export default defineComponent({
   components: {
@@ -81,16 +82,16 @@ export default defineComponent({
   },
 
   methods: {
-    handleFeatureToggle(featureKey: string) {
+    handleFeatureToggle(featureKey: keyof PlusFeatures) {
       this.dispatch(plus.setFeature({ feature: featureKey, value: !this.features[featureKey] }))
     },
   },
 
   computed: {
-    features() {
+    features(): PlusFeatures {
       return this.state.features
     },
-    needsMigration() {
+    needsMigration(): boolean {
       return !this.state.isMigrationComplete && this.state.files && this.state.files.length > 0
     },
   },

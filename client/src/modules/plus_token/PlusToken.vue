@@ -78,16 +78,16 @@ export default defineComponent({
   },
 
   computed: {
-    apiToken() {
+    apiToken(): string {
       return this.state.token
     },
-    isTokenValid() {
+    isTokenValid(): boolean {
       return this.state.user !== null
     },
-    userEmail() {
+    userEmail(): string {
       return this.state.user?.email || ''
     },
-    showContent() {
+    showContent(): boolean {
       return !this.state.isLoading
     },
   },

@@ -1,11 +1,13 @@
 import { handleActions, createAction } from 'redux-actions'
 import * as lifecycle from './lifecycle.store'
 
+export type PlusFeatures = {
+  fileStorage: boolean
+  feedProxy: boolean
+}
+
 export type State = {
-  features: {
-    fileStorage: boolean
-    feedProxy: boolean
-  }
+  features: PlusFeatures
   token: string
   user: {
     email: string

@@ -139,22 +139,22 @@ export default defineComponent({
     },
   },
   computed: {
-    progress() {
+    progress(): number {
       return this.state.progress
     },
-    totalFiles() {
+    totalFiles(): number {
       return this.state.files.reduce((acc: number, file: any) => acc + file.files.length, 0)
     },
-    totalEpisodes() {
+    totalEpisodes(): number {
       return this.state.files.length
     },
-    currentEpisodeName() {
+    currentEpisodeName(): string {
       return this.state.currentEpisodeName
     },
-    currentFileName() {
+    currentFileName(): string {
       return this.state.currentFileName
     },
-    uiState() {
+    uiState(): string {
       return this.state.totalState
     },
   },
