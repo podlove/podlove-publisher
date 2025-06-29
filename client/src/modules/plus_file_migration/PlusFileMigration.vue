@@ -100,7 +100,12 @@
         </div>
 
         <section class="bg-gray-50 my-5 p-5 rounded-lg">
-          <h3 class="text-base font-medium text-gray-800 mb-2">Currently Uploading</h3>
+          <div class="flex items-center mb-2">
+            <h3 class="text-base font-medium text-gray-800">Currently Uploading</h3>
+            <div class="ml-2 animate-spin">
+              <div class="w-4 h-4 border-2 border-gray-300 border-t-gray-700 rounded-full"></div>
+            </div>
+          </div>
           <p class="text-gray-600 text-sm mb-1">
             <strong>Episode:</strong> {{ currentEpisodeName }}
           </p>
