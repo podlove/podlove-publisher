@@ -132,10 +132,12 @@ class WP_REST_PodlovePlus_Controller extends \WP_REST_Controller
 
         if ($feature === 'fileStorage') {
             $podcast->plus_enable_storage = $value;
+            do_action('podlove_plus_enable_storage_changed', $value);
         }
 
         if ($feature === 'feedProxy') {
             $podcast->plus_enable_proxy = $value;
+            do_action('podlove_plus_enable_proxy_changed', $value);
         }
 
         $podcast->save();
