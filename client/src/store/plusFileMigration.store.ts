@@ -22,6 +22,7 @@ export type State = {
   currentFileName: string
   episodesWithFiles: EpisodeWithFiles[]
   isMigrationComplete: boolean
+  showMigrationToolManually: boolean
 }
 
 export const initialState: State = {
@@ -31,6 +32,7 @@ export const initialState: State = {
   currentFileName: '',
   episodesWithFiles: [],
   isMigrationComplete: false,
+  showMigrationToolManually: false,
 }
 
 export const INIT = 'podlove/publisher/plusFileMigration/INIT'
@@ -41,6 +43,7 @@ export const SET_CURRENT_METADATA = 'podlove/publisher/plusFileMigration/SET_CUR
 export const SET_FILE_STATE = 'podlove/publisher/plusFileMigration/SET_FILE_STATE'
 export const SET_PROGRESS = 'podlove/publisher/plusFileMigration/SET_PROGRESS'
 export const SET_MIGRATION_COMPLETE = 'podlove/publisher/plusFileMigration/SET_MIGRATION_COMPLETE'
+export const TOGGLE_MIGRATION_TOOL_MANUALLY = 'podlove/publisher/plusFileMigration/TOGGLE_MIGRATION_TOOL_MANUALLY'
 
 export const init = createAction<void>(INIT)
 export const setEpisodesWithFiles =
@@ -53,6 +56,7 @@ export const setFileState = createAction<{ filename: string; state: UploadState 
 export const setProgress = createAction<{ progress: number }>(SET_PROGRESS)
 export const setMigrationComplete =
   createAction<{ isMigrationComplete: boolean }>(SET_MIGRATION_COMPLETE)
+export const toggleMigrationToolManually = createAction<void>(TOGGLE_MIGRATION_TOOL_MANUALLY)
 
 export const reducer = handleActions(
   {
@@ -99,6 +103,10 @@ export const reducer = handleActions(
       ...state,
       isMigrationComplete: action.payload.isMigrationComplete,
     }),
+    [TOGGLE_MIGRATION_TOOL_MANUALLY]: (state: State): State => ({
+      ...state,
+      showMigrationToolManually: !state.showMigrationToolManually,
+    }),
   },
   initialState
 )
@@ -110,4 +118,5 @@ export const selectors = {
   currentFileName: (state: State) => state.currentFileName,
   episodesWithFiles: (state: State) => state.episodesWithFiles,
   isMigrationComplete: (state: State) => state.isMigrationComplete,
+  showMigrationToolManually: (state: State) => state.showMigrationToolManually,
 }

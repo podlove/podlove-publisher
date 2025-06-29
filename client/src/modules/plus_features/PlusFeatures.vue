@@ -13,6 +13,16 @@
         :modelValue="features.fileStorage"
         @update:modelValue="handleFeatureToggle('fileStorage')"
       >
+        <template #settings-action v-if="features.fileStorage">
+          <button
+            @click="toggleMigrationTool"
+            class="p-1 text-gray-400 hover:text-gray-600 transition-colors flex items-center gap-1"
+            title="Show Migration Tool"
+          >
+            <Cog6ToothIcon class="size-5" /> <span>Show Migration Tool</span>
+          </button>
+        </template>
+
         <p class="text-sm text-gray-600 mb-2">
           Store your podcast files in fast and reliable cloud storage. Don't worry about dealing
           with WordPress performance issues as your podcast grows. Focus on creating great content
@@ -30,7 +40,7 @@
           configure it here in the plugin.
         </p>
 
-        <template #footer v-if="features.fileStorage && needsMigration">
+        <template #footer v-if="features.fileStorage && (needsMigration || showMigrationTool)">
           <PlusFileMigration />
         </template>
       </Feature>
@@ -52,6 +62,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
+import { Cog6ToothIcon } from '@heroicons/vue/24/outline'
 import Feature from './Feature.vue'
 import PlusFileMigration from '../plus_file_migration/PlusFileMigration.vue'
 import * as plusFileMigration from '@store/plusFileMigration.store'
@@ -64,6 +75,7 @@ export default defineComponent({
   components: {
     Feature,
     PlusFileMigration,
+    Cog6ToothIcon,
   },
 
   setup() {
@@ -72,6 +84,7 @@ export default defineComponent({
         features: selectors.plus.features,
         files: selectors.plusFileMigration.episodesWithFiles,
         isMigrationComplete: selectors.plusFileMigration.isMigrationComplete,
+        showMigrationToolManually: selectors.plusFileMigration.showMigrationToolManually,
       }),
       dispatch: injectStore().dispatch,
     }
@@ -85,6 +98,9 @@ export default defineComponent({
     handleFeatureToggle(featureKey: keyof PlusFeatures) {
       this.dispatch(plus.setFeature({ feature: featureKey, value: !this.features[featureKey] }))
     },
+    toggleMigrationTool() {
+      this.dispatch(plusFileMigration.toggleMigrationToolManually())
+    },
   },
 
   computed: {
@@ -93,6 +109,9 @@ export default defineComponent({
     },
     needsMigration(): boolean {
       return !this.state.isMigrationComplete && this.state.files && this.state.files.length > 0
+    },
+    showMigrationTool(): boolean {
+      return this.state.showMigrationToolManually
     },
   },
 })

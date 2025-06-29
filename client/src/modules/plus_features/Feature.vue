@@ -6,14 +6,17 @@
       <div class="mb-3 flex items-center justify-between">
         <h3 class="text-base font-medium text-gray-800">{{ title }}</h3>
         <div class="flex items-center gap-3">
-          <span
-            v-if="modelValue"
-            class="rounded-full bg-green-100 px-3 py-1 text-xs font-medium text-green-600"
-            >Active</span
-          >
-          <span v-else class="rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-500"
-            >Disabled</span
-          >
+          <div class="flex items-center gap-2">
+            <slot name="settings-action"></slot>
+            <span
+              v-if="modelValue"
+              class="rounded-full bg-green-100 px-3 py-1 text-xs font-medium text-green-600"
+              >Active</span
+            >
+            <span v-else class="rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-500"
+              >Disabled</span
+            >
+          </div>
           <Switch
             :modelValue="modelValue"
             @update:modelValue="$emit('update:modelValue', $event)"
