@@ -67,11 +67,17 @@ function* migrateFile(
   yield put(plusFileMigration.setFileState({ filename: currentFileName, state: 'in_progress' }))
 
   try {
-    yield api.post(`plus/migrate_file`, {
+    const response = yield api.post(`plus/migrate_file`, {
       filename: currentFileName,
       file_url: currentFile.localUrl,
     })
-    yield put(plusFileMigration.setFileState({ filename: currentFileName, state: 'finished' }))
+
+    if (response.result === false) {
+      yield put(plusFileMigration.setFileState({ filename: currentFileName, state: 'error' }))
+    } else {
+      yield put(plusFileMigration.setFileState({ filename: currentFileName, state: 'finished' }))
+    }
+
   } catch (error) {
     yield put(plusFileMigration.setFileState({ filename: currentFileName, state: 'error' }))
     throw error

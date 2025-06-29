@@ -13,7 +13,8 @@
         </div>
         <h3 class="text-lg font-medium text-gray-800 mb-2.5">Upload Complete!</h3>
         <p class="text-gray-600 text-sm mb-6 max-w-md mx-auto">
-          All your files have been successfully uploaded.
+          <span v-if="failedFiles === 0">All your files have been successfully uploaded.</span>
+          <span v-else>Upload process completed with {{ failedFiles }} failed upload{{ failedFiles > 1 ? 's' : '' }}.</span>
         </p>
 
         <div class="bg-gray-50 rounded-lg p-5 mx-auto m-5 text-left">
@@ -22,16 +23,41 @@
             <span>Total Episodes:</span>
             <span>{{ totalEpisodes }}</span>
           </div>
-          <div class="flex justify-between text-sm text-gray-600">
+          <div class="flex justify-between mb-2.5 text-sm text-gray-600">
             <span>Total Files:</span>
             <span>{{ totalFiles }}</span>
+          </div>
+          <div v-if="failedFiles > 0" class="flex justify-between mb-4 text-sm text-red-600">
+            <span>Failed Uploads:</span>
+            <span>{{ failedFiles }}</span>
+          </div>
+
+          <div v-if="failedFiles > 0" class="border-t border-gray-200 pt-4">
+            <div class="text-sm font-medium text-gray-800 mb-3">Failed Uploads:</div>
+            <div class="space-y-2">
+              <div v-for="failedFile in failedFilesList" :key="`${failedFile.episodeName}-${failedFile.fileName}`"
+                   class="bg-red-50 border border-red-200 rounded p-3">
+                <div class="text-sm text-red-800">
+                  <div class="font-medium">{{ failedFile.episodeName }}</div>
+                  <div class="text-red-600 mt-1">{{ failedFile.fileName }}</div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
         <p class="text-gray-600 text-left text-sm px-2 mx-auto">
-          Starting immediately, your files will be served from PLUS Cloud Storage to all listeners.
-          When you create and manage new episodes, files will be directly uploaded to PLUS Cloud
-          Storage.<br /><br />Happy podcasting!
+          <span v-if="failedFiles === 0">
+            Starting immediately, your files will be served from PLUS Cloud Storage to all listeners.
+            When you create and manage new episodes, files will be directly uploaded to PLUS Cloud
+            Storage.<br /><br />Happy podcasting!
+          </span>
+          <span v-else>
+            Successfully uploaded files will be served from PLUS Cloud Storage to all listeners.
+            You may want to retry uploading the failed files or check the file URLs and try again.
+            When you create and manage new episodes, files will be directly uploaded to PLUS Cloud
+            Storage.
+          </span>
         </p>
       </div>
     </section>
@@ -147,6 +173,25 @@ export default defineComponent({
     },
     totalEpisodes(): number {
       return this.state.files.length
+    },
+    failedFiles(): number {
+      return this.state.files.reduce((acc: number, episode: any) => {
+        return acc + episode.files.filter((file: any) => file.state === 'error').length
+      }, 0)
+    },
+    failedFilesList(): Array<{episodeName: string, fileName: string}> {
+      const failedFiles: Array<{episodeName: string, fileName: string}> = []
+      this.state.files.forEach((episode: any) => {
+        episode.files.forEach((file: any) => {
+          if (file.state === 'error') {
+            failedFiles.push({
+              episodeName: episode.episodeName,
+              fileName: file.name
+            })
+          }
+        })
+      })
+      return failedFiles
     },
     currentEpisodeName(): string {
       return this.state.currentEpisodeName
