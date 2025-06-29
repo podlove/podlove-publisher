@@ -8,7 +8,6 @@ class FileStorage
 {
     private $module;
     private $api;
-    private static $nonce = 'update_assets_settings';
 
     public function __construct($module, $api)
     {
@@ -20,10 +19,6 @@ class FileStorage
     {
         add_action('podlove_before_assign_assets_settings', [$this, 'settings_card']);
         add_action('podlove_data_js', [$this, 'extend_data_js']);
-
-        if (isset($_REQUEST['page']) && $_REQUEST['page'] == 'podlove_episode_assets_settings_handle' && isset($_REQUEST['update_plus_settings']) && $_REQUEST['update_plus_settings'] == 'true') {
-            add_action('admin_bar_init', [$this, 'save_setting']);
-        }
 
         add_filter('podlove_file_url_template', [self::class, 'file_url_template']);
         add_filter('podlove_url_template_field_config', [$this, 'modify_url_template_field']);
@@ -80,27 +75,6 @@ class FileStorage
         $data['plus']['storage_enabled'] = self::is_enabled();
 
         return $data;
-    }
-
-    public function save_setting()
-    {
-        if (!wp_verify_nonce($_REQUEST['_podlove_nonce'], self::$nonce)) {
-            return;
-        }
-
-        $podcast_settings = get_option('podlove_podcast', []);
-
-        if (isset($_REQUEST['podlove_podcast'])) {
-            $podcast_settings['plus_enable_storage'] = $_REQUEST['podlove_podcast']['plus_enable_storage'] == 'on';
-        } else {
-            $podcast_settings['plus_enable_storage'] = false;
-        }
-
-        update_option('podlove_podcast', $podcast_settings);
-
-        do_action('podlove_plus_enable_storage_changed', $podcast_settings['plus_enable_storage']);
-
-        header('Location: '.get_site_url().'/wp-admin/admin.php?page=podlove_episode_assets_settings_handle');
     }
 
     // advertise the file storage if it is not enabled
