@@ -21,6 +21,7 @@ class FileStorage
         add_action('podlove_data_js', [$this, 'extend_data_js']);
 
         add_filter('podlove_file_url_template', [self::class, 'file_url_template']);
+        add_filter('podlove_media_file_base_uri', [self::class, 'file_url_base']);
         add_filter('podlove_url_template_field_config', [$this, 'modify_url_template_field']);
 
         if (self::is_enabled()) {
@@ -36,12 +37,21 @@ class FileStorage
         return $tabs;
     }
 
-    public static function file_url_template($template)
+    public static function file_url_base()
     {
         if (self::is_enabled()) {
             $base_url = Plus::base_url();
             $podcast = Podcast::get();
-            $template = trailingslashit($base_url).'download/'.$podcast->plus_slug.'/%episode_slug%%suffix%.%format_extension%';
+            $template = trailingslashit($base_url).'download/'.$podcast->plus_slug.'/';
+        }
+
+        return $template;
+    }
+
+    public static function file_url_template($template)
+    {
+        if (self::is_enabled()) {
+            $template = trailingslashit(self::file_url_base()).'%episode_slug%%suffix%.%format_extension%';
         }
 
         return $template;
@@ -51,10 +61,11 @@ class FileStorage
     {
         if (self::is_enabled()) {
             // Get local URL by temporarily removing the filter
+            remove_filter('podlove_media_file_base_uri', [self::class, 'file_url_base']);
             remove_filter('podlove_file_url_template', [self::class, 'file_url_template']);
             $local_url = $file->get_file_url();
+            add_filter('podlove_media_file_base_uri', [self::class, 'file_url_base']);
             add_filter('podlove_file_url_template', [self::class, 'file_url_template']);
-
             return $local_url;
         }
 
@@ -91,7 +102,7 @@ class FileStorage
     {
         if (self::is_enabled()) {
             $config['attributes'] = 'class="large-text" readonly disabled style="background-color: #f0f0f0; color: #666;"';
-            $config['description'] = '<strong>' . __('This setting is managed automatically by PLUS File Storage.', 'podlove-podcasting-plugin-for-wordpress') . '</strong>';
+            $config['description'] = '<strong>'.__('This setting is managed automatically by PLUS File Storage.', 'podlove-podcasting-plugin-for-wordpress').'</strong>';
         }
 
         return $config;
