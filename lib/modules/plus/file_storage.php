@@ -37,15 +37,15 @@ class FileStorage
         return $tabs;
     }
 
-    public static function file_url_base()
+    public static function file_url_base($url_base = null)
     {
         if (self::is_enabled()) {
             $base_url = Plus::base_url();
             $podcast = Podcast::get();
-            $template = trailingslashit($base_url).'download/'.$podcast->plus_slug.'/';
+            $url_base = trailingslashit($base_url).'download/'.$podcast->plus_slug.'/';
         }
 
-        return $template;
+        return $url_base;
     }
 
     public static function file_url_template($template)
@@ -66,6 +66,7 @@ class FileStorage
             $local_url = $file->get_file_url();
             add_filter('podlove_media_file_base_uri', [self::class, 'file_url_base']);
             add_filter('podlove_file_url_template', [self::class, 'file_url_template']);
+
             return $local_url;
         }
 
