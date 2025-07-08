@@ -119,13 +119,13 @@
       </podlove-button>
 
       <podlove-button
-        v-if="state.selectedFiles && state.selectedFiles.length > 0 && allFilesUploaded"
-        variant="primary"
+        v-if="state.selectedFiles && state.selectedFiles.length > 0"
+        variant="secondary"
         @click="selectAnotherFile"
         class="ml-1 mt-3"
       >
-        <upload-icon class="-ml-0.5 mr-2 h-4 w-4" aria-hidden="true" />
-        {{ __('Select more Files for Upload', 'podlove-podcasting-plugin-for-wordpress') }}
+        <plus-icon class="-ml-0.5 mr-2 h-4 w-4" aria-hidden="true" />
+        {{ __('Add more Files', 'podlove-podcasting-plugin-for-wordpress') }}
       </podlove-button>
     </div>
   </div>
@@ -137,7 +137,7 @@ import { mapState, injectStore } from 'redux-vuex'
 
 import { plusUploadIntent } from '@store/mediafiles.store'
 import PodloveButton from '@components/button/Button.vue'
-import { CloudArrowUpIcon as UploadIcon, DocumentTextIcon, XMarkIcon } from '@heroicons/vue/24/outline'
+import { CloudArrowUpIcon as UploadIcon, PlusIcon, DocumentTextIcon, XMarkIcon } from '@heroicons/vue/24/outline'
 import { State, selectors } from '@store'
 import * as mediafiles from '@store/mediafiles.store'
 
@@ -154,6 +154,7 @@ export default defineComponent({
     UploadIcon,
     DocumentTextIcon,
     XMarkIcon,
+    PlusIcon,
   },
   data() {
     return {}
@@ -182,14 +183,17 @@ export default defineComponent({
     handleFileSelection(event: Event): void {
       const fileList = (event.target as HTMLInputElement).files
       if (!fileList || fileList.length === 0) {
-        this.dispatch({ type: mediafiles.SET_FILE_INFO, payload: [] })
         return
       }
 
       const filesArray = Array.from(fileList)
       const episodeSlug = this.state.episodeSlug
 
-      this.dispatch(mediafiles.fileSelected(filesArray, episodeSlug))
+      const existingFiles = this.state.selectedFiles || []
+      const existingFileObjects = existingFiles.map((fileInfo: FileInfo) => fileInfo.file)
+      const allFiles = [...existingFileObjects, ...filesArray]
+
+      this.dispatch(mediafiles.fileSelected(allFiles, episodeSlug))
     },
     resetFiles() {
       this.dispatch({ type: mediafiles.SET_FILE_INFO, payload: [] })
@@ -204,7 +208,6 @@ export default defineComponent({
       }
     },
     selectAnotherFile() {
-      this.resetFiles()
       this.triggerFileInput()
     },
     getUploadProgress(fileName: string): number | null {
