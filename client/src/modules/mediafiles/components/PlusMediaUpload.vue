@@ -67,7 +67,10 @@
               </div>
 
               <!-- File Exists Warning -->
-              <div v-if="fileInfo?.fileExists" class="mt-2 flex items-center text-yellow-600">
+              <div
+                v-if="fileInfo?.fileExists && uploadStatus != 'finished'"
+                class="mt-2 flex items-center text-yellow-600"
+              >
                 <span class="text-xs">
                   {{
                     __(
@@ -109,6 +112,16 @@
       >
         <upload-icon class="-ml-0.5 mr-2 h-4 w-4" aria-hidden="true" />
         {{ __('Upload Media File', 'podlove-podcasting-plugin-for-wordpress') }}
+      </podlove-button>
+
+      <podlove-button
+        v-if="fileInfo && uploadStatus == 'finished'"
+        variant="primary"
+        @click="selectAnotherFile"
+        class="ml-1 mt-3"
+      >
+        <upload-icon class="-ml-0.5 mr-2 h-4 w-4" aria-hidden="true" />
+        {{ __('Select another File for Upload', 'podlove-podcasting-plugin-for-wordpress') }}
       </podlove-button>
     </div>
   </div>
@@ -180,6 +193,10 @@ export default defineComponent({
       if (fileInput) {
         fileInput.click()
       }
+    },
+    selectAnotherFile() {
+      this.resetFile()
+      this.triggerFileInput()
     },
   },
 
