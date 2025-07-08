@@ -28,22 +28,51 @@ export function* selectMediaFromLibrary() {
  * 3. Extracts the permanent file URL and dispatches it via setUploadUrl action
  * 4. Tracks upload progress
  */
-export function* triggerPlusUpload(api: PodloveApiClient, action: Action) {
+export function* triggerPlusUpload(api: PodloveApiClient, action: Action): Generator<any, void, any> {
   const file = get(action, ['payload'])
   const progressKey = `plus-upload-${file.name}`
 
   // Reset any previous progress for this file
   yield put(progress.resetProgress(progressKey))
 
+  try {
+    const uploadUrl = yield call(getUploadUrl, api, file.name)
+    const fileUrl = yield call(uploadFileToUrl, uploadUrl, file, progressKey)
+    yield put(mediafiles.setUploadUrl(fileUrl))
+    const completeResult = yield call(completeFileUpload, api, file.name)
+
+    console.log('completeResult', completeResult)
+  } catch (error) {
+    console.error('File upload failed:', error)
+    yield put(
+      progress.setProgressStatus({
+        key: progressKey,
+        status: 'error',
+        message: error instanceof Error ? error.message : 'File upload failed',
+      })
+    )
+  }
+}
+
+/**
+ * Gets a pre-signed upload URL from the Plus API
+ */
+function* getUploadUrl(api: PodloveApiClient, filename: string): Generator<any, string, any> {
   const { result: upload_url } = yield api.post(`plus/create_file_upload`, {
-    filename: file.name,
+    filename,
   })
 
   if (!upload_url) {
-    console.error('Failed to get upload URL')
-    return
+    throw new Error('Failed to get upload URL')
   }
 
+  return upload_url
+}
+
+/**
+ * Uploads file to the provided URL with progress tracking
+ */
+function* uploadFileToUrl(uploadUrl: string, file: File, progressKey: string): Generator<any, string, any> {
   const progressChannel: Channel<ProgressPayload> = yield call(
     createAndWatchProgressChannel,
     handleProgressUpdate
@@ -51,38 +80,33 @@ export function* triggerPlusUpload(api: PodloveApiClient, action: Action) {
 
   const handleProgress = createProgressHandler(progressChannel)
 
-  try {
-    const response: AxiosResponse<any> = yield call(axios.put, upload_url, file, {
-      headers: { 'Content-Type': file.type },
-      onUploadProgress: handleProgress(progressKey),
-    })
+  const response: AxiosResponse<any> = yield call(axios.put, uploadUrl, file, {
+    headers: { 'Content-Type': file.type },
+    onUploadProgress: handleProgress(progressKey),
+  })
 
-    const fileUrl = response.config.url?.split('?')[0]
+  const fileUrl = response.config.url?.split('?')[0]
 
-    if (fileUrl) {
-      yield put(mediafiles.setUploadUrl(fileUrl))
-
-      // Complete the file upload
-      const { result: completeResult } = yield api.post(`plus/complete_file_upload`, {
-        filename: file.name,
-      })
-
-      console.log('completeResult', completeResult)
-
-      if (!completeResult) {
-        console.error('Failed to complete file upload')
-      }
-    }
-  } catch (error) {
-    console.error('File upload failed:', error)
-    yield put(
-      progress.setProgressStatus({
-        key: progressKey,
-        status: 'error',
-        message: 'File upload failed',
-      })
-    )
+  if (!fileUrl) {
+    throw new Error('Failed to extract file URL from response')
   }
+
+  return fileUrl
+}
+
+/**
+ * Completes the file upload process via Plus API
+ */
+function* completeFileUpload(api: PodloveApiClient, filename: string): Generator<any, any, any> {
+  const { result: completeResult } = yield api.post(`plus/complete_file_upload`, {
+    filename,
+  })
+
+  if (!completeResult) {
+    throw new Error('Failed to complete file upload')
+  }
+
+  return completeResult
 }
 
 function* handleProgressUpdate(value: ProgressPayload) {
