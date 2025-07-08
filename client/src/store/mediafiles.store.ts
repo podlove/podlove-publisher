@@ -9,18 +9,25 @@ export type MediaFile = {
   is_verifying: boolean
 }
 
+export type FileInfo = {
+  file: File
+  originalName: string
+  newName: string
+  fileExists?: boolean
+}
+
 export type State = {
   is_initializing: boolean
   slug_autogeneration_enabled: boolean
   files: MediaFile[]
-  fileInfo: { file: File; originalName: string; newName: string } | null
+  selectedFiles: FileInfo[]
 }
 
 export const initialState: State = {
   is_initializing: true,
   slug_autogeneration_enabled: false,
   files: [],
-  fileInfo: null,
+  selectedFiles: [],
 }
 
 export const INIT = 'podlove/publisher/mediafiles/INIT'
@@ -37,6 +44,8 @@ export const ENABLE_SLUG_AUTOGEN = 'podlove/publisher/mediafiles/ENABLE_SLUG_AUT
 export const DISABLE_SLUG_AUTOGEN = 'podlove/publisher/mediafiles/DISABLE_SLUG_AUTOGEN'
 export const FILE_SELECTED = 'podlove/publisher/mediafiles/FILE_SELECTED'
 export const SET_FILE_INFO = 'podlove/publisher/mediafiles/SET_FILE_INFO'
+export const ADD_SELECTED_FILES = 'podlove/publisher/mediafiles/ADD_SELECTED_FILES'
+export const REMOVE_SELECTED_FILE = 'podlove/publisher/mediafiles/REMOVE_SELECTED_FILE'
 
 export const init = createAction<void>(INIT)
 export const initDone = createAction<void>(INIT_DONE)
@@ -50,10 +59,13 @@ export const plusUploadIntent = createAction<File | null>(PLUS_UPLOAD_INTENT)
 export const setUploadUrl = createAction<string>(SET_UPLOAD_URL)
 export const enableSlugAutogen = createAction<void>(ENABLE_SLUG_AUTOGEN)
 export const disableSlugAutogen = createAction<void>(DISABLE_SLUG_AUTOGEN)
-export const fileSelected = (file: File, episodeSlug: string | null) => ({
+export const fileSelected = (files: File[], episodeSlug: string | null) => ({
   type: FILE_SELECTED,
-  payload: { file, episodeSlug },
+  payload: { files, episodeSlug },
 })
+
+export const addSelectedFiles = createAction<FileInfo[]>(ADD_SELECTED_FILES)
+export const removeSelectedFile = createAction<string>(REMOVE_SELECTED_FILE)
 
 // TODO: enable revalidates I think?
 export const reducer = handleActions(
@@ -108,11 +120,31 @@ export const reducer = handleActions(
       state: State,
       action: {
         type: string
-        payload: { file: File; originalName: string; newName: string } | null
+        payload: FileInfo[]
       }
     ): State => ({
       ...state,
-      fileInfo: action.payload,
+      selectedFiles: action.payload,
+    }),
+    [ADD_SELECTED_FILES]: (
+      state: State,
+      action: {
+        type: string
+        payload: FileInfo[]
+      }
+    ): State => ({
+      ...state,
+      selectedFiles: [...state.selectedFiles, ...action.payload],
+    }),
+    [REMOVE_SELECTED_FILE]: (
+      state: State,
+      action: {
+        type: string
+        payload: string
+      }
+    ): State => ({
+      ...state,
+      selectedFiles: state.selectedFiles.filter(f => f.newName !== action.payload),
     }),
   },
   initialState
@@ -122,16 +154,24 @@ export const selectors = {
   isInitializing: (state: State) => state.is_initializing,
   slugAutogenerationEnabled: (state: State) => state.slug_autogeneration_enabled,
   files: (state: State) => state.files,
-  fileInfo: (state: State) => state.fileInfo,
+  selectedFiles: (state: State) => state.selectedFiles,
 }
 
 export const actions = {
-  fileSelected: (file: File, episodeSlug: string | null) => ({
+  fileSelected: (files: File[], episodeSlug: string | null) => ({
     type: FILE_SELECTED,
-    payload: { file, episodeSlug },
+    payload: { files, episodeSlug },
   }),
-  setFileInfo: (fileInfo: { file: File; originalName: string; newName: string } | null) => ({
+  setSelectedFiles: (selectedFiles: FileInfo[]) => ({
     type: SET_FILE_INFO,
-    payload: fileInfo,
+    payload: selectedFiles,
+  }),
+  addSelectedFiles: (selectedFiles: FileInfo[]) => ({
+    type: ADD_SELECTED_FILES,
+    payload: selectedFiles,
+  }),
+  removeSelectedFile: (fileName: string) => ({
+    type: REMOVE_SELECTED_FILE,
+    payload: fileName,
   }),
 }

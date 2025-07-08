@@ -48,6 +48,7 @@ function* initialize(api: PodloveApiClient) {
   yield takeEvery(mediafiles.DISABLE, handleDisable, api)
   yield takeEvery(mediafiles.VERIFY, handleVerify, api)
   yield takeLatest(episode.SLUG_CHANGED, verifyAll, api)
+  yield takeLatest(episode.SLUG_CHANGED, updateSelectedFileNames, api)
   yield debounce(2000, wordpress.UPDATE, maybeUpdateSlug, api)
   yield takeEvery(mediafiles.FILE_SELECTED, handleFileSelection, api)
 
@@ -267,48 +268,100 @@ function* handleVerify(api: PodloveApiClient, action: { type: string; payload: n
   yield verifyEpisodeAsset(api, episodeId, assetId)
 }
 
-function* handleFileSelection(api: PodloveApiClient, action: Action) {
-  const { file, episodeSlug } = get(action, ['payload'])
+function* handleFileSelection(api: PodloveApiClient, action: Action): Generator<any, void, any> {
+  const { files, episodeSlug } = get(action, ['payload'])
 
-  const fileInfo = createFileInfo(file, episodeSlug)
+  // Extract slug from first file if no episode slug is set
+  let currentSlug = episodeSlug
+  if (!currentSlug && files.length > 0) {
+    const firstFileName = files[0].name
+    // Remove extension and use as slug
+    currentSlug = firstFileName.split('.').slice(0, -1).join('.')
 
+    // Set the episode slug immediately
+    yield put(episode.update({ prop: 'slug', value: currentSlug }))
+  }
+
+  const fileInfos = createFileInfos(files, currentSlug)
+
+  // Check if files exist for each file
+  const fileInfosWithExistenceCheck = yield all(
+    fileInfos.map((fileInfo) => call(checkFileExists, api, fileInfo))
+  )
+
+  yield put({
+    type: mediafiles.SET_FILE_INFO,
+    payload: fileInfosWithExistenceCheck,
+  })
+}
+
+function* updateSelectedFileNames(api: PodloveApiClient): Generator<any, void, any> {
+  const selectedFiles: any[] = yield select(selectors.mediafiles.selectedFiles)
+  const newSlug: string = yield select(selectors.episode.slug)
+
+  if (selectedFiles.length > 0 && newSlug) {
+    // Recreate file infos with new slug
+    const originalFiles = selectedFiles.map(fileInfo => {
+      // Create a new File with the original name
+      return new File([fileInfo.file], fileInfo.originalName, {
+        type: fileInfo.file.type,
+        lastModified: fileInfo.file.lastModified,
+      })
+    })
+
+    const updatedFileInfos = createFileInfos(originalFiles, newSlug)
+
+    // Check if files exist for each file with new names
+    const fileInfosWithExistenceCheck = yield all(
+      updatedFileInfos.map((fileInfo) => call(checkFileExists, api, fileInfo))
+    )
+
+    yield put({
+      type: mediafiles.SET_FILE_INFO,
+      payload: fileInfosWithExistenceCheck,
+    })
+  }
+}
+
+function* checkFileExists(api: PodloveApiClient, fileInfo: any): Generator<any, any, any> {
   const { result: fileExists } = yield api.post(`plus/check_file_exists`, {
     filename: fileInfo.file.name,
   })
 
-  yield put({
-    type: mediafiles.SET_FILE_INFO,
-    payload: {
-      ...fileInfo,
-      fileExists,
-    },
-  })
+  return {
+    ...fileInfo,
+    fileExists,
+  }
 }
 
 /**
- * Creates a file info object with the original file name and the file name to
+ * Creates file info objects with the original file names and the file names to
  * be used for the upload if an episode slug is provided.
  */
-function createFileInfo(file: File, episodeSlug?: string) {
-  if (!episodeSlug) {
-    return {
-      file,
-      originalName: file.name,
-      newName: file.name,
+function createFileInfos(files: File[], episodeSlug?: string) {
+  return files.map((file) => {
+    if (!episodeSlug) {
+      return {
+        file,
+        originalName: file.name,
+        newName: file.name,
+      }
     }
-  }
 
-  const extension = file.name.split('.').pop()
-  const newFile = new File([file], `${episodeSlug}.${extension}`, {
-    type: file.type,
-    lastModified: file.lastModified,
+    const extension = file.name.split('.').pop()
+    const newFileName = `${episodeSlug}.${extension}`
+
+    const newFile = new File([file], newFileName, {
+      type: file.type,
+      lastModified: file.lastModified,
+    })
+
+    return {
+      file: newFile,
+      originalName: file.name,
+      newName: newFile.name,
+    }
   })
-
-  return {
-    file: newFile,
-    originalName: file.name,
-    newName: newFile.name,
-  }
 }
 
 async function loadMeta(audio: HTMLAudioElement) {
