@@ -8,28 +8,35 @@ import { get } from 'lodash'
 export function* handleFileSelection(api: PodloveApiClient, action: Action): Generator<any, void, any> {
   const { files, episodeSlug } = get(action, ['payload'])
 
-  // Extract slug from first file if no episode slug is set
-  let currentSlug = episodeSlug
-  if (!currentSlug && files.length > 0) {
-    const firstFileName = files[0].name
-    // Remove extension and use as slug
-    currentSlug = firstFileName.split('.').slice(0, -1).join('.')
-
-    // Set the episode slug immediately
-    yield put(episode.update({ prop: 'slug', value: currentSlug }))
-  }
-
+  const currentSlug = yield call(setEpisodeSlugIfNeeded, files, episodeSlug)
   const fileInfos = createFileInfos(files, currentSlug)
-
-  // Check if files exist for each file
-  const fileInfosWithExistenceCheck = yield all(
-    fileInfos.map((fileInfo) => call(checkFileExists, api, fileInfo))
-  )
+  const fileInfosWithExistenceCheck = yield call(checkFileInfosExistence, api, fileInfos)
 
   yield put({
     type: mediafiles.SET_FILE_INFO,
     payload: fileInfosWithExistenceCheck,
   })
+}
+
+function extractSlugFromFilename(fileName: string): string {
+  return fileName.split('.').slice(0, -1).join('.')
+}
+
+function* setEpisodeSlugIfNeeded(files: File[], providedSlug: string | null): Generator<any, string, any> {
+  if (providedSlug) {
+    return providedSlug
+  }
+
+  if (files.length === 0) {
+    return ''
+  }
+
+  const firstFilename = files[0].name
+  const extractedSlug = extractSlugFromFilename(firstFilename)
+
+  yield put(episode.update({ prop: 'slug', value: extractedSlug }))
+
+  return extractedSlug
 }
 
 function* checkFileExists(api: PodloveApiClient, fileInfo: any): Generator<any, any, any> {
@@ -41,6 +48,12 @@ function* checkFileExists(api: PodloveApiClient, fileInfo: any): Generator<any, 
     ...fileInfo,
     fileExists,
   }
+}
+
+function* checkFileInfosExistence(api: PodloveApiClient, fileInfos: any[]): Generator<any, any[], any> {
+  return yield all(
+    fileInfos.map((fileInfo) => call(checkFileExists, api, fileInfo))
+  )
 }
 
 /**
