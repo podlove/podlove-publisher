@@ -23,6 +23,27 @@ class REST_API
                 'permission_callback' => [$this, 'permission_check'],
             ]
         ]);
+
+        register_rest_route(self::api_namespace, self::api_base.'/init-plus-file-transfer/(?P<production_uuid>[A-Za-z0-9\-]+)/(?P<post_id>[0-9]+)', [
+            [
+                'methods' => \WP_REST_Server::CREATABLE,
+                'callback' => [$this, 'init_plus_file_transfer'],
+                'permission_callback' => [$this, 'permission_check'],
+                'args' => [
+                    'production_uuid' => [
+                        'required' => true,
+                        'type' => 'string',
+                        'pattern' => '^[A-Z)a-z0-9\-]+$',
+                        'description' => 'The UUID of the Auphonic production'
+                    ],
+                    'post_id' => [
+                        'required' => true,
+                        'type' => 'integer',
+                        'description' => 'The ID of the post/episode'
+                    ]
+                ]
+            ]
+        ]);
     }
 
     public function get_token()
@@ -32,6 +53,64 @@ class REST_API
         return rest_ensure_response($key);
     }
 
+    public function init_plus_file_transfer($request)
+    {
+        $production_uuid = $request->get_param('production_uuid');
+        $post_id = $request->get_param('post_id');
+
+        if (!$production_uuid) {
+            return new \WP_Error('invalid_production_uuid', 'Production UUID is required', ['status' => 400]);
+        }
+
+        if (!$post_id) {
+            return new \WP_Error('invalid_post_id', 'Post ID is required', ['status' => 400]);
+        }
+
+        // Verify that the post and production are related
+        if (!$this->verify_post_production_relationship($post_id, $production_uuid)) {
+            return new \WP_Error('post_production_mismatch', 'The specified post and production are not related', ['status' => 400]);
+        }
+
+        // Fetch the production data to get the associated post
+        $production_data = $this->module->fetch_production($production_uuid);
+
+        if (!$production_data) {
+            return new \WP_Error('production_not_found', 'Could not fetch production data', ['status' => 404]);
+        }
+
+        $production = json_decode($production_data, true);
+
+        if (!$production || !isset($production['data'])) {
+            return new \WP_Error('invalid_production_data', 'Invalid production data format', ['status' => 400]);
+        }
+
+        // Check if production is done
+        if ($production['data']['status_string'] !== 'Done') {
+            return new \WP_Error('production_not_done', 'Production is not completed yet', ['status' => 400]);
+        }
+
+        // Set up $_POST to simulate webhook call
+        $_POST['uuid'] = $production_uuid;
+        $_POST['status_string'] = 'Done';
+
+        try {
+            $this->module->update_production_data($post_id);
+
+            if (\Podlove\Modules\Plus\FileStorage::is_enabled()) {
+                $this->module->initiate_plus_file_transfers($post_id);
+            }
+
+            return rest_ensure_response([
+                'success' => true,
+                'message' => 'PLUS file transfer initiated successfully',
+                'post_id' => $post_id,
+                'production_uuid' => $production_uuid
+            ]);
+        } catch (\Exception $e) {
+            return new \WP_Error('transfer_failed', 'PLUS file transfer failed: '.$e->getMessage(), ['status' => 500]);
+        }
+    }
+
     public function permission_check()
     {
         if (!current_user_can('edit_posts')) {
@@ -39,5 +118,18 @@ class REST_API
         }
 
         return true;
+    }
+
+    /**
+     * Verify that a post and production are related.
+     *
+     * @param int    $post_id
+     * @param string $production_uuid
+     *
+     * @return bool
+     */
+    private function verify_post_production_relationship($post_id, $production_uuid)
+    {
+        return get_post_meta($post_id, 'auphonic_production_id', true) === $production_uuid;
     }
 }

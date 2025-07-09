@@ -66,6 +66,11 @@ class Plus extends \Podlove\Modules\Base
         });
     }
 
+    public function get_api()
+    {
+        return $this->api;
+    }
+
     public static function base_url()
     {
         if (defined('PODLOVE_PLUS_BASE_URL')) {

@@ -1,6 +1,7 @@
 import * as auphonic from '@store/auphonic.store'
 import * as episode from '@store/episode.store'
 import * as progress from '@store/progress.store'
+import * as plus from '@store/plus.store'
 import {
   takeFirst,
   createAndWatchProgressChannel,
@@ -17,7 +18,6 @@ import {
   all,
   call,
   race,
-  cancelled,
 } from 'redux-saga/effects'
 import { createApi } from '../sagas/api'
 import { createApi as createAuphonicApi } from '../sagas/auphonic.api'
@@ -29,12 +29,14 @@ import { State } from '../store'
 import { get } from 'lodash'
 import Timestamp from '@lib/timestamp'
 import { Channel } from 'redux-saga'
+import { verifyAll } from './mediafiles.verification.sagas'
 
 function* auphonicSaga(): any {
   const apiClient: PodloveApiClient = yield createApi()
   yield fork(initialize, apiClient)
   yield takeEvery(auphonic.UPDATE_FILE_SELECTION, handleFileSelection)
   yield takeEvery(auphonic.SET_SERVICE_FILES, handleServiceFilesAvailable)
+  yield put(plus.init())
 }
 
 function* initialize(api: PodloveApiClient) {
@@ -55,6 +57,10 @@ function* initialize(api: PodloveApiClient) {
     yield takeEvery(auphonic.START_PRODUCTION, markProductionAsRunning, api)
     yield takeEvery(auphonic.STOP_POLLING, markProductionAsNotRunning, api)
     yield takeEvery(auphonic.DESELECT_PRODUCTION, markProductionAsNotRunning, api)
+
+    yield takeEvery(auphonic.TRIGGER_PLUS_TRANSFER, handleTriggerPlusTransfer, api)
+    yield takeEvery(auphonic.LOAD_PLUS_TRANSFER_STATUS, handleLoadPlusTransferStatus, api)
+    yield takeEvery(auphonic.SET_PLUS_TRANSFER_STATUS, handlePlusTransferStatusChange, api)
   }
 }
 
@@ -134,7 +140,7 @@ function* pollWatcherSaga(auphonicApi: AuphonicApiClient) {
   }
 }
 
-function* pollProductionSaga(auphonicApi: AuphonicApiClient) {
+function* pollProductionSaga(auphonicApi: AuphonicApiClient): any {
   while (true) {
     let uuid: string = yield select(selectors.auphonic.productionId)
 
@@ -151,6 +157,15 @@ function* pollProductionSaga(auphonicApi: AuphonicApiClient) {
     // DONE
     if (production.status == 3) {
       yield put(episode.update({ prop: 'slug', value: production.output_basename }))
+
+      // NOTE: is there a race condition here? because the file transfer uses
+      // the slug form the database
+
+      // trigger PLUS transfer when production finishes
+      const plusFeatures = yield select(selectors.plus.features)
+      if (plusFeatures.fileStorage) {
+        yield put(auphonic.triggerPlusTransfer({ production_uuid: production.uuid }))
+      }
     }
 
     // see https://auphonic.com/api/info/production_status.json
@@ -678,6 +693,118 @@ function* maybeRestorePresetSelection() {
     }
   }
 }
+
+function* handleTriggerPlusTransfer(api: PodloveApiClient, action: { type: string; payload: { production_uuid: string } }): any {
+  const { production_uuid } = action.payload
+  const postId: Number = yield select(selectors.post.id)
+
+  try {
+    yield put(auphonic.setPlusTransferStatus({
+      production_uuid,
+      status: 'in_progress'
+    }))
+
+    const response = yield api.post(`auphonic/init-plus-file-transfer/${production_uuid}/${postId}`, {})
+
+    if (response.result && response.result.success) {
+      yield call(pollTransferStatus, api, production_uuid)
+    } else {
+      yield put(auphonic.setPlusTransferStatus({
+        production_uuid,
+        status: 'failed',
+        errors: response.result?.message || 'Failed to trigger transfer'
+      }))
+    }
+  } catch (error: any) {
+    yield put(auphonic.setPlusTransferStatus({
+      production_uuid,
+      status: 'failed',
+      errors: error.message || 'Failed to trigger transfer'
+    }))
+  }
+}
+
+function* handleLoadPlusTransferStatus(api: PodloveApiClient, action: { type: string; payload: { production_uuid: string } }): any {
+  const { production_uuid } = action.payload
+
+  try {
+    const episodeId: string = yield select(selectors.episode.id)
+    if (!episodeId) {
+      console.error('Episode ID not available for loading transfer status')
+      return
+    }
+
+    const episodeData = yield api.get(`episodes/${episodeId}`)
+    const transferStatus = episodeData.result.auphonic_plus_transfer_status
+    const transferFiles = episodeData.result.auphonic_plus_transfer_files
+    const transferErrors = episodeData.result.auphonic_plus_transfer_errors
+
+    if (transferStatus) {
+      yield put(auphonic.setPlusTransferStatus({
+        production_uuid,
+        status: transferStatus,
+        files: transferFiles,
+        errors: transferErrors
+      }))
+    }
+  } catch (error) {
+    console.error('Error loading PLUS transfer status:', error)
+  }
+}
+
+function* handlePlusTransferStatusChange(api: PodloveApiClient, action: { type: string; payload: { production_uuid: string; status: string } }): any {
+  const { status } = action.payload
+
+  if (status === 'completed') {
+    yield call(verifyAll, api)
+  }
+}
+
+function* pollTransferStatus(api: PodloveApiClient, production_uuid: string): any {
+  const MAX_POLLS = 60 // 5 minutes with 5 second intervals
+  let pollCount = 0
+
+  while (pollCount < MAX_POLLS) {
+    yield delay(5000)
+
+    try {
+      const episodeId: string = yield select(selectors.episode.id)
+      if (!episodeId) {
+        console.error('Episode ID not available for polling transfer status')
+        break
+      }
+
+      const episodeData = yield api.get(`episodes/${episodeId}`)
+      const transferStatus = episodeData.result.auphonic_plus_transfer_status
+      const transferFiles = episodeData.result.auphonic_plus_transfer_files
+      const transferErrors = episodeData.result.auphonic_plus_transfer_errors
+
+      if (transferStatus && transferStatus !== 'in_progress') {
+        yield put(auphonic.setPlusTransferStatus({
+          production_uuid,
+          status: transferStatus,
+          files: transferFiles,
+          errors: transferErrors
+        }))
+        break
+      }
+    } catch (error) {
+      console.error('Error polling transfer status:', error)
+    }
+
+    pollCount++
+  }
+
+  if (pollCount >= MAX_POLLS) {
+    yield put(auphonic.setPlusTransferStatus({
+      production_uuid,
+      status: 'failed',
+      errors: 'Transfer polling timed out'
+    }))
+  }
+}
+
+
 
 export default function () {
   return function* () {

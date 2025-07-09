@@ -60,6 +60,7 @@ function* initialize(api: PodloveApiClient) {
   yield takeEvery(mediafiles.ENABLE, handleEnable, api)
   yield takeEvery(mediafiles.DISABLE, handleDisable, api)
   yield takeEvery(mediafiles.VERIFY, handleVerify, api)
+  yield takeEvery(mediafiles.VERIFY_ALL, verifyAll, api)
   yield takeLatest(episode.SLUG_CHANGED, verifyAll, api)
   yield takeLatest(episode.SLUG_CHANGED, updateSelectedFileNames, api)
   yield debounce(2000, wordpress.UPDATE, maybeUpdateSlug, api)

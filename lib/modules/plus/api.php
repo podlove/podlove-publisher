@@ -164,12 +164,12 @@ class API
         return false;
     }
 
-    public function migrate_file($filename, $file_url)
+    public function migrate_file($filename, $file_url, $prevent_double_uploads = true)
     {
         $filename = $this->sanitize_filename($filename);
 
         // prevent double uploads
-        if ($this->check_file_exists($filename)) {
+        if ($prevent_double_uploads && $this->check_file_exists($filename)) {
             return true;
         }
 
@@ -184,6 +184,52 @@ class API
         }
 
         return $this->complete_file_upload($filename);
+    }
+
+    /**
+     * Migrate an Auphonic file to PLUS storage.
+     *
+     * This method is a wrapper around migrate_file specifically for Auphonic files.
+     * It provides additional error handling and logging for the Auphonic integration.
+     *
+     * @param string $auphonic_url The download URL from Auphonic
+     * @param string $filename     The filename to use in PLUS storage
+     *
+     * @return bool True on success, false on failure
+     */
+    public function migrate_auphonic_file($auphonic_url, $filename)
+    {
+        $filename = $this->sanitize_filename($filename);
+
+        \Podlove\Log::get()->addInfo(
+            'Starting Auphonic file migration to PLUS storage.',
+            ['filename' => $filename, 'source_url' => $auphonic_url]
+        );
+
+        try {
+            $result = $this->migrate_file($filename, $auphonic_url, false);
+
+            if ($result) {
+                \Podlove\Log::get()->addInfo(
+                    'Auphonic file migration to PLUS storage successful.',
+                    ['filename' => $filename]
+                );
+            } else {
+                \Podlove\Log::get()->addError(
+                    'Auphonic file migration to PLUS storage failed.',
+                    ['filename' => $filename, 'source_url' => $auphonic_url]
+                );
+            }
+
+            return $result;
+        } catch (\Exception $e) {
+            \Podlove\Log::get()->addError(
+                'Auphonic file migration to PLUS storage failed with exception.',
+                ['filename' => $filename, 'source_url' => $auphonic_url, 'error' => $e->getMessage()]
+            );
+
+            return false;
+        }
     }
 
     /**

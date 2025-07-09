@@ -59,6 +59,9 @@ const auphonic = {
   isSaving: createSelector(root.auphonic, auphonicStore.selectors.isSaving),
   isInitializing: createSelector(root.auphonic, auphonicStore.selectors.isInitializing),
   publishWhenDone: createSelector(root.auphonic, auphonicStore.selectors.publishWhenDone),
+  plusTransferStatus: createSelector(root.auphonic, auphonicStore.selectors.plusTransferStatus),
+  plusTransferFiles: createSelector(root.auphonic, auphonicStore.selectors.plusTransferFiles),
+  plusTransferErrors: createSelector(root.auphonic, auphonicStore.selectors.plusTransferErrors),
 }
 
 const progress = {

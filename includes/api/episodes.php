@@ -599,6 +599,9 @@ class WP_REST_PodloveEpisode_Controller extends \WP_REST_Controller
             'license_url' => $episode->license_url,
             'auphonic_production_id' => get_post_meta($episode->post_id, 'auphonic_production_id', true),
             'is_auphonic_production_running' => get_post_meta($episode->post_id, 'is_auphonic_production_running', true),
+            'auphonic_plus_transfer_status' => get_post_meta($episode->post_id, 'auphonic_plus_transfer_status', true),
+            'auphonic_plus_transfer_files' => get_post_meta($episode->post_id, 'auphonic_plus_transfer_files', true),
+            'auphonic_plus_transfer_errors' => get_post_meta($episode->post_id, 'auphonic_plus_transfer_errors', true),
             'show' => $show
         ];
 

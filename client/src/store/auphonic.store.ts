@@ -62,6 +62,13 @@ export type Production = {
   service: string | null
 }
 
+export type PlusTransferFile = {
+  success: boolean
+  filename: string
+  download_url: string
+  message: string
+}
+
 export type AuphonicInputFile = {
   id: string
   input_file: string
@@ -117,6 +124,13 @@ export type FileSelection = {
   fileSelection: string | null
 }
 
+export type PlusTransferStatus = {
+  production_uuid: string
+  status: 'waiting_for_webhook' | 'in_progress' | 'completed' | 'failed'
+  files?: PlusTransferFile[]
+  errors?: string
+}
+
 export type State = {
   token: string | null
   production: Production | null
@@ -131,6 +145,7 @@ export type State = {
   is_saving: boolean
   is_initializing: boolean
   publish_when_done: boolean
+  plus_transfer_status: PlusTransferStatus | null
 }
 
 export const initialState: State = {
@@ -147,6 +162,7 @@ export const initialState: State = {
   is_saving: false,
   is_initializing: true,
   publish_when_done: false,
+  plus_transfer_status: null,
 }
 
 export const INIT = 'podlove/publisher/auphonic/INIT'
@@ -175,6 +191,9 @@ export const STOP_POLLING = 'podlove/publisher/auphonic/STOP_POLLING'
 export const START_SAVING = 'podlove/publisher/auphonic/START_SAVING'
 export const STOP_SAVING = 'podlove/publisher/auphonic/STOP_SAVING'
 export const UPDATE_WEBHOOK = 'podlove/publisher/auphonic/UPDATE_WEBHOOK'
+export const SET_PLUS_TRANSFER_STATUS = 'podlove/publisher/auphonic/SET_PLUS_TRANSFER_STATUS'
+export const TRIGGER_PLUS_TRANSFER = 'podlove/publisher/auphonic/TRIGGER_PLUS_TRANSFER'
+export const LOAD_PLUS_TRANSFER_STATUS = 'podlove/publisher/auphonic/LOAD_PLUS_TRANSFER_STATUS'
 
 export const init = createAction<void>(INIT)
 export const initDone = createAction<void>(INIT_DONE)
@@ -217,6 +236,9 @@ export const stopSaving = createAction<void>(STOP_SAVING)
 
 // Webhook
 export const updateWebhook = createAction<boolean>(UPDATE_WEBHOOK)
+export const setPlusTransferStatus = createAction<PlusTransferStatus>(SET_PLUS_TRANSFER_STATUS)
+export const triggerPlusTransfer = createAction<{ production_uuid: string }>(TRIGGER_PLUS_TRANSFER)
+export const loadPlusTransferStatus = createAction<{ production_uuid: string }>(LOAD_PLUS_TRANSFER_STATUS)
 
 export const reducer = handleActions(
   {
@@ -427,6 +449,12 @@ export const reducer = handleActions(
       ...state,
       publish_when_done: action.payload,
     }),
+    [SET_PLUS_TRANSFER_STATUS]: (state: State, action: { payload: PlusTransferStatus }): State => {
+      return {
+        ...state,
+        plus_transfer_status: action.payload,
+      }
+    },
   },
   initialState
 )
@@ -512,4 +540,7 @@ export const selectors = {
   isSaving: (state: State) => state.is_saving,
   isInitializing: (state: State) => state.is_initializing,
   publishWhenDone: (state: State) => state.publish_when_done,
+  plusTransferStatus: (state: State) => state.plus_transfer_status?.status,
+  plusTransferFiles: (state: State) => state.plus_transfer_status?.files,
+  plusTransferErrors: (state: State) => state.plus_transfer_status?.errors,
 }
