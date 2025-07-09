@@ -1,21 +1,39 @@
 import { PodloveApiClient } from '@lib/api'
-import { all, call, put } from 'redux-saga/effects'
+import { all, call, put, select } from 'redux-saga/effects'
 import * as mediafiles from '@store/mediafiles.store'
 import * as episode from '@store/episode.store'
 import { Action } from 'redux'
 import { get } from 'lodash'
+import { selectors } from '@store'
 
 export function* handleFileSelection(api: PodloveApiClient, action: Action): Generator<any, void, any> {
   const { files, episodeSlug } = get(action, ['payload'])
 
-  const currentSlug = yield call(setEpisodeSlugIfNeeded, files, episodeSlug)
-  const fileInfos = createFileInfos(files, currentSlug)
-  const fileInfosWithExistenceCheck = yield call(checkFileInfosExistence, api, fileInfos)
+  const existingSelectedFiles = yield select(selectors.mediafiles.selectedFiles)
 
-  yield put({
-    type: mediafiles.SET_FILE_INFO,
-    payload: fileInfosWithExistenceCheck,
-  })
+  const existingFileObjects = existingSelectedFiles.map((fileInfo: any) => fileInfo.file)
+  const newFiles = rejectExistingFiles(files, existingFileObjects)
+
+  if (newFiles.length > 0) {
+    const currentSlug = yield call(setEpisodeSlugIfNeeded, newFiles, episodeSlug)
+    const newFileInfos = createFileInfos(newFiles, currentSlug)
+    const newFileInfosWithExistenceCheck = yield call(checkFileInfosExistence, api, newFileInfos)
+
+    const allFileInfos = [...existingSelectedFiles, ...newFileInfosWithExistenceCheck]
+
+    yield put({
+      type: mediafiles.SET_FILE_INFO,
+      payload: allFileInfos,
+    })
+  }
+}
+
+function rejectExistingFiles(files: File[], existingFiles: File[]): File[] {
+  return files.filter((file: File) =>
+    !existingFiles.some((existing: File) =>
+      existing.name === file.name && existing.size === file.size
+    )
+  )
 }
 
 function extractSlugFromFilename(fileName: string): string {
