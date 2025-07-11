@@ -117,6 +117,7 @@ import { injectStore, mapState } from 'redux-vuex'
 import { selectors } from '@store'
 import { PlusTransferFile, triggerPlusTransfer, loadPlusTransferStatus } from '@store/auphonic.store'
 import { verifyAll } from '@store/mediafiles.store'
+import type { Production } from '@store/auphonic.store'
 
 import {
   ClockIcon,
@@ -170,7 +171,7 @@ export default defineComponent({
   },
 
   computed: {
-    production() {
+    production(): Production {
       return this.state.production || {}
     },
     plusTransferStatus(): 'waiting_for_webhook' | 'in_progress' | 'completed' | 'failed' | undefined {
