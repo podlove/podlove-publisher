@@ -272,7 +272,11 @@ class MediaFile extends Base
 
     public function get_file_name()
     {
-        return $this->episode()->slug.'.'.$this->episode_asset()->file_type()->extension;
+        $asset = $this->episode_asset();
+        $suffix = $asset->suffix ?? '';
+        $extension = $asset->file_type()->extension;
+
+        return $this->episode()->slug.$suffix.'.'.$extension;
     }
 
     /**
