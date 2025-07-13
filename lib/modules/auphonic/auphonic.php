@@ -469,16 +469,15 @@ class Auphonic extends \Podlove\Modules\Base
             return;
         }
 
-
         $episode = \Podlove\Model\Episode::find_one_by_post_id($post_id);
         if (!$episode) {
-          \Podlove\Log::get()->addError(
-            'Could not find episode for post ID when generating filename.',
-            ['post_id' => $post_id]
-          );
-          $this->set_transfer_status($post_id, 'failed', 'Episode not found');
+            \Podlove\Log::get()->addError(
+                'Could not find episode for post ID when generating filename.',
+                ['post_id' => $post_id]
+            );
+            $this->set_transfer_status($post_id, 'failed', 'Episode not found');
 
-          return;
+            return;
         }
 
         $plus_module = \Podlove\Modules\Plus\Plus::instance();
@@ -551,10 +550,16 @@ class Auphonic extends \Podlove\Modules\Base
         $matching_files = [];
 
         foreach ($output_files as $file) {
-            $extension = pathinfo($file['filename'], PATHINFO_EXTENSION);
+            $filename = $file['filename'];
 
-            if (in_array($extension, $configured_extensions)) {
-                $matching_files[] = $file;
+            // we purposely do not use `pathinfo` here because one of our valid
+            // "extensions" is "chapters.txt" and that would not match.
+            foreach ($configured_extensions as $extension) {
+                if (str_ends_with($filename, $extension)) {
+                    $matching_files[] = $file;
+
+                    break;
+                }
             }
         }
 
