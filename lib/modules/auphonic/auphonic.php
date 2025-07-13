@@ -3,6 +3,7 @@
 namespace Podlove\Modules\Auphonic;
 
 use Podlove\Http;
+use Podlove\Modules\Auphonic\PlusFileTransfer;
 
 class Auphonic extends \Podlove\Modules\Base
 {
@@ -17,9 +18,17 @@ class Auphonic extends \Podlove\Modules\Base
      */
     private $api;
 
+    /**
+     * Plus file transfer handler.
+     *
+     * @var Podlove\Modules\Auphonic\PlusFileTransfer
+     */
+    private $plus_file_transfer;
+
     public function load()
     {
         $this->api = new API_Wrapper($this);
+        $this->plus_file_transfer = new PlusFileTransfer($this);
 
         new EpisodeEnhancer($this);
 
@@ -141,7 +150,7 @@ class Auphonic extends \Podlove\Modules\Base
             $transfer_status = get_post_meta($post_id, 'auphonic_plus_transfer_status', true);
 
             if (empty($transfer_status) || $transfer_status === 'waiting_for_webhook') {
-                $this->initiate_plus_file_transfers($post_id);
+                $this->plus_file_transfer->initiate_transfers($post_id);
             }
         }
 
@@ -219,6 +228,16 @@ class Auphonic extends \Podlove\Modules\Base
             'post_title' => $metadata['title'],
         ]);
         wp_set_post_tags($post_id, $metadata['tags']);
+    }
+
+    /**
+     * Initiate PLUS file transfers for an episode.
+     *
+     * @param int $post_id
+     */
+    public function initiate_plus_file_transfers($post_id)
+    {
+        $this->plus_file_transfer->initiate_transfers($post_id);
     }
 
     public function convert_chapters_to_string($chapters)
@@ -437,195 +456,5 @@ class Auphonic extends \Podlove\Modules\Base
         }
     }
 
-    /**
-     * Initiate PLUS file transfers for matching Auphonic output files.
-     *
-     * @param int $post_id
-     */
-    public function initiate_plus_file_transfers($post_id)
-    {
-        $production = json_decode($this->fetch_production($_POST['uuid']), true)['data'];
 
-        if (!isset($production['output_files']) || !is_array($production['output_files'])) {
-            \Podlove\Log::get()->addInfo(
-                'No output files found in Auphonic production data.',
-                ['post_id' => $post_id]
-            );
-
-            return;
-        }
-
-        $this->set_transfer_status($post_id, 'in_progress');
-        $configured_extensions = $this->get_configured_asset_extensions();
-        $matching_files = $this->filter_output_files_by_extensions($production['output_files'], $configured_extensions);
-
-        if (empty($matching_files)) {
-            \Podlove\Log::get()->addInfo(
-                'No matching files found for configured asset extensions.',
-                ['post_id' => $post_id, 'configured_extensions' => $configured_extensions]
-            );
-            $this->set_transfer_status($post_id, 'completed');
-
-            return;
-        }
-
-        $episode = \Podlove\Model\Episode::find_one_by_post_id($post_id);
-        if (!$episode) {
-            \Podlove\Log::get()->addError(
-                'Could not find episode for post ID when generating filename.',
-                ['post_id' => $post_id]
-            );
-            $this->set_transfer_status($post_id, 'failed', 'Episode not found');
-
-            return;
-        }
-
-        $plus_module = \Podlove\Modules\Plus\Plus::instance();
-
-        $transfer_results = [];
-        foreach ($matching_files as $file) {
-            // update the file name based on the episode slug, because the
-            // Auphonic file name might not match the Publisher expectation.
-            $original_filename = $file['filename'];
-            $extension = pathinfo($original_filename, PATHINFO_EXTENSION);
-            $new_filename = $episode->slug.'.'.$extension;
-            $file['filename'] = $new_filename;
-
-            $result = $this->transfer_file_to_plus($plus_module, $file, $post_id);
-            $transfer_results[] = $result;
-        }
-
-        $failed_transfers = array_filter($transfer_results, function ($result) {
-            return !$result['success'];
-        });
-
-        if (empty($failed_transfers)) {
-            $this->set_transfer_status($post_id, 'completed');
-            \Podlove\Log::get()->addInfo(
-                'All Auphonic files transferred successfully to PLUS storage.',
-                ['post_id' => $post_id, 'files_count' => count($matching_files)]
-            );
-        } else {
-            $this->set_transfer_status($post_id, 'failed', 'Some files failed to transfer');
-            \Podlove\Log::get()->addError(
-                'Some Auphonic files failed to transfer to PLUS storage.',
-                ['post_id' => $post_id, 'failed_count' => count($failed_transfers)]
-            );
-        }
-
-        // Store transfer results for UI feedback
-        update_post_meta($post_id, 'auphonic_plus_transfer_files', $transfer_results);
-    }
-
-    /**
-     * Get configured asset extensions.
-     *
-     * @return array
-     */
-    private function get_configured_asset_extensions()
-    {
-        $extensions = [];
-        $episode_assets = \Podlove\Model\EpisodeAsset::all();
-
-        foreach ($episode_assets as $asset) {
-            $file_type = $asset->file_type();
-            if ($file_type) {
-                $extensions[] = $file_type->extension;
-            }
-        }
-
-        return array_unique($extensions);
-    }
-
-    /**
-     * Filter output files to only include those matching configured extensions.
-     *
-     * @param array $output_files
-     * @param array $configured_extensions
-     *
-     * @return array
-     */
-    private function filter_output_files_by_extensions($output_files, $configured_extensions)
-    {
-        $matching_files = [];
-
-        foreach ($output_files as $file) {
-            $filename = $file['filename'];
-
-            // we purposely do not use `pathinfo` here because one of our valid
-            // "extensions" is "chapters.txt" and that would not match.
-            foreach ($configured_extensions as $extension) {
-                if (str_ends_with($filename, $extension)) {
-                    $matching_files[] = $file;
-
-                    break;
-                }
-            }
-        }
-
-        return $matching_files;
-    }
-
-    /**
-     * Transfer a single file to PLUS storage.
-     *
-     * @param \Podlove\Modules\Plus\Plus $plus_module
-     * @param array                      $file_data
-     * @param int                        $post_id
-     *
-     * @return array
-     */
-    private function transfer_file_to_plus($plus_module, $file_data, $post_id)
-    {
-        try {
-            $filename = $file_data['filename'];
-            $download_url = $file_data['download_url'];
-
-            $api_key = $this->get_module_option('auphonic_api_key');
-            $download_url = $download_url.'?bearer_token='.$api_key;
-
-            $result = $plus_module->get_api()->migrate_auphonic_file($download_url, $filename);
-
-            if ($result) {
-                return [
-                    'success' => true,
-                    'filename' => $filename,
-                    'download_url' => $download_url,
-                    'message' => 'File transferred successfully'
-                ];
-            }
-
-            return [
-                'success' => false,
-                'filename' => $filename,
-                'download_url' => $download_url,
-                'message' => 'File transfer failed'
-            ];
-        } catch (\Exception $e) {
-            return [
-                'success' => false,
-                'filename' => $file_data['filename'] ?? 'unknown',
-                'download_url' => $file_data['download_url'] ?? 'unknown',
-                'message' => 'Transfer failed: '.$e->getMessage()
-            ];
-        }
-    }
-
-    /**
-     * Set transfer status for an episode.
-     *
-     * @param int    $post_id
-     * @param string $status        waiting_for_webhook|in_progress|completed|failed
-     * @param string $error_message
-     */
-    private function set_transfer_status($post_id, $status, $error_message = '')
-    {
-        update_post_meta($post_id, 'auphonic_plus_transfer_status', $status);
-
-        if ($error_message) {
-            update_post_meta($post_id, 'auphonic_plus_transfer_errors', $error_message);
-        } else {
-            delete_post_meta($post_id, 'auphonic_plus_transfer_errors');
-        }
-    }
 }

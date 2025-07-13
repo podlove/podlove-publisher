@@ -437,6 +437,7 @@ class MediaFile extends Base
 
         // check that content length exists and hasn't changed
         if (!isset($header['download_content_length']) || $header['download_content_length'] <= 0) {
+            $mime_type = $this->episode_asset()->file_type()->mime_type;
             Log::get()->addWarning(
                 'Unable to read "Content-Length" header. Impossible to determine file size.',
                 ['media_file_id' => $this->id, 'mime_type' => $header['content_type'], 'expected_mime_type' => $mime_type]
