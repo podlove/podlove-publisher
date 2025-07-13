@@ -4,6 +4,7 @@ import { PodloveApiClient } from '@lib/api'
 import { createApi } from '../sagas/api'
 
 import * as plusFileMigration from '@store/plusFileMigration.store'
+import * as auphonic from '@store/auphonic.store'
 import { selectors } from '@store'
 
 function* plusFileMigrationSaga() {
@@ -76,6 +77,12 @@ function* migrateFile(
       yield put(plusFileMigration.setFileState({ filename: currentFileName, state: 'error' }))
     } else {
       yield put(plusFileMigration.setFileState({ filename: currentFileName, state: 'finished' }))
+
+      // Set auphonic transfer status to completed for UI consistency
+      yield put(auphonic.setPlusTransferStatus({
+        production_uuid: 'migration',
+        status: 'completed'
+      }))
     }
 
   } catch (error) {
