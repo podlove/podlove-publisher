@@ -28,7 +28,11 @@
               <!-- File Icon -->
               <div class="flex-shrink-0">
                 <div class="w-10 h-10 bg-white rounded-lg flex items-center justify-center">
-                  <document-text-icon class="w-6 h-6 text-indigo-500" />
+                  <div
+                    v-if="getFilenameGenerationStatus(fileInfo.originalName) === 'in_progress'"
+                    class="animate-spin rounded-full h-6 w-6 border-b-2 border-indigo-500"
+                  ></div>
+                  <document-text-icon v-else class="w-6 h-6 text-indigo-500" />
                 </div>
               </div>
 
@@ -44,6 +48,17 @@
                 <p class="text-xs text-gray-500">
                   {{ (fileInfo.file.size / 1024 / 1024).toFixed(2) }} MB
                 </p>
+
+                <!-- Filename Generation Status -->
+                <div
+                  v-if="getFilenameGenerationStatus(fileInfo.originalName) === 'in_progress'"
+                  class="mt-2 flex items-center text-indigo-600"
+                >
+                  <div class="animate-spin rounded-full h-3 w-3 border-b border-indigo-500 mr-2"></div>
+                  <span class="text-xs">
+                    {{ __('Generating filename...', 'podlove-podcasting-plugin-for-wordpress') }}
+                  </span>
+                </div>
 
                 <!-- Progress Bar -->
                 <div class="mt-2 w-full bg-white rounded-full h-1.5">
@@ -113,9 +128,10 @@
         variant="primary"
         @click="plusUploadIntent"
         class="ml-1 mt-3"
+        :disabled="hasFilesGeneratingFilenames"
       >
         <upload-icon class="-ml-0.5 mr-2 h-4 w-4" aria-hidden="true" />
-        {{ __('Upload Media Files', 'podlove-podcasting-plugin-for-wordpress') }}
+        {{ hasFilesGeneratingFilenames ? __('Generating filenames...', 'podlove-podcasting-plugin-for-wordpress') : __('Upload Media Files', 'podlove-podcasting-plugin-for-wordpress') }}
       </podlove-button>
 
       <podlove-button
@@ -145,7 +161,7 @@ interface FileInfo {
   file: File
   originalName: string
   newName: string
-  fileExists: boolean
+  fileExists: boolean | null
 }
 
 export default defineComponent({
@@ -222,6 +238,10 @@ export default defineComponent({
       const key = `plus-upload-${fileName}`
       return this.state.message(key) || null
     },
+    getFilenameGenerationStatus(originalName: string): string | null {
+      const key = `filename-generation-${originalName}`
+      return this.state.status(key) || null
+    },
   },
 
   computed: {
@@ -238,6 +258,12 @@ export default defineComponent({
       return this.selectedFiles.length > 0 && this.selectedFiles.every(fileInfo => {
         const status = this.getUploadStatus(fileInfo.file.name)
         return status === 'finished'
+      })
+    },
+    hasFilesGeneratingFilenames(): boolean {
+      return this.selectedFiles.some(fileInfo => {
+        const status = this.getFilenameGenerationStatus(fileInfo.originalName)
+        return status === 'in_progress'
       })
     },
   },

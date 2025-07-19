@@ -1,7 +1,8 @@
 import { PodloveApiClient } from '@lib/api'
-import { all, call, put, select } from 'redux-saga/effects'
+import { call, put, select, delay, fork } from 'redux-saga/effects'
 import * as mediafiles from '@store/mediafiles.store'
 import * as episode from '@store/episode.store'
+import * as progress from '@store/progress.store'
 import { Action } from 'redux'
 import { get } from 'lodash'
 import { selectors } from '@store'
@@ -16,15 +17,28 @@ export function* handleFileSelection(api: PodloveApiClient, action: Action): Gen
 
   if (newFiles.length > 0) {
     const currentSlug = yield call(setEpisodeSlugIfNeeded, newFiles, episodeSlug)
-    const newFileInfos = createFileInfos(newFiles, currentSlug)
-    const newFileInfosWithExistenceCheck = yield call(checkFileInfosExistence, api, newFileInfos)
+    const episodeId = yield select(selectors.episode.id)
 
-    const allFileInfos = [...existingSelectedFiles, ...newFileInfosWithExistenceCheck]
+    // Immediately show files with original names (no file existence check yet)
+    const immediateFileInfos = newFiles.map(file => ({
+      file,
+      originalName: file.name,
+      newName: file.name,
+      fileExists: null, // Will be determined after filename generation
+    }))
 
+    const allFileInfos = [...existingSelectedFiles, ...immediateFileInfos]
+
+    // Show files immediately
     yield put({
       type: mediafiles.SET_FILE_INFO,
       payload: allFileInfos,
     })
+
+    // Generate filenames in the background for each new file
+    for (const file of newFiles) {
+      yield fork(generateFilenameForFile, api, file, episodeId)
+    }
   }
 }
 
@@ -57,7 +71,7 @@ function* setEpisodeSlugIfNeeded(files: File[], providedSlug: string | null): Ge
   return extractedSlug
 }
 
-function* checkFileExists(api: PodloveApiClient, fileInfo: any): Generator<any, any, any> {
+export function* checkFileExists(api: PodloveApiClient, fileInfo: any): Generator<any, any, any> {
   const { result: fileExists } = yield api.post(`plus/check_file_exists`, {
     filename: fileInfo.file.name,
   })
@@ -68,38 +82,72 @@ function* checkFileExists(api: PodloveApiClient, fileInfo: any): Generator<any, 
   }
 }
 
-function* checkFileInfosExistence(api: PodloveApiClient, fileInfos: any[]): Generator<any, any[], any> {
-  return yield all(
-    fileInfos.map((fileInfo) => call(checkFileExists, api, fileInfo))
-  )
-}
-
 /**
- * Creates file info objects with the original file names and the file names to
- * be used for the upload if an episode slug is provided.
+ * Generate filename for a single file in the background and update the UI
  */
-function createFileInfos(files: File[], episodeSlug?: string) {
-  return files.map((file) => {
-    if (!episodeSlug) {
-      return {
-        file,
-        originalName: file.name,
-        newName: file.name,
-      }
-    }
+export function* generateFilenameForFile(api: PodloveApiClient, file: File, episodeId: string): Generator<any, void, any> {
+  const progressKey = `filename-generation-${file.name}`
 
-    const extension = file.name.split('.').pop()
-    const newFileName = `${episodeSlug}.${extension}`
+  try {
+    // Start loading state
+    yield put(progress.setProgressStatus({ key: progressKey, status: 'in_progress', message: 'Generating filename...' }))
 
+    const { result } = yield api.post('plus/generate_filename', {
+      original_filename: file.name,
+      episode_id: episodeId,
+    })
+
+    const newFileName = result.generated_filename
     const newFile = new File([file], newFileName, {
       type: file.type,
       lastModified: file.lastModified,
     })
 
-    return {
+    // Check if file exists with the new filename
+    const fileInfo = {
       file: newFile,
       originalName: file.name,
-      newName: newFile.name,
+      newName: newFileName,
     }
+
+    const fileInfoWithExistenceCheck = yield call(checkFileExists, api, fileInfo)
+
+    // Update the specific file in the selectedFiles array
+    yield call(updateFileInSelection, file.name, fileInfoWithExistenceCheck)
+
+    // Complete loading state
+    yield put(progress.setProgressStatus({ key: progressKey, status: 'finished', message: 'Filename generated' }))
+
+    // Clean up progress state after a short delay
+    yield fork(cleanupProgressState, progressKey, 2000)
+  } catch (error) {
+    // Error state
+    yield put(progress.setProgressStatus({ key: progressKey, status: 'error', message: 'Failed to generate filename' }))
+
+    // Clean up error state after a delay
+    yield fork(cleanupProgressState, progressKey, 5000)
+
+    console.warn('Failed to generate filename via API, keeping original:', error)
+  }
+}
+
+/**
+ * Update a specific file in the selectedFiles array
+ */
+export function* updateFileInSelection(originalFileName: string, updatedFileInfo: any): Generator<any, void, any> {
+  const selectedFiles = yield select(selectors.mediafiles.selectedFiles)
+
+  const updatedSelectedFiles = selectedFiles.map((fileInfo: any) =>
+    fileInfo.originalName === originalFileName ? updatedFileInfo : fileInfo
+  )
+
+  yield put({
+    type: mediafiles.SET_FILE_INFO,
+    payload: updatedSelectedFiles,
   })
+}
+
+export function* cleanupProgressState(progressKey: string, delayMs: number): Generator<any, void, any> {
+  yield delay(delayMs)
+  yield put(progress.resetProgress(progressKey))
 }

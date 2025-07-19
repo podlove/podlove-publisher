@@ -1,8 +1,9 @@
 import { PodloveApiClient } from '@lib/api'
 import { selectors } from '@store'
-import { all, call, put, select } from 'redux-saga/effects'
+import { put, select, fork } from 'redux-saga/effects'
 import * as mediafiles from '@store/mediafiles.store'
 import * as episode from '@store/episode.store'
+import { generateFilenameForFile } from './mediafiles.fileselection.sagas'
 
 export function* maybeUpdateSlug(
   api: PodloveApiClient,
@@ -29,66 +30,32 @@ export function* updateSelectedFileNames(api: PodloveApiClient): Generator<any, 
   const newSlug: string = yield select(selectors.episode.slug)
 
   if (selectedFiles.length > 0 && newSlug) {
-    // Recreate file infos with new slug
+    // Recreate file infos with original names first
     const originalFiles = selectedFiles.map(fileInfo => {
-      // Create a new File with the original name
       return new File([fileInfo.file], fileInfo.originalName, {
         type: fileInfo.file.type,
         lastModified: fileInfo.file.lastModified,
       })
     })
 
-    const updatedFileInfos = createFileInfos(originalFiles, newSlug)
+    // Immediately update files with original names (no file existence check yet)
+    const immediateFileInfos = originalFiles.map(file => ({
+      file,
+      originalName: file.name,
+      newName: file.name,
+      fileExists: null, // Will be determined after filename generation
+    }))
 
-    // Check if files exist for each file with new names
-    const fileInfosWithExistenceCheck = yield all(
-      updatedFileInfos.map((fileInfo) => call(checkFileExists, api, fileInfo))
-    )
-
+    // Show files immediately
     yield put({
       type: mediafiles.SET_FILE_INFO,
-      payload: fileInfosWithExistenceCheck,
-    })
-  }
-}
-
-function* checkFileExists(api: PodloveApiClient, fileInfo: any): Generator<any, any, any> {
-  const { result: fileExists } = yield api.post(`plus/check_file_exists`, {
-    filename: fileInfo.file.name,
-  })
-
-  return {
-    ...fileInfo,
-    fileExists,
-  }
-}
-
-/**
- * Creates file info objects with the original file names and the file names to
- * be used for the upload if an episode slug is provided.
- */
-function createFileInfos(files: File[], episodeSlug?: string) {
-  return files.map((file) => {
-    if (!episodeSlug) {
-      return {
-        file,
-        originalName: file.name,
-        newName: file.name,
-      }
-    }
-
-    const extension = file.name.split('.').pop()
-    const newFileName = `${episodeSlug}.${extension}`
-
-    const newFile = new File([file], newFileName, {
-      type: file.type,
-      lastModified: file.lastModified,
+      payload: immediateFileInfos,
     })
 
-    return {
-      file: newFile,
-      originalName: file.name,
-      newName: newFile.name,
+    // Generate new filenames in the background
+    const episodeId = yield select(selectors.episode.id)
+    for (const file of originalFiles) {
+      yield fork(generateFilenameForFile, api, file, episodeId)
     }
-  })
+  }
 }

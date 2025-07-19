@@ -45,6 +45,36 @@ class PlusFileTransfer
     }
 
     /**
+     * Generate filename based on episode and matching asset.
+     *
+     * When uploading or importing files, their filenames may not match the
+     * expectations set by the asset system. Here we determine the filename as
+     * the Publisher expects it.
+     *
+     * @param string                 $original_filename
+     * @param \Podlove\Model\Episode $episode
+     *
+     * @return string
+     */
+    public static function generate_filename($original_filename, $episode)
+    {
+        $matching_asset = self::find_matching_asset_for_filename($original_filename);
+
+        if ($matching_asset) {
+            $temp_media_file = new \Podlove\Model\MediaFile();
+            $temp_media_file->episode_id = $episode->id;
+            $temp_media_file->episode_asset_id = $matching_asset->id;
+
+            return $temp_media_file->get_file_name();
+        }
+
+        // Fallback
+        $extension = pathinfo($original_filename, PATHINFO_EXTENSION);
+
+        return $episode->slug.'.'.$extension;
+    }
+
+    /**
      * Get and validate production data from Auphonic.
      *
      * @param int $post_id
@@ -128,39 +158,12 @@ class PlusFileTransfer
         $transfer_results = [];
 
         foreach ($matching_files as $file) {
-            $file['filename'] = $this->generate_new_filename($file['filename'], $episode);
+            $file['filename'] = self::generate_filename($file['filename'], $episode);
             $result = $this->transfer_file_to_plus($plus_module, $file, $post_id);
             $transfer_results[] = $result;
         }
 
         return $transfer_results;
-    }
-
-    /**
-     * Generate new filename based on episode and matching asset.
-     *
-     * @param string                 $original_filename
-     * @param \Podlove\Model\Episode $episode
-     *
-     * @return string
-     */
-    private function generate_new_filename($original_filename, $episode)
-    {
-        $matching_asset = $this->find_matching_asset_for_filename($original_filename);
-
-        if ($matching_asset) {
-            // Create a temporary MediaFile to use the get_file_name() method
-            $temp_media_file = new \Podlove\Model\MediaFile();
-            $temp_media_file->episode_id = $episode->id;
-            $temp_media_file->episode_asset_id = $matching_asset->id;
-
-            return $temp_media_file->get_file_name();
-        }
-        // Fallback to original logic
-        // TODO: Do we actually want a fallback?
-        $extension = pathinfo($original_filename, PATHINFO_EXTENSION);
-
-        return $episode->slug.'.'.$extension;
     }
 
     /**
@@ -231,9 +234,9 @@ class PlusFileTransfer
             // we purposely do not use `pathinfo` here because one of our valid
             // "extensions" is "chapters.txt" and that would not match.
             return array_reduce(
-              $configured_extensions,
-              fn($carry, $extension) => $carry || str_ends_with($filename, $extension),
-              false
+                $configured_extensions,
+                 fn ($carry, $extension) => $carry || str_ends_with($filename, $extension),
+                false
             );
         });
     }
@@ -283,14 +286,7 @@ class PlusFileTransfer
         }
     }
 
-    /**
-     * Find the matching asset for a given filename.
-     *
-     * @param string $original_filename
-     *
-     * @return null|\Podlove\Model\EpisodeAsset
-     */
-    private function find_matching_asset_for_filename($original_filename)
+    private static function find_matching_asset_for_filename($original_filename)
     {
         $episode_assets = \Podlove\Model\EpisodeAsset::all();
 
