@@ -2,6 +2,8 @@
 
 namespace Podlove\Modules\Plus;
 
+use Podlove\Model\Podcast;
+
 class SettingsPage
 {
     private $module;
@@ -47,7 +49,11 @@ class SettingsPage
             </div>
 
             <div style="max-width: 800px;">
-              <?php Banner::plus_main(); ?>
+              <?php if ($this->module->get_module_option('plus_api_token')) {
+                Banner::plus_authenticated();
+              } else {
+                Banner::plus_main();
+              } ?>
             </div>
 
             <div data-client="podlove" style="margin: 15px 0; max-width: 800px; ">

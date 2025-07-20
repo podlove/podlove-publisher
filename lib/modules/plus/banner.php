@@ -116,4 +116,23 @@ class Banner
 
         $banner->render();
     }
+
+    /**
+     * Create and render a banner for authenticated PLUS users.
+     */
+    public static function plus_authenticated()
+    {
+        $content = 'Manage your account  and access advanced features from your dashboard.</p>';
+
+        $banner = new self(
+            __('Manage Your Publisher PLUS Account', 'podlove-podcasting-plugin-for-wordpress'),
+            $content,
+            __('Go to PLUS Dashboard &#10140;', 'podlove-podcasting-plugin-for-wordpress'),
+            'https://plus.podlove.org/dashboard',
+            'Publisher PLUS',
+            true
+        );
+
+        $banner->render();
+    }
 }
