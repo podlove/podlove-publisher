@@ -6,6 +6,7 @@ import { createApi } from '../sagas/api'
 import * as plusFileMigration from '@store/plusFileMigration.store'
 import * as auphonic from '@store/auphonic.store'
 import { selectors } from '@store'
+import { determineMigrationStatus } from '@lib/statusHelpers'
 
 function* plusFileMigrationSaga() {
   const apiClient: PodloveApiClient = yield createApi()
@@ -121,7 +122,7 @@ function* startMigration(api: PodloveApiClient): Generator<any, void, any> {
 
   yield put(
     plusFileMigration.setTotalState({
-      totalState: hasErrors ? 'error' : 'finished',
+      totalState: determineMigrationStatus(hasErrors),
     })
   )
 

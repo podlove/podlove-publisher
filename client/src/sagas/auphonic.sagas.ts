@@ -18,6 +18,8 @@ import { v4 as uuidv4 } from 'uuid'
 import { State } from '../store'
 import { get } from 'lodash'
 import Timestamp from '@lib/timestamp'
+import { createErrorResponse, createTransferErrorResponse, getApiErrorMessage } from '@lib/errorHandling'
+import { determineTransferStatus, countSuccessfulResults } from '@lib/statusHelpers'
 import { Channel } from 'redux-saga'
 import { verifyAll } from './mediafiles.verification.sagas'
 
@@ -722,17 +724,13 @@ function* handleTriggerPlusTransfer(
       // Phase 2: Process files sequentially
       yield call(processTransferQueue, api, production_uuid, postId, transferQueue)
     } else {
-      yield put(
-        auphonic.setPlusTransferStatus({
-          production_uuid,
-          status: 'failed',
-          errors:
-            response.error?.message ||
-            response.message ||
-            response.result?.message ||
-            'Failed to initialize transfer',
-        })
-      )
+             yield put(
+         auphonic.setPlusTransferStatus({
+           production_uuid,
+           status: 'failed',
+           errors: getApiErrorMessage(response, 'Failed to initialize transfer'),
+         })
+       )
     }
   } catch (error: any) {
     yield put(
@@ -751,7 +749,6 @@ function* processTransferQueue(
   postId: Number,
   transferQueue: any[]
 ): any {
-  const totalFiles = transferQueue.length
   let transferredFiles = 0
   let hasErrors = false
   const transferResults: any[] = []
@@ -768,21 +765,12 @@ function* processTransferQueue(
       }
     } catch (error: any) {
       hasErrors = true
-      transferResults.push({
-        success: false,
-        filename: file.filename,
-        download_url: file.download_url,
-        message: `Transfer failed: ${error.message}`,
-      })
+      transferResults.push(createTransferErrorResponse(file, error.message))
       console.error('Error transferring file:', error)
     }
   }
 
-  const finalStatus = hasErrors
-    ? transferredFiles > 0
-      ? 'completed_with_errors'
-      : 'failed'
-    : 'completed'
+  const finalStatus = determineTransferStatus(hasErrors, transferredFiles)
 
   yield put(
     auphonic.setPlusTransferStatus({
@@ -806,12 +794,7 @@ function* transferFile(
   if (response.result) {
     return response.result
   } else {
-    return {
-      success: false,
-      filename: fileData.filename,
-      download_url: fileData.download_url,
-      message: response.error?.message || response.message || 'Transfer failed',
-    }
+    return createErrorResponse(fileData, { message: getApiErrorMessage(response, 'Transfer failed') })
   }
 }
 
