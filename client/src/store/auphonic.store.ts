@@ -126,7 +126,7 @@ export type FileSelection = {
 
 export type PlusTransferStatus = {
   production_uuid: string
-  status: 'waiting_for_webhook' | 'in_progress' | 'completed' | 'failed'
+  status: 'waiting_for_webhook' | 'in_progress' | 'completed' | 'completed_with_errors' | 'failed'
   files?: PlusTransferFile[]
   errors?: string
 }

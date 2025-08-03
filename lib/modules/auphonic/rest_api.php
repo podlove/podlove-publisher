@@ -44,6 +44,32 @@ class REST_API
                 ]
             ]
         ]);
+
+        register_rest_route(self::api_namespace, self::api_base.'/transfer-single-file/(?P<production_uuid>[A-Za-z0-9\-]+)/(?P<post_id>[0-9]+)', [
+            [
+                'methods' => \WP_REST_Server::CREATABLE,
+                'callback' => [$this, 'transfer_single_file'],
+                'permission_callback' => [$this, 'permission_check'],
+                'args' => [
+                    'production_uuid' => [
+                        'required' => true,
+                        'type' => 'string',
+                        'pattern' => '^[A-Za-z0-9\-]+$',
+                        'description' => 'The UUID of the Auphonic production'
+                    ],
+                    'post_id' => [
+                        'required' => true,
+                        'type' => 'integer',
+                        'description' => 'The ID of the post/episode'
+                    ],
+                    'file_data' => [
+                        'required' => true,
+                        'type' => 'object',
+                        'description' => 'File data for transfer'
+                    ]
+                ]
+            ]
+        ]);
     }
 
     public function get_token()
@@ -97,17 +123,57 @@ class REST_API
             $this->module->update_production_data($post_id);
 
             if (\Podlove\Modules\Plus\FileStorage::is_enabled()) {
-                $this->module->initiate_plus_file_transfers($post_id);
+                $transfer_queue = $this->module->get_plus_transfer_queue($post_id);
+
+                return rest_ensure_response([
+                    'success' => true,
+                    'message' => 'Transfer queue prepared',
+                    'transfer_queue' => $transfer_queue,
+                    'post_id' => $post_id,
+                    'production_uuid' => $production_uuid
+                ]);
             }
 
             return rest_ensure_response([
                 'success' => true,
-                'message' => 'PLUS file transfer initiated successfully',
+                'message' => 'PLUS file storage not enabled',
+                'transfer_queue' => [],
                 'post_id' => $post_id,
                 'production_uuid' => $production_uuid
             ]);
         } catch (\Exception $e) {
-            return new \WP_Error('transfer_failed', 'PLUS file transfer failed: '.$e->getMessage(), ['status' => 500]);
+            return new \WP_Error('transfer_failed', 'Failed to prepare transfer queue: '.$e->getMessage(), ['status' => 500]);
+        }
+    }
+
+    public function transfer_single_file($request)
+    {
+        $production_uuid = $request->get_param('production_uuid');
+        $post_id = $request->get_param('post_id');
+        $file_data = $request->get_param('file_data');
+
+        if (!$production_uuid) {
+            return new \WP_Error('invalid_production_uuid', 'Production UUID is required', ['status' => 400]);
+        }
+
+        if (!$post_id) {
+            return new \WP_Error('invalid_post_id', 'Post ID is required', ['status' => 400]);
+        }
+
+        if (!$file_data) {
+            return new \WP_Error('invalid_file_data', 'File data is required', ['status' => 400]);
+        }
+
+        if (!$this->verify_post_production_relationship($post_id, $production_uuid)) {
+            return new \WP_Error('post_production_mismatch', 'The specified post and production are not related', ['status' => 400]);
+        }
+
+        try {
+            $result = $this->module->transfer_single_plus_file($post_id, $file_data);
+
+            return rest_ensure_response($result);
+        } catch (\Exception $e) {
+            return new \WP_Error('transfer_failed', 'File transfer failed: '.$e->getMessage(), ['status' => 500]);
         }
     }
 

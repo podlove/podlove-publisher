@@ -75,6 +75,54 @@ class PlusFileTransfer
     }
 
     /**
+     * Get transfer queue without executing transfers (similar to plusFileMigration initialization).
+     *
+     * @param int $post_id
+     *
+     * @return array
+     */
+    public function get_transfer_queue($post_id)
+    {
+        $production = $this->get_production_data($post_id);
+        if (!$production) {
+            return [];
+        }
+
+        $matching_files = $this->get_matching_files($production['output_files'], $post_id);
+        if (empty($matching_files)) {
+            return [];
+        }
+
+        $episode = $this->get_episode($post_id);
+        if (!$episode) {
+            return [];
+        }
+
+        $transfer_queue = [];
+        foreach ($matching_files as $file) {
+            $file['filename'] = self::generate_filename($file['filename'], $episode);
+            $transfer_queue[] = $file;
+        }
+
+        return $transfer_queue;
+    }
+
+    /**
+     * Transfer a single file.
+     *
+     * @param int   $post_id
+     * @param array $file_data
+     *
+     * @return array
+     */
+    public function transfer_single_file($post_id, $file_data)
+    {
+        $plus_module = \Podlove\Modules\Plus\Plus::instance();
+
+        return $this->transfer_file_to_plus($plus_module, $file_data, $post_id);
+    }
+
+    /**
      * Get and validate production data from Auphonic.
      *
      * @param int $post_id

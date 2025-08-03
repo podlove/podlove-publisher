@@ -3,7 +3,6 @@
 namespace Podlove\Modules\Auphonic;
 
 use Podlove\Http;
-use Podlove\Modules\Auphonic\PlusFileTransfer;
 
 class Auphonic extends \Podlove\Modules\Base
 {
@@ -240,6 +239,31 @@ class Auphonic extends \Podlove\Modules\Base
         $this->plus_file_transfer->initiate_transfers($post_id);
     }
 
+    /**
+     * Get PLUS file transfer queue for an episode.
+     *
+     * @param int $post_id
+     *
+     * @return array
+     */
+    public function get_plus_transfer_queue($post_id)
+    {
+        return $this->plus_file_transfer->get_transfer_queue($post_id);
+    }
+
+    /**
+     * Transfer a single PLUS file for an episode.
+     *
+     * @param int   $post_id
+     * @param array $file_data
+     *
+     * @return array
+     */
+    public function transfer_single_plus_file($post_id, $file_data)
+    {
+        return $this->plus_file_transfer->transfer_single_file($post_id, $file_data);
+    }
+
     public function convert_chapters_to_string($chapters)
     {
         if (!is_array($chapters)) {
@@ -455,6 +479,4 @@ class Auphonic extends \Podlove\Modules\Base
             header('Location: '.get_site_url().'/wp-admin/admin.php?page=podlove_settings_modules_handle');
         }
     }
-
-
 }
