@@ -264,6 +264,19 @@ class Auphonic extends \Podlove\Modules\Base
         return $this->plus_file_transfer->transfer_single_file($post_id, $file_data);
     }
 
+    /**
+     * Set final PLUS transfer status after frontend processing.
+     *
+     * @param int $post_id
+     * @param string $status
+     * @param array|null $files
+     * @param string|null $errors
+     */
+    public function set_plus_transfer_final_status($post_id, $status, $files = null, $errors = null)
+    {
+        $this->plus_file_transfer->set_final_transfer_status($post_id, $status, $files, $errors);
+    }
+
     public function convert_chapters_to_string($chapters)
     {
         if (!is_array($chapters)) {

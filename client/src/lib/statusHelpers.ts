@@ -30,7 +30,7 @@ export const determineMigrationStatus = (hasErrors: boolean): MigrationStatus =>
 export const isSuccessResult = (result: any): boolean => {
   if (typeof result === 'boolean') return result
   if (result && typeof result === 'object') {
-    return result.success !== false
+    return result.success === true // only true is success, null (pending) and false are not
   }
   return false
 }

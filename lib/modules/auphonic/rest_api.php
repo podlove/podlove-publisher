@@ -70,6 +70,42 @@ class REST_API
                 ]
             ]
         ]);
+
+        register_rest_route(self::api_namespace, self::api_base.'/set-plus-transfer-status/(?P<production_uuid>[A-Za-z0-9\-]+)/(?P<post_id>[0-9]+)', [
+            [
+                'methods' => \WP_REST_Server::CREATABLE,
+                'callback' => [$this, 'set_plus_transfer_status'],
+                'permission_callback' => [$this, 'permission_check'],
+                'args' => [
+                    'production_uuid' => [
+                        'required' => true,
+                        'type' => 'string',
+                        'pattern' => '^[A-Za-z0-9\-]+$',
+                        'description' => 'The UUID of the Auphonic production'
+                    ],
+                    'post_id' => [
+                        'required' => true,
+                        'type' => 'integer',
+                        'description' => 'The ID of the post/episode'
+                    ],
+                    'status' => [
+                        'required' => true,
+                        'type' => 'string',
+                        'description' => 'Final transfer status'
+                    ],
+                    'files' => [
+                        'required' => false,
+                        'type' => 'array',
+                        'description' => 'Transfer results'
+                    ],
+                    'errors' => [
+                        'required' => false,
+                        'type' => ['string', 'null'],
+                        'description' => 'Error message if any'
+                    ]
+                ]
+            ]
+        ]);
     }
 
     public function get_token()
@@ -174,6 +210,45 @@ class REST_API
             return rest_ensure_response($result);
         } catch (\Exception $e) {
             return new \WP_Error('transfer_failed', 'File transfer failed: '.$e->getMessage(), ['status' => 500]);
+        }
+    }
+
+    public function set_plus_transfer_status($request)
+    {
+        $production_uuid = $request->get_param('production_uuid');
+        $post_id = $request->get_param('post_id');
+        $status = $request->get_param('status');
+        $files = $request->get_param('files');
+        $errors = $request->get_param('errors');
+
+        if (!$production_uuid) {
+            return new \WP_Error('invalid_production_uuid', 'Production UUID is required', ['status' => 400]);
+        }
+
+        if (!$post_id) {
+            return new \WP_Error('invalid_post_id', 'Post ID is required', ['status' => 400]);
+        }
+
+        if (!$status) {
+            return new \WP_Error('invalid_status', 'Status is required', ['status' => 400]);
+        }
+
+        if (!$this->verify_post_production_relationship($post_id, $production_uuid)) {
+            return new \WP_Error('post_production_mismatch', 'The specified post and production are not related', ['status' => 400]);
+        }
+
+        try {
+            // Convert empty/null errors to null for consistent handling
+            $errors = empty($errors) ? null : $errors;
+
+            $this->module->set_plus_transfer_final_status($post_id, $status, $files, $errors);
+
+            return rest_ensure_response([
+                'success' => true,
+                'message' => 'Transfer status updated successfully'
+            ]);
+        } catch (\Exception $e) {
+            return new \WP_Error('status_update_failed', 'Failed to update transfer status: '.$e->getMessage(), ['status' => 500]);
         }
     }
 

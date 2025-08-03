@@ -32,15 +32,36 @@
       </div>
 
       <!-- In progress -->
-      <div class="rounded-md bg-yellow-50 p-4" v-if="plusTransferStatus === 'in_progress'">
+      <div class="rounded-md bg-gray-50 p-4" v-if="plusTransferStatus === 'in_progress'">
         <div class="flex">
           <div class="flex-shrink-0">
-            <ArrowPathIcon class="h-5 w-5 text-yellow-400 animate-spin" aria-hidden="true" />
+            <ArrowPathIcon class="h-5 w-5 text-gray-400 animate-spin" aria-hidden="true" />
           </div>
           <div class="ml-3">
-            <h3 class="text-sm font-medium text-yellow-800">{{ __('Transferring Files', 'podlove-podcasting-plugin-for-wordpress') }}</h3>
-            <div class="mt-2 text-sm text-yellow-700">
+            <h3 class="text-sm font-medium text-gray-800">{{ __('Transferring Files', 'podlove-podcasting-plugin-for-wordpress') }}</h3>
+            <div class="mt-2 text-sm text-gray-700">
               <p>{{ __('Files are being transferred to PLUS storage...', 'podlove-podcasting-plugin-for-wordpress') }}</p>
+              <div class="mt-3" v-if="plusTransferFiles && plusTransferFiles.length > 0">
+                <ul class="space-y-1">
+                  <li v-for="file in plusTransferFiles" :key="file.filename" class="flex items-center text-sm">
+                    <span class="flex-shrink-0 mr-2">
+                      <ArrowPathIcon v-if="file.status === 'processing'" class="h-4 w-4 text-blue-500 animate-spin" />
+                      <CheckCircleIcon v-else-if="file.status === 'completed'" class="h-4 w-4 text-green-500" />
+                      <XCircleIcon v-else-if="file.status === 'failed'" class="h-4 w-4 text-red-500" />
+                      <ClockIcon v-else class="h-4 w-4 text-gray-400" />
+                    </span>
+                    <span class="font-medium">{{ file.filename }}</span>
+                    <span class="ml-2 text-xs" :class="{
+                      'text-blue-600': file.status === 'processing',
+                      'text-green-600': file.status === 'completed',
+                      'text-red-600': file.status === 'failed',
+                      'text-gray-500': file.status === 'pending'
+                    }">
+                      {{ getFileStatusMessage(file) }}
+                    </span>
+                  </li>
+                </ul>
+              </div>
             </div>
           </div>
         </div>
@@ -55,17 +76,50 @@
           <div class="ml-3">
             <h3 class="text-sm font-medium text-green-800">{{ __('Transfer Complete', 'podlove-podcasting-plugin-for-wordpress') }}</h3>
             <div class="mt-2 text-sm text-green-700">
-              <p>{{ __('Files have been transferred successfully to PLUS storage.', 'podlove-podcasting-plugin-for-wordpress') }}</p>
+              <p>{{ __('All files have been transferred successfully to PLUS storage.', 'podlove-podcasting-plugin-for-wordpress') }}</p>
               <div class="mt-2" v-if="plusTransferFiles && plusTransferFiles.length > 0">
                 <p class="font-medium">{{ __('Transferred files:', 'podlove-podcasting-plugin-for-wordpress') }}</p>
-                <ul class="mt-1 list-disc list-inside">
-                  <li v-for="file in plusTransferFiles" :key="file.filename" class="text-sm">
+                <ul class="mt-1 space-y-1">
+                  <li v-for="file in plusTransferFiles" :key="file.filename" class="flex items-center text-sm">
+                    <CheckCircleIcon class="h-4 w-4 text-green-500 mr-2" />
                     <span class="font-medium">{{ file.filename }}</span>
-                    <span v-if="file.success" class="text-green-600 ml-2">✓</span>
-                    <span v-else class="text-red-600 ml-2">✗</span>
                   </li>
                 </ul>
               </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Completed with errors -->
+      <div class="rounded-md bg-yellow-50 p-4" v-if="plusTransferStatus === 'completed_with_errors'">
+        <div class="flex">
+          <div class="flex-shrink-0">
+            <ExclamationTriangleIcon class="h-5 w-5 text-yellow-400" aria-hidden="true" />
+          </div>
+          <div class="ml-3">
+            <h3 class="text-sm font-medium text-yellow-800">{{ __('Transfer Completed with Errors', 'podlove-podcasting-plugin-for-wordpress') }}</h3>
+            <div class="mt-2 text-sm text-yellow-700">
+              <p>{{ __('Some files were transferred successfully, but others failed.', 'podlove-podcasting-plugin-for-wordpress') }}</p>
+              <div class="mt-2" v-if="plusTransferFiles && plusTransferFiles.length > 0">
+                <p class="font-medium">{{ __('File transfer results:', 'podlove-podcasting-plugin-for-wordpress') }}</p>
+                <ul class="mt-1 space-y-1">
+                  <li v-for="file in plusTransferFiles" :key="file.filename" class="flex items-center text-sm">
+                    <CheckCircleIcon v-if="file.status === 'completed'" class="h-4 w-4 text-green-500 mr-2" />
+                    <XCircleIcon v-else class="h-4 w-4 text-red-500 mr-2" />
+                    <span class="font-medium">{{ file.filename }}</span>
+                    <span v-if="file.status === 'failed'" class="ml-2 text-xs text-red-600">{{ file.message }}</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="mt-4">
+              <button
+                @click="triggerManualTransfer"
+                class="inline-flex items-center rounded-md bg-yellow-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-yellow-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-yellow-600"
+              >
+                {{ __('Retry Failed Transfers', 'podlove-podcasting-plugin-for-wordpress') }}
+              </button>
             </div>
           </div>
         </div>
@@ -124,6 +178,7 @@ import {
   ArrowPathIcon,
   CheckCircleIcon,
   XCircleIcon,
+  ExclamationTriangleIcon,
 } from '@heroicons/vue/24/outline'
 
 export default defineComponent({
@@ -132,6 +187,7 @@ export default defineComponent({
     ArrowPathIcon,
     CheckCircleIcon,
     XCircleIcon,
+    ExclamationTriangleIcon,
   },
 
   setup() {
@@ -168,13 +224,28 @@ export default defineComponent({
     refreshEpisodeData() {
       this.dispatch(verifyAll())
     },
+
+    getFileStatusMessage(file: PlusTransferFile): string {
+      switch (file.status) {
+        case 'pending':
+          return 'Waiting...'
+        case 'processing':
+          return 'Transferring...'
+        case 'completed':
+          return 'Completed'
+        case 'failed':
+          return file.message || 'Failed'
+        default:
+          return file.message || ''
+      }
+    },
   },
 
   computed: {
     production(): Production {
       return this.state.production || {}
     },
-    plusTransferStatus(): 'waiting_for_webhook' | 'in_progress' | 'completed' | 'failed' | undefined {
+    plusTransferStatus(): 'waiting_for_webhook' | 'in_progress' | 'completed' | 'completed_with_errors' | 'failed' | undefined {
       return this.state.plusTransferStatus
     },
     plusTransferFiles(): PlusTransferFile[] | undefined {

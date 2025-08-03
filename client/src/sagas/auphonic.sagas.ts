@@ -743,6 +743,36 @@ function* handleTriggerPlusTransfer(
   }
 }
 
+// Helper function to get remaining pending files
+function getPendingFiles(transferQueue: any[], completedCount: number): any[] {
+  return transferQueue.slice(completedCount).map(file => ({
+    success: null,
+    status: 'pending' as const,
+    filename: file.filename,
+    download_url: file.download_url,
+    message: 'Waiting to transfer...'
+  }))
+}
+
+// Helper function to create file with processing state
+function createProcessingFile(file: any): any {
+  return {
+    success: null,
+    status: 'processing' as const,
+    filename: file.filename,
+    download_url: file.download_url,
+    message: 'Transferring...'
+  }
+}
+
+// Helper function to update file result with proper status
+function updateFileResult(result: any): any {
+  return {
+    ...result,
+    status: result.success ? 'completed' as const : 'failed' as const
+  }
+}
+
 function* processTransferQueue(
   api: PodloveApiClient,
   production_uuid: string,
@@ -753,7 +783,41 @@ function* processTransferQueue(
   let hasErrors = false
   const transferResults: any[] = []
 
-  for (const file of transferQueue) {
+    // Show initial transfer UI with all files as pending
+  const initialFiles = transferQueue.map(file => ({
+    success: null,
+    status: 'pending' as const,
+    filename: file.filename,
+    download_url: file.download_url,
+    message: 'Waiting to transfer...'
+  }))
+
+  yield put(
+    auphonic.setPlusTransferStatus({
+      production_uuid,
+      status: 'in_progress',
+      files: initialFiles,
+    })
+  )
+
+  for (let i = 0; i < transferQueue.length; i++) {
+    const file = transferQueue[i]
+
+    // Mark current file as processing
+    const filesWithProcessing = [
+      ...transferResults.map(updateFileResult),
+      createProcessingFile(file),
+      ...getPendingFiles(transferQueue, i + 1)
+    ]
+
+    yield put(
+      auphonic.setPlusTransferStatus({
+        production_uuid,
+        status: 'in_progress', // Keep as in_progress during transfer
+        files: filesWithProcessing,
+      })
+    )
+
     try {
       const result = yield call(transferFile, api, production_uuid, postId, file)
       transferResults.push(result)
@@ -763,20 +827,68 @@ function* processTransferQueue(
       } else {
         hasErrors = true
       }
+
+      // Update UI after each file transfer (but still in_progress if more files remain)
+      const isLastFile = i === transferQueue.length - 1
+      const currentStatus = isLastFile ? determineTransferStatus(hasErrors, transferredFiles) : 'in_progress'
+
+      yield put(
+        auphonic.setPlusTransferStatus({
+          production_uuid,
+          status: currentStatus,
+          files: [...transferResults.map(updateFileResult), ...getPendingFiles(transferQueue, transferResults.length)],
+        })
+      )
     } catch (error: any) {
       hasErrors = true
-      transferResults.push(createTransferErrorResponse(file, error.message))
+      const errorResult = createTransferErrorResponse(file, error.message)
+      transferResults.push(errorResult)
       console.error('Error transferring file:', error)
+
+      // Update UI after error (but still in_progress if more files remain)
+      const isLastFile = i === transferQueue.length - 1
+      const currentStatus = isLastFile ? determineTransferStatus(hasErrors, transferredFiles) : 'in_progress'
+
+      yield put(
+        auphonic.setPlusTransferStatus({
+          production_uuid,
+          status: currentStatus,
+          files: [...transferResults.map(updateFileResult), ...getPendingFiles(transferQueue, transferResults.length)],
+        })
+      )
     }
   }
 
   const finalStatus = determineTransferStatus(hasErrors, transferredFiles)
 
+  // Store final status in backend for page reload persistence
+  try {
+    const payload: any = {
+      status: finalStatus,
+      files: transferResults
+    }
+
+    // Only include errors parameter if there are errors
+    if (hasErrors) {
+      if (transferredFiles === 0) {
+        payload.errors = 'All file transfers failed'
+      } else {
+        const failedCount = transferResults.length - transferredFiles
+        payload.errors = `${failedCount} of ${transferResults.length} file transfers failed`
+      }
+    }
+
+    yield api.post(`auphonic/set-plus-transfer-status/${production_uuid}/${postId}`, payload)
+  } catch (error: any) {
+    console.error('Failed to store final transfer status:', error)
+  }
+
+  // Final UI update with only completed results (no pending files)
   yield put(
     auphonic.setPlusTransferStatus({
       production_uuid,
       status: finalStatus,
-      files: transferResults,
+      files: transferResults.map(updateFileResult),
     })
   )
 }

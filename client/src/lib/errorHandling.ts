@@ -11,6 +11,7 @@ export interface FileWithUrl {
 
 export interface ErrorResponse {
   success: false
+  status: 'failed'
   filename: string
   download_url: string
   message: string
@@ -21,6 +22,7 @@ export interface ErrorResponse {
  */
 export const createErrorResponse = (file: FileWithUrl, error: any): ErrorResponse => ({
   success: false,
+  status: 'failed',
   filename: file.filename || file.name || 'unknown',
   download_url: file.download_url || file.localUrl || 'unknown',
   message: error.message || 'Processing failed'
@@ -41,6 +43,7 @@ export const getApiErrorMessage = (response: any, fallback: string = 'Request fa
  */
 export const createTransferErrorResponse = (file: FileWithUrl, errorMessage: string): ErrorResponse => ({
   success: false,
+  status: 'failed',
   filename: file.filename || file.name || 'unknown',
   download_url: file.download_url || file.localUrl || 'unknown',
   message: `Transfer failed: ${errorMessage}`

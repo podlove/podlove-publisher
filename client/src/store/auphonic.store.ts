@@ -63,7 +63,8 @@ export type Production = {
 }
 
 export type PlusTransferFile = {
-  success: boolean
+  success: boolean | null // null indicates pending/processing state
+  status: 'pending' | 'processing' | 'completed' | 'failed' // explicit status for UI
   filename: string
   download_url: string
   message: string
