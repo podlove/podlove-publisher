@@ -712,7 +712,7 @@ function* handleTriggerPlusTransfer(api: PodloveApiClient, action: { type: strin
       yield put(auphonic.setPlusTransferStatus({
         production_uuid,
         status: 'failed',
-        errors: response.result?.message || 'Failed to trigger transfer'
+        errors: response.error?.message || response.message || response.result?.message || 'Failed to trigger transfer'
       }))
     }
   } catch (error: any) {
