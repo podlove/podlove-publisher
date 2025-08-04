@@ -118,6 +118,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 = 4.2.5 =
 
 - fix: an episode that is assigned to a show can now be taken out of that show
+- load more Auphonic productions to select from (50)
 
 = 4.2.4 =
 

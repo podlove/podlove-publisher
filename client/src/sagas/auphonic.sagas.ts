@@ -64,7 +64,7 @@ function* initializeAuphonicApi() {
 
   const {
     result: { data: productions },
-  } = yield auphonicApi.get(`productions.json`, { limit: 10, minimal_data: true })
+  } = yield auphonicApi.get(`productions.json`, { limit: 50, minimal_data: true })
 
   let {
     result: { data: services },
