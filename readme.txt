@@ -115,6 +115,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 4.2.5 =
+
+- fix: an episode that is assigned to a show can now be taken out of that show
+
 = 4.2.4 =
 
 - fix: when upgrading YOAST SEO while the Publisher is active, permalinks do not break any more

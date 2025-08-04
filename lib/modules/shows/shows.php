@@ -269,6 +269,8 @@ class Shows extends \Podlove\Modules\Base
     {
         if (self::is_valid_existing_slug($show_slug)) {
             wp_set_object_terms($post_id, $show_slug, 'shows');
+        } else {
+            wp_delete_object_term_relationships($post_id, 'shows');
         }
     }
 
