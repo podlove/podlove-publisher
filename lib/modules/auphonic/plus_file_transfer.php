@@ -75,7 +75,7 @@ class PlusFileTransfer
     }
 
     /**
-     * Get transfer queue without executing transfers (similar to plusFileMigration initialization).
+     * Get transfer queue without executing transfers.
      *
      * @param int $post_id
      *
@@ -132,15 +132,12 @@ class PlusFileTransfer
      */
     public function set_final_transfer_status($post_id, $status, $files = null, $errors = null)
     {
-        // Store final status
         update_post_meta($post_id, 'auphonic_plus_transfer_status', $status);
 
-        // Store transfer results if provided
         if ($files !== null) {
             update_post_meta($post_id, 'auphonic_plus_transfer_files', $files);
         }
 
-        // Store/clear errors
         if (!empty($errors)) {
             update_post_meta($post_id, 'auphonic_plus_transfer_errors', $errors);
         } else {
