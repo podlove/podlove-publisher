@@ -75,6 +75,11 @@ class Image
         $this->upload_baseurl = content_url('cache/podlove/').$id_directory;
     }
 
+    public function source_url()
+    {
+        return $this->source_url;
+    }
+
     public static function cache_dir()
     {
         return trailingslashit(WP_CONTENT_DIR).'cache/podlove/';

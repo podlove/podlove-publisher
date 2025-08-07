@@ -298,7 +298,6 @@ class Episode extends Base implements Licensable
     public function cover_art()
     {
         return $this->with_blog_scope(function () {
-            $podcast = Podcast::get();
             $asset_assignment = AssetAssignment::get_instance();
 
             if (!$asset_assignment->image) {
