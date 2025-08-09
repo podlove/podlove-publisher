@@ -2,6 +2,7 @@ import { PodloveApiClient } from '@lib/api'
 import { selectors } from '@store'
 import { put, select } from 'redux-saga/effects'
 import * as mediafiles from '@store/mediafiles.store'
+import * as episode from '@store/episode.store'
 import { MediaFile } from '@store/mediafiles.store'
 
 export function* handleEnable(api: PodloveApiClient, action: { type: string; payload: number }) {
@@ -18,6 +19,11 @@ export function* handleEnable(api: PodloveApiClient, action: { type: string; pay
   }
 
   yield put(mediafiles.update(fileUpdate))
+
+  // Update episode freeze status if it was returned from enable
+  if (typeof result.slug_frozen !== 'undefined') {
+    yield put(episode.update({ prop: 'slug_frozen', value: result.slug_frozen }))
+  }
 }
 
 export function* handleDisable(api: PodloveApiClient, action: { type: string; payload: number }) {

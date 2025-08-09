@@ -59,3 +59,19 @@ export function* updateSelectedFileNames(api: PodloveApiClient): Generator<any, 
     }
   }
 }
+
+export function* handleUnfreezeSlug(api: PodloveApiClient): Generator<any, void, any> {
+  const episodeId: string = yield select(selectors.episode.id)
+
+  if (!episodeId) {
+    return
+  }
+
+  try {
+    const { result } = yield api.post(`episodes/${episodeId}/unfreeze_slug`, {})
+
+    yield put(episode.set({ slug_frozen: result.slug_frozen }))
+  } catch (error) {
+    console.error('Failed to unfreeze slug:', error)
+  }
+}

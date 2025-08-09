@@ -107,6 +107,7 @@ const contributors = {
 const episode = {
   id: createSelector(root.episode, episodeStore.selectors.id),
   slug: createSelector(root.episode, episodeStore.selectors.slug),
+  slugFrozen: createSelector(root.episode, episodeStore.selectors.slugFrozen),
   duration: createSelector(root.episode, episodeStore.selectors.duration),
   number: createSelector(root.episode, episodeStore.selectors.number),
   title: createSelector(root.episode, episodeStore.selectors.title),

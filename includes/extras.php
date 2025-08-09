@@ -25,6 +25,7 @@ add_action('admin_init', function () {
 // initialize post type
 add_action('init', function () {
     new \Podlove\Podcast_Post_Type();
+    \Podlove\SlugFreeze::init();
 });
 
 // apply domain mapping plugin where it's essential

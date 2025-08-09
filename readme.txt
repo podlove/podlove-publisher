@@ -128,6 +128,14 @@ If certain features are not enabled, banners explain their usefulness.
 
 "Publisher PLUS" is a module and can be disabled. This also disables all related banners.
 
+**Other Changes**
+
+- new: media file slug "freeze". As soon as the first media file validates, the
+slug is marked as "frozen" so it cannot be edited accidently any more, by
+automations or manual interaction. There is an edit button to consciously change
+it, if necessary.
+- fixes "Activate for all existing Episodes" button in assets
+
 = 4.2.4 =
 
 - fix: when upgrading YOAST SEO while the Publisher is active, permalinks do not break any more

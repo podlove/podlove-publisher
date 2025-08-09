@@ -24,6 +24,7 @@ function load_podlove_podcast_publisher()
     require_once __DIR__.'/lib/version.php';
     require_once __DIR__.'/lib/feeds.php';
     require_once __DIR__.'/lib/shortcodes.php';
+    require_once __DIR__.'/lib/slug_freeze.php';
     require_once __DIR__.'/plugin.php';
 }
 

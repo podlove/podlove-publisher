@@ -30,7 +30,8 @@ import {
 } from './mediafiles.duration.sagas'
 import {
   maybeUpdateSlug,
-  updateSelectedFileNames
+  updateSelectedFileNames,
+  handleUnfreezeSlug
 } from './mediafiles.slug.sagas'
 import {
   handleFileSelection
@@ -75,6 +76,7 @@ function* initialize(api: PodloveApiClient) {
   yield takeEvery(mediafiles.UPLOAD_INTENT, selectMediaFromLibrary)
   yield takeEvery(mediafiles.PLUS_UPLOAD_INTENT, triggerPlusUpload, api)
   yield takeEvery(mediafiles.SET_UPLOAD_URL, setUploadMedia, api)
+  yield takeEvery(mediafiles.UNFREEZE_SLUG, handleUnfreezeSlug, api)
 
   yield put(mediafiles.initDone())
 }

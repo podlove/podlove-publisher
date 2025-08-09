@@ -47,6 +47,7 @@ export const FILE_SELECTED = 'podlove/publisher/mediafiles/FILE_SELECTED'
 export const SET_FILE_INFO = 'podlove/publisher/mediafiles/SET_FILE_INFO'
 export const ADD_SELECTED_FILES = 'podlove/publisher/mediafiles/ADD_SELECTED_FILES'
 export const REMOVE_SELECTED_FILE = 'podlove/publisher/mediafiles/REMOVE_SELECTED_FILE'
+export const UNFREEZE_SLUG = 'podlove/publisher/mediafiles/UNFREEZE_SLUG'
 
 export const init = createAction<void>(INIT)
 export const initDone = createAction<void>(INIT_DONE)
@@ -68,6 +69,7 @@ export const fileSelected = (files: File[], episodeSlug: string | null) => ({
 
 export const addSelectedFiles = createAction<FileInfo[]>(ADD_SELECTED_FILES)
 export const removeSelectedFile = createAction<string>(REMOVE_SELECTED_FILE)
+export const unfreezeSlug = createAction<void>(UNFREEZE_SLUG)
 
 // TODO: enable revalidates I think?
 export const reducer = handleActions(
