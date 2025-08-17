@@ -42,7 +42,6 @@ class EpisodeAsset
             return;
         }
 
-        $podcast = Model\Podcast::get();
         $asset = Model\EpisodeAsset::find_by_id($_REQUEST['episode_asset']);
 
         $episodes = Model\Episode::all();
@@ -51,12 +50,12 @@ class EpisodeAsset
             $post = get_post($post_id);
 
             // skip deleted podcasts
-            if (!in_array($post->post_status, ['pending', 'draft', 'publish', 'future'])) {
+            if (!in_array(get_post_status($post), ['pending', 'draft', 'publish', 'future'])) {
                 continue;
             }
 
             // skip versions
-            if ($post->post_type != 'podcast') {
+            if (get_post_type($post) != 'podcast') {
                 continue;
             }
 
@@ -66,7 +65,13 @@ class EpisodeAsset
                 $file = new Model\MediaFile();
                 $file->episode_id = $episode->id;
                 $file->episode_asset_id = $asset->id;
+                $file->active = true;
                 $file->save();
+            } else {
+                if (!$file->active) {
+                    $file->active = true;
+                    $file->save();
+                }
             }
 
             do_action('podlove_media_file_content_has_changed', $file->id);
