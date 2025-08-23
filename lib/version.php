@@ -55,7 +55,7 @@ function maybe_run_database_migrations()
         // plugin has just been installed
         update_option('podlove_database_version', DATABASE_VERSION);
     } elseif ($database_version < DATABASE_VERSION) {
-        wp_redirect(admin_url('index.php?podlove_page=podlove_upgrade&_wp_http_referer='.urlencode(wp_unslash($_SERVER['REQUEST_URI']))));
+        wp_safe_redirect(admin_url('index.php?podlove_page=podlove_upgrade&_wp_http_referer='.urlencode(wp_unslash($_SERVER['REQUEST_URI']))));
 
         exit;
     }
@@ -81,7 +81,7 @@ function run_database_migrations()
     }
 
     if (isset($_REQUEST['_wp_http_referer']) && $_REQUEST['_wp_http_referer']) {
-        wp_redirect($_REQUEST['_wp_http_referer']);
+        wp_safe_redirect($_REQUEST['_wp_http_referer']);
 
         exit;
     }
