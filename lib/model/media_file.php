@@ -270,6 +270,15 @@ class MediaFile extends Base
         });
     }
 
+    public function get_file_name()
+    {
+        $asset = $this->episode_asset();
+        $suffix = $asset->suffix ?? '';
+        $extension = $asset->file_type()->extension;
+
+        return $this->episode()->slug.$suffix.'.'.$extension;
+    }
+
     /**
      * Build file name as it appears when you download the file.
      *
@@ -277,9 +286,7 @@ class MediaFile extends Base
      */
     public function get_download_file_name()
     {
-        $file_name = $this->episode()->slug
-                   .'.'
-                   .$this->episode_asset()->file_type()->extension;
+        $file_name = $this->get_file_name();
 
         return apply_filters('podlove_download_file_name', $file_name, $this);
     }
@@ -430,6 +437,7 @@ class MediaFile extends Base
 
         // check that content length exists and hasn't changed
         if (!isset($header['download_content_length']) || $header['download_content_length'] <= 0) {
+            $mime_type = $this->episode_asset()->file_type()->mime_type;
             Log::get()->addWarning(
                 'Unable to read "Content-Length" header. Impossible to determine file size.',
                 ['media_file_id' => $this->id, 'mime_type' => $header['content_type'], 'expected_mime_type' => $mime_type]

@@ -16,3 +16,4 @@ require_once \Podlove\PLUGIN_DIR.'includes/api/chapters.php';
 require_once \Podlove\PLUGIN_DIR.'includes/api/feeds.php';
 require_once \Podlove\PLUGIN_DIR.'includes/api/tools.php';
 require_once \Podlove\PLUGIN_DIR.'includes/api/admin/onboarding.php';
+require_once \Podlove\PLUGIN_DIR.'includes/api/admin/plus.php';

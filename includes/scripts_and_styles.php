@@ -23,7 +23,8 @@ add_action('admin_enqueue_scripts', function () {
         'podlove_page_podlove_slackshownotes_settings',
         'podlove_page_podlove_tools_settings_handle',
         'podlove_page_podlove_analytics',
-        'podlove-setup-wizard'
+        'podlove-setup-wizard',
+        'podlove_page_publisher_plus_settings',
     ];
 
     // vue job dashboard
