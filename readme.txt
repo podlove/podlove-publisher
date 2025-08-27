@@ -117,23 +117,21 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 = 4.3.0 =
 
-Reworked and extended the Publisher PLUS service.
+Reworked and extended the **Publisher PLUS** service. It now offers the "File Storage" feature to conveniently upload media files to PLUS instead of storing it in WordPress or other external locations.
 
-Highlight: The "File Storage" feature allows to conveniently upload media files to PLUS.
+To get started, navigate to "Podlove - Modules", find "Publisher PLUS" and activate it. This will add a new menu entry with further instructions.
+
 There is a migration tool to copy existing media files to PLUS.
 
-Feature management moved. There is now a "Publisher PLUS" settings page for token management and feature toggles.
-
-If certain features are not enabled, banners explain their usefulness.
-
-"Publisher PLUS" is a module and can be disabled. This also disables all related banners.
+Give it a try if this kind of service interests you. And please do give feedback :)
 
 **Other Changes**
 
+- PLUS feature management moved: there is now a "Publisher PLUS" settings page for token management and feature toggles
 - new: media file slug "freeze". As soon as the first media file validates, the
 slug is marked as "frozen" so it cannot be edited accidently any more, by
 automations or manual interaction. There is an edit button to consciously change
-it, if necessary.
+it, if necessary
 - fixes "Activate for all existing Episodes" button in assets
 
 = 4.2.6 =
