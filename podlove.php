@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Podlove Podcast Publisher
  * Plugin URI:  https://podlove.org/podlove-podcast-publisher/
- * Version: 4.2.7
+ * Version: 4.3.0
  * Requires at least: 4.9.6
  * Requires PHP: 8.0
  * Author:      Podlove
@@ -24,6 +24,7 @@ function load_podlove_podcast_publisher()
     require_once __DIR__.'/lib/version.php';
     require_once __DIR__.'/lib/feeds.php';
     require_once __DIR__.'/lib/shortcodes.php';
+    require_once __DIR__.'/lib/slug_freeze.php';
     require_once __DIR__.'/plugin.php';
 }
 

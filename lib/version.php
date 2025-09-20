@@ -42,7 +42,7 @@ namespace Podlove;
 
 use Podlove\Jobs\CronJobRunner;
 
-define('Podlove\DATABASE_VERSION', 160);
+define('Podlove\DATABASE_VERSION', 162);
 
 add_action('admin_init', '\Podlove\maybe_run_database_migrations');
 add_action('admin_init', '\Podlove\run_database_migrations', 5);
@@ -1684,6 +1684,19 @@ function run_migrations_for_version($version)
             foreach ($shows as $show) {
                 \Podlove\Modules\Shows\Model\Show::generate_guid($show->id);
             }
+
+            break;
+        case 161:
+            // Add slug_frozen column to episodes table
+            $sql = sprintf(
+                'ALTER TABLE `%s` ADD COLUMN `slug_frozen` TINYINT DEFAULT 0',
+                Model\Episode::table_name()
+            );
+            $wpdb->query($sql);
+
+            break;
+        case 162:
+            \Podlove\SlugFreeze::apply_slug_freeze_to_existing_episodes();
 
             break;
     }

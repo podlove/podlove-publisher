@@ -1,0 +1,8 @@
+---
+description:
+globs: *.vue,*.ts
+alwaysApply: false
+---
+- use Heroicons for SVG Icons
+- keep state in the redux store
+- unless trivial, logic belongs into the sagas, not the vue component

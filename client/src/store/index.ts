@@ -22,9 +22,11 @@ import { State as podcastState } from './podcast.store'
 import { State as auphonicState } from './auphonic.store'
 import { State as progressState } from './progress.store'
 import { State as mediafilesState } from './mediafiles.store'
+import { State as plusFileMigrationState } from './plusFileMigration.store'
 import { State as relatedEpisodesState } from './relatedEpisodes.store'
 import { State as showsState } from './shows.store'
 import { State as adminState } from './admin.store'
+import { State as plusState } from './plus.store'
 
 import lifecycleSaga from '../sagas/lifecycle.sagas'
 import podcastSaga from '../sagas/podcast.sagas'
@@ -39,6 +41,8 @@ import mediafilesSaga from '../sagas/mediafiles.sagas'
 import relatedEpisodesSaga from '../sagas/relatedEpisodes.sagas'
 import showsSaga from '../sagas/shows.sagas'
 import adminSaga from '../sagas/admin.sagas'
+import plusFileMigrationSaga from '../sagas/plusFileMigration.sagas'
+import plusSaga from '../sagas/plus.sagas'
 
 export interface State {
   lifecycle: LifecycleState
@@ -56,6 +60,8 @@ export interface State {
   relatedEpisodes: relatedEpisodesState
   shows: showsState
   admin: adminState
+  plusFileMigration: plusFileMigrationState
+  plus: plusState
 }
 
 const sagas = createSagaMiddleware()
@@ -76,5 +82,7 @@ sagas.run(mediafilesSaga())
 sagas.run(relatedEpisodesSaga())
 sagas.run(showsSaga())
 sagas.run(adminSaga())
+sagas.run(plusFileMigrationSaga())
+sagas.run(plusSaga())
 
 export { selectors, sagas }

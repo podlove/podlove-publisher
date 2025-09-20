@@ -1,20 +1,14 @@
 import * as auphonic from '@store/auphonic.store'
 import * as episode from '@store/episode.store'
 import * as progress from '@store/progress.store'
-import { takeFirst } from '../sagas/helper'
+import * as plus from '@store/plus.store'
 import {
-  delay,
-  put,
-  take,
-  fork,
-  takeEvery,
-  select,
-  all,
-  call,
-  race,
-  cancelled,
-  spawn,
-} from 'redux-saga/effects'
+  takeFirst,
+  createAndWatchProgressChannel,
+  ProgressPayload,
+  createProgressHandler,
+} from '../sagas/helper'
+import { delay, put, take, fork, takeEvery, select, all, call, race } from 'redux-saga/effects'
 import { createApi } from '../sagas/api'
 import { createApi as createAuphonicApi } from '../sagas/auphonic.api'
 import { PodloveApiClient } from '@lib/api'
@@ -24,14 +18,17 @@ import { v4 as uuidv4 } from 'uuid'
 import { State } from '../store'
 import { get } from 'lodash'
 import Timestamp from '@lib/timestamp'
-import { AxiosProgressEvent } from 'axios'
-import { Channel, channel } from 'redux-saga'
+import { createErrorResponse, createTransferErrorResponse, getApiErrorMessage } from '@lib/errorHandling'
+import { determineTransferStatus, countSuccessfulResults } from '@lib/statusHelpers'
+import { Channel } from 'redux-saga'
+import { verifyAll } from './mediafiles.verification.sagas'
 
 function* auphonicSaga(): any {
   const apiClient: PodloveApiClient = yield createApi()
   yield fork(initialize, apiClient)
   yield takeEvery(auphonic.UPDATE_FILE_SELECTION, handleFileSelection)
   yield takeEvery(auphonic.SET_SERVICE_FILES, handleServiceFilesAvailable)
+  yield put(plus.init())
 }
 
 function* initialize(api: PodloveApiClient) {
@@ -52,6 +49,10 @@ function* initialize(api: PodloveApiClient) {
     yield takeEvery(auphonic.START_PRODUCTION, markProductionAsRunning, api)
     yield takeEvery(auphonic.STOP_POLLING, markProductionAsNotRunning, api)
     yield takeEvery(auphonic.DESELECT_PRODUCTION, markProductionAsNotRunning, api)
+
+    yield takeEvery(auphonic.TRIGGER_PLUS_TRANSFER, handleTriggerPlusTransfer, api)
+    yield takeEvery(auphonic.LOAD_PLUS_TRANSFER_STATUS, handleLoadPlusTransferStatus, api)
+    yield takeEvery(auphonic.SET_PLUS_TRANSFER_STATUS, handlePlusTransferStatusChange, api)
   }
 }
 
@@ -131,7 +132,7 @@ function* pollWatcherSaga(auphonicApi: AuphonicApiClient) {
   }
 }
 
-function* pollProductionSaga(auphonicApi: AuphonicApiClient) {
+function* pollProductionSaga(auphonicApi: AuphonicApiClient): any {
   while (true) {
     let uuid: string = yield select(selectors.auphonic.productionId)
 
@@ -148,6 +149,15 @@ function* pollProductionSaga(auphonicApi: AuphonicApiClient) {
     // DONE
     if (production.status == 3) {
       yield put(episode.update({ prop: 'slug', value: production.output_basename }))
+
+      // NOTE: is there a race condition here? because the file transfer uses
+      // the slug form the database
+
+      // trigger PLUS transfer when production finishes
+      const plusFeatures = yield select(selectors.plus.features)
+      if (plusFeatures.fileStorage) {
+        yield put(auphonic.triggerPlusTransfer({ production_uuid: production.uuid }))
+      }
     }
 
     // see https://auphonic.com/api/info/production_status.json
@@ -426,32 +436,6 @@ function getSaveProductionPayload(state: State): object {
   }
 }
 
-type ProgressPayload = {
-  key: string
-  progress: number
-}
-
-interface ProgressData {
-  key: string
-  progress: number
-}
-
-function* watchProgressChannel(progressChannel: Channel<ProgressData>) {
-  try {
-    while (true) {
-      const payload: ProgressPayload = yield take(progressChannel)
-
-      // TODO: reset when selecting a file
-      // TODO: reset when using the source picker
-      yield put(progress.setProgress(payload))
-    }
-  } finally {
-    if ((yield cancelled()) as boolean) {
-      progressChannel.close()
-    }
-  }
-}
-
 function* handleSaveProduction(
   auphonicApi: AuphonicApiClient,
   action: { type: string; payload: any }
@@ -468,17 +452,12 @@ function* handleSaveProduction(
   //@ts-ignore
   yield auphonicApi.delete(`production/${uuid}/chapters.json`)
 
-  const progressChannel: Channel<ProgressData> = yield call(channel)
-  yield spawn(watchProgressChannel, progressChannel)
+  const progressChannel: Channel<ProgressPayload> = yield call(
+    createAndWatchProgressChannel,
+    progress.setProgress
+  )
 
-  const handleProgress = (key: string) => (progressEvent: AxiosProgressEvent) => {
-    if (progressEvent.total) {
-      const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total)
-      const payload: ProgressPayload = { key, progress: percentCompleted }
-
-      progressChannel.put(payload)
-    }
-  }
+  const handleProgress = createProgressHandler(progressChannel)
 
   // save multi_input_files by saving/updating each track individually
   yield all(
@@ -704,6 +683,274 @@ function* maybeRestorePresetSelection() {
     if (savedPreset) {
       yield put(auphonic.setPreset(savedPreset))
     }
+  }
+}
+
+function* handleTriggerPlusTransfer(
+  api: PodloveApiClient,
+  action: { type: string; payload: { production_uuid: string } }
+): any {
+  const { production_uuid } = action.payload
+  const postId: Number = yield select(selectors.post.id)
+
+  try {
+    yield put(
+      auphonic.setPlusTransferStatus({
+        production_uuid,
+        status: 'in_progress',
+      })
+    )
+
+    // Phase 1: Get transfer queue
+    const response = yield api.post(
+      `auphonic/init-plus-file-transfer/${production_uuid}/${postId}`,
+      {}
+    )
+
+    if (response.result && response.result.success && response.result.transfer_queue) {
+      const transferQueue = response.result.transfer_queue
+
+      if (transferQueue.length === 0) {
+        yield put(
+          auphonic.setPlusTransferStatus({
+            production_uuid,
+            status: 'completed',
+            files: [],
+          })
+        )
+        return
+      }
+
+      // Phase 2: Process files sequentially
+      yield call(processTransferQueue, api, production_uuid, postId, transferQueue)
+    } else {
+             yield put(
+         auphonic.setPlusTransferStatus({
+           production_uuid,
+           status: 'failed',
+           errors: getApiErrorMessage(response, 'Failed to initialize transfer'),
+         })
+       )
+    }
+  } catch (error: any) {
+    yield put(
+      auphonic.setPlusTransferStatus({
+        production_uuid,
+        status: 'failed',
+        errors: error.message || 'Failed to trigger transfer',
+      })
+    )
+  }
+}
+
+// Helper function to get remaining pending files
+function getPendingFiles(transferQueue: any[], completedCount: number): any[] {
+  return transferQueue.slice(completedCount).map(file => ({
+    success: null,
+    status: 'pending' as const,
+    filename: file.filename,
+    download_url: file.download_url,
+    message: 'Waiting to transfer...'
+  }))
+}
+
+// Helper function to create file with processing state
+function createProcessingFile(file: any): any {
+  return {
+    success: null,
+    status: 'processing' as const,
+    filename: file.filename,
+    download_url: file.download_url,
+    message: 'Transferring...'
+  }
+}
+
+// Helper function to update file result with proper status
+function updateFileResult(result: any): any {
+  return {
+    ...result,
+    status: result.success ? 'completed' as const : 'failed' as const
+  }
+}
+
+function* processTransferQueue(
+  api: PodloveApiClient,
+  production_uuid: string,
+  postId: Number,
+  transferQueue: any[]
+): any {
+  let transferredFiles = 0
+  let hasErrors = false
+  const transferResults: any[] = []
+
+    // Show initial transfer UI with all files as pending
+  const initialFiles = transferQueue.map(file => ({
+    success: null,
+    status: 'pending' as const,
+    filename: file.filename,
+    download_url: file.download_url,
+    message: 'Waiting to transfer...'
+  }))
+
+  yield put(
+    auphonic.setPlusTransferStatus({
+      production_uuid,
+      status: 'in_progress',
+      files: initialFiles,
+    })
+  )
+
+  for (let i = 0; i < transferQueue.length; i++) {
+    const file = transferQueue[i]
+
+    // Mark current file as processing
+    const filesWithProcessing = [
+      ...transferResults.map(updateFileResult),
+      createProcessingFile(file),
+      ...getPendingFiles(transferQueue, i + 1)
+    ]
+
+    yield put(
+      auphonic.setPlusTransferStatus({
+        production_uuid,
+        status: 'in_progress', // Keep as in_progress during transfer
+        files: filesWithProcessing,
+      })
+    )
+
+    try {
+      const result = yield call(transferFile, api, production_uuid, postId, file)
+      transferResults.push(result)
+
+      if (result.success) {
+        transferredFiles++
+      } else {
+        hasErrors = true
+      }
+
+      // Update UI after each file transfer (but still in_progress if more files remain)
+      const isLastFile = i === transferQueue.length - 1
+      const currentStatus = isLastFile ? determineTransferStatus(hasErrors, transferredFiles) : 'in_progress'
+
+      yield put(
+        auphonic.setPlusTransferStatus({
+          production_uuid,
+          status: currentStatus,
+          files: [...transferResults.map(updateFileResult), ...getPendingFiles(transferQueue, transferResults.length)],
+        })
+      )
+    } catch (error: any) {
+      hasErrors = true
+      const errorResult = createTransferErrorResponse(file, error.message)
+      transferResults.push(errorResult)
+      console.error('Error transferring file:', error)
+
+      // Update UI after error (but still in_progress if more files remain)
+      const isLastFile = i === transferQueue.length - 1
+      const currentStatus = isLastFile ? determineTransferStatus(hasErrors, transferredFiles) : 'in_progress'
+
+      yield put(
+        auphonic.setPlusTransferStatus({
+          production_uuid,
+          status: currentStatus,
+          files: [...transferResults.map(updateFileResult), ...getPendingFiles(transferQueue, transferResults.length)],
+        })
+      )
+    }
+  }
+
+  const finalStatus = determineTransferStatus(hasErrors, transferredFiles)
+
+  // Store final status in backend for page reload persistence
+  try {
+    const payload: any = {
+      status: finalStatus,
+      files: transferResults
+    }
+
+    // Only include errors parameter if there are errors
+    if (hasErrors) {
+      if (transferredFiles === 0) {
+        payload.errors = 'All file transfers failed'
+      } else {
+        const failedCount = transferResults.length - transferredFiles
+        payload.errors = `${failedCount} of ${transferResults.length} file transfers failed`
+      }
+    }
+
+    yield api.post(`auphonic/set-plus-transfer-status/${production_uuid}/${postId}`, payload)
+  } catch (error: any) {
+    console.error('Failed to store final transfer status:', error)
+  }
+
+  // Final UI update with only completed results (no pending files)
+  yield put(
+    auphonic.setPlusTransferStatus({
+      production_uuid,
+      status: finalStatus,
+      files: transferResults.map(updateFileResult),
+    })
+  )
+}
+
+function* transferFile(
+  api: PodloveApiClient,
+  production_uuid: string,
+  postId: Number,
+  fileData: any
+): any {
+  const response = yield api.post(`auphonic/transfer-single-file/${production_uuid}/${postId}`, {
+    file_data: fileData,
+  })
+
+  if (response.result) {
+    return response.result
+  } else {
+    return createErrorResponse(fileData, { message: getApiErrorMessage(response, 'Transfer failed') })
+  }
+}
+
+function* handleLoadPlusTransferStatus(
+  api: PodloveApiClient,
+  action: { type: string; payload: { production_uuid: string } }
+): any {
+  const { production_uuid } = action.payload
+
+  try {
+    const episodeId: string = yield select(selectors.episode.id)
+    if (!episodeId) {
+      console.error('Episode ID not available for loading transfer status')
+      return
+    }
+
+    const episodeData = yield api.get(`episodes/${episodeId}`)
+    const transferStatus = episodeData.result.auphonic_plus_transfer_status
+    const transferFiles = episodeData.result.auphonic_plus_transfer_files
+    const transferErrors = episodeData.result.auphonic_plus_transfer_errors
+
+    if (transferStatus) {
+      yield put(
+        auphonic.setPlusTransferStatus({
+          production_uuid,
+          status: transferStatus,
+          files: transferFiles,
+          errors: transferErrors,
+        })
+      )
+    }
+  } catch (error) {
+    console.error('Error loading PLUS transfer status:', error)
+  }
+}
+
+function* handlePlusTransferStatusChange(
+  api: PodloveApiClient,
+  action: { type: string; payload: { production_uuid: string; status: string } }
+): any {
+  const { status } = action.payload
+
+  if (status === 'completed') {
+    yield call(verifyAll, api)
   }
 }
 

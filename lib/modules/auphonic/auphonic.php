@@ -17,9 +17,17 @@ class Auphonic extends \Podlove\Modules\Base
      */
     private $api;
 
+    /**
+     * Plus file transfer handler.
+     *
+     * @var Podlove\Modules\Auphonic\PlusFileTransfer
+     */
+    private $plus_file_transfer;
+
     public function load()
     {
         $this->api = new API_Wrapper($this);
+        $this->plus_file_transfer = new PlusFileTransfer($this);
 
         new EpisodeEnhancer($this);
 
@@ -135,11 +143,17 @@ class Auphonic extends \Podlove\Modules\Base
             return;
         }
 
-        // Update episode with production results
         $this->update_production_data($post_id);
 
+        if (\Podlove\Modules\Plus\FileStorage::is_enabled()) {
+            $transfer_status = get_post_meta($post_id, 'auphonic_plus_transfer_status', true);
+
+            if (empty($transfer_status) || $transfer_status === 'waiting_for_webhook') {
+                $this->plus_file_transfer->initiate_transfers($post_id);
+            }
+        }
+
         if (!$enabled) {
-            // webhook was enabled on production start but disabled during production
             \Podlove\Log::get()->addInfo(
                 'Auphonic webhook was enabled on production start but disabled during production. Episode data was updated but not published.',
                 ['post_id' => $post_id]
@@ -213,6 +227,54 @@ class Auphonic extends \Podlove\Modules\Base
             'post_title' => $metadata['title'],
         ]);
         wp_set_post_tags($post_id, $metadata['tags']);
+    }
+
+    /**
+     * Initiate PLUS file transfers for an episode.
+     *
+     * @param int $post_id
+     */
+    public function initiate_plus_file_transfers($post_id)
+    {
+        $this->plus_file_transfer->initiate_transfers($post_id);
+    }
+
+    /**
+     * Get PLUS file transfer queue for an episode.
+     *
+     * @param int $post_id
+     *
+     * @return array
+     */
+    public function get_plus_transfer_queue($post_id)
+    {
+        return $this->plus_file_transfer->get_transfer_queue($post_id);
+    }
+
+    /**
+     * Transfer a single PLUS file for an episode.
+     *
+     * @param int   $post_id
+     * @param array $file_data
+     *
+     * @return array
+     */
+    public function transfer_single_plus_file($post_id, $file_data)
+    {
+        return $this->plus_file_transfer->transfer_single_file($post_id, $file_data);
+    }
+
+    /**
+     * Set final PLUS transfer status after frontend processing.
+     *
+     * @param int $post_id
+     * @param string $status
+     * @param array|null $files
+     * @param string|null $errors
+     */
+    public function set_plus_transfer_final_status($post_id, $status, $files = null, $errors = null)
+    {
+        $this->plus_file_transfer->set_final_transfer_status($post_id, $status, $files, $errors);
     }
 
     public function convert_chapters_to_string($chapters)

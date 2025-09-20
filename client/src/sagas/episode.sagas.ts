@@ -50,12 +50,21 @@ function* initialize(api: PodloveApiClient) {
   }
 }
 
-function collectEpisodeUpdate(action: Action) {
+function* collectEpisodeUpdate(action: Action) {
   const prop = get(action, ['payload', 'prop'])
   const value = get(action, ['payload', 'value'], null)
 
   if (!prop) {
     return
+  }
+
+  // If trying to update slug when frozen, block the update
+  if (prop === 'slug') {
+    const slugFrozen: boolean = yield select(selectors.episode.slugFrozen)
+    if (slugFrozen) {
+      console.warn('Attempted to update frozen slug - update blocked')
+      return
+    }
   }
 
   EPISODE_UPDATE[prop] = value
