@@ -1,9 +1,0 @@
----
-description:
-globs: *.php
-alwaysApply: false
----
-- You are operating in a WordPress plugin context
-- The purpose of the plugin is to manage a podcast, its episodes and all related metadata
-- When working with lists, prefer functional programming over imperative programming
-- When using functional programming, prefer arrow functions
