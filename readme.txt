@@ -135,6 +135,7 @@ slug is marked as "frozen" so it cannot be edited accidently any more, by
 automations or manual interaction. There is an edit button to consciously change
 it, if necessary.
 - fixes "Activate for all existing Episodes" button in assets
+- security fix from v4.2.7
 
 = 4.2.4 =
 
