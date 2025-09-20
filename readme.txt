@@ -3,7 +3,7 @@ Contributors: eteubert
 Donate link: https://opencollective.com/podlove
 Tags: podlove, podcast, publishing, rss, audio
 Tested up to: 6.7.2
-Stable tag: 4.2.6
+Stable tag: 4.2.7
 Requires at least: 4.9.6
 Requires PHP: 8.0
 License: MIT
@@ -114,6 +114,12 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 6. Includes the Podlove Web Player. One more thing: you can manage and present all contributors easily.
 
 == Changelog ==
+
+= 4.2.7 =
+
+- security: Improved handling of image files in the download cache to block malicious uploads.
+
+Note: this should not affect normal image delivery, but please keep an eye out for any unexpected issues with cached images.
 
 = 4.2.6 =
 

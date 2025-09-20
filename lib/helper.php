@@ -82,12 +82,32 @@ function get_help_link($tab_id, $title = '<sup>?</sup>')
  *
  * @return bool
  */
-function is_image($file)
+function is_image($file, $filename = "")
 {
+    // simple PHP based checks
     $type = get_image_type($file);
     $mime = get_image_mime_type($type);
+    $mime_is_image = substr($mime, 0, 5) == 'image';
 
-    return substr($mime, 0, 5) == 'image';
+    // more checks using WP helpers
+    if (!$filename) {
+      $filename = basename($file);
+    }
+    
+    $check = wp_check_filetype_and_ext($file, $filename);
+    $ext = isset($check['ext']) && $check['ext'] ? strtolower($check['ext']) : null;
+    $wp_type = isset($check['type']) && $check['type'] ? strtolower($check['type']) : null;
+
+    $wp_type_looks_correct = stripos($wp_type, 'image/') === 0;
+    
+    // denielist some exts for extra safety
+    $danger_exts = [
+      'php', 'php3', 'php4', 'php5', 'phtml', 'phar', 'pl', 'py', 'rb', 'cgi', 'asp', 'aspx', 'jsp',
+    ];
+
+    $ext_looks_dangerous = empty($ext) || in_array($ext, $danger_exts, true);
+
+    return $mime_is_image && !$ext_looks_dangerous && $wp_type_looks_correct; 
 }
 
 function get_image_type($file)
