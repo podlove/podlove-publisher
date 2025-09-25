@@ -1,0 +1,99 @@
+{
+  "entries": [
+    {
+      "name": "Apple HomePod",
+      "pattern": "HomePod|^AirPodcasts/\\d",
+      "category": "smart_speaker"
+    },
+    {
+      "name": "Apple iPad",
+      "pattern": "ipad|iPad|IPAD",
+      "category": "mobile"
+    },
+    {
+      "name": "Apple TV",
+      "pattern": "Apple TV|AppleTV|apple;apple_tv",
+      "category": "smart_tv"
+    },
+    {
+      "name": "Apple iPhone",
+      "pattern": "iphone|iOS|iPhone|CFNetwork| ios |phone;ios",
+      "category": "mobile"
+    },
+    {
+      "name": "Apple Watch",
+      "pattern": "watch|Watch OS",
+      "category": "watch"
+    },
+    {
+      "name": "Apple iPod",
+      "pattern": "iPod|IPOD",
+      "category": "mobile"
+    },
+    {
+      "name": "Apple Computer",
+      "pattern": "OS X|OSX|Macintosh|Macbook",
+      "category": "computer"
+    },
+    {
+      "name": "Google Home",
+      "pattern": "GoogleChirp|Google-Speech-Actions|CrKey.*DeviceType/SmartSpeaker",
+      "category": "smart_speaker"
+    },
+    {
+      "name": "Google Chromebook",
+      "pattern": "Chromebook|CrOS",
+      "category": "computer"
+    },
+    {
+      "name": "Android Tablet",
+      "pattern": "[a|A]ndroid.*[t|T]ablet|[t|T]ablet.*[a|A]ndroid|SM-T| GT-|^ZTE;Xview",
+      "category": "mobile"
+    },
+    {
+      "name": "Other Smart TV",
+      "pattern": "SmartTV|[Rr]oku|CrKey|AFTT Build|AFTM Build|BRAVIA 4K|Opera TV|SmartTv|TSBNetTV|SMART-TV|TV Safari|WebTV|InettvBrowser|GoogleTV|HbbTV|smart-tv|olleh tv|^sony_tv;ps5;|Microsoft Xbox|^Google;Chromecast|^TCL;|^Xiaomi;(MIBOX|MiTV-)|^samsung;[uq][nej]\\d|^hisense;(c235x|c205x)|^skyworth;NoblexTV|^Sony;BRAVIA|^tcl;(c1\\d{2}x|7140x)|^onn\\.;8821x|^Funai;PHILIPS4KTV|^Sagemcom;VSB|^TPV;[A-Z0-9]+AndroidTV;|^(CVT_NULL|MediaTek);SMARTTV;|^NVIDIA;SHIELDAndroidTV|UHDAndroidTV;|^westinghouse;7808x;|^ZTE;B820C",
+      "category": "smart_tv"
+    },
+    {
+      "name": "Android Phone",
+      "pattern": "ServeStream|Android|android|HTC|ExoPlayer|^AntennaPod/|^GSA/.*\\.arm(64)?$|^sp-agent|^PRDownloader$|^(Turtlecast|TURTLECAST)/",
+      "category": "mobile"
+    },
+    {
+      "name": "Windows Computer",
+      "pattern": "Windows|windows|WMPlayer|Winamp|Win32|Win64|NSPlayer|MediaMonkey|NSPlayer|PC",
+      "category": "computer"
+    },
+    {
+      "name": "Amazon Smart Speaker",
+      "pattern": "Alexa|^Echo/|^Amazon;Echo",
+      "category": "smart_speaker"
+    },
+    {
+      "name": "Other Smart Speaker",
+      "pattern": "sonos|Sonos|^Bose/|^VictorReader|^Bose;Bose_(Home_Speaker|Soundbar|Portable_Home|Smart_Speaker)|^HEOS;DENON|^Denon;DENON-DWHS|^Storybutton/|^Bluesound;|^Yamaha;WX-",
+      "category": "smart_speaker"
+    },
+    {
+      "name": "Other Computer",
+      "pattern": "Lavf/|desktop|Linux|linux|VLC|^okhttp/|CastBox/",
+      "category": "computer"
+    },
+    {
+      "name": "Other Tablet",
+      "pattern": "tablet|Tablet",
+      "category": "mobile"
+    },
+    {
+      "name": "Other Watch",
+      "pattern": "watch|Watch|^Garmin ",
+      "category": "watch"
+    },
+    {
+      "name": "Other Mobile Device",
+      "pattern": "Player FM$|^Podkicker/|spotify_unknown|^Castro|^Swoot Agent| KAIOS/|^Zune/|^PodcastGuru |^Pocket Casts$|^AmazonMusic$|RTL\\+",
+      "category": "mobile"
+    }
+  ]
+}
