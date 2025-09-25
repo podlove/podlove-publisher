@@ -106,6 +106,15 @@ add_action('admin_enqueue_scripts', function () {
             'jquery', 'jquery-ui-sortable', 'jquery-ui-datepicker',
         ], $version);
 
+        wp_localize_script(
+            'podlove_admin',
+            'podlove_vue',
+            [
+                'rest_url' => esc_url_raw(rest_url()),
+                'nonce' => wp_create_nonce('wp_rest')
+            ]
+        );
+
         wp_enqueue_style('jquery-ui-style', \Podlove\PLUGIN_URL.'/js/admin/jquery-ui/css/smoothness/jquery-ui.css');
 
         wp_localize_script(

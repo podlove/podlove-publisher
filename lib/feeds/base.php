@@ -459,7 +459,7 @@ function override_feed_entry($hook, $podcast, $feed, $format)
             $xml .= ob_get_contents();
             ob_end_clean();
 
-            return $xml;
+            return $xml . "\n";
         }, 15 * MINUTE_IN_SECONDS);
     }, 11);
 }

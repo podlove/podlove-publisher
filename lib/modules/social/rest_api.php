@@ -51,6 +51,28 @@ class REST_API
                 'permission_callback' => '__return_true',
             ],
         ]);
+
+        register_rest_route(self::api_namespace, self::api_base.'/lookup/(?P<service>.+)', [
+            [
+                'methods' => \WP_REST_Server::READABLE,
+                'callback' => [$this, 'lookup_person'],
+                'args' => [
+                    'service' => [
+                        'description' => __('lookup service: webfinger, gravatar.com, etc'),
+                        'default' => 'webfinger',
+                        'type' => 'enum',
+                        'enum' => ['webfinger', 'json', 'gravatar.com']
+                    ],
+                    'id' => [
+                        'description' => __('contributor id'),
+                        'type' => 'string',
+                        'required' => true
+
+                    ]
+                ],
+                //'permission_callback' => "__return current_user_can( 'edit_posts' );",
+            ],
+        ]);
     }
 
     public function get_services($request)
@@ -82,6 +104,61 @@ class REST_API
         }, $services);
 
         return new \WP_REST_Response($entries);
+    }
+
+    public function lookup_person($request)
+    {
+        $service = $request->get_param('service');
+        $contributor = $request->get_param('id');
+        $clean = function ($x) { return $x; };
+
+        switch ( $service ) {
+            case 'gravatar.com':
+                // $contributor needs to be either hash of email address or gravatar.com username
+                // if email, then create md5 hash
+                if (strpos($contributor, '@')) {
+                    $contributor = md5($contributor);
+                }
+                $url = "https://$service/$contributor.json";
+                $clean = function ($x) { return $x->entry[0]; };
+                break;
+            case 'json':
+                $host = parse_url($contributor, PHP_URL_HOST) ?: parse_url('//' . $contributor, PHP_URL_HOST);
+                $path = parse_url($contributor, PHP_URL_PATH);
+                $url = "https://${host}${path}";
+                break;
+            // TODO: OpenGraph? via library (e.g. https://github.com/shweshi/OpenGraph) or manual?
+            default:
+                $host = parse_url($contributor, PHP_URL_HOST) ?: parse_url('//' . $contributor, PHP_URL_HOST);
+                $url = "https://$host/.well-known/webfinger?resource=" . urlencode($contributor);
+                break;
+        }
+
+        try {
+            $response = wp_remote_get($url, ['headers' => ['Accept' => 'application/json']]);
+            if (is_wp_error($response)) {
+                return new \WP_Error(
+                    'podlove_rest_contributor_lookup_error',
+                    $response->get_error_message(),
+                    ['status' => 400, 'url' => $url]
+                );
+            }
+            $result = $clean(json_decode($response['body']));
+            if ($response['response']['code'] !== 200 || !$result) {
+                return new \WP_Error(
+                    'podlove_rest_contributor_lookup_not_found',
+                    $response['response']['message'],
+                    ['status' => 404, 'url' => $url]
+                );
+            }
+            return new \WP_REST_Response($result);
+        } catch ( \Exception $e ) {
+            return new \WP_Error(
+                'podlove_rest_contributor_lookup_error',
+                $e->getMessage(),
+                ['status' => 500]
+            );
+        }
     }
 }
 

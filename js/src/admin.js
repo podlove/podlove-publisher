@@ -51,8 +51,93 @@ function convert_to_slug(string) {
 	return string;
 }
 
+function fix_url(string) {
+	if (!string) {
+		return null;
+	}
+	var url = string;
+	try   { url = new URL(string) } 
+	catch { url = new URL((string.indexOf("@") != -1 ? 'acct:' : 'https://') + string) };
+	if ( url.protocol === 'http:' ) {
+		url.protocol = 'https:'
+	}
+	return PODLOVE.untrailingslashit(url.toString());
+}
+
+
+function lookup_identifier(service, id) {
+	try {
+		return jQuery.getJSON(podlove_vue.rest_url + "podlove/v1/social/lookup/" + service, {'id': id })
+		// returns 404 when nothing is found, 
+		// TODO: how to I supress the error message in the browser's JavaScript Console?
+	} 
+	catch { }
+}
+
 function auto_fill_form(id, title_id) {
 	(function ($) {
+		function find_profile(identifier, type) {
+			// identier is probably an URI
+			if ( type !== 'email' && identifier.indexOf(":") !== -1 ) {
+				lookup_identifier('webfinger', identifier).done(function(webfinger) {
+					console.debug("webfinger lookup response", webfinger);
+					fill_if_empty('#podlove_contributor_guid', webfinger.subject);
+					fill_if_empty('#podlove_contributor_privateemail', webfinger.alias);
+
+					// TODO: Add social media accounts from webfinger.aliases to datatable
+					fill_person_from_links(webfinger.links);
+				});
+				return null;
+			} 
+			// identier is probably a string in form user@domain.tld
+			else {
+				lookup_identifier('webfinger', 'acct:' + identifier).done((webfinger) => {
+					console.debug("webfinger lookup response", webfinger);
+					if (webfinger) {
+						// allways overwrite URI with subject from response
+						$('#podlove_contributor_guid').val(webfinger.subject);
+						// TODO: Add social media accounts from webfinger.aliases to datatable
+						fill_person_from_links(webfinger.links);
+					}
+				}).fail(() => lookup_identifier('gravatar.com', identifier).done((gravatar) => {
+					console.debug("gravatar lookup response", gravatar);
+					fill_if_empty('#podlove_contributor_guid', fix_url(gravatar.urls?.[0]?.value || gravatar.accounts?.pop()?.url || 'https://' + identifier.split('@')[1]));
+					fill_if_empty('#podlove_contributor_identifier', gravatar.preferredUsername);
+					fill_if_empty('#podlove_contributor_realname', gravatar.name.formatted 
+						|| [gravatar.name.givenName, gravatar.name.familyName].join(' ') 
+						|| gravatar.preferredUsername);
+					fill_if_empty('#podlove_contributor_publicname', gravatar.name.formatted || gravatar.preferredUsername);
+					fill_if_empty('#podlove_contributor_avatar', gravatar.thumbnailUrl, true);
+				}));	
+			}
+		}
+		
+		function fill_person_from_links(links) {
+			// lookup links[rel=self] for name, avatar, etc.
+			var self = links.filter(x => x.rel === 'self');
+			if (self.length > 0) {
+				lookup_identifier('json', self[0].href).done((mastodon) => {
+					console.debug("links.self person lookup response", mastodon);
+					fill_if_empty('#podlove_contributor_identifier', mastodon.preferredUsername);
+					fill_if_empty('#podlove_contributor_realname', mastodon.name || mastodon.preferredUsername);
+					fill_if_empty('#podlove_contributor_publicname', mastodon.name || mastodon.preferredUsername);
+					fill_if_empty('#podlove_contributor_avatar', mastodon.icon.url, true);
+				});
+			}
+		}
+
+		function fill_if_empty(field, value, triggerChangeEvent) {
+			var input = $(field);
+			if ( input.val() == "" && value ) {
+				input.val(value);
+				if (triggerChangeEvent) {
+					input.change();
+				}
+				return true;
+			}
+		}
+
+
 		switch (id) {
 			case 'contributor':
 				if ($("#podlove_contributor_publicname").val() == "") {
@@ -60,6 +145,27 @@ function auto_fill_form(id, title_id) {
 						$("#podlove_contributor_publicname").attr('placeholder', $("#podlove_contributor_nickname").val());
 					} else {
 						$("#podlove_contributor_publicname").attr('placeholder', $("#podlove_contributor_realname").val());
+					}
+				}
+				if ($("#podlove_contributor_guid").val() == "") {
+					if ($("#podlove_contributor_realname").val() != "") {
+						$("#podlove_contributor_publicname").attr('placeholder', $("#podlove_contributor_nickname").val());
+					}
+				}
+				break;
+			case 'contributor_email':
+				if ($("#podlove_contributor_avatar").val() == "") {
+					var email = $("#podlove_contributor_privateemail").val();
+					if (email != "") {
+						find_profile(email, 'email');
+					}
+				}
+				break;
+			case 'contributor_guid':
+				if ($("#podlove_contributor_avatar").val() == "") {
+					var guid = $("#podlove_contributor_guid").val();
+					if (guid != "") {
+						find_profile(guid, 'uri');
 					}
 				}
 				break;
@@ -115,6 +221,9 @@ function clean_up_input() {
 
 				textfield.addClass("podlove-invalid-input");
 				$status.addClass("podlove-input-isinvalid");
+
+				// abort further change events, hopefully
+				return false;
 			}
 
 			// trim whitespace
@@ -142,7 +251,7 @@ function clean_up_input() {
 						if (!textfield.val().match(valid_url_regexp)) {
 							// Encode URL only if it is not already encoded
 							if (!encodeURI(textfield.val()).match(valid_url_regexp)) {
-								ShowInputError('Please enter a valid URL');
+								return ShowInputError('Please enter a valid URL');
 							} else {
 								textfield.val(encodeURI(textfield.val()));
 							}
@@ -153,13 +262,13 @@ function clean_up_input() {
 							// textfield.val( encodeURI( textfield.val() ) );
 
 							if (!textfield.val().match(/^(?:(?:https?|ftp):\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]+-?)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]+-?)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:\/[^\s]*)?$/i)) {
-								ShowInputError('Please enter a valid email adress or a valid URL');
+								return ShowInputError('Please enter a valid email adress or a valid URL');
 							}
 						}
 						break;
 					case "email":
-						if (!textfield.val().match(/^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/i))
-							ShowInputError('Please enter a valid email adress.');
+						if (!textfield.val().match(/^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/i)) 
+							return ShowInputError('Please enter a valid email adress.');
 						break;
 				}
 			}
@@ -246,6 +355,10 @@ jQuery(function ($) {
 		auto_fill_form('contributor', 'realname');
 	});
 
+	$("#podlove_contributor_privateemail").change(function () {
+		auto_fill_form('contributor_email', 'email');
+	});
+
 	$("#podlove_contributor_group_title").change(function () {
 		auto_fill_form('contributor_group', 'group_title');
 	});
@@ -256,9 +369,16 @@ jQuery(function ($) {
 
 	$(document).ready(function () {
 		auto_fill_form('contributor', 'realname');
+		// TODO auto_fill_form('contributor_guid', 'guid'); from social media accounts
 		clean_up_input();
 		init_contextual_help_links();
 		new ClipboardJS('.clipboard-btn');
+	});
+
+	const guid = $("#podlove_contributor_guid");
+	guid.change(function () {
+		guid.val(fix_url(guid.val()));
+		auto_fill_form('contributor_guid', 'guid');
 	});
 
 });
