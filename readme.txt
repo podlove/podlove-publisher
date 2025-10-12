@@ -93,6 +93,10 @@ Episode title in API now follows the same rules as in RSS feed. There's a new fi
 - If you enjoy the plugin, please [leave a review](https://wordpress.org/support/plugin/podlove-podcasting-plugin-for-wordpress/reviews/#new-post).
 - You can answer questions of other fellow podcasters in the [Podlove Community](https://community.podlove.org/).
 
+### Where do I report security bugs found in this plugin? =
+
+Please report security bugs found in the source code of the Podlove Podcast Publisher plugin through the [Patchstack Vulnerability Disclosure  Program](https://patchstack.com/database/vdp/9e5fb42f-70ee-4afb-9e86-886900031833). The Patchstack team will assist you with verification, CVE assignment, and notify the developers of this plugin.
+
 ---
 
 This product includes GeoLite2 data created by MaxMind, available from http://www.maxmind.com.
