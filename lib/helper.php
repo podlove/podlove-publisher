@@ -100,7 +100,7 @@ function is_image($file, $filename = "")
 
     $wp_type_looks_correct = stripos($wp_type, 'image/') === 0;
     
-    // denielist some exts for extra safety
+    // denylist some exts for extra safety
     $danger_exts = [
       'php', 'php3', 'php4', 'php5', 'phtml', 'phar', 'pl', 'py', 'rb', 'cgi', 'asp', 'aspx', 'jsp',
     ];
