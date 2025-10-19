@@ -38,9 +38,6 @@ class Plus extends \Podlove\Modules\Base
         $this->file_storage = new FileStorage($this, $this->api);
         $this->file_storage->init();
 
-        // disabling unfinished feature
-        // (new ImageGenerator($this, $this->api))->init();
-
         add_action('rest_api_init', function () {
             $controller = new RestApi($this->api);
             $controller->register_routes();
