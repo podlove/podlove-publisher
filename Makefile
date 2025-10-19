@@ -92,6 +92,11 @@ build:
 	rm -f dist/*.code-workspace
 	rm -f dist/.prettierrc
 	rm -f dist/.editorconfig
+	rm -rf dist/devbox.d
+	rm -f dist/devbox.json
+	rm -f dist/devbox.lock
+	rm -f dist/Dockerfile
+	rm -f dist/docker-compose.yml
 	find dist -name "*composer.json" | xargs rm -rf
 	find dist -name "*composer.lock" | xargs rm -rf
 	find dist -name "*.swp" | xargs rm -rf
