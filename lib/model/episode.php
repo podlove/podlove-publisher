@@ -344,7 +344,7 @@ class Episode extends Base implements Licensable
     /**
      * Get episode chapters.
      *
-     * @param string $format object, psc, mp4chaps, json. Default: object
+     * @param string $format object, psc, mp4chaps, json, pijson. Default: object
      *
      * @return mixed
      */

@@ -855,16 +855,16 @@
         },
         {
             "name": "podlove/podlove-timeline",
-            "version": "v2.0.0",
+            "version": "v2.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/podlove/podlove-timeline.git",
-                "reference": "b6af8065ac93fdbee65ca89001fb2a6bf8149417"
+                "reference": "cdf8c677ddf9b46bf8a46ca187986d4fb4ae40e4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/podlove/podlove-timeline/zipball/b6af8065ac93fdbee65ca89001fb2a6bf8149417",
-                "reference": "b6af8065ac93fdbee65ca89001fb2a6bf8149417",
+                "url": "https://api.github.com/repos/podlove/podlove-timeline/zipball/cdf8c677ddf9b46bf8a46ca187986d4fb4ae40e4",
+                "reference": "cdf8c677ddf9b46bf8a46ca187986d4fb4ae40e4",
                 "shasum": ""
             },
             "require": {
@@ -896,9 +896,9 @@
             ],
             "support": {
                 "issues": "https://github.com/podlove/podlove-timeline/issues",
-                "source": "https://github.com/podlove/podlove-timeline/tree/v2.0.0"
+                "source": "https://github.com/podlove/podlove-timeline/tree/v2.1.0"
             },
-            "time": "2023-10-14T12:19:34+00:00"
+            "time": "2025-12-14T12:51:51+00:00"
         },
         {
             "name": "podlove/webvtt-parser",
