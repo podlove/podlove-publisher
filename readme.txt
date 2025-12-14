@@ -121,7 +121,8 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 = 4.3.1 =
 
-* add "podcast:chapters" tag to RSS feed, which Apple Podcast now prefers for chapters information
+* add "podcast:chapters" tag to RSS feed, which Apple Podcast now prefers for chapters information.
+* change default database table character set to utf8mb4 for emoji support. For safety reasons, there is no automatic migration provided. If you prefer, you can update Publisher tables manually via SQL, but in most cases the episode table will be all you need: `ALTER TABLE wp_podlove_episode CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;`
 
 = 4.3.0 =
 
