@@ -2,7 +2,7 @@
 Contributors: eteubert
 Donate link: https://opencollective.com/podlove
 Tags: podlove, podcast, publishing, rss, audio
-Tested up to: 6.7.2
+Tested up to: 6.9.0
 Stable tag: 4.3.0
 Requires at least: 4.9.6
 Requires PHP: 8.0
@@ -118,6 +118,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 6. Includes the Podlove Web Player. One more thing: you can manage and present all contributors easily.
 
 == Changelog ==
+
+= 4.3.1 =
+
+* add "podcast:chapters" tag to RSS feed, which Apple Podcast now prefers for chapters information
 
 = 4.3.0 =
 
