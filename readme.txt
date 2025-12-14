@@ -2,8 +2,8 @@
 Contributors: eteubert
 Donate link: https://opencollective.com/podlove
 Tags: podlove, podcast, publishing, rss, audio
-Tested up to: 6.7.2
-Stable tag: 4.3.0
+Tested up to: 6.9.0
+Stable tag: 4.3.1
 Requires at least: 4.9.6
 Requires PHP: 8.0
 License: MIT
@@ -118,6 +118,11 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 6. Includes the Podlove Web Player. One more thing: you can manage and present all contributors easily.
 
 == Changelog ==
+
+= 4.3.1 =
+
+* add "podcast:chapters" tag to RSS feed, which Apple Podcast now prefers for chapters information.
+* change default database table character set to utf8mb4 for emoji support. For safety reasons, there is no automatic migration provided. If you prefer, you can update Publisher tables manually via SQL, but in most cases the episode table will be all you need: `ALTER TABLE wp_podlove_episode CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;`
 
 = 4.3.0 =
 
