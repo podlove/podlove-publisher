@@ -712,6 +712,10 @@ class Contributors extends \Podlove\Modules\Base
 
     public function delete_podcast_contributor()
     {
+        if (!current_user_can('podlove_manage_contributors')) {
+            return;
+        }
+      
         $object_id = (int) $_REQUEST['object_id'];
 
         if (!$object_id) {
@@ -725,6 +729,10 @@ class Contributors extends \Podlove\Modules\Base
 
     public function delete_default_contributor()
     {
+        if (!current_user_can('podlove_manage_contributors')) {
+          return;
+        }
+        
         $object_id = (int) $_REQUEST['object_id'];
 
         if (!$object_id) {
@@ -738,6 +746,10 @@ class Contributors extends \Podlove\Modules\Base
 
     public function delete_episode_contributor()
     {
+        if (!current_user_can('edit_posts')) {
+          return;
+        }
+        
         $object_id = (int) $_REQUEST['object_id'];
 
         if (!$object_id) {
