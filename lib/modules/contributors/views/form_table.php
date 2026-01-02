@@ -201,7 +201,8 @@ use Podlove\Modules\Contributors\Contributors;
 
                         var data = {
                             action: ajax_action,
-                            object_id: object_id
+                            object_id: object_id,
+                            nonce: podlove_admin_global.nonce_ajax
                         };
 
                         $.ajax({

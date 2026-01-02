@@ -715,6 +715,11 @@ class Contributors extends \Podlove\Modules\Base
         if (!current_user_can('podlove_manage_contributors')) {
             return;
         }
+        
+        if (!\wp_verify_nonce($_REQUEST['nonce'], 'podlove_ajax')) {
+            http_response_code(401);
+            exit;
+        }
       
         $object_id = (int) $_REQUEST['object_id'];
 
@@ -733,6 +738,11 @@ class Contributors extends \Podlove\Modules\Base
           return;
         }
         
+        if (!\wp_verify_nonce($_REQUEST['nonce'], 'podlove_ajax')) {
+            http_response_code(401);
+            exit;
+        }
+        
         $object_id = (int) $_REQUEST['object_id'];
 
         if (!$object_id) {
@@ -748,6 +758,11 @@ class Contributors extends \Podlove\Modules\Base
     {
         if (!current_user_can('edit_posts')) {
           return;
+        }
+        
+        if (!\wp_verify_nonce($_REQUEST['nonce'], 'podlove_ajax')) {
+            http_response_code(401);
+            exit;
         }
         
         $object_id = (int) $_REQUEST['object_id'];
