@@ -431,9 +431,13 @@ class Episode extends Wrapper
      */
     public function files()
     {
+        $files = array_filter($this->episode->media_files(), function ($file) {
+            return (bool) $file->active;
+        });
+
         return array_map(function ($file) {
             return new File($file);
-        }, $this->episode->media_files());
+        }, $files);
     }
 
     /**
@@ -452,9 +456,12 @@ class Episode extends Wrapper
      */
     public function file($asset_name)
     {
+        $files = array_filter($this->episode->media_files(['identifier' => $asset_name]), function ($file) {
+            return (bool) $file->active;
+        });
         $files = array_map(function ($file) {
             return new File($file);
-        }, $this->episode->media_files(['identifier' => $asset_name]));
+        }, $files);
 
         if ($files) {
             return reset($files);
