@@ -119,6 +119,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 4.3.3 =
+
+* change: default new contributors to visible
+
 = 4.3.2 =
 
 * improve permission verification when deleting default and podcast contributions
