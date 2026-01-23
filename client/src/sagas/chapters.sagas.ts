@@ -221,7 +221,7 @@ function* handleKeydown(input: {
 }
 
 function* selectImageFromLibrary() {
-  yield put(wordpress.selectMediaFromLibrary({ onSuccess: { type: chapters.SELECT_IMAGE } }))
+  yield put(wordpress.selectMediaFromLibrary({ onSuccess: { type: chapters.SET_IMAGE } }))
 }
 
 export default function () {
