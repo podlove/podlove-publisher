@@ -34,6 +34,10 @@ function* chaptersSaga(): any {
 
 function* initialize(api: PodloveApiClient) {
   const episodeId: string = yield select(selectors.episode.id)
+  if (!episodeId) {
+    return
+  }
+
   const { result }: { result: { chapters: PodloveChapter[] } } = yield api.get(
     `chapters/${episodeId}`
   )

@@ -122,6 +122,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 = 4.3.3 =
 
 * fix: allow selecting chapter images from the media library
+* fix: prevent media files module from hanging on new episodes without an ID
 * change: default new contributors to visible
 * fix: treat inactive episode files as nonexistent in templates
 

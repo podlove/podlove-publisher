@@ -37,6 +37,10 @@ function* updateAuphonicWebhookConfig() {
 
 function* initialize(api: PodloveApiClient) {
   const episodeId: string = yield select(selectors.episode.id)
+  if (!episodeId) {
+    return
+  }
+
   const { result: episodesResult }: { result: PodloveEpisode } = yield api.get(
     `episodes/${episodeId}`
   )

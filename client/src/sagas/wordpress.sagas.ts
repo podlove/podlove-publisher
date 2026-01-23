@@ -33,12 +33,28 @@ function* wordpressSaga(): any {
 }
 
 function getFeaturedImageIdFromEditor() {
+  if (!wordpress.store?.select) {
+    return null
+  }
+
   const editor = wordpress.store.select('core/editor')
+  if (!editor?.getEditedPostAttribute) {
+    return null
+  }
+
   return editor.getEditedPostAttribute('featured_media')
 }
 
 function getTitleFromEditor() {
+  if (!wordpress.store?.select) {
+    return ''
+  }
+
   const editor = wordpress.store.select('core/editor')
+  if (!editor?.getEditedPostAttribute) {
+    return ''
+  }
+
   return editor.getEditedPostAttribute('title')
 }
 

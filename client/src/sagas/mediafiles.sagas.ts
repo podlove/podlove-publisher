@@ -15,6 +15,7 @@ import * as wordpress from '@store/wordpress.store'
 import { MediaFile } from '@store/mediafiles.store'
 import { takeFirst } from './helper'
 import { createApi } from './api'
+import { get } from 'lodash'
 
 // Import handlers from other saga modules
 import {
@@ -50,13 +51,14 @@ function* mediafilesSaga(): any {
 function* initialize(api: PodloveApiClient) {
   const episodeId: string = yield select(selectors.episode.id)
 
-  const {
-    result: { results: files },
-  }: { result: { results: MediaFile[] } } = yield api.get(`episodes/${episodeId}/media`)
+  let files: MediaFile[] = []
 
-  if (files) {
-    yield put(mediafiles.set(files))
+  if (episodeId) {
+    const { result } = yield api.get(`episodes/${episodeId}/media`)
+    files = get(result, ['results'], [])
   }
+
+  yield put(mediafiles.set(files))
 
   yield takeEvery(mediafiles.ENABLE, handleEnable, api)
   yield takeEvery(mediafiles.DISABLE, handleDisable, api)
