@@ -173,7 +173,15 @@ class Podcast implements Licensable
 
     public function get_media_file_base_uri()
     {
-        return apply_filters('podlove_media_file_base_uri', trailingslashit($this->media_file_base_uri));
+        $base_uri = $this->media_file_base_uri;
+
+        // Avoid passing null/empty values into trailingslashit(), which can
+        // trigger deprecation notices and also return "/" for empty strings.
+        if (!is_string($base_uri) || $base_uri === '') {
+            return apply_filters('podlove_media_file_base_uri', '');
+        }
+
+        return apply_filters('podlove_media_file_base_uri', trailingslashit($base_uri));
     }
 
     /**

@@ -214,7 +214,7 @@ class MediaFile extends Base
     {
         // trim params
         $params = array_map(function ($p) {
-            return trim($p);
+            return trim((string) $p);
         }, $params);
 
         $connector = function ($path) {
