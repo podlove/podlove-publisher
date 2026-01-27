@@ -1524,8 +1524,18 @@ function run_migrations_for_version($version)
 
             break;
         case 141:
-            $sql = 'CREATE INDEX accessed_at ON `%s` (accessed_at)';
-            $wpdb->query(sprintf($sql, Model\DownloadIntentClean::table_name()));
+            $table = Model\DownloadIntentClean::table_name();
+            $index_exists = (bool) $wpdb->get_var(
+                $wpdb->prepare(
+                    "SHOW INDEX FROM `{$table}` WHERE Key_name = %s",
+                    'accessed_at'
+                )
+            );
+
+            if (!$index_exists) {
+                $sql = 'CREATE INDEX accessed_at ON `%s` (accessed_at)';
+                $wpdb->query(sprintf($sql, $table));
+            }
 
             break;
         case 142:
