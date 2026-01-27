@@ -94,6 +94,7 @@ function podlove_setup_modules()
         'logging',
         'podlove_web_player',
         'open_graph',
+        'plus',
         // 'asset_validation',
         'oembed',
         // 'feed_validation',

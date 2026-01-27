@@ -119,6 +119,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 4.3.4 =
+
+* change: enable the Publisher PLUS module by default for new and existing installs
+
 = 4.3.3 =
 
 * fix: allow selecting chapter images from the media library
