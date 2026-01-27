@@ -237,10 +237,17 @@ class API
      */
     public function list_podcasts()
     {
+        // Without a token, the PLUS API will return 401. Treat as no podcasts.
+        if (trim((string) $this->token) === '') {
+            return [];
+        }
+
         $curl = new Http\Curl();
         $curl->request($this->module::base_url().'/api/rest/v1/podcasts', $this->params());
 
-        return $this->handle_json_response($curl) ?? [];
+        $response = $this->handle_json_response($curl);
+
+        return is_array($response) ? $response : [];
     }
 
     /**
@@ -265,6 +272,9 @@ class API
     public function get_podcast_by_guid(string $guid)
     {
         $podcasts = $this->list_podcasts();
+        if ($podcasts === []) {
+            return false;
+        }
 
         $matching_podcast = array_filter($podcasts, function ($podcast) use ($guid) {
             return $podcast->guid === $guid;

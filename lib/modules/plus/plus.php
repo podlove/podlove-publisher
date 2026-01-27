@@ -50,6 +50,10 @@ class Plus extends \Podlove\Modules\Base
         // We do this to ensure that the _slug_ of the podcast is always up to
         // date in PLUS because it is used as part of the media download URL.
         add_action('update_option_podlove_podcast', function ($old_value, $new_value) {
+            if (trim((string) $this->api->getToken()) === '') {
+                return;
+            }
+
             if ($old_value['title'] !== $new_value['title']) {
                 $this->update_podcast_title_and_slug($old_value['guid'], $new_value['title']);
             }
