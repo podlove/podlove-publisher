@@ -15,6 +15,10 @@ class FeedProxy
 
     public static function is_enabled()
     {
+        if (!\Podlove\Modules\Base::is_active('plus')) {
+            return false;
+        }
+
         return (bool) \Podlove\Model\Podcast::get()->plus_enable_proxy;
     }
 
