@@ -122,6 +122,9 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 = 4.3.4 =
 
 * change: enable the Publisher PLUS module by default for new and existing installs
+* fix: prevent connection to PLUS service when module is deactivated
+* fix: prevent feed proxy when PLUS module is deactivated
+* fix: various PHP deprecation warnings and notices
 
 = 4.3.3 =
 
