@@ -11,7 +11,6 @@
     "twig/twig": "3.14.*",
     "geoip2/geoip2": "~2.0",
     "matomo/device-detector": "6.1.*",
-    "phpunit/php-timer": "5.0.*",
     "podlove/webvtt-parser": "^1.1.6",
     "geertw/ip-anonymizer": "^1.1",
     "dariuszp/cli-progress-bar": "^1.0",
@@ -22,7 +21,6 @@
   },
   "require-dev": {
     "pear/pear_exception": "1.0.*@dev",
-    "phpunit/phpunit": "9.6.9",
     "bamarni/composer-bin-plugin": "1.4.1"
   },
   "autoload": {
