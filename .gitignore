@@ -5,6 +5,7 @@
 *.code-workspace
 wprelease.yml
 composer.phar
+node_modules
 js/node_modules
 client/node_modules
 vendor/*
@@ -24,3 +25,4 @@ lib/modules/podlove_web_player/player_v2/
 .build/wp*
 /.vs
 config.local.js
+*.cache

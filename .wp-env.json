@@ -1,0 +1,12 @@
+{
+  "plugins": [
+    "."
+  ],
+  "env": {
+    "tests": {
+      "mappings": {
+        "wp-content/plugins/podlove-podcasting-plugin-for-wordpress": "."
+      }
+    }
+  }
+}

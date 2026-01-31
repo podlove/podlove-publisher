@@ -3,18 +3,19 @@
 use Podlove\Modules\Seasons\Model\Season;
 use Podlove\Modules\Seasons\Model\SeasonsValidator;
 
-/**
- * @internal
- * @coversNothing
- */
 class SeasonsValidatorTest extends WP_UnitTestCase
 {
-    /**
-     * @before
-     */
-    public function activateSeasonsModule()
+    public function setUp(): void
     {
-        \Podlove\Modules\Base::activate('seasons');
+        parent::setUp();
+
+        podlove_test_activate_module('seasons', \Podlove\Modules\Seasons\Seasons::class);
+    }
+
+    public function tearDown(): void
+    {
+        podlove_test_truncate_seasons_table();
+        parent::tearDown();
     }
 
     public function testDetectsMultipleFirstSeasons()
@@ -50,4 +51,5 @@ class SeasonsValidatorTest extends WP_UnitTestCase
         $this->assertEquals('duplicate_start_dates', $issue->type);
         $this->assertEquals('Some of your seasons have the same start date.', $issue->message());
     }
+
 }
