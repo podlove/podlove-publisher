@@ -47,6 +47,35 @@ make docker-install
 5. For isolated development run `WORDPRESS_URL=http://podlove.local npm run dev` with your Wordpress environment
 6. For integrated development run `npm run serve` and go to your local Wordpress environment and see your changes
 
+## Testing
+
+Integration tests use the official WordPress PHPUnit setup via `wp-env`, which starts a Docker-based WordPress test environment.
+
+Prerequisites:
+- Docker is running
+- Node.js + npm
+- PHP + Composer
+
+First-time setup:
+```
+composer install
+composer bin php-scoper install
+composer prefix-dependencies
+npm install
+npm run wp-env:start
+```
+
+Run integration tests:
+```
+npm run test:integration
+```
+
+If `wp-env run` fails with a missing docker-compose file, the environment was not created yet or was cleaned up. Recreate it with:
+```
+npx wp-env destroy
+npm run wp-env:start
+```
+
 ## Formatting Code
 
 Use [PHP-CS-Fixer](https://github.com/FriendsOfPhp/PHP-CS-Fixer) to format code before committing.

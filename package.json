@@ -1,0 +1,13 @@
+{
+  "name": "podlove-publisher",
+  "private": true,
+  "devDependencies": {
+    "@wordpress/env": "^10.39.0"
+  },
+  "scripts": {
+    "wp-env": "wp-env",
+    "wp-env:start": "wp-env start",
+    "wp-env:stop": "wp-env stop",
+    "test:integration": "wp-env run tests-cli --env-cwd=wp-content/plugins/podlove-podcasting-plugin-for-wordpress vendor/bin/phpunit --configuration=phpunit.xml.dist"
+  }
+}

@@ -21,7 +21,9 @@
   },
   "require-dev": {
     "pear/pear_exception": "1.0.*@dev",
-    "bamarni/composer-bin-plugin": "1.4.1"
+    "bamarni/composer-bin-plugin": "1.4.1",
+    "phpunit/phpunit": "^9.6",
+    "yoast/phpunit-polyfills": "^4.0"
   },
   "autoload": {
     "classmap": [
