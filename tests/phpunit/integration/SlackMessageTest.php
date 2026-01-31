@@ -2,10 +2,6 @@
 
 use Podlove\Modules\SlackShownotes\Message;
 
-/**
- * @internal
- * @coversNothing
- */
 class SlackMessageTest extends WP_UnitTestCase
 {
     public function testExtractLinkMatchedWithAttachment()
@@ -39,7 +35,7 @@ EOT;
         $message = json_decode($data, true);
         $result = Message::extract_links($message);
 
-        $this->assertEquals(count($result), 1);
+        $this->assertEquals(1, count($result));
         $this->assertEquals($result[0]['link'], 'https://freakshow.fm/fs228-letty-im-datenteich');
         $this->assertEquals($result[0]['title'], 'FS228 Letty im Datenteich');
         $this->assertEquals($result[0]['source'], 'Freak Show');
@@ -60,7 +56,7 @@ EOT;
         $message = json_decode($data, true);
         $result = Message::extract_links($message);
 
-        $this->assertEquals(count($result), 1);
+        $this->assertEquals(1, count($result));
         $this->assertEquals($result[0]['link'], 'http://www.spiegel.de/politik/ausland/kongos-regierung-kappt-das-internet-nach-praesidentenwahl-a-1245955.html');
         $this->assertEquals($result[0]['title'], null);
         $this->assertEquals($result[0]['source'], 'spiegel.de');
@@ -68,8 +64,6 @@ EOT;
 
     public function testLinkWithPipes()
     {
-        // when Slack detects something that looks like an URL it makes a canonical version
-        // for example: golem.de is expanded to <https://golem.de|golem.de>
         $data = <<<'EOT'
 {
     "client_msg_id": "5510681d-1c33-41aa-a0ee-62779cd9e8ad",
@@ -83,7 +77,7 @@ EOT;
         $message = json_decode($data, true);
         $result = Message::extract_links($message);
 
-        $this->assertEquals(count($result), 1);
+        $this->assertEquals(1, count($result));
         $this->assertEquals($result[0]['link'], 'https://golem.de');
         $this->assertEquals($result[0]['title'], null);
         $this->assertEquals($result[0]['source'], 'golem.de');
@@ -134,7 +128,7 @@ EOT;
         $message = json_decode($data, true);
         $result = Message::extract_links($message);
 
-        $this->assertEquals(count($result), 2);
+        $this->assertEquals(2, count($result));
         $this->assertEquals($result[0]['link'], 'https://www.zeit.de/gesellschaft/zeitgeschehen/2018-12/vatikan-papst-franziskus-sprecher-ruecktritt');
         $this->assertEquals($result[0]['title'], 'Vatikan: Sprecher von Papst Franziskus treten zurück');
         $this->assertEquals($result[1]['link'], 'https://www.zeit.de/2019/01/demokratieverdrossenheit-misstrauen-aufschwung-buerger-generationenkonflikt');

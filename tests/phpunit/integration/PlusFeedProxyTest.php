@@ -4,10 +4,6 @@ use Podlove\Model\Podcast;
 use Podlove\Modules\Base;
 use Podlove\Modules\Plus\FeedProxy;
 
-/**
- * @internal
- * @coversNothing
- */
 class PlusFeedProxyTest extends WP_UnitTestCase
 {
     private $was_plus_active;
@@ -16,6 +12,7 @@ class PlusFeedProxyTest extends WP_UnitTestCase
     {
         parent::setUp();
         $this->was_plus_active = Base::is_active('plus');
+        podlove_test_activate_module('plus', \Podlove\Modules\Plus\Plus::class);
     }
 
     public function tearDown(): void
