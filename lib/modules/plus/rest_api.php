@@ -108,6 +108,10 @@ class RestApi extends \WP_REST_Controller
 
     public function create_upload_url($request)
     {
+        if ($error = $this->require_token()) {
+            return $error;
+        }
+
         $filename = $request->get_param('filename');
 
         return $this->api->create_file_upload($filename);
@@ -115,6 +119,10 @@ class RestApi extends \WP_REST_Controller
 
     public function check_file_exists($request)
     {
+        if ($error = $this->require_token()) {
+            return $error;
+        }
+
         $filename = $request->get_param('filename');
 
         return $this->api->check_file_exists($filename);
@@ -122,6 +130,10 @@ class RestApi extends \WP_REST_Controller
 
     public function complete_upload($request)
     {
+        if ($error = $this->require_token()) {
+            return $error;
+        }
+
         $filename = $request->get_param('filename');
 
         return $this->api->complete_file_upload($filename);
@@ -147,6 +159,10 @@ class RestApi extends \WP_REST_Controller
 
     public function migrate_file($request)
     {
+        if ($error = $this->require_token()) {
+            return $error;
+        }
+
         $filename = $request->get_param('filename');
         $file_url = $request->get_param('file_url');
 
@@ -183,5 +199,19 @@ class RestApi extends \WP_REST_Controller
             'generated_filename' => $filename,
             'episode_id' => $episode_id
         ];
+    }
+
+    private function require_token()
+    {
+        $token = trim((string) $this->api->getToken());
+        if ($token === '') {
+            return new \WP_Error(
+                'podlove_plus_token_missing',
+                'Publisher PLUS API token is not configured. Set it in Publisher PLUS settings.',
+                ['status' => 400]
+            );
+        }
+
+        return null;
     }
 }
