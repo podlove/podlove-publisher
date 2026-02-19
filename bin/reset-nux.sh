@@ -116,7 +116,8 @@ start_ngrok_tunnel() {
   echo "Starting ngrok tunnel for: ${tunnel_target}"
 
   # Start ngrok in the background and resolve the public URL via the local API.
-  NGROK_LOG="$(mktemp -t ngrok-reset-nux)"
+  # macOS mktemp requires a template with at least 3-6 X's.
+  NGROK_LOG="$(mktemp -t ngrok-reset-nux.XXXXXX)"
   local host_header="--host-header=${LOCAL_HOST}:${LOCAL_PORT}"
   case "${WP}" in
     *wp-env*)
