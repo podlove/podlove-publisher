@@ -42,6 +42,7 @@ class Repair
         self::clear_podlove_image_cache();
         self::flush_rewrite_rules();
         self::remove_duplicate_episodes();
+        self::repair_missing_columns();
 
         // hook for modules to add their repair methods
         do_action('podlove_repair_do_repair');
@@ -147,6 +148,10 @@ class Repair
 					<strong><?php echo __('flushes WordPress rewrite rules', 'podlove-podcasting-plugin-for-wordpress'); ?></strong>
 					<?php echo __('If you have strange behaviour in some sites or pages are not found which should exist, this might solve it.', 'podlove-podcasting-plugin-for-wordpress'); ?>
 				</li>
+				<li>
+					<strong><?php echo __('repairs missing database columns', 'podlove-podcasting-plugin-for-wordpress'); ?></strong>
+					<?php echo __('Adds newer Podlove columns if they are missing. This is safe and only affects Podlove tables.', 'podlove-podcasting-plugin-for-wordpress'); ?>
+				</li>
 				<?php // hook for modules to add their repair method descriptions?>
 				<?php foreach (apply_filters('podlove_repair_descriptions', []) as $entry) { ?>
 					<li><?php echo $entry; ?></li>
@@ -195,5 +200,80 @@ class Repair
 
 		<?php
         self::clear_repair_log();
+    }
+
+    private static function repair_missing_columns()
+    {
+        global $wpdb;
+
+        $columns = [
+            Model\Episode::table_name() => [
+                'title' => 'TEXT',
+                'number' => 'INT UNSIGNED',
+                'type' => 'VARCHAR(10)',
+                'soundbite_start' => 'VARCHAR(255)',
+                'soundbite_duration' => 'VARCHAR(255)',
+                'soundbite_title' => 'VARCHAR(255)',
+                'slug_frozen' => 'TINYINT DEFAULT 0'
+            ],
+            Model\MediaFile::table_name() => [
+                'active' => 'TINYINT',
+            ],
+        ];
+
+        if (Modules\Shownotes\Model\Entry::table_exists()) {
+            $columns[Modules\Shownotes\Model\Entry::table_name()] = [
+                'affiliate_url' => 'TEXT',
+                'hidden' => 'INT',
+                'image' => 'TEXT',
+            ];
+        }
+
+        $added = [];
+
+        foreach ($columns as $table => $table_columns) {
+            foreach ($table_columns as $column => $definition) {
+                if (self::column_exists($table, $column)) {
+                    continue;
+                }
+
+                $sql = sprintf(
+                    'ALTER TABLE `%s` ADD COLUMN `%s` %s',
+                    esc_sql($table),
+                    esc_sql($column),
+                    $definition
+                );
+
+                $result = $wpdb->query($sql);
+                if ($result !== false) {
+                    $added[] = "{$table}.{$column}";
+                }
+            }
+        }
+
+        if (!empty($added)) {
+            self::add_to_repair_log(
+                sprintf(
+                    __('Added missing database columns: %s', 'podlove-podcasting-plugin-for-wordpress'),
+                    implode(', ', $added)
+                )
+            );
+        } else {
+            self::add_to_repair_log(
+                __('No missing Podlove columns found.', 'podlove-podcasting-plugin-for-wordpress')
+            );
+        }
+    }
+
+    private static function column_exists($table, $column)
+    {
+        global $wpdb;
+
+        $sql = $wpdb->prepare(
+            'SHOW COLUMNS FROM `'.$table.'` LIKE %s',
+            $column
+        );
+
+        return (bool) $wpdb->get_var($sql);
     }
 }
