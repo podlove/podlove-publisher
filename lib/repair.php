@@ -230,6 +230,7 @@ class Repair
         }
 
         $added = [];
+        $errors = [];
 
         foreach ($columns as $table => $table_columns) {
             foreach ($table_columns as $column => $definition) {
@@ -247,6 +248,12 @@ class Repair
                 $result = $wpdb->query($sql);
                 if ($result !== false) {
                     $added[] = "{$table}.{$column}";
+                } else {
+                    $errors[] = [
+                        'table' => $table,
+                        'column' => $column,
+                        'error' => $wpdb->last_error,
+                    ];
                 }
             }
         }
@@ -262,6 +269,41 @@ class Repair
             self::add_to_repair_log(
                 __('No missing Podlove columns found.', 'podlove-podcasting-plugin-for-wordpress')
             );
+        }
+
+        if (!empty($errors)) {
+            $has_permission_error = false;
+            foreach ($errors as $error) {
+                if (stripos($error['error'], 'ALTER command denied') !== false
+                    || stripos($error['error'], 'access denied') !== false
+                    || stripos($error['error'], 'permission') !== false
+                ) {
+                    $has_permission_error = true;
+                    break;
+                }
+            }
+
+            $details = implode(', ', array_map(function ($error) {
+                return "{$error['table']}.{$error['column']}";
+            }, $errors));
+
+            if ($has_permission_error) {
+                self::add_to_repair_log(
+                    sprintf(
+                        __('Could not add some columns due to database permissions (ALTER denied). Ask your host to grant ALTER privileges or run the ALTER statements manually. Missing: %s', 'podlove-podcasting-plugin-for-wordpress'),
+                        $details
+                    ),
+                    'notice'
+                );
+            } else {
+                self::add_to_repair_log(
+                    sprintf(
+                        __('Could not add some columns due to database errors. Missing: %s', 'podlove-podcasting-plugin-for-wordpress'),
+                        $details
+                    ),
+                    'notice'
+                );
+            }
         }
     }
 
