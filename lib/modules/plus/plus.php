@@ -11,6 +11,7 @@ class Plus extends \Podlove\Modules\Base
     public $feed_pusher;
     public $feed_proxy;
     public $file_storage;
+    public $growth_banner;
     protected $module_name = 'Publisher PLUS';
     protected $module_description = 'Publisher PLUS provides additional features and services for your podcast.';
     protected $module_group = 'external services';
@@ -37,6 +38,9 @@ class Plus extends \Podlove\Modules\Base
 
         $this->file_storage = new FileStorage($this, $this->api);
         $this->file_storage->init();
+
+        $this->growth_banner = new GrowthBanner($this);
+        $this->growth_banner->init();
 
         add_action('rest_api_init', function () {
             $controller = new RestApi($this->api);
