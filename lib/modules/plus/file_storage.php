@@ -103,7 +103,7 @@ class FileStorage
     {
         if (self::is_enabled()) {
             $config['attributes'] = 'class="large-text" readonly disabled style="background-color: #f0f0f0; color: #666;"';
-            $config['description'] = '<strong>'.__('This setting is managed automatically by PLUS File Storage.', 'podlove-podcasting-plugin-for-wordpress').'</strong>';
+            $config['description'] = '<strong>'.__('This setting is managed automatically by PLUS Podcast File Hosting.', 'podlove-podcasting-plugin-for-wordpress').'</strong>';
         }
 
         return $config;

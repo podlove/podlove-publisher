@@ -484,7 +484,7 @@ class Feed
                 'html' => ['class' => 'regular-text podlove-check-input'],
             ]);
 
-            $wrapper->subheader(__('Feed Proxy', 'podlove-podcasting-plugin-for-wordpress'));
+            $wrapper->subheader(__('Reliable Feed Delivery', 'podlove-podcasting-plugin-for-wordpress'));
 
             if (!FeedProxy::is_enabled()) {
                 $wrapper->select('redirect_http_status', [

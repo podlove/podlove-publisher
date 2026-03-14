@@ -49,7 +49,7 @@ class GlobalFeedSettings
                 echo '<a target="_blank" href="'.esc_attr($proxy_url).'">'.$proxy_url.'</a>';
                 echo '</p>';
                 echo '<p class="description">';
-                echo __('You are using Publisher PLUS, which automatically configures the proxy settings for you.', 'podlove-podcasting-plugin-for-wordpress');
+                echo __('You are using Publisher PLUS Reliable Feed Delivery, which automatically configures these settings for you.', 'podlove-podcasting-plugin-for-wordpress');
                 echo '</p>';
             },
         ]);

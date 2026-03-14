@@ -60,13 +60,13 @@ class Banner
     public static function feed_proxy()
     {
         $content = '<p>'
-        .__('High-traffic RSS feeds can slow down your podcast hosting. Our <strong>Feed Proxy</strong> service offloads this traffic to our optimized servers, ensuring lightning-fast delivery even during traffic spikes. Stop worrying about server loads and focus on creating great content.', 'podlove-podcasting-plugin-for-wordpress')
+        .__('High-traffic RSS feeds can slow down your podcast hosting. <strong>Reliable Feed Delivery</strong> keeps your feed fast and available by offloading traffic to our optimized servers, even during traffic spikes. Stop worrying about server load and focus on creating great content.', 'podlove-podcasting-plugin-for-wordpress')
         .'</p>';
 
         $banner = new self(
             __('Optimize Your Podcast\'s Performance', 'podlove-podcasting-plugin-for-wordpress'),
             $content,
-            __('Enable Feed Proxy', 'podlove-podcasting-plugin-for-wordpress'),
+            __('Enable Reliable Feed Delivery', 'podlove-podcasting-plugin-for-wordpress'),
             admin_url('admin.php?page=publisher_plus_settings')
         );
 
@@ -79,13 +79,13 @@ class Banner
     public static function file_storage()
     {
         $content = '<p>'
-        .__('Store your podcast files in fast and reliable cloud storage. Don\'t worry about dealing with WordPress performance issues as your podcast grows. Focus on creating great content and let us handle the rest.', 'podlove-podcasting-plugin-for-wordpress')
+        .__('Store your podcast files in fast and reliable cloud hosting built for podcast delivery. Avoid the storage and performance limits of serving files directly from WordPress as your show grows.', 'podlove-podcasting-plugin-for-wordpress')
         .'</p>';
 
         $banner = new self(
-            __('Reliable Podcast File Hosting', 'podlove-podcasting-plugin-for-wordpress'),
+            __('Podcast File Hosting', 'podlove-podcasting-plugin-for-wordpress'),
             $content,
-            __('Enable File Storage', 'podlove-podcasting-plugin-for-wordpress'),
+            __('Enable Podcast File Hosting', 'podlove-podcasting-plugin-for-wordpress'),
             admin_url('admin.php?page=publisher_plus_settings')
         );
 

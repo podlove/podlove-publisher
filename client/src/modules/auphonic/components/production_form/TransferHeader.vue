@@ -1,8 +1,8 @@
 <template>
   <div class="mb-4">
-    <h3 class="text-lg font-medium leading-6 text-gray-900">PLUS File Storage</h3>
+    <h3 class="text-lg font-medium leading-6 text-gray-900">PLUS Podcast File Hosting</h3>
     <p class="mt-1 text-sm text-gray-500">
-      {{ __('Auphonic files are automatically transferred to PLUS storage.', 'podlove-podcasting-plugin-for-wordpress') }}
+      {{ __('Auphonic files are automatically transferred to PLUS Podcast File Hosting.', 'podlove-podcasting-plugin-for-wordpress') }}
     </p>
   </div>
 </template>

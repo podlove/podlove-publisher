@@ -9,7 +9,7 @@
 
     <div class="space-y-3">
       <Feature
-        title="File Storage"
+        title="Podcast File Hosting"
         :modelValue="features.fileStorage"
         @update:modelValue="handleFeatureToggle('fileStorage')"
       >
@@ -24,20 +24,19 @@
         </template>
 
         <p class="text-sm text-gray-600 mb-2">
-          Store your podcast files in fast and reliable cloud storage. Don't worry about dealing
-          with WordPress performance issues as your podcast grows. Focus on creating great content
-          and let us handle the rest.
+          Keep your podcast files in fast, reliable cloud hosting built for podcast delivery. As
+          your show grows, you can avoid the storage and performance limits of serving files
+          directly from WordPress.
         </p>
 
         <p class="text-sm text-gray-600 mb-2">
-          You can enable file storage by using the feature switch here. This will automatically upload
-          your podcast files to the cloud and make them available for download.
+          Enable Podcast File Hosting here to automatically upload your media files and make them
+          available from Publisher PLUS.
         </p>
 
         <p class="text-sm text-gray-600">
-          If at any point you want to disable file storage, you can do so by disabling the feature
-          here. Then files will be served from your local WordPress or FTP storage again, as you
-          configure it here in the plugin.
+          You can disable it again at any time. Your files will then be served from the WordPress
+          or FTP storage location configured in the plugin.
         </p>
 
         <template #footer v-if="features.fileStorage && (needsMigration || showMigrationTool)">
@@ -46,14 +45,14 @@
       </Feature>
 
       <Feature
-        title="Feed Proxy"
+        title="Reliable Feed Delivery"
         :modelValue="features.feedProxy"
         @update:modelValue="handleFeatureToggle('feedProxy')"
       >
         <p class="text-sm text-gray-600">
-          When Feed Proxy is enabled, all feed requests are automatically redirected to the
-          corresponding proxy feed URL. It can be disabled at any time without risk of losing
-          subscribers because a temporary redirect (HTTP 307) is used.
+          Keep your podcast feed fast and available even during traffic spikes. When enabled,
+          Publisher PLUS automatically routes feed requests through our optimized delivery
+          infrastructure, and you can turn it off again at any time without losing subscribers.
         </p>
       </Feature>
     </div>
