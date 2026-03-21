@@ -7,7 +7,7 @@ use Podlove\Modules\Locations\Settings\Podcast_Settings_Tab;
 class LocationsTest extends WP_UnitTestCase
 {
     /**
-     * @var EpisodeFactory
+     * @var EpisodeFactory 
      */
     private $episode_factory;
 
