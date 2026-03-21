@@ -28,18 +28,22 @@ class Location
         $table = self::table_name();
         $charset_collate = $wpdb->get_charset_collate();
 
+        // dbDelta requires PRIMARY KEY on its own line (two spaces before "(") — inline
+        // "PRIMARY KEY" on the id column causes ALTERs that error with "Multiple primary key defined"
+        // when the table already exists (e.g. tests re-activate the module).
         $sql = "CREATE TABLE {$table} (
-            id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-            episode_id BIGINT UNSIGNED NOT NULL,
-            rel VARCHAR(20) NOT NULL DEFAULT 'subject',
-            location_name VARCHAR(255),
-            location_lat DECIMAL(10,8),
-            location_lng DECIMAL(11,8),
-            location_address TEXT,
-            location_country VARCHAR(2),
-            location_osm VARCHAR(50),
-            UNIQUE KEY episode_rel (episode_id, rel)
-        ) {$charset_collate};";
+			id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+			episode_id BIGINT UNSIGNED NOT NULL,
+			rel VARCHAR(20) NOT NULL DEFAULT 'subject',
+			location_name VARCHAR(255) NULL,
+			location_lat DECIMAL(10,8) NULL,
+			location_lng DECIMAL(11,8) NULL,
+			location_address TEXT NULL,
+			location_country VARCHAR(2) NULL,
+			location_osm VARCHAR(50) NULL,
+			UNIQUE KEY episode_rel (episode_id, rel),
+			PRIMARY KEY  (id)
+		) {$charset_collate};";
 
         require_once ABSPATH.'wp-admin/includes/upgrade.php';
         dbDelta($sql);
