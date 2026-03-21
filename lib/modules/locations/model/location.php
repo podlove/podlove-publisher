@@ -65,6 +65,35 @@ class Location
         return self::from_row($row);
     }
 
+    /**
+     * @return Location[]
+     */
+    public static function all()
+    {
+        global $wpdb;
+
+        $table = self::table_name();
+        $rows = $wpdb->get_results("SELECT * FROM {$table} ORDER BY id ASC");
+
+        if (!$rows) {
+            return [];
+        }
+
+        $locations = [];
+        foreach ($rows as $row) {
+            $locations[] = self::from_row($row);
+        }
+
+        return $locations;
+    }
+
+    public static function delete_all()
+    {
+        global $wpdb;
+
+        $wpdb->query('DELETE FROM '.self::table_name());
+    }
+
     public function save()
     {
         global $wpdb;
