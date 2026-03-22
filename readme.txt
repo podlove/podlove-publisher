@@ -16,9 +16,13 @@ We started the Podlove Podcast Publisher project in 2012 because existing soluti
 
 Official Site: [podlove.org/podlove-podcast-publisher](https://podlove.org/podlove-podcast-publisher)
 
-### Video Tutorial: Getting started with Podlove Publisher
+### Getting Started Videos
 
-[youtube http://www.youtube.com/watch?v=Hmrm-jUe6u4]
+Starting fresh with Podlove Publisher:
+https://youtu.be/2UZrmPAcyrs
+
+Migrating an existing podcast to Podlove Publisher:
+https://youtu.be/s6jL6jk6hWk
 
 ### Compatible RSS Feeds
 
