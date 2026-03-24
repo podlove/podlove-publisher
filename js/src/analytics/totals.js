@@ -24,7 +24,15 @@ jQuery(document).ready(function ($) {
 	};
 
 	function render_episode_performance_chart() {
-		var chart_width = $("#total-chart").closest(".wrap").width();
+		var chart_container = $("#total-chart");
+		var chart_width;
+
+		if (chart_container.closest(".postbox-container").length) {
+			chart_width = chart_container.closest(".postbox-container").width();
+		} else {
+			chart_width = chart_container.closest(".wrap").width();
+		}
+
 		var xfilter = crossfilter(totalsRawData);
 		var all = xfilter.groupAll().reduce(reduceAddFun, reduceSubFun, reduceBaseFun);
 		var total_downloads = all.value().downloads;
