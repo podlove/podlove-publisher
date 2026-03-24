@@ -45,6 +45,12 @@ class FeedPusher
     {
         delete_option('podlove_plus_push_feeds');
 
+        // Bail out early if no PLUS token is configured.
+        $token = trim((string) $this->api->getToken());
+        if ($token === '') {
+            return;
+        }
+
         // podcasts
         $feeds = array_map(function ($feed) {
             return $feed->get_subscribe_url();

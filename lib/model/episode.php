@@ -298,7 +298,6 @@ class Episode extends Base implements Licensable
     public function cover_art()
     {
         return $this->with_blog_scope(function () {
-            $podcast = Podcast::get();
             $asset_assignment = AssetAssignment::get_instance();
 
             if (!$asset_assignment->image) {
@@ -345,7 +344,7 @@ class Episode extends Base implements Licensable
     /**
      * Get episode chapters.
      *
-     * @param string $format object, psc, mp4chaps, json. Default: object
+     * @param string $format object, psc, mp4chaps, json, pijson. Default: object
      *
      * @return mixed
      */
@@ -496,6 +495,38 @@ class Episode extends Base implements Licensable
 
         return 1;
     }
+
+    /**
+     * Check if slug is frozen
+     *
+     * @return bool
+     */
+    public function is_slug_frozen()
+    {
+        return (bool) $this->slug_frozen;
+    }
+
+    /**
+     * Freeze the slug to prevent automatic changes
+     */
+    public function freeze_slug()
+    {
+        if (!$this->is_slug_frozen()) {
+            $this->slug_frozen = 1;
+            $this->save();
+        }
+    }
+
+    /**
+     * Unfreeze the slug to allow automatic changes
+     */
+    public function unfreeze_slug()
+    {
+        if ($this->is_slug_frozen()) {
+            $this->slug_frozen = 0;
+            $this->save();
+        }
+    }
 }
 
 Episode::property('id', 'INT NOT NULL AUTO_INCREMENT PRIMARY KEY');
@@ -517,3 +548,4 @@ Episode::property('license_url', 'TEXT');
 Episode::property('soundbite_start', 'VARCHAR(255)');
 Episode::property('soundbite_duration', 'VARCHAR(255)');
 Episode::property('soundbite_title', 'VARCHAR(255)');
+Episode::property('slug_frozen', 'TINYINT DEFAULT 0');

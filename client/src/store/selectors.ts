@@ -9,11 +9,14 @@ import * as transcriptsStore from './transcripts.store'
 import * as contributorsStore from './contributors.store'
 import * as settingsStore from './settings.store'
 import * as podcastStore from './podcast.store'
+import * as plusFileMigrationStore from './plusFileMigration.store'
+import * as plusStore from './plus.store'
 import * as auphonicStore from './auphonic.store'
 import * as progressStore from './progress.store'
 import * as mediafilesStore from './mediafiles.store'
 import * as relatedEpisodesStore from './relatedEpisodes.store'
 import * as showsStore from './shows.store'
+import * as adminStore from './admin.store'
 
 const root = {
   lifecycle: (state: State) => state.lifecycle,
@@ -30,6 +33,9 @@ const root = {
   settings: (state: State) => state.settings,
   relatedEpisodes: (state: State) => state.relatedEpisodes,
   shows: (state: State) => state.shows,
+  admin: (state: State) => state.admin,
+  plusFileMigration: (state: State) => state.plusFileMigration,
+  plus: (state: State) => state.plus,
 }
 
 const lifecycle = {
@@ -53,12 +59,23 @@ const auphonic = {
   isSaving: createSelector(root.auphonic, auphonicStore.selectors.isSaving),
   isInitializing: createSelector(root.auphonic, auphonicStore.selectors.isInitializing),
   publishWhenDone: createSelector(root.auphonic, auphonicStore.selectors.publishWhenDone),
+  plusTransferStatus: createSelector(root.auphonic, auphonicStore.selectors.plusTransferStatus),
+  plusTransferFiles: createSelector(root.auphonic, auphonicStore.selectors.plusTransferFiles),
+  plusTransferErrors: createSelector(root.auphonic, auphonicStore.selectors.plusTransferErrors),
 }
 
 const progress = {
   progress: createSelector(
     [root.progress, (_state: any, key: string) => key],
     progressStore.selectors.progress
+  ),
+  status: createSelector(
+    [root.progress, (_state: any, key: string) => key],
+    progressStore.selectors.status
+  ),
+  message: createSelector(
+    [root.progress, (_state: any, key: string) => key],
+    progressStore.selectors.message
   ),
 }
 
@@ -90,6 +107,7 @@ const contributors = {
 const episode = {
   id: createSelector(root.episode, episodeStore.selectors.id),
   slug: createSelector(root.episode, episodeStore.selectors.slug),
+  slugFrozen: createSelector(root.episode, episodeStore.selectors.slugFrozen),
   duration: createSelector(root.episode, episodeStore.selectors.duration),
   number: createSelector(root.episode, episodeStore.selectors.number),
   title: createSelector(root.episode, episodeStore.selectors.title),
@@ -131,6 +149,7 @@ const episode = {
 const mediafiles = {
   isInitializing: createSelector(root.mediafiles, mediafilesStore.selectors.isInitializing),
   files: createSelector(root.mediafiles, mediafilesStore.selectors.files),
+  selectedFiles: createSelector(root.mediafiles, mediafilesStore.selectors.selectedFiles),
   slugAutogenerationEnabled: createSelector(
     root.mediafiles,
     mediafilesStore.selectors.slugAutogenerationEnabled
@@ -169,6 +188,7 @@ const settings = {
     root.settings,
     settingsStore.selectors.enableEpisodeExplicit
   ),
+  enablePlusStorage: createSelector(root.settings, settingsStore.selectors.enablePlusStorage),
   modules: createSelector(root.settings, settingsStore.selectors.modules),
 }
 
@@ -182,6 +202,45 @@ const relatedEpisodes = {
 
 const shows = {
   list: createSelector(root.shows, showsStore.selectors.shows),
+}
+
+const admin = {
+  bannerHide: createSelector(root.admin, adminStore.selectors.bannerHide),
+  type: createSelector(root.admin, adminStore.selectors.type),
+  feedUrl: createSelector(root.admin, adminStore.selectors.feedUrl),
+}
+
+const plusFileMigration = {
+  totalState: createSelector(root.plusFileMigration, plusFileMigrationStore.selectors.totalState),
+  progress: createSelector(root.plusFileMigration, plusFileMigrationStore.selectors.progress),
+  currentEpisodeName: createSelector(
+    root.plusFileMigration,
+    plusFileMigrationStore.selectors.currentEpisodeName
+  ),
+  currentFileName: createSelector(
+    root.plusFileMigration,
+    plusFileMigrationStore.selectors.currentFileName
+  ),
+  episodesWithFiles: createSelector(
+    root.plusFileMigration,
+    plusFileMigrationStore.selectors.episodesWithFiles
+  ),
+  isMigrationComplete: createSelector(
+    root.plusFileMigration,
+    plusFileMigrationStore.selectors.isMigrationComplete
+  ),
+  showMigrationToolManually: createSelector(
+    root.plusFileMigration,
+    plusFileMigrationStore.selectors.showMigrationToolManually
+  ),
+}
+
+const plus = {
+  features: createSelector(root.plus, plusStore.selectors.features),
+  token: createSelector(root.plus, plusStore.selectors.token),
+  user: createSelector(root.plus, plusStore.selectors.user),
+  isLoading: createSelector(root.plus, plusStore.selectors.isLoading),
+  isSaving: createSelector(root.plus, plusStore.selectors.isSaving),
 }
 
 export default {
@@ -199,4 +258,7 @@ export default {
   mediafiles,
   relatedEpisodes,
   shows,
+  admin,
+  plusFileMigration,
+  plus,
 }

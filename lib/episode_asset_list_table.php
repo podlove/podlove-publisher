@@ -35,7 +35,7 @@ class Episode_Asset_List_Table extends \Podlove\List_Table
             'delete' => $link(__('Delete', 'podlove-podcasting-plugin-for-wordpress'), 'delete'),
         ];
 
-        $title = ($episode_asset->title) ? $episode_asset->title : __('- title missing -', 'podlove-podcasting-plugin-for-wordpress');
+        $title = $episode_asset->title ? esc_html($episode_asset->title) : __('- title missing -', 'podlove-podcasting-plugin-for-wordpress');
 
         return sprintf(
             '%1$s %2$s',

@@ -46,7 +46,7 @@ class WebPlayer extends Tab
 			<table class="form-table">
 				<?php $this->form_fields(); ?>
 			</table>
-			
+
 			<?php submit_button(__('Save Changes'), 'button-primary', 'submit', true); ?>
 		</form>
 		<?php
@@ -133,7 +133,7 @@ class WebPlayer extends Tab
 								<?php foreach ($episode_assets as $episode_asset) { ?>
 									<?php $file_type = $episode_asset->file_type(); ?>
 									<?php if ($file_type && in_array($file_type->mime_type, $mime_types)) { ?>
-										<option value="<?php echo $episode_asset->id; ?>" <?php selected($episode_asset->id, $value); ?>><?php echo $episode_asset->title; ?></option>
+										<option value="<?php echo $episode_asset->id; ?>" <?php selected($episode_asset->id, $value); ?>><?php echo esc_html($episode_asset->title); ?></option>
 									<?php } ?>
 								<?php } ?>
 							</select>

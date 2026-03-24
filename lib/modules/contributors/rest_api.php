@@ -615,7 +615,7 @@ class WP_REST_PodloveContributors_Controller extends WP_REST_Controller
     public function create_item($request)
     {
         $contributor = new Contributor();
-        $contributor->visibility = 0;
+        $contributor->visibility = 1;
         $contributor->contributioncount = 0;
         $contributor->save();
 

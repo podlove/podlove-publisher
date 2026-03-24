@@ -33,7 +33,7 @@ function ga_track_download($request_id, $media_file, $ua_string, $ptm_context, $
     $debug_ga = false;
     $ga_collect_endpoint = 'https://www.google-analytics.com/'.($debug_ga ? 'debug/' : '').'collect';
 
-    $ga_tracking_id = trim(\Podlove\get_setting('tracking', 'ga'));
+    $ga_tracking_id = trim(\Podlove\get_setting('tracking', 'ga') ?? '');
     if (!$ga_tracking_id || $ga_tracking_id === '') {
         return;
     }

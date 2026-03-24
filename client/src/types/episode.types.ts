@@ -1,5 +1,6 @@
 export interface PodloveEpisode {
   slug: string
+  slug_frozen: boolean
   number: string
   title: string
   subtitle: string

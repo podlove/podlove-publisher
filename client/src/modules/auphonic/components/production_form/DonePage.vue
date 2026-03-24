@@ -39,6 +39,8 @@
       </div>
     </div>
 
+    <PlusTransferStatus v-if="plusFileStorageEnabled" />
+
     <div class="mt-4 overflow-hidden rounded-lg bg-white shadow" v-if="visibleEntries.length > 0">
       <div class="p-6">
         <div>
@@ -99,6 +101,7 @@ import { selectors } from '@store'
 import { AuphonicChapter, Production } from '@store/auphonic.store'
 import { update as updateEpisode } from '@store/episode.store'
 import { parsed as parsedChapters } from '@store/chapters.store'
+import * as plus from '@store/plus.store'
 
 import {
   ClipboardDocumentCheckIcon as ClipboardCheckIcon,
@@ -106,6 +109,7 @@ import {
   ExclamationTriangleIcon as ExclamationIcon,
 } from '@heroicons/vue/24/outline'
 import { PodloveChapter } from '../../../../types/chapters.types'
+import PlusTransferStatus from './PlusTransferStatus.vue'
 
 type Entry = {
   key: number
@@ -119,6 +123,7 @@ export default defineComponent({
     ClipboardCheckIcon,
     ExternalLinkIcon,
     ExclamationIcon,
+    PlusTransferStatus,
   },
 
   setup() {
@@ -133,9 +138,15 @@ export default defineComponent({
         license_name: selectors.episode.license_name,
         license_url: selectors.episode.license_url,
         chapters: selectors.chapters.list,
+        episodeId: selectors.episode.id,
+        plusFeatures: selectors.plus.features
       }),
       dispatch: injectStore().dispatch,
     }
+  },
+
+  created() {
+    this.dispatch(plus.init())
   },
 
   methods: {
@@ -245,6 +256,9 @@ export default defineComponent({
     },
     visibleEntries(): Entry[] {
       return this.entries.filter((e: Entry) => e.there && this.isDifferent(e))
+    },
+    plusFileStorageEnabled(): boolean {
+      return this.state.plusFeatures.fileStorage
     },
   },
 })

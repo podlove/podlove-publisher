@@ -4,7 +4,7 @@ use Podlove\Model;
 /*
  * Enable chapters pages
  *
- * add ?chapters_format=psc|json|mp4chaps to any episode URL to get chapters
+ * add ?chapters_format=psc|json|mp4chaps|pijson to any episode URL to get chapters
  */
 add_action('wp', function () {
     if (!is_single()) {
@@ -12,7 +12,7 @@ add_action('wp', function () {
     }
 
     $chapters_format = filter_input(INPUT_GET, 'chapters_format', FILTER_VALIDATE_REGEXP, [
-        'options' => ['regexp' => '/^(psc|json|mp4chaps)$/'],
+        'options' => ['regexp' => '/^(psc|pijson|json|mp4chaps)$/'],
     ]);
 
     if (!$chapters_format) {
@@ -34,6 +34,7 @@ add_action('wp', function () {
 
             break;
         case 'json':
+        case 'pijson':
             header('Content-Type: application/json');
 
             break;
@@ -104,8 +105,24 @@ add_filter('podlove_episode_form_data', function ($form_data, $episode) {
     return $form_data;
 }, 10, 2);
 
-// add PSC to rss feed
+// add PSC & podcast index json to RSS feed
 add_action('podlove_append_to_feed_entry', function ($podcast, $episode, $feed, $format) {
+    // PSC
     $chapters = new \Podlove\Feeds\Chapters($episode);
     $chapters->render('inline');
+ 
+    // podcastindex
+    $doc = new \DOMDocument();
+    $node = $doc->createElement('podcast:chapters');
+    
+    $url = $episode->permalink().'?chapters_format=pijson';
+    $attr = $doc->createAttribute('url');
+    $attr->value = esc_attr($url);
+    $node->appendChild($attr);
+    
+    $attr2 = $doc->createAttribute('type');
+    $attr2->value = "application/json+chapters";
+    $node->appendChild($attr2);
+    
+    echo "\n".$doc->saveXML($node); 
 }, 10, 4);

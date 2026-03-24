@@ -34,6 +34,10 @@ function* chaptersSaga(): any {
 
 function* initialize(api: PodloveApiClient) {
   const episodeId: string = yield select(selectors.episode.id)
+  if (!episodeId) {
+    return
+  }
+
   const { result }: { result: { chapters: PodloveChapter[] } } = yield api.get(
     `chapters/${episodeId}`
   )
@@ -221,7 +225,7 @@ function* handleKeydown(input: {
 }
 
 function* selectImageFromLibrary() {
-  yield put(wordpress.selectMediaFromLibrary({ onSuccess: { type: chapters.SELECT_IMAGE } }))
+  yield put(wordpress.selectMediaFromLibrary({ onSuccess: { type: chapters.SET_IMAGE } }))
 }
 
 export default function () {

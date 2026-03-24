@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tiny behavior additions.
  *
@@ -24,6 +25,7 @@ add_action('admin_init', function () {
 // initialize post type
 add_action('init', function () {
     new \Podlove\Podcast_Post_Type();
+    \Podlove\SlugFreeze::init();
 });
 
 // apply domain mapping plugin where it's essential
@@ -33,3 +35,35 @@ add_action('plugins_loaded', function () {
         add_filter('podlove_subscribe_url', 'domain_mapping_post_content', 20);
     }
 });
+
+/*
+ * When changing from an external cover asset to 'manual', copy external url
+ * into local field.
+ */
+add_filter('pre_update_option_podlove_asset_assignment', function ($new, $old) {
+    if (!isset($old['image']) || !isset($new['image'])) {
+        return $new;
+    }
+
+    if ($new['image'] != 'manual') {  // just changes to manual
+        return $new;
+    }
+
+    if (((int) $old['image']) <= 0) { // just changes from an asset
+        return $new;
+    }
+
+    \Podlove\Log::get()->addInfo('Copying cover art from asset to manual');
+
+    $episodes = \Podlove\Model\Episode::find_all_by_time();
+
+    foreach ($episodes as $episode) {
+        if ($cover_art = $episode->cover_art()) {
+            $url = $cover_art->source_url();
+            \Podlove\Log::get()->addInfo('Copying cover art '.$url.' from asset to manual for episode '.$episode->id);
+            $episode->update_attribute('cover_art', $url);
+        }
+    }
+
+    return $new;
+}, 10, 2);

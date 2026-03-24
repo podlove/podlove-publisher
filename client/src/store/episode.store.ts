@@ -25,6 +25,7 @@ export const CREATE_CONTRIBUTION = 'podlove/publisher/episode/CREATE_CONTRIBUTIO
 export type State = {
   id: string | null
   slug: string | null
+  slug_frozen: boolean
   duration: number | null
   number: string | null
   title: string | null
@@ -50,6 +51,7 @@ export type State = {
 export const initialState: State = {
   id: null,
   slug: null,
+  slug_frozen: false,
   duration: null,
   number: null,
   subtitle: null,
@@ -78,6 +80,7 @@ export const init = createAction<void>(INIT)
 export const selectPoster = createAction<void>(SELECT_POSTER)
 export const set = createAction<{
   slug?: string
+  slug_frozen?: boolean
   number?: string
   duration?: string
   title?: string
@@ -125,6 +128,7 @@ export const reducer = handleActions(
         'summary',
         'duration',
         'slug',
+        'slug_frozen',
         'auphonic_webhook_config',
         'is_auphonic_production_running',
         'soundbite_start',
@@ -149,6 +153,7 @@ export const reducer = handleActions(
     [SET]: (state: State, action: typeof update): State => ({
       ...state,
       slug: get(action, ['payload', 'slug'], state.slug),
+      slug_frozen: get(action, ['payload', 'slug_frozen'], state.slug_frozen),
       number: get(action, ['payload', 'number'], state.number),
       duration: get(action, ['payload', 'duration'], state.duration),
       title: get(action, ['payload', 'title_clean'], state.title),
@@ -258,6 +263,7 @@ export const reducer = handleActions(
 export const selectors = {
   id: (state: State) => state.id,
   slug: (state: State) => state.slug,
+  slugFrozen: (state: State) => state.slug_frozen,
   duration: (state: State) => state.duration,
   number: (state: State) => state.number,
   title: (state: State) => state.title,

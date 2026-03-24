@@ -421,7 +421,7 @@ abstract class Base
              .static::table_name()
              .' ('
              .implode(',', $property_sql)
-             .' ) CHARACTER SET utf8;'
+             .' ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;'
         ;
 
         $wpdb->query($sql);

@@ -32,7 +32,7 @@ class Description extends Tab
 
         $settings = get_option('podlove_podcast');
         foreach ($formKeys as $key) {
-            $settings[$key] = stripslashes($_POST['podlove_podcast'][$key]);
+            $settings[$key] = wp_kses(stripslashes($_POST['podlove_podcast'][$key]), wp_kses_allowed_html('post'));
         }
         update_option('podlove_podcast', $settings);
         header('Location: '.$this->get_url());
@@ -57,7 +57,6 @@ class Description extends Tab
 
         \Podlove\Form\build_for($podcast, $form_attributes, function ($form) {
             $wrapper = new \Podlove\Form\Input\TableWrapper($form);
-            $podcast = $form->object;
 
             $wrapper->string('title', [
                 'label' => __('Title', 'podlove-podcasting-plugin-for-wordpress'),

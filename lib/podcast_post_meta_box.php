@@ -44,16 +44,11 @@ class Podcast_Post_Meta_Box
      */
     public static function post_type_meta_box_callback($post)
     {
-        $post_id = $post->ID;
-
-        $podcast = Model\Podcast::get();
-        $episode = Model\Episode::find_or_create_by_post_id($post_id);
-
+        $episode = Model\Episode::find_or_create_by_post_id($post->ID);
         ?>
 
 		<?php do_action('podlove_episode_meta_box_start'); ?>
 
-		<input type="hidden" name="show-media-file-base-uri" value="<?php echo $podcast->get_media_file_base_uri(); ?>" />
 		<div class="podlove-div-wrapper-form">
 			<?php
             $form_args = [

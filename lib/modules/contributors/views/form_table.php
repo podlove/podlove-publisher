@@ -192,16 +192,14 @@ use Podlove\Modules\Contributors\Contributors;
                             case "podlove_contributor_defaults[contributor]":
                                 ajax_action += "default";
                                 break;
-                            case "episode_contributor":
-                                ajax_action += "episode";
-                                break;
                             default:
                                 console.log("Error when deleting social/donation entry: unknows form type '" + form_base_name + "'");
                         }
 
                         var data = {
                             action: ajax_action,
-                            object_id: object_id
+                            object_id: object_id,
+                            nonce: podlove_admin_global.nonce_ajax
                         };
 
                         $.ajax({

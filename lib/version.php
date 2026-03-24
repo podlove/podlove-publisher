@@ -42,7 +42,7 @@ namespace Podlove;
 
 use Podlove\Jobs\CronJobRunner;
 
-define('Podlove\DATABASE_VERSION', 157);
+define('Podlove\DATABASE_VERSION', 163);
 
 add_action('admin_init', '\Podlove\maybe_run_database_migrations');
 add_action('admin_init', '\Podlove\run_database_migrations', 5);
@@ -55,7 +55,7 @@ function maybe_run_database_migrations()
         // plugin has just been installed
         update_option('podlove_database_version', DATABASE_VERSION);
     } elseif ($database_version < DATABASE_VERSION) {
-        wp_redirect(admin_url('index.php?podlove_page=podlove_upgrade&_wp_http_referer='.urlencode(wp_unslash($_SERVER['REQUEST_URI']))));
+        wp_safe_redirect(admin_url('index.php?podlove_page=podlove_upgrade&_wp_http_referer='.urlencode(wp_unslash($_SERVER['REQUEST_URI']))));
 
         exit;
     }
@@ -81,7 +81,7 @@ function run_database_migrations()
     }
 
     if (isset($_REQUEST['_wp_http_referer']) && $_REQUEST['_wp_http_referer']) {
-        wp_redirect($_REQUEST['_wp_http_referer']);
+        wp_safe_redirect($_REQUEST['_wp_http_referer']);
 
         exit;
     }
@@ -1524,8 +1524,18 @@ function run_migrations_for_version($version)
 
             break;
         case 141:
-            $sql = 'CREATE INDEX accessed_at ON `%s` (accessed_at)';
-            $wpdb->query(sprintf($sql, Model\DownloadIntentClean::table_name()));
+            $table = Model\DownloadIntentClean::table_name();
+            $index_exists = (bool) $wpdb->get_var(
+                $wpdb->prepare(
+                    "SHOW INDEX FROM `{$table}` WHERE Key_name = %s",
+                    'accessed_at'
+                )
+            );
+
+            if (!$index_exists) {
+                $sql = 'CREATE INDEX accessed_at ON `%s` (accessed_at)';
+                $wpdb->query(sprintf($sql, $table));
+            }
 
             break;
         case 142:
@@ -1659,9 +1669,49 @@ function run_migrations_for_version($version)
 
             // update deprecated "clean" value to "false"
             if ($podcast->explicit == 2) {
-              $podcast->explicit = 0;
-              $podcast->save();
+                $podcast->explicit = 0;
+                $podcast->save();
             }
+
+            break;
+        case 159:
+            if (Modules\Social\Model\Service::table_exists()) {
+                Modules\Social\Social::update_existing_services();
+                Modules\Social\Social::build_missing_services();
+            }
+
+            $podcast = Model\Podcast::get();
+
+            if (!$podcast->guid) {
+                $podcast->guid = \Ramsey\Uuid\Uuid::uuid4();
+                $podcast->save();
+            }
+
+            break;
+        case 160:
+            // Generate GUIDs for all shows that don't have one
+            $shows = \Podlove\Modules\Shows\Model\Show::all();
+            foreach ($shows as $show) {
+                \Podlove\Modules\Shows\Model\Show::generate_guid($show->id);
+            }
+
+            break;
+        case 161:
+            // Add slug_frozen column to episodes table
+            $sql = sprintf(
+                'ALTER TABLE `%s` ADD COLUMN `slug_frozen` TINYINT DEFAULT 0',
+                Model\Episode::table_name()
+            );
+            $wpdb->query($sql);
+
+            break;
+        case 162:
+            \Podlove\SlugFreeze::apply_slug_freeze_to_existing_episodes();
+
+            break;
+        case 163:
+            // Activate PLUS module by default for existing installations.
+            \Podlove\Modules\Base::activate('plus');
 
             break;
     }

@@ -2,8 +2,8 @@
 Contributors: eteubert
 Donate link: https://opencollective.com/podlove
 Tags: podlove, podcast, publishing, rss, audio
-Tested up to: 6.7.1
-Stable tag: 4.1.23
+Tested up to: 6.9.1
+Stable tag: 4.3.5
 Requires at least: 4.9.6
 Requires PHP: 8.0
 License: MIT
@@ -93,6 +93,10 @@ Episode title in API now follows the same rules as in RSS feed. There's a new fi
 - If you enjoy the plugin, please [leave a review](https://wordpress.org/support/plugin/podlove-podcasting-plugin-for-wordpress/reviews/#new-post).
 - You can answer questions of other fellow podcasters in the [Podlove Community](https://community.podlove.org/).
 
+### Where do I report security bugs found in this plugin? =
+
+Please report security bugs found in the source code of the Podlove Podcast Publisher plugin through the [Patchstack Vulnerability Disclosure  Program](https://patchstack.com/database/vdp/9e5fb42f-70ee-4afb-9e86-886900031833). The Patchstack team will assist you with verification, CVE assignment, and notify the developers of this plugin.
+
 ---
 
 This product includes GeoLite2 data created by MaxMind, available from http://www.maxmind.com.
@@ -114,6 +118,130 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 6. Includes the Podlove Web Player. One more thing: you can manage and present all contributors easily.
 
 == Changelog ==
+
+= 4.3.5 =
+
+* new: the "Repair" function in "Tools" now checks for missing database columns and adds missing ones
+
+= 4.3.4 =
+
+* change: enable the Publisher PLUS module by default for new and existing installs
+* fix: prevent connection to PLUS service when module is deactivated
+* fix: prevent feed proxy when PLUS module is deactivated
+* fix: escape missing template id error in podlove-template shortcode
+* fix: various PHP deprecation warnings and notices
+
+= 4.3.3 =
+
+* fix: allow selecting chapter images from the media library
+* fix: prevent media files module from hanging on new episodes without an ID
+* change: default new contributors to visible
+* fix: treat inactive episode files as nonexistent in templates
+
+= 4.3.2 =
+
+* improve permission verification when deleting default and podcast contributions
+
+= 4.3.1 =
+
+* add "podcast:chapters" tag to RSS feed, which Apple Podcast now prefers for chapters information.
+* change default database table character set to utf8mb4 for emoji support. For safety reasons, there is no automatic migration provided. If you prefer, you can update Publisher tables manually via SQL, but in most cases the episode table will be all you need: `ALTER TABLE wp_podlove_episode CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;`
+
+= 4.3.0 =
+
+Reworked and extended the **Publisher PLUS** service. It now offers the "File Storage" feature to conveniently upload media files to PLUS instead of storing it in WordPress or other external locations.
+
+To get started, navigate to "Podlove - Modules", find "Publisher PLUS" and activate it. This will add a new menu entry with further instructions.
+
+There is a migration tool to copy existing media files to PLUS.
+
+Give it a try if this kind of service interests you. And please do give feedback :)
+
+**Other Changes**
+
+- PLUS feature management moved: there is now a "Publisher PLUS" settings page for token management and feature toggles
+- new: media file slug "freeze". As soon as the first media file validates, the
+slug is marked as "frozen" so it cannot be edited accidently any more, by
+automations or manual interaction. There is an edit button to consciously change
+it, if necessary
+- fixes "Activate for all existing Episodes" button in assets
+
+= 4.2.7 =
+
+- security: Improved handling of image files in the download cache to block malicious uploads.
+
+Note: this should not affect normal image delivery, but please keep an eye out for any unexpected issues with cached images.
+
+= 4.2.6 =
+
+- fix: open redirection vulnerability
+
+= 4.2.5 =
+
+- fix: an episode that is assigned to a show can now be taken out of that show
+- load more Auphonic productions to select from (50)
+
+= 4.2.4 =
+
+- fix: when upgrading YOAST SEO while the Publisher is active, permalinks do not break any more
+- onboarding: show warning if application passwords are disabled
+- include feeds in `GET podlove/v2/shows` result
+
+= 4.2.3 =
+
+- feat: add API route to list public feeds: `GET podlove/v2/feeds`
+- security: remove unused code (which contained an XSS vulnerability)
+
+= 4.2.2 =
+
+Fix GUIDs for shows:
+
+- generate a guid for all existing shows
+- use the guid in the RSS feed, instead of the podcast guid
+- new shows will get a new guid
+
+= 4.2.1 =
+
+- security: XSS vulnerability in podcast summary
+
+= 4.2.0 =
+
+This release introduces the all-new **Onboarding Assistant**, enabling you to
+either setup a new podcast or move your existing podcast to Podlove with just
+your RSS Feed URL.
+
+This makes it much easier for potential podcasters to get started, as it makes
+the initial setup process as simple and quick as possible, now only requiring
+the podcaster to define what's really necessary about the podcast, without
+needing to worry about technical details.
+
+And for the first time, you can now move any of your existing podcasts to
+Podlove Publisher. All you need is the RSS feed. Podlove Publisher finds all the
+episode data and metadata like the audio file, title, description, chapters,
+transcript and contributors and imports them automatically.
+
+A huge Thank You goes to the [Prototype Fund](https://prototypefund.de/project/podlove-publisher-onboarding-import-assistant/)
+for sponsoring the development of the Onboarding Assistant module.
+
+**Other Changes**
+
+- removes outdated "Migration Wizard"
+- generate a guid for the podcast and use it in the RSS feed `podcast:guid` tag
+- API changes:
+  - episodes: allow filtering by `guid`
+  - podcast: include the following fields in responses: guid, language, feeds
+- fix: respect slashes in file slugs when urlencoding
+- security: XSS vulnerability in feed name
+
+= 4.1.25 =
+
+* fix: Auphonic "Start Production" is working again
+
+= 4.1.24 =
+
+* security: XSS vulnerability in episode assets title
+* feat: add API route to clear caches: `DELETE podlove/v2/tools/clear-caches`
+* feat: add bluesky to social services
 
 = 4.1.23 =
 
@@ -281,164 +409,6 @@ directly.
 - transcripts: rename "delete" action to "clear"
 - transcripts: show timestamps in editor preview
 - upgrade heroicons (icon library) from v1 to v2
-
-= 4.0.15 =
-
-- security: add nonces to jobs management
-
-= 4.0.14 =
-
-- add: migrate episode license selector user interface
-- change: show unknown duration as "--:--:--.---" instead of "00:00:00.000"
-- fix: auto-generate file slug from episode-post-title
-- fix: ensure slug field is always usable (wide enough, and prefix shortened if necessary)
-- security: fix SQL injection vulnerability in Related Episodes module
-- security: ensure only administrators can manage jobs
-
-= 4.0.13 =
-
-**Features**
-
-- Templates: new `active` accessor for `File` objects. Returns if the file is marked as active.
-
-**Bugfixes and Improvements**
-
-- fix: don't use the Auphonic chapter image URL (real fix where chapter images are downloaded and served from WordPress will follow later)
-- fix: only display active files in download widgets
-- improve handling of upload directory
-
-= 4.0.12 =
-
-**Security**
-
-- fix SSRF vulnerability in Slacknotes module
-- add missing capability check and nonce validation to importer functions
-- add missing capability check and nonce validation to exporter functions
-
-= 4.0.11 =
-
-- new: show admin notice when a database migration fails
-- fix bug where tracking data could be lost by disabling a media file checkbox
-- fix bug where imported Hindenburg chapters were not sorted by time
-- fix build script (correctly delete all vendor prefixed dependencies)
-- fix deprecation warnings ([#1431](https://github.com/podlove/podlove-publisher/pull/1431), [#1430](https://github.com/podlove/podlove-publisher/pull/1430))
-- update js dependencies
-- update help text for missing curl module
-
-= 4.0.10 =
-
-- fix security issues (XSS)
-- do not unnecessarily flush rewrite rules ([Issue#1432](https://github.com/podlove/podlove-publisher/issues/1432))
-- fix link to Slacknotes and Subscribe Button documentation
-- fix psr library not removed after prefixing ([Issue#1421](https://github.com/podlove/podlove-publisher/issues/1421))
-
-= 4.0.9 =
-
-**Enhancements**
-
-- trim whitespaces from beginning and end of file slug
-- soundbite: change placeholder to HH:MM:SS to clarify format
-
-**Bugfixes**
-
-- fix division by zero in analytics
-- fix default contributors missing position attribute
-- fix Auphonic chapter timestamp import
-- fix page reload when clicking chapter upload button
-
-= 4.0.8 =
-
-**Bugfixes**
-
-- fix broken analytics episode screen
-
-= 4.0.7 =
-
-**Bugfixes**
-
-- fix media verification not saving
-- fix shownotes unfurling
-- avoid failure during database migration
-
-**Misc**
-
-- update/cleanup various js dependencies
-
-= 4.0.6 =
-
-**Bugfixes**
-
-- Auphonic: saving production not working when slug is not set (bug introduced in 4.0.5)
-
-= 4.0.5 =
-
-**Bugfixes**
-
-
-- Auphonic: restore previous behaviour:
-  - automatically fill in file slug, validate media files and fill in duration when production finishes
-  - use slug as "output_basename" if it is set
-
-**Misc**
-
-- cleanup legacy js app (dependency updates, deletion of unused code etc.)
-
-= 4.0.3 / 4.0.4 =
-
-**Enhancements**
-
-- Auphonic: sort presets alphabetically
-- Contributors: make better use of available space
-
-**Bugfixes**
-
-- episode metadata not saving reliably for some people
-- Auphonic: fix chapter time import
-- WordPress File Upload: display slug input (should be filled automatically but does not seem to work reliably)
-
-= 4.0.2 =
-
-**Bugfixes**
-
-- Auphonic: Chapters can be imported from production metadata
-- Contributors: Add support for Gravatar and default contributor image on edit screens
-- Dashboard: Asset Validation / Detection is working again [#1396](https://github.com/podlove/podlove-publisher/issues/1396)
-- Automatic Numbering: error when selecting a show
-
-= 4.0.1 =
-
-**Enhancements**
-
-- Auphonic: autosave before "Start Production" so it is not required to explicitly save before starting
-
-**Bugfixes**
-
-- Auphonic: open productions with missing algorithm information
-- Templates: fix broken core templates `downloads-select` and `related-episodes-list`
-- Classic Editor: display Episode Title Placeholder based on Blog Post Title
-
-= 4.0.0 =
-
-Podlove Publisher 4.0 is here, bringing a spring-clean (in November!) of the episode page. We tore up the foundation to bring you an all-new user interface.
-
-**Warning:** PHP 8.0 and above is now required!
-
-**Highlights**
-
-- **Episode Form** User Interface is modernised and auto-saves, so no work is ever lost.
-- **Auphonic module** includes Multitrack Support.
-- **New Contributors** can be added without leaving the episode page.
-- **Chapters** support images.
-- **REST API V2** is now, including many more endpoints. See the [API documentation](https://docs.podlove.org/podlove-publisher/api) for all the details.
-
-
-**Tidbits**
-
-- file “slug” field is prefixed with the media location so it’s more obvious what it is used for
-- episode duration is always auto-detected and not an input field any more
-- Auphonic Preset can be selected directly in the episode and does not rely on global module setting any more
-- removed module “Twitter Card Integration” (RIP). By the way, if you want to follow us on social media, find us here: https://fosstodon.org/@podlove
-- fix various PHP notices and warnings to be PHP 8.0+ compatible
 
 ----
 

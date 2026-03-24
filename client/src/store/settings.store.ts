@@ -6,6 +6,9 @@ type TrackingMode = 'ptm_analytics'
 type TrackingWindow = 'daily'
 
 export interface State {
+  plus: {
+    storage_enabled: boolean | null
+  }
   metadata: {
     enable_episode_explicit: boolean | null
     enable_episode_license: boolean | null
@@ -42,6 +45,9 @@ export interface State {
 }
 
 export const initialState: State = {
+  plus: {
+    storage_enabled: null,
+  },
   metadata: {
     enable_episode_explicit: null,
     enable_episode_license: null,
@@ -107,6 +113,9 @@ export const reducer = handleActions(
   {
     [INIT]: (state: State, action: typeof init): State => ({
       ...state,
+      plus: {
+        storage_enabled: get(action, ['payload', 'plus', 'storage_enabled'], null) === true,
+      },
       metadata: {
         enable_episode_explicit:
           get(
@@ -123,7 +132,7 @@ export const reducer = handleActions(
         enable_episode_recording_date:
           get(
             action,
-            ['payload', 'expert_settings', 'metadata', 'enable_episode_license'],
+            ['payload', 'expert_settings', 'metadata', 'enable_episode_recording_date'],
             null
           ) === '1',
       },
@@ -198,6 +207,7 @@ export const selectors = {
   episodeNumberPadding: (state: State) => state.website.episode_number_padding,
   imageAsset: (state: State) => state.assets.image,
   enableEpisodeExplicit: (state: State) => state.metadata.enable_episode_explicit,
+  enablePlusStorage: (state: State) => state.plus.storage_enabled,
   mediaFileBaseUri: (state: State) => state.media.base_uri,
   modules: (state: State) => state.modules,
 }

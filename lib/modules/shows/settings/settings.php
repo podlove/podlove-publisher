@@ -179,13 +179,9 @@ if (isset($_GET['action']) && $_GET['action'] == 'confirm_delete') {
      */
     private function create()
     {
-        global $wpdb;
-
         if (!$_POST['podlove_show']) {
             return;
         }
-
-        $show = new Show();
 
         // Create new term
         $new_term = wp_insert_term(
@@ -205,6 +201,8 @@ if (isset($_GET['action']) && $_GET['action'] == 'confirm_delete') {
         foreach (self::show_meta_data_fields() as $meta_data) {
             add_term_meta($new_term['term_id'], $meta_data, $_POST['podlove_show'][$meta_data]);
         }
+
+        Show::generate_guid($new_term['term_id']);
 
         if (isset($_POST['submit_and_stay'])) {
             $this->redirect('edit', $new_term['term_id']);

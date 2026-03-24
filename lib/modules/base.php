@@ -115,12 +115,20 @@ abstract class Base
     {
         $options = get_option('podlove_active_modules');
 
+        if (!is_array($options)) {
+            return false;
+        }
+
         return isset($options[$module_name]);
     }
 
     public static function activate($module_name)
     {
         $options = get_option('podlove_active_modules');
+        if (!is_array($options)) {
+            $options = [];
+        }
+
         if (!isset($options[$module_name])) {
             $options[$module_name] = 'on';
             update_option('podlove_active_modules', $options);
@@ -159,6 +167,10 @@ abstract class Base
     public static function deactivate($module_name)
     {
         $options = get_option('podlove_active_modules');
+        if (!is_array($options)) {
+            $options = [];
+        }
+
         if (isset($options[$module_name])) {
             unset($options[$module_name]);
             update_option('podlove_active_modules', $options);

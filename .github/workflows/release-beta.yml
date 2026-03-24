@@ -2,14 +2,14 @@ on:
   push:
     # Sequence of patterns matched against refs/tags
     tags:
-      - "*-beta*"
+      - '*-beta*'
 
 name: Beta Release
 
 jobs:
   build:
     name: Build and Release Beta Version
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     steps:
       - name: Setup PHP with PECL extension
         uses: shivammathur/setup-php@v2

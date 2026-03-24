@@ -2,6 +2,8 @@
 
 namespace Podlove;
 
+use Ramsey\Uuid\Uuid as UUID;
+
 /**
  * Add custom GUID to episodes.
  * Display in all podcast feeds.
@@ -120,14 +122,7 @@ class Custom_Guid
      */
     public static function guid_for_post($post)
     {
-        $segments = [];
-
-        $segments[] = apply_filters('podlove_guid_prefix', 'podlove');
-        $segments[] = apply_filters('podlove_guid_time', gmdate('c'));
-        $hash = substr(sha1($post->ID.$post->post_title.time()), 0, 15);
-        $segments[] = apply_filters('podlove_guid_hash', $hash);
-
-        return apply_filters('podlove_guid', strtolower(implode('-', $segments)));
+        return apply_filters('podlove_guid', UUID::uuid4());
     }
 
     /**

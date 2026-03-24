@@ -48,7 +48,7 @@ class FileValidation
 
         $header = [__('Episode', 'podlove-podcasting-plugin-for-wordpress')];
         foreach ($assets as $asset) {
-            $header[] = $asset->title;
+            $header[] = esc_html($asset->title);
         }
         $header[] = __('Status', 'podlove-podcasting-plugin-for-wordpress');
 

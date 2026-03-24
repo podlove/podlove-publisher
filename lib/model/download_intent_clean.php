@@ -13,9 +13,20 @@ class DownloadIntentClean extends Base
 
         parent::build();
 
-        // note: this will silently fail if it already exists
-        $sql = 'CREATE INDEX accessed_at ON `%s` (accessed_at)';
-        $wpdb->query(sprintf($sql, \Podlove\Model\DownloadIntentClean::table_name()));
+        // Guard index creation to avoid noisy "Duplicate key name" errors
+        // when setup/build runs multiple times (e.g. activation + migrations).
+        $table = \Podlove\Model\DownloadIntentClean::table_name();
+        $index_exists = (bool) $wpdb->get_var(
+            $wpdb->prepare(
+                "SHOW INDEX FROM `{$table}` WHERE Key_name = %s",
+                'accessed_at'
+            )
+        );
+
+        if (!$index_exists) {
+            $sql = 'CREATE INDEX accessed_at ON `%s` (accessed_at)';
+            $wpdb->query(sprintf($sql, $table));
+        }
     }
 
     public static function episode_age_in_hours($episode_id)

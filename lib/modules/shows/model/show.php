@@ -4,6 +4,7 @@ namespace Podlove\Modules\Shows\Model;
 
 use Podlove\Model\Episode;
 use Podlove\Model\Image;
+use Ramsey\Uuid\Uuid as UUID;
 
 class Show
 {
@@ -16,6 +17,7 @@ class Show
     public $language;
     public $category;
     public $auphonic_preset;
+    public $guid;
 
     /**
      * A show object consists of the following properties:
@@ -40,6 +42,7 @@ class Show
         $this->language = '';
         $this->category = '';
         $this->auphonic_preset = '';
+        $this->guid = '';
     }
 
     /**
@@ -157,6 +160,7 @@ class Show
         $show->language = get_term_meta($term->term_id, 'language', true);
         $show->category = get_term_meta($term->term_id, 'category', true);
         $show->auphonic_preset = get_term_meta($term->term_id, 'auphonic_preset', true);
+        $show->guid = get_term_meta($term->term_id, 'guid', true);
 
         return $show;
     }
@@ -164,5 +168,12 @@ class Show
     public function image()
     {
         return new Image($this->image, $this->title);
+    }
+
+    public static function generate_guid($term_id)
+    {
+        if (!get_term_meta($term_id, 'guid', true)) {
+            update_term_meta($term_id, 'guid', UUID::uuid4());
+        }
     }
 }

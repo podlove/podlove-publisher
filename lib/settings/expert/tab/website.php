@@ -246,14 +246,20 @@ class Website extends Tab
             ),
             // $callback
             function () {
+                $current_template = \Podlove\get_setting('website', 'url_template');
+
+                $field_config = apply_filters('podlove_url_template_field_config', [
+                    'attributes' => 'class="large-text podlove-check-input"',
+                    'description' => __('Is used to generate URLs. You probably don\'t want to change this.', 'podlove-podcasting-plugin-for-wordpress')
+                ]);
                 ?>
-				<input name="podlove_website[url_template]" id="url_template" type="text" value="<?php echo \Podlove\get_setting('website', 'url_template'); ?>" class="large-text podlove-check-input">
-				<p>
-					<span class="description">
-						<?php echo __('Is used to generate URLs. You probably don\'t want to change this.', 'podlove-podcasting-plugin-for-wordpress'); ?>
-					</span>
-				</p>
-				<?php
+                <input name="podlove_website[url_template]" id="url_template" type="text" value="<?php echo esc_attr($current_template); ?>" <?php echo $field_config['attributes']; ?>>
+                <p>
+                    <span class="description">
+                        <?php echo $field_config['description']; ?>
+                    </span>
+                </p>
+                <?php
             },
             // $page
             Settings::$pagehook,

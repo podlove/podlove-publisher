@@ -40,7 +40,6 @@ class Contributors extends \Podlove\Modules\Base
 
         add_action('wp_ajax_podlove-contributors-delete-podcast', [$this, 'delete_podcast_contributor']);
         add_action('wp_ajax_podlove-contributors-delete-default', [$this, 'delete_default_contributor']);
-        add_action('wp_ajax_podlove-contributors-delete-episode', [$this, 'delete_episode_contributor']);
 
         add_action('podlove_feed_settings_bottom', [$this, 'feed_settings']);
         add_action('podlove_feed_process', [$this, 'feed_process'], 10, 2);
@@ -712,6 +711,15 @@ class Contributors extends \Podlove\Modules\Base
 
     public function delete_podcast_contributor()
     {
+        if (!current_user_can('podlove_manage_contributors')) {
+            return;
+        }
+        
+        if (!\wp_verify_nonce($_REQUEST['nonce'], 'podlove_ajax')) {
+            http_response_code(401);
+            exit;
+        }
+      
         $object_id = (int) $_REQUEST['object_id'];
 
         if (!$object_id) {
@@ -725,6 +733,15 @@ class Contributors extends \Podlove\Modules\Base
 
     public function delete_default_contributor()
     {
+        if (!current_user_can('podlove_manage_contributors')) {
+          return;
+        }
+        
+        if (!\wp_verify_nonce($_REQUEST['nonce'], 'podlove_ajax')) {
+            http_response_code(401);
+            exit;
+        }
+        
         $object_id = (int) $_REQUEST['object_id'];
 
         if (!$object_id) {
@@ -732,19 +749,6 @@ class Contributors extends \Podlove\Modules\Base
         }
 
         if ($service = DefaultContribution::find_by_id($object_id)) {
-            $service->delete();
-        }
-    }
-
-    public function delete_episode_contributor()
-    {
-        $object_id = (int) $_REQUEST['object_id'];
-
-        if (!$object_id) {
-            return;
-        }
-
-        if ($service = EpisodeContribution::find_by_id($object_id)) {
             $service->delete();
         }
     }

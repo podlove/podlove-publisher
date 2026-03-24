@@ -176,6 +176,10 @@ class WP_REST_PodloveEpisode_Controller extends \WP_REST_Controller
                         'description' => __('Filter by show slug.', 'podlove-podcasting-plugin-for-wordpress'),
                         'type' => 'string'
                     ],
+                    'guid' => [
+                        'description' => __('Filter by guid.', 'podlove-podcasting-plugin-for-wordpress'),
+                        'type' => 'string'
+                    ],
                     'sort_by' => [
                         'description' => __('Sort the list of episodes', 'podlove-podcasting-plugin-for-wordpress'),
                         'type' => 'string',
@@ -215,6 +219,34 @@ class WP_REST_PodloveEpisode_Controller extends \WP_REST_Controller
             ]
         ]);
 
+        register_rest_route($this->namespace, '/'.$this->rest_base.'/(?P<id>[\d]+)/freeze_slug', [
+            'args' => [
+                'id' => [
+                    'description' => __('Unique identifier for the episode.', 'podlove-podcasting-plugin-for-wordpress'),
+                    'type' => 'integer',
+                ],
+            ],
+            [
+                'methods' => \WP_REST_Server::EDITABLE,
+                'callback' => [$this, 'freeze_slug'],
+                'permission_callback' => [$this, 'update_item_permissions_check'],
+            ]
+        ]);
+
+        register_rest_route($this->namespace, '/'.$this->rest_base.'/(?P<id>[\d]+)/unfreeze_slug', [
+            'args' => [
+                'id' => [
+                    'description' => __('Unique identifier for the episode.', 'podlove-podcasting-plugin-for-wordpress'),
+                    'type' => 'integer',
+                ],
+            ],
+            [
+                'methods' => \WP_REST_Server::EDITABLE,
+                'callback' => [$this, 'unfreeze_slug'],
+                'permission_callback' => [$this, 'update_item_permissions_check'],
+            ]
+        ]);
+
         register_rest_route($this->namespace, '/'.$this->rest_base.'/(?P<id>[\d]+)', [
             'args' => [
                 'id' => [
@@ -229,6 +261,10 @@ class WP_REST_PodloveEpisode_Controller extends \WP_REST_Controller
             ],
             [
                 'args' => [
+                    'guid' => [
+                        'description' => __('Globally unique id.', 'podlove-podcasting-plugin-for-wordpress'),
+                        'type' => 'string',
+                    ],
                     'title' => [
                         'description' => __('Clear, concise name for your episode.', 'podlove-podcasting-plugin-for-wordpress'),
                         'type' => 'string',
@@ -465,6 +501,7 @@ class WP_REST_PodloveEpisode_Controller extends \WP_REST_Controller
 
         $order_by = $request->get_param('order_by');
         $sort_by = $request->get_param('sort_by');
+        $guid_filter = $request->get_param('guid');
 
         $args = [];
         if ($order_by) {
@@ -500,6 +537,13 @@ class WP_REST_PodloveEpisode_Controller extends \WP_REST_Controller
             if ($show_slug) {
                 $show = Shows\Model\Show::find_one_by_episode_id($episode->id);
                 if (!$show || $show_slug != $show->slug) {
+                    continue;
+                }
+            }
+
+            // filter by guid
+            if ($guid_filter) {
+                if (get_the_guid($episode->post_id) != $guid_filter) {
                     continue;
                 }
             }
@@ -557,7 +601,9 @@ class WP_REST_PodloveEpisode_Controller extends \WP_REST_Controller
         $data = [
             '_version' => 'v2',
             'id' => $id,
+            'guid' => get_the_guid($episode->post_id),
             'slug' => $episode->slug,
+            'slug_frozen' => $episode->is_slug_frozen(),
             'post_id' => $episode->post_id,
             'title' => get_the_title($episode->post_id),
             'title_clean' => $episode->title,
@@ -568,7 +614,7 @@ class WP_REST_PodloveEpisode_Controller extends \WP_REST_Controller
             'publicationDate' => mysql2date('c', $post->post_date),
             'recording_date' => $episode->recording_date,
             'poster' => $episode->cover_art_with_fallback()->setWidth(500)->url(),
-            'episode_poster' => $episode->cover,
+            'episode_poster' => $episode->cover_art,
             'link' => get_permalink($episode->post_id),
             'audio' => \podlove_pwp5_audio_files($episode, null),
             'files' => \podlove_pwp5_files($episode, null),
@@ -582,6 +628,9 @@ class WP_REST_PodloveEpisode_Controller extends \WP_REST_Controller
             'license_url' => $episode->license_url,
             'auphonic_production_id' => get_post_meta($episode->post_id, 'auphonic_production_id', true),
             'is_auphonic_production_running' => get_post_meta($episode->post_id, 'is_auphonic_production_running', true),
+            'auphonic_plus_transfer_status' => get_post_meta($episode->post_id, 'auphonic_plus_transfer_status', true),
+            'auphonic_plus_transfer_files' => get_post_meta($episode->post_id, 'auphonic_plus_transfer_files', true),
+            'auphonic_plus_transfer_errors' => get_post_meta($episode->post_id, 'auphonic_plus_transfer_errors', true),
             'show' => $show
         ];
 
@@ -719,6 +768,46 @@ class WP_REST_PodloveEpisode_Controller extends \WP_REST_Controller
         return new \Podlove\Api\Response\CreateResponse(['slug' => $slug]);
     }
 
+    public function freeze_slug($request)
+    {
+        $id = $request->get_param('id');
+        if (!$id) {
+            return new \Podlove\Api\Error\NotFound();
+        }
+
+        $episode = Episode::find_by_id($id);
+        if (!$episode) {
+            return new \Podlove\Api\Error\NotFound();
+        }
+
+        $episode->freeze_slug();
+
+        return new \Podlove\Api\Response\OkResponse([
+            'status' => 'ok',
+            'slug_frozen' => $episode->is_slug_frozen()
+        ]);
+    }
+
+    public function unfreeze_slug($request)
+    {
+        $id = $request->get_param('id');
+        if (!$id) {
+            return new \Podlove\Api\Error\NotFound();
+        }
+
+        $episode = Episode::find_by_id($id);
+        if (!$episode) {
+            return new \Podlove\Api\Error\NotFound();
+        }
+
+        $episode->unfreeze_slug();
+
+        return new \Podlove\Api\Response\OkResponse([
+            'status' => 'ok',
+            'slug_frozen' => $episode->is_slug_frozen()
+        ]);
+    }
+
     public function update_item_permissions_check($request)
     {
         if (!current_user_can('edit_posts')) {
@@ -740,6 +829,10 @@ class WP_REST_PodloveEpisode_Controller extends \WP_REST_Controller
 
         if (!$episode) {
             return new \Podlove\Api\Error\NotFound();
+        }
+
+        if (isset($request['guid'])) {
+            update_post_meta($episode->post_id, '_podlove_guid', $request['guid']);
         }
 
         if (isset($request['title'])) {
@@ -787,8 +880,11 @@ class WP_REST_PodloveEpisode_Controller extends \WP_REST_Controller
 
         if (isset($request['slug'])) {
             $slug = trim($request['slug']);
-            $episode->slug = $slug;
-            $isSlugSet = true;
+            // Only allow slug changes if not frozen
+            if (!$episode->is_slug_frozen()) {
+                $episode->slug = $slug;
+                $isSlugSet = true;
+            }
         }
 
         if (isset($request['duration'])) {
@@ -891,13 +987,17 @@ class WP_REST_PodloveEpisode_Controller extends \WP_REST_Controller
         }
         do_action('podlove_media_file_content_verified', $file->id);
 
+        // refetch because episode may have been edited by action
+        $episode = $this->get_episode_from_request($request);
+
         \podlove_clear_feed_cache_for_post($episode->post_id);
 
         return new \Podlove\Api\Response\OkResponse([
             'status' => 'ok',
             'file_size' => $file->size,
             'file_url' => $file->get_file_url(),
-            'active' => $file->active
+            'active' => $file->active,
+            'slug_frozen' => $episode->is_slug_frozen(),
         ]);
     }
 
@@ -947,15 +1047,20 @@ class WP_REST_PodloveEpisode_Controller extends \WP_REST_Controller
                 'message' => 'file size cannot be determined',
                 'file_url' => $file->get_file_url(),
                 'active' => $file->active,
+                'slug_frozen' => $episode->is_slug_frozen(),
             ]);
         }
         do_action('podlove_media_file_content_verified', $file->id);
+
+        // refetch because episode may have been edited by action
+        $episode = $this->get_episode_from_request($request);
 
         return new \Podlove\Api\Response\OkResponse([
             'status' => 'ok',
             'file_size' => $file->size,
             'file_url' => $file->get_file_url(),
             'active' => $file->active,
+            'slug_frozen' => $episode->is_slug_frozen(),
         ]);
     }
 

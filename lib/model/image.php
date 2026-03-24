@@ -75,6 +75,11 @@ class Image
         $this->upload_baseurl = content_url('cache/podlove/').$id_directory;
     }
 
+    public function source_url()
+    {
+        return $this->source_url;
+    }
+
     public static function cache_dir()
     {
         return trailingslashit(WP_CONTENT_DIR).'cache/podlove/';
@@ -311,7 +316,7 @@ class Image
 
     public function generate_resized_copy()
     {
-        if (!\Podlove\is_image($this->original_file())) {
+        if (!\Podlove\is_image($this->original_file(), basename($this->source_url))) {
             Log::get()->addWarning('Podlove Image Cache: Not an image ('.$this->original_file().')');
 
             return;
@@ -389,7 +394,7 @@ class Image
                 $path = explode($plugin_dirname, $source_url)[1];
                 $file = untrailingslashit(\Podlove\PLUGIN_DIR).$path;
 
-                if (file_exists($file) && \Podlove\is_image($file)) {
+                if (file_exists($file) && \Podlove\is_image($file, basename($this->source_url))) {
                     $this->create_basedir();
                     $this->save_cache_data();
                     $this->copy_as_original_file($file);
@@ -431,7 +436,7 @@ class Image
             );
         }
 
-        if (!\Podlove\is_image($temp_file)) {
+        if (!\Podlove\is_image($temp_file, basename($this->source_url))) {
             Log::get()->addWarning(
                 sprintf(__('Podlove Image Cache: Downloaded file is not an image.')),
                 ['url' => $this->source_url]

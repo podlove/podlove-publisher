@@ -4,7 +4,7 @@
 			"name": "Podlove Publisher"
 		},
 		{
-			"path": "../../..",
+			"path": "../WordPress",
 			"name": "WordPress"
 		}
 	],

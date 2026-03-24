@@ -18,7 +18,7 @@
         <div class="min-w-0 flex-1 px-2 md:grid md:gap-4">
           <div class="flex-shrink-0">
             <p class="truncate text-sm font-medium text-gray-900">
-              {{ data.realname }}
+              {{ data.realname || data.publicname }}
             </p>
             <p class="flex items-center text-sm text-gray-500">
               <span class="truncate">{{ data.nickname }}</span>

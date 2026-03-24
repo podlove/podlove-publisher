@@ -76,6 +76,26 @@ class NotSupported extends \WP_Error
     }
 }
 
+class ArgumentError extends \WP_Error
+{
+    /**
+     * Constructor.
+     *
+     * @param mixed $code
+     * @param mixed $message
+     */
+    public function __construct($code = '', $message = '')
+    {
+        if (strlen($code) == 0) {
+            $code = 'rest_forbidden';
+        }
+        if (strlen($message) == 0) {
+            $message = esc_html__('invalid argument');
+        }
+        parent::__construct($code, $message, ['status' => 400]);
+    }
+}
+
 class InternalServerError extends \WP_Error
 {
     /**
