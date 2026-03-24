@@ -30,6 +30,10 @@ class Onboarding extends \Podlove\Modules\Base
       return;
     }
 
+    if (apply_filters('podlove_admin_promo_banner_active', false)) {
+      return;
+    }
+
     if (isset($_REQUEST['page']) && $_REQUEST['page'] === 'podlove_settings_onboarding_handle') {
       return;
     } ?>

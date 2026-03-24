@@ -2,11 +2,10 @@
 
 namespace Podlove\Modules\Plus;
 
-class GrowthBanner
+class EarlyFileHostingBanner
 {
-    const MIN_EPISODES = 10;
-    const DISMISS_NONCE_ACTION = 'podlove_plus_growth_banner_dismiss';
-    const BANNER_NAME = PromotionCoordinator::GROWTH_BANNER;
+    const BANNER_NAME = PromotionCoordinator::EARLY_FILE_HOSTING_BANNER;
+    const DISMISS_NONCE_ACTION = 'podlove_plus_early_file_hosting_banner_dismiss';
 
     private $coordinator;
 
@@ -20,7 +19,7 @@ class GrowthBanner
         add_action('admin_enqueue_scripts', [$this, 'enqueue_assets']);
         add_action('admin_init', [$this, 'maybe_handle_dismiss']);
         add_action('admin_notices', [$this, 'render']);
-        add_action('wp_ajax_podlove_plus_growth_banner_dismiss', [$this, 'ajax_dismiss']);
+        add_action('wp_ajax_podlove_plus_early_file_hosting_banner_dismiss', [$this, 'ajax_dismiss']);
     }
 
     public function enqueue_assets()
@@ -40,23 +39,23 @@ class GrowthBanner
             return;
         }
 
-        $dismiss_url = wp_nonce_url(add_query_arg('podlove_dismiss_plus_growth_banner', '1'), self::DISMISS_NONCE_ACTION);
+        $dismiss_url = wp_nonce_url(add_query_arg('podlove_dismiss_plus_early_file_hosting_banner', '1'), self::DISMISS_NONCE_ACTION);
         ?>
-        <div id="podlove-plus-growth-banner-wrap" style="margin: 20px 20px 0 2px;">
-            <div id="podlove-plus-growth-banner" class="plus-banner" style="max-width: none;">
+        <div id="podlove-plus-early-file-hosting-banner-wrap" style="margin: 20px 20px 0 2px;">
+            <div id="podlove-plus-early-file-hosting-banner" class="plus-banner" style="max-width: none;">
                 <a
-                    class="podlove-plus-growth-banner-dismiss"
+                    class="podlove-plus-early-file-hosting-banner-dismiss"
                     href="<?php echo esc_url($dismiss_url); ?>"
                     aria-label="<?php esc_attr_e('Dismiss', 'podlove-podcasting-plugin-for-wordpress'); ?>"
                     style="position: absolute; top: 12px; right: 14px; color: rgba(255, 255, 255, 0.85); text-decoration: none; font-size: 22px; line-height: 1;"
                 >&times;</a>
-                <h3><?php esc_html_e('Make your podcast delivery more reliable', 'podlove-podcasting-plugin-for-wordpress'); ?></h3>
+                <h3><?php esc_html_e('Host your podcast files on infrastructure built for delivery', 'podlove-podcasting-plugin-for-wordpress'); ?></h3>
                 <div class="plus-banner-content">
-                    <p><?php esc_html_e('Publisher PLUS helps you keep your feed fast during traffic spikes and host your podcast files on infrastructure built for podcast delivery, so your WordPress site has less to handle.', 'podlove-podcasting-plugin-for-wordpress'); ?></p>
+                    <p><?php esc_html_e('Publisher PLUS File Storage helps you keep uploads simple and your podcast files reliable from the start, without depending on your WordPress host for media delivery.', 'podlove-podcasting-plugin-for-wordpress'); ?></p>
                 </div>
                 <div class="plus-banner-footer">
                     <a href="<?php echo esc_url(admin_url('admin.php?page=publisher_plus_settings')); ?>" class="btn">
-                        <?php esc_html_e('Explore Publisher PLUS', 'podlove-podcasting-plugin-for-wordpress'); ?>
+                        <?php esc_html_e('Explore Podcast File Hosting', 'podlove-podcasting-plugin-for-wordpress'); ?>
                     </a>
                     <div class="corner-logo">
                         <svg class="logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 99.32 160.81" style="width: 18px; height: 24px;">
@@ -75,13 +74,13 @@ class GrowthBanner
         <script>
             (function() {
                 document.addEventListener('click', function(event) {
-                    const dismissButton = event.target.closest('#podlove-plus-growth-banner .podlove-plus-growth-banner-dismiss');
+                    const dismissButton = event.target.closest('#podlove-plus-early-file-hosting-banner .podlove-plus-early-file-hosting-banner-dismiss');
                     if (!dismissButton) {
                         return;
                     }
 
                     const data = new window.FormData();
-                    data.append('action', 'podlove_plus_growth_banner_dismiss');
+                    data.append('action', 'podlove_plus_early_file_hosting_banner_dismiss');
                     data.append('_ajax_nonce', '<?php echo esc_js(wp_create_nonce(self::DISMISS_NONCE_ACTION)); ?>');
 
                     fetch(ajaxurl, {
@@ -97,7 +96,7 @@ class GrowthBanner
 
     public function maybe_handle_dismiss()
     {
-        if (!isset($_GET['podlove_dismiss_plus_growth_banner'])) {
+        if (!isset($_GET['podlove_dismiss_plus_early_file_hosting_banner'])) {
             return;
         }
 
@@ -108,7 +107,7 @@ class GrowthBanner
         check_admin_referer(self::DISMISS_NONCE_ACTION);
         $this->coordinator->dismiss(self::BANNER_NAME);
 
-        wp_safe_redirect(remove_query_arg(['podlove_dismiss_plus_growth_banner', '_wpnonce']));
+        wp_safe_redirect(remove_query_arg(['podlove_dismiss_plus_early_file_hosting_banner', '_wpnonce']));
         exit;
     }
 
@@ -124,7 +123,7 @@ class GrowthBanner
         wp_send_json_success();
     }
 
-    private function should_render()
+    private function should_render(): bool
     {
         return $this->coordinator->should_render(self::BANNER_NAME);
     }
