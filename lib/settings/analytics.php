@@ -57,6 +57,28 @@ class Analytics
         }
 
         add_filter('screen_settings', [$this, 'screen_settings'], 10, 2);
+        add_action('wp_dashboard_setup', [$this, 'dashboard_setup']);
+    }
+
+    public function dashboard_setup()
+    {
+        if (!current_user_can('podlove_read_analytics')) {
+            return;
+        }
+
+        wp_add_dashboard_widget(
+            'podlove_analytics_recent_downloads',
+            __('Podlove - Recent Downloads', 'podlove-podcasting-plugin-for-wordpress'),
+            [$this, 'dashboard_widget_recent_downloads']
+        );
+    }
+
+    public function dashboard_widget_recent_downloads()
+    {
+        ?>
+        <div id="total-chart" style="height: 200px; width: 100%;"></div>
+        <div class="clear"></div>
+        <?php
     }
 
     public function handle_export($action)
@@ -162,11 +184,14 @@ class Analytics
 
     public function scripts_and_styles()
     {
-        if (!isset($_REQUEST['page'])) {
+        if (!isset($_REQUEST['page']) && !isset($GLOBALS['pagenow'])) {
             return;
         }
 
-        if ($_REQUEST['page'] != 'podlove_analytics') {
+        $is_analytics_page = isset($_REQUEST['page']) && $_REQUEST['page'] == 'podlove_analytics';
+        $is_dashboard = isset($GLOBALS['pagenow']) && $GLOBALS['pagenow'] == 'index.php';
+
+        if (!$is_analytics_page && !$is_dashboard) {
             return;
         }
 
