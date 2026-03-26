@@ -13,7 +13,7 @@
         v-for="(voice, vindex) in state.voices"
         :key="`voice-${vindex}`"
         class="w-full py-2 px-4"
-        :class="{ 'bg-white': vindex % 2 }"
+        :class="{ 'bg-white': Number(vindex) % 2 }"
       >
         <label for="country" class="block text-sm font-medium text-gray-700">{{
           voice.voice
