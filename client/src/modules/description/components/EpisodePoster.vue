@@ -79,11 +79,11 @@
 </template>
 
 <script lang="ts">
-import { injectStore, mapState } from 'redux-vuex'
 import { StyleValue, defineComponent } from 'vue'
 import { selectors } from '@store'
 import { PencilIcon, XMarkIcon as XIcon } from '@heroicons/vue/24/outline'
 import { update as updateEpisode, selectPoster as selectEpisodePoster } from '@store/episode.store'
+import { injectAppDispatch, mapAppState } from '@store/vue'
 
 import Modal from '@components/modal/Modal.vue'
 import PodloveButton from '@components/button/Button.vue'
@@ -99,12 +99,12 @@ export default defineComponent({
 
   setup() {
     return {
-      state: mapState({
+      state: mapAppState({
         poster: selectors.episode.poster,
         episodePoster: selectors.episode.episodePoster,
         asset: selectors.settings.imageAsset,
       }),
-      dispatch: injectStore().dispatch,
+      dispatch: injectAppDispatch(),
     }
   },
 

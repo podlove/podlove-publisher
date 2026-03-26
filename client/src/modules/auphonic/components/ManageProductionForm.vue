@@ -350,8 +350,7 @@ import PodloveButton from '@components/button/Button.vue'
 import FileChooser from './FileChooser.vue'
 
 import { State, selectors } from '@store'
-
-import { injectStore, mapState } from 'redux-vuex'
+import { injectAppDispatch, mapAppState } from '@store/vue'
 import * as auphonic from '@store/auphonic.store'
 import { Production, AudioTrack } from '@store/auphonic.store'
 
@@ -404,13 +403,13 @@ export default defineComponent({
 
   setup() {
     return {
-      state: mapState({
+      state: mapAppState({
         production: selectors.auphonic.production,
         tracks: selectors.auphonic.tracks,
         isSaving: selectors.auphonic.isSaving,
         progress: (state: State) => (key: string) => selectors.progress.progress(state, key),
       }),
-      dispatch: injectStore().dispatch,
+      dispatch: injectAppDispatch(),
     }
   },
 
@@ -463,13 +462,13 @@ export default defineComponent({
       this.updateTrack('identifier_new', (event.target as HTMLInputElement).value, index)
     },
     uploadProgress(key: string): string | null {
-      return this.state.progress(key) || null
+      return this.state.progress(key)?.toString() || null
     },
   },
 
   computed: {
     production(): Production {
-      return this.state.production || {}
+      return this.state.production!
     },
     isSaving(): boolean {
       return this.state.isSaving
@@ -487,7 +486,7 @@ export default defineComponent({
       return this.state.tracks || []
     },
     isMultitrack(): boolean {
-      return this.state.production && this.state.production.is_multitrack
+      return !!this.state.production?.is_multitrack
     },
   },
 })

@@ -25,7 +25,6 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { mapState, injectStore } from 'redux-vuex'
 
 import { selectors } from '@store'
 
@@ -33,6 +32,10 @@ import Module from '@components/module/Module.vue'
 import PodloveListbox, { OptionObject } from '@components/combobox/Combobox.vue'
 import Tag from '@components/tag/Tag.vue';
 import * as related from '@store/relatedEpisodes.store'
+import { injectAppDispatch, mapAppState } from '@store/vue'
+import { PodloveEpisodeList } from '../../types/relatedEpisodes.types'
+
+type RelatedOption = OptionObject
 
 export default defineComponent({
   components: {
@@ -42,31 +45,37 @@ export default defineComponent({
   },
   setup() {
     return {
-      state: mapState({
+      state: mapAppState({
         episodeList: selectors.relatedEpisodes.episodeList,
         selectEpisodes: selectors.relatedEpisodes.selectEpisode,
       }),
-      dispatch: injectStore().dispatch,
+      dispatch: injectAppDispatch(),
     }
   },
   created() {
     this.dispatch(related.init())
   },
   computed: {
+    episodeOptions(): RelatedOption[] {
+      return this.state.episodeList.map((episode: PodloveEpisodeList) => ({
+        id: episode.episode_id,
+        title: episode.episode_title,
+      }))
+    },
     fullEpisodeList() : Array<OptionObject> {
-      if (this.state.episodeList.length == 0)
-        return this.state.episodeList
+      if (this.episodeOptions.length == 0)
+        return this.episodeOptions
       if (this.state.selectEpisodes.length == 0) {
         const selectAllEpisodes = { id: 0, title: "Select all episodes"}
-        return [selectAllEpisodes, ...this.state.episodeList]
+        return [selectAllEpisodes, ...this.episodeOptions]
       }
       else {
         const selectAllEpisodes = { id: -1, title: "Deselect all episodes"}
-        return [selectAllEpisodes, ...this.state.episodeList]
+        return [selectAllEpisodes, ...this.episodeOptions]
       }
     },
     selectEpisodeNames() : Array<OptionObject> | null {
-      return this.state.episodeList?.filter( (episode: OptionObject) => {
+      return this.episodeOptions.filter((episode: RelatedOption) => {
         return this.state.selectEpisodes.includes( episode.id )
       })
     }

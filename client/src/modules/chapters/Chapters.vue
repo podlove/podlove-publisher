@@ -13,7 +13,7 @@ import { defineComponent } from 'vue'
 import { TabsContainer, Tab } from '@components/tabs'
 import Module from '@components/module/Module.vue'
 
-import { injectStore } from 'redux-vuex'
+import { injectAppDispatch } from '@store/vue'
 
 import * as chapters from '@store/chapters.store'
 
@@ -33,7 +33,7 @@ export default defineComponent({
 
   setup(): { dispatch: Function } {
     return {
-      dispatch: injectStore().dispatch,
+      dispatch: injectAppDispatch(),
     }
   },
 

@@ -11,12 +11,12 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import { injectStore } from 'redux-vuex'
 import { TabsContainer, Tab } from '@components/tabs'
 
 import Module from '@components/module/Module.vue'
 import * as transcripts from '@store/transcripts.store'
 import * as contributors from '@store/contributors.store'
+import { injectAppDispatch } from '@store/vue'
 
 import TranscriptsList from './components/List.vue'
 import TranscriptsVoices from './components/Voices.vue'
@@ -36,7 +36,7 @@ export default defineComponent({
 
   setup(): { dispatch: Function } {
     return {
-      dispatch: injectStore().dispatch,
+      dispatch: injectAppDispatch(),
     }
   },
 

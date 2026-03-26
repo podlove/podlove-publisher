@@ -42,10 +42,9 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import { selectors } from '@store'
-
-import { injectStore, mapState } from 'redux-vuex'
 import * as mediafiles from '@store/mediafiles.store'
 import Module from '@components/module/Module.vue'
+import { injectAppDispatch, mapAppState } from '@store/vue'
 
 import { ArrowPathIcon as RefreshIcon } from '@heroicons/vue/24/outline'
 
@@ -66,12 +65,12 @@ export default defineComponent({
 
   setup() {
     return {
-      state: mapState({
+      state: mapAppState({
         isInitializing: selectors.mediafiles.isInitializing,
         modules: selectors.settings.modules,
         plusStorageEnabled: selectors.settings.enablePlusStorage,
       }),
-      dispatch: injectStore().dispatch,
+      dispatch: injectAppDispatch(),
     }
   },
 
@@ -83,7 +82,7 @@ export default defineComponent({
       return this.state.modules?.includes('wordpress_file_upload')
     },
     isPlusStorageEnabled(): boolean {
-      return this.state.plusStorageEnabled
+      return !!this.state.plusStorageEnabled
     },
   },
 

@@ -58,9 +58,9 @@
 </template>
 
 <script lang="ts">
-import { injectStore } from 'redux-vuex'
 import { defineComponent } from '@vue/runtime-core'
 import { download } from '@store/chapters.store'
+import { injectAppDispatch } from '@store/vue'
 import Popover from '@components/popover/Popover.vue'
 import PodloveButton from '@components/button/Button.vue'
 
@@ -71,7 +71,7 @@ export default defineComponent({
   },
   setup(): { dispatch: Function } {
     return {
-      dispatch: injectStore().dispatch,
+      dispatch: injectAppDispatch(),
     }
   },
   methods: {

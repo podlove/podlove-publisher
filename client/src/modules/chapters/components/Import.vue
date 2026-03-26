@@ -39,9 +39,9 @@
 
 <script lang="ts">
 import { get } from 'lodash'
-import { injectStore } from 'redux-vuex'
 import { parse as parseChapters } from '@store/chapters.store'
 import { defineComponent } from '@vue/runtime-core'
+import { injectAppDispatch } from '@store/vue'
 
 import PodloveButton from '@components/button/Button.vue'
 import Tooltip from '@components/tooltip/Tooltip.vue'
@@ -54,7 +54,7 @@ export default defineComponent({
 
   setup() {
     return {
-      dispatch: injectStore().dispatch,
+      dispatch: injectAppDispatch(),
     }
   },
 

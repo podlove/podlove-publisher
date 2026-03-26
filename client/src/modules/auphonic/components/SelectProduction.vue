@@ -66,11 +66,9 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import { selectors } from '@store'
-
-import { injectStore, mapState } from 'redux-vuex'
-
 import * as auphonic from '@store/auphonic.store'
 import { Production } from '@store/auphonic.store'
+import { injectAppDispatch, mapAppState } from '@store/vue'
 
 import {
   Listbox,
@@ -101,11 +99,11 @@ export default defineComponent({
 
   setup() {
     return {
-      state: mapState({
+      state: mapAppState({
         productions: selectors.auphonic.productions,
         production: selectors.auphonic.production,
       }),
-      dispatch: injectStore().dispatch,
+      dispatch: injectAppDispatch(),
     }
   },
 
@@ -117,7 +115,7 @@ export default defineComponent({
 
   computed: {
     productions(): ProductionWithSelectionData[] {
-      return this.state.productions.map((production: Production) => {
+      return (this.state.productions || []).map((production: Production) => {
         const date = production.creation_time.split('T')[0]
         const name = production.metadata.title
 

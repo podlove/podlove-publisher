@@ -97,8 +97,8 @@ found" -->
 import { defineComponent } from 'vue'
 import { selectors } from '@store'
 
-import { injectStore, mapState } from 'redux-vuex'
 import * as mediafiles from '@store/mediafiles.store'
+import { injectAppDispatch, mapAppState } from '@store/vue'
 
 import { CheckCircleIcon, XCircleIcon } from '@heroicons/vue/24/solid'
 
@@ -117,11 +117,11 @@ export default defineComponent({
 
   setup() {
     return {
-      state: mapState({
+      state: mapAppState({
         files: selectors.mediafiles.files,
         duration: selectors.episode.duration,
       }),
-      dispatch: injectStore().dispatch,
+      dispatch: injectAppDispatch(),
     }
   },
 

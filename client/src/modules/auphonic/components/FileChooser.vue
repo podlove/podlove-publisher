@@ -105,11 +105,11 @@
 import { defineComponent } from 'vue'
 import { selectors } from '@store'
 
-import { injectStore, mapState } from 'redux-vuex'
 import * as auphonic from '@store/auphonic.store'
-import { Service } from '@store/auphonic.store'
+import { FileSelection, Service } from '@store/auphonic.store'
 import { update as updateEpisode } from '@store/episode.store'
 import { disableSlugAutogen } from '@store/mediafiles.store'
+import { injectAppDispatch, mapAppState } from '@store/vue'
 
 import {
   Listbox,
@@ -122,6 +122,15 @@ import { CheckIcon, ChevronUpDownIcon as SelectorIcon } from '@heroicons/vue/24/
 import { get } from 'lodash'
 
 import { DocumentCheckIcon } from '@heroicons/vue/24/outline'
+
+type LocalFileSelection = {
+  urlValue?: string | null
+  fileValue?: File | string | null
+  currentServiceSelection?: string | null
+  fileSelection?: string | null
+}
+
+type ServiceFilesMap = Record<string, string[] | null>
 
 export default defineComponent({
   props: ['file_key', 'track_index'],
@@ -138,7 +147,7 @@ export default defineComponent({
   },
 
   setup() {
-    const state = mapState({
+    const state = mapAppState({
       services: selectors.auphonic.incomingServices,
       serviceFiles: selectors.auphonic.serviceFiles,
       fileSelections: selectors.auphonic.fileSelections,
@@ -147,7 +156,7 @@ export default defineComponent({
 
     return {
       state,
-      dispatch: injectStore().dispatch,
+      dispatch: injectAppDispatch(),
     }
   },
 
@@ -198,26 +207,32 @@ export default defineComponent({
     services(): Service[] {
       return this.state.services
     },
-    currentService(): Service {
-      return this.state.services.find((s: Service) => s.uuid === this.currentServiceSelection)
+    currentService(): Service | null {
+      return this.state.services.find((s: Service) => s.uuid === this.currentServiceSelection) || null
+    },
+    serviceFilesMap(): ServiceFilesMap {
+      return this.state.serviceFiles as ServiceFilesMap
     },
     serviceFiles(): string[] | null {
-      return get(this.state, ['serviceFiles', this.currentServiceSelection], null)
+      return this.currentServiceSelection
+        ? this.serviceFilesMap[this.currentServiceSelection] ?? null
+        : null
     },
-    fileSelection(): any {
-      return this.state.fileSelections[this.file_key]
+    fileSelection(): LocalFileSelection {
+      return get(this.state.fileSelections, [this.file_key], {}) as LocalFileSelection
     },
-    filenameSelectedForUpload(): any {
-      return this.fileSelection?.fileValue?.name
+    filenameSelectedForUpload(): string | null {
+      const fileValue = this.fileSelection.fileValue
+      return fileValue instanceof File ? fileValue.name : null
     },
-    currentServiceSelection(): any {
-      return this.fileSelection?.currentServiceSelection
+    currentServiceSelection(): string | null {
+      return this.fileSelection.currentServiceSelection || null
     },
     urlFieldValue(): string {
-      return this.fileSelection.urlValue
+      return this.fileSelection.urlValue || ''
     },
     externalFileFieldValue(): string {
-      return this.fileSelection.fileSelection
+      return this.fileSelection.fileSelection || ''
     },
     slugCandidate(): string | null {
       if (this.currentServiceSelection == 'url') {

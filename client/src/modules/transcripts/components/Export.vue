@@ -42,9 +42,9 @@
 </template>
 
 <script lang="ts">
-import { mapState } from 'redux-vuex'
 import selectors from '@store/selectors'
 import { defineComponent } from '@vue/runtime-core'
+import { mapAppState } from '@store/vue'
 
 import Popover from '@components/popover/Popover.vue'
 import PodloveButton from '@components/button/Button.vue'
@@ -84,7 +84,7 @@ export default defineComponent({
 
   setup() {
     return {
-      state: mapState({
+      state: mapAppState({
         post: selectors.post.id,
         baseUrl: selectors.runtime.baseUrl,
         transcripts: selectors.transcripts.list,

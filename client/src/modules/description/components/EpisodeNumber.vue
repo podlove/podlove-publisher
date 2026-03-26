@@ -24,10 +24,10 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import { mapState, injectStore } from 'redux-vuex'
 
 import { selectors } from '@store'
 import { update as updateEpisode } from '@store/episode.store'
+import { injectAppDispatch, mapAppState } from '@store/vue'
 
 
 import Module from '@components/module/Module.vue'
@@ -39,10 +39,10 @@ export default defineComponent({
 
   setup() {
     return {
-      state: mapState({
+      state: mapAppState({
         number: selectors.episode.number,
       }),
-      dispatch: injectStore().dispatch,
+      dispatch: injectAppDispatch(),
     }
   },
 

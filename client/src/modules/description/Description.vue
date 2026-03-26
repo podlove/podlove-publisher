@@ -27,9 +27,8 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import { mapState, injectStore } from 'redux-vuex'
-
 import { selectors } from '@store'
+import { injectAppDispatch, mapAppState } from '@store/vue'
 
 import Module from '@components/module/Module.vue'
 import * as episode from '@store/episode.store'
@@ -56,10 +55,10 @@ export default defineComponent({
 
   setup() {
     return {
-      state: mapState({
+      state: mapAppState({
         explicitContentEnabled: selectors.settings.enableEpisodeExplicit,
       }),
-      dispatch: injectStore().dispatch,
+      dispatch: injectAppDispatch(),
     }
   },
 

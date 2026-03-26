@@ -15,7 +15,7 @@
           rounded-md
         "
         :value="state.title"
-        :placeholder="state.post_title"
+        :placeholder="state.post_title || undefined"
         @input="updateTitle($event)"
       />
     </div>
@@ -25,11 +25,10 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import { mapState, injectStore } from 'redux-vuex'
-
 import { selectors } from '@store'
 import { update as updateEpisode } from '@store/episode.store'
 import Module from '@components/module/Module.vue'
+import { injectAppDispatch, mapAppState } from '@store/vue'
 
 export default defineComponent({
   components: {
@@ -38,11 +37,11 @@ export default defineComponent({
 
   setup() {
     return {
-      state: mapState({
+      state: mapAppState({
         title: selectors.episode.title,
         post_title: selectors.post.title
       }),
-      dispatch: injectStore().dispatch,
+      dispatch: injectAppDispatch(),
     }
   },
 

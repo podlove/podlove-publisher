@@ -29,9 +29,9 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import { Switch, SwitchGroup, SwitchLabel } from '@headlessui/vue'
-import { injectStore, mapState } from 'redux-vuex'
 import { selectors } from '@store'
 import * as auphonic from '@store/auphonic.store'
+import { injectAppDispatch, mapAppState } from '@store/vue'
 
 export default defineComponent({
   components: {
@@ -52,10 +52,10 @@ export default defineComponent({
   },
   setup() {
     return {
-      state: mapState({
+      state: mapAppState({
         publishWhenDone: selectors.auphonic.publishWhenDone,
       }),
-      dispatch: injectStore().dispatch,
+      dispatch: injectAppDispatch(),
     }
   },
   // fixme: set state initially when episode data is available; somewhere in saga/store?

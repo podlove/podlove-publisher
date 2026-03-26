@@ -149,20 +149,13 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import { mapState, injectStore } from 'redux-vuex'
 
-import { plusUploadIntent } from '@store/mediafiles.store'
+import { plusUploadIntent, FileInfo } from '@store/mediafiles.store'
 import PodloveButton from '@components/button/Button.vue'
 import { CloudArrowUpIcon as UploadIcon, PlusIcon, DocumentTextIcon, XMarkIcon } from '@heroicons/vue/24/outline'
 import { State, selectors } from '@store'
 import * as mediafiles from '@store/mediafiles.store'
-
-interface FileInfo {
-  file: File
-  originalName: string
-  newName: string
-  fileExists: boolean | null
-}
+import { injectAppDispatch, mapAppState } from '@store/vue'
 
 export default defineComponent({
   components: {
@@ -177,14 +170,14 @@ export default defineComponent({
   },
   setup() {
     return {
-      state: mapState({
+      state: mapAppState({
         progress: (state: State) => (key: string) => selectors.progress.progress(state, key),
         status: (state: State) => (key: string) => selectors.progress.status(state, key),
         message: (state: State) => (key: string) => selectors.progress.message(state, key),
         episodeSlug: (state: State) => selectors.episode.slug(state),
         selectedFiles: (state: State) => selectors.mediafiles.selectedFiles(state),
       }),
-      dispatch: injectStore().dispatch,
+      dispatch: injectAppDispatch(),
     }
   },
 

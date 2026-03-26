@@ -84,8 +84,7 @@ import Module from '@components/module/Module.vue'
 import PodloveButton from '@components/button/Button.vue'
 import { PlusIcon as PlusSmIcon, ArrowPathIcon as RefreshIcon } from '@heroicons/vue/24/outline'
 import { selectors } from '@store'
-
-import { injectStore, mapState } from 'redux-vuex'
+import { injectAppDispatch, mapAppState } from '@store/vue'
 import * as auphonic from '@store/auphonic.store'
 import SelectProduction from '../components/SelectProduction.vue'
 import SelectPreset from '../components/SelectPreset.vue'
@@ -106,12 +105,12 @@ export default defineComponent({
   },
   setup() {
     return {
-      state: mapState({
-        presetUUID: selectors.auphonic.preset,
+      state: mapAppState({
+        preset: selectors.auphonic.preset,
         presets: selectors.auphonic.presets,
         isInitializing: selectors.auphonic.isInitializing,
       }),
-      dispatch: injectStore().dispatch,
+      dispatch: injectAppDispatch(),
     }
   },
 
@@ -141,8 +140,8 @@ export default defineComponent({
   },
 
   computed: {
-    preset(): auphonic.Preset {
-      return this.state.presets.find((p: auphonic.Preset) => p.uuid === this.state.presetUUID)
+    preset(): auphonic.Preset | null {
+      return this.state.preset
     },
     isInitializing(): boolean {
       return this.state.isInitializing

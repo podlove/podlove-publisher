@@ -46,9 +46,9 @@
 <script lang="ts">
 import { defineComponent } from '@vue/runtime-core'
 import { last, dropRight, get } from 'lodash'
-import { mapState } from 'redux-vuex'
 import selectors from '@store/selectors'
 import { DocumentTextIcon } from '@heroicons/vue/24/outline'
+import { mapAppState } from '@store/vue'
 
 import Avatar from '@components/icons/Avatar.vue'
 
@@ -58,18 +58,23 @@ import { PodloveContributor } from '../../../types/contributors.types'
 import TranscriptsImport from './Import.vue'
 import Timestamp from '@lib/timestamp'
 
-interface Transcript {
+interface TranscriptGroup {
   voiceId: string
-  voice: {
-    avatar: string
-    name: string
-  }
   content: {
     text: string
     start: number
     end: number
   }[]
 }
+
+interface Transcript extends TranscriptGroup {
+  voice: {
+    avatar?: string
+    name: string
+  }
+}
+
+type VoiceMap = Record<string, { id: string; name: string; avatar: string }>
 
 export default defineComponent({
   components: {
@@ -80,7 +85,7 @@ export default defineComponent({
 
   setup() {
     return {
-      state: mapState({
+      state: mapAppState({
         transcripts: selectors.transcripts.list,
         contributors: selectors.contributors.contributors,
         voices: selectors.transcripts.voices,
@@ -89,12 +94,16 @@ export default defineComponent({
   },
 
   computed: {
-    voices(): { [key: string]: { id: string; name: string; avatar: string } }[] {
-      return this.state.contributors.reduce(
-        (result: { name: string; avatar: string }[], contributor: PodloveContributor) => {
+    voices(): VoiceMap {
+      return this.state.contributors.reduce<VoiceMap>(
+        (result, contributor: PodloveContributor) => {
           const voice = this.state.voices.find(
             (voice: { voice: string; contributor: string }) => voice.contributor === contributor.id
           )?.voice
+
+          if (!voice) {
+            return result
+          }
 
           return {
             ...result,
@@ -111,7 +120,7 @@ export default defineComponent({
 
     transcripts(): Transcript[] {
       return this.state.transcripts
-        .reduce((result: Transcript[], transcript: PodloveTranscript) => {
+        .reduce<TranscriptGroup[]>((result, transcript: PodloveTranscript) => {
           const lastTranscript = last(result)
           if (lastTranscript && lastTranscript.voiceId === transcript.voice) {
             return [
@@ -145,7 +154,7 @@ export default defineComponent({
             },
           ]
         }, [])
-        .map((transcript: Transcript) => ({
+        .map((transcript: TranscriptGroup): Transcript => ({
           ...transcript,
           voice: get(this.voices, [transcript.voiceId], { name: transcript.voiceId }),
         }))

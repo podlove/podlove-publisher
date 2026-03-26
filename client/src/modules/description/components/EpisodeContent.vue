@@ -5,7 +5,7 @@
         id="explicit-content"
         type="checkbox"
         class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded"
-        :checked="state.explicit"
+        :checked="!!state.explicit"
         @input="updateExplicit($event)"
       />
     </div>
@@ -20,18 +20,17 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import { mapState, injectStore } from 'redux-vuex'
-
 import { selectors } from '@store'
 import { update as updateEpisode } from '@store/episode.store'
+import { injectAppDispatch, mapAppState } from '@store/vue'
 
 export default defineComponent({
   setup() {
     return {
-      state: mapState({
+      state: mapAppState({
         explicit: selectors.episode.explicit,
       }),
-      dispatch: injectStore().dispatch,
+      dispatch: injectAppDispatch(),
     }
   },
 

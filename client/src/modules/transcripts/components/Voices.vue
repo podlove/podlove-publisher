@@ -39,12 +39,12 @@
 
 <script lang="ts">
 import { defineComponent } from '@vue/runtime-core'
-import { injectStore, mapState } from 'redux-vuex'
 import selectors from '@store/selectors'
 import { updateVoice } from '@store/transcripts.store'
 import Modal from '@components/modal/Modal.vue'
 import PodloveButton from '@components/button/Button.vue'
 import { PodloveContributor } from '../../../types/contributors.types'
+import { injectAppDispatch, mapAppState } from '@store/vue'
 
 export default defineComponent({
   components: {
@@ -58,11 +58,11 @@ export default defineComponent({
   },
   setup() {
     return {
-      state: mapState({
+      state: mapAppState({
         contributors: selectors.contributors.contributors,
         voices: selectors.transcripts.voices,
       }),
-      dispatch: injectStore().dispatch,
+      dispatch: injectAppDispatch(),
     }
   },
 

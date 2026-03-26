@@ -37,7 +37,6 @@ import PodloveButton from '@components/button/Button.vue'
 import Contribution from './components/Contribution.vue'
 import AddContribution from './components/AddContribution.vue'
 
-import { injectStore, mapState } from 'redux-vuex'
 import { PlusIcon as PlusSmIcon } from '@heroicons/vue/24/outline'
 
 import { selectors } from '@store'
@@ -45,6 +44,16 @@ import * as contributors from '@store/contributors.store'
 import * as episode from '@store/episode.store'
 import { PodloveEpisodeContribution } from '../../types/episode.types'
 import { PodloveContributor, PodloveRole, PodloveGroup } from '../../types/contributors.types'
+import { injectAppDispatch, mapAppState } from '@store/vue'
+
+type ContributionViewModel = Partial<Omit<PodloveContributor, 'id'>> & {
+  id: string | number
+  contributor_id: string | number
+  role_id: number
+  group_id: number
+  position: number
+  comment: string
+}
 
 export default defineComponent({
   components: {
@@ -64,14 +73,14 @@ export default defineComponent({
   setup(): {
     dispatch: Function
     state: {
-      contributions: (PodloveContributor & PodloveEpisodeContribution)[]
+      contributions: ContributionViewModel[]
       roles: PodloveRole[]
       groups: PodloveGroup[]
     }
   } {
     return {
-      dispatch: injectStore().dispatch,
-      state: mapState({
+      dispatch: injectAppDispatch(),
+      state: mapAppState({
         contributions: selectors.episode.contributions,
         roles: selectors.contributors.roles,
         groups: selectors.contributors.groups,

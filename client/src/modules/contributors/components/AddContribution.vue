@@ -95,12 +95,16 @@ import {
   ComboboxOptions,
 } from '@headlessui/vue'
 
-import { injectStore, mapState } from 'redux-vuex'
-
 import { selectors } from '@store'
 import { PodloveContributor } from '../../../types/contributors.types'
 import { PodloveEpisodeContribution } from '../../../types/episode.types'
 import { usePopper } from '@lib/popper'
+import { injectAppDispatch, mapAppState } from '@store/vue'
+
+type ContributionOption = Omit<PodloveEpisodeContribution, 'id' | 'contributor_id'> & {
+  id: string | number
+  contributor_id: string | number
+}
 
 export default defineComponent({
   data() {
@@ -114,7 +118,7 @@ export default defineComponent({
     dispatch: Function
     state: {
       contributors: PodloveContributor[]
-      episodeContributions: PodloveEpisodeContribution[]
+      episodeContributions: ContributionOption[]
     }
     trigger: any
     container: any
@@ -140,8 +144,8 @@ export default defineComponent({
     })
 
     return {
-      dispatch: injectStore().dispatch,
-      state: mapState({
+      dispatch: injectAppDispatch(),
+      state: mapAppState({
         contributors: selectors.contributors.contributors,
         episodeContributions: selectors.episode.contributions,
       }),

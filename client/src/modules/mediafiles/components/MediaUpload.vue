@@ -16,9 +16,9 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import { mapState, injectStore } from 'redux-vuex'
 
 import { uploadIntent } from '@store/mediafiles.store'
+import { injectAppDispatch, mapAppState } from '@store/vue'
 import PodloveButton from '@components/button/Button.vue'
 import { CloudArrowUpIcon as UploadIcon } from '@heroicons/vue/24/outline'
 
@@ -29,8 +29,8 @@ export default defineComponent({
   },
   setup() {
     return {
-      state: mapState({}),
-      dispatch: injectStore().dispatch,
+      state: mapAppState({}),
+      dispatch: injectAppDispatch(),
     }
   },
 

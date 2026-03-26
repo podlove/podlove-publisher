@@ -59,10 +59,8 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue'
 import { selectors } from '@store'
-
-import { injectStore, mapState } from 'redux-vuex'
-
 import * as auphonic from '@store/auphonic.store'
+import { injectAppDispatch, mapAppState } from '@store/vue'
 
 import {
   Listbox,
@@ -95,11 +93,11 @@ export default defineComponent({
 
   setup() {
     return {
-      state: mapState({
+      state: mapAppState({
         presets: selectors.auphonic.presets,
         currentPreset: selectors.auphonic.preset,
       }),
-      dispatch: injectStore().dispatch,
+      dispatch: injectAppDispatch(),
     }
   },
 
@@ -111,7 +109,7 @@ export default defineComponent({
 
   computed: {
     presets(): PresetWithSelectionData[] {
-      return this.state.presets
+      return (this.state.presets || [])
         .map((preset: Preset) => {
           const date = preset.creation_time.split('T')[0]
           const name = preset.preset_name
@@ -119,7 +117,7 @@ export default defineComponent({
 
           return { ...preset, _select: { name, date, is_multitrack } }
         })
-        .toSorted((a: any, b: any) => {
+        .toSorted((a: PresetWithSelectionData, b: PresetWithSelectionData) => {
           const nameA = a._select.name.toUpperCase()
           const nameB = b._select.name.toUpperCase()
 
@@ -130,7 +128,7 @@ export default defineComponent({
     },
     currentPreset(): PresetWithSelectionData | null | undefined {
       const currentPreset = this.state.currentPreset
-      return this.presets.find((p) => p.uuid === currentPreset)
+      return this.presets.find((p) => p.uuid === currentPreset?.uuid)
     },
   },
 })

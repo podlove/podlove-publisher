@@ -59,21 +59,20 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import { injectStore, mapState } from 'redux-vuex'
-
 import { selectors } from '@store'
 import { update as updateEpisode } from '@store/episode.store'
 import Timestamp from '@lib/timestamp'
+import { injectAppDispatch, mapAppState } from '@store/vue'
 
 export default defineComponent({
     setup() {
         return {
-            state: mapState({
+            state: mapAppState({
                 soundbite_start: selectors.episode.soundbite_start,
                 soundbite_duration: selectors.episode.soundbite_duration,
                 soundbite_title: selectors.episode.soundbite_title,
             }),
-            dispatch: injectStore().dispatch,
+            dispatch: injectAppDispatch(),
         }
     },
 
@@ -101,7 +100,7 @@ export default defineComponent({
       updateSoundbiteEnd(event: Event) {
         const raw = (event.target as HTMLInputElement).value
         let end = Timestamp.fromString(raw).totalMs
-        let start = Timestamp.fromString(this.state.soundbite_start).totalMs
+        let start = Timestamp.fromString(this.state.soundbite_start || '').totalMs
         if (start < end) {
           let duration = end - start;
           this.dispatch(

@@ -13,13 +13,12 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import { selectors } from '@store'
-
-import { injectStore, mapState } from 'redux-vuex'
 import * as auphonic from '@store/auphonic.store'
 import ManageProductionForm from './components/ManageProductionForm.vue'
 import StartScreen from './components/StartScreen.vue'
 import AuphonicLogo from './components/Logo.vue'
 import Module from '@components/module/Module.vue'
+import { injectAppDispatch, mapAppState } from '@store/vue'
 
 export default defineComponent({
   components: {
@@ -31,11 +30,11 @@ export default defineComponent({
 
   setup() {
     return {
-      state: mapState({
+      state: mapAppState({
         productionId: selectors.auphonic.productionId,
         isInitializing: selectors.auphonic.isInitializing,
       }),
-      dispatch: injectStore().dispatch,
+      dispatch: injectAppDispatch(),
     }
   },
 

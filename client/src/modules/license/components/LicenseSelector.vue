@@ -102,11 +102,11 @@
 
 <script lang="ts">
 import { PropType, defineComponent } from '@vue/runtime-core'
-import { injectStore, mapState } from 'redux-vuex'
 
 import { update as updateEpisode } from '@store/episode.store'
 import { update as updatePodcast } from '@store/podcast.store'
 import { selectors } from '@store'
+import { injectAppDispatch, mapAppState } from '@store/vue'
 
 import LicensePreview from './LicenseView.vue'
 import PodloveButton from '@components/button/Button.vue'
@@ -147,11 +147,11 @@ export default defineComponent({
   },
   setup() {
     return {
-      state: mapState({
+      state: mapAppState({
         episodeLicenseUrl: selectors.episode.license_url,
         podcastLicenseUrl: selectors.podcast.license_url
       }),
-      dispatch: injectStore().dispatch,
+      dispatch: injectAppDispatch(),
     }
   },
   props: {

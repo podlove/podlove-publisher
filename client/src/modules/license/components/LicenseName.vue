@@ -23,9 +23,8 @@
 
 <script lang="ts">
 import { PropType, defineComponent } from 'vue'
-import { mapState, injectStore } from 'redux-vuex';
-
 import { selectors } from '@store';
+import { injectAppDispatch, mapAppState } from '@store/vue'
 
 import Module from '@components/module/Module.vue'
 import * as episode from '@store/episode.store'
@@ -45,11 +44,11 @@ export default defineComponent({
   },
   setup() {
     return {
-      state: mapState({
+      state: mapAppState({
         episodeLicenseName: selectors.episode.license_name,
         podcastLicenseName: selectors.podcast.license_name,
       }),
-      dispatch: injectStore().dispatch,
+      dispatch: injectAppDispatch(),
     }
   },
   created() {
@@ -57,7 +56,9 @@ export default defineComponent({
   },
   computed: {
     getLicenseName() : string {
-      return this.scope == PodloveLicenseScope.Episode ? this.state.episodeLicenseName : this.state.podcastLicenseName
+      return this.scope == PodloveLicenseScope.Episode
+        ? this.state.episodeLicenseName || ''
+        : this.state.podcastLicenseName || ''
     }
   },
   methods: {

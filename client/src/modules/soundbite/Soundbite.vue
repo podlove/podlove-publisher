@@ -12,8 +12,7 @@ import { defineComponent } from 'vue'
 
 import Module from '@components/module/Module.vue'
 import * as episode from '@store/episode.store'
-
-import { injectStore } from 'redux-vuex'
+import { injectAppDispatch } from '@store/vue'
 
 import SoundbiteClear from './components/Clear.vue'
 import SoundbiteForm from './components/Form.vue'
@@ -27,7 +26,7 @@ export default defineComponent({
 
     setup(): { dispatch: Function } {
         return {
-            dispatch: injectStore().dispatch,
+            dispatch: injectAppDispatch(),
         }
     },
 

@@ -3,10 +3,10 @@
 </template>
 
 <script lang="ts">
-import { injectStore } from 'redux-vuex'
 import { defineComponent } from '@vue/runtime-core'
 
 import { update as updateEpisode } from '@store/episode.store'
+import { injectAppDispatch } from '@store/vue'
 
 import PodloveButton from '@components/button/Button.vue'
 
@@ -15,7 +15,7 @@ export default defineComponent({
 
   setup() {
     return {
-      dispatch: injectStore().dispatch,
+      dispatch: injectAppDispatch(),
     }
   },
 

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="rounded-md bg-green-50 p-4" v-if="production.status == 3">
+    <div class="rounded-md bg-green-50 p-4" v-if="production && production.status == 3">
       <div class="flex">
         <div class="flex-shrink-0">
           <ClipboardCheckIcon class="h-5 w-5 text-green-400" aria-hidden="true" />
@@ -23,7 +23,7 @@
       </div>
     </div>
 
-    <div class="rounded-md bg-yellow-50 p-4 mt-4" v-if="production.warning_message">
+    <div class="rounded-md bg-yellow-50 p-4 mt-4" v-if="production?.warning_message">
       <div class="flex">
         <div class="flex-shrink-0">
           <ExclamationIcon class="h-5 w-5 text-yellow-400" aria-hidden="true" />
@@ -96,12 +96,12 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import { injectStore, mapState } from 'redux-vuex'
 import { selectors } from '@store'
 import { AuphonicChapter, Production } from '@store/auphonic.store'
 import { update as updateEpisode } from '@store/episode.store'
 import { parsed as parsedChapters } from '@store/chapters.store'
 import * as plus from '@store/plus.store'
+import { injectAppDispatch, mapAppState } from '@store/vue'
 
 import {
   ClipboardDocumentCheckIcon as ClipboardCheckIcon,
@@ -128,7 +128,7 @@ export default defineComponent({
 
   setup() {
     return {
-      state: mapState({
+      state: mapAppState({
         production: selectors.auphonic.production,
         title: selectors.episode.title,
         subtitle: selectors.episode.subtitle,
@@ -141,7 +141,7 @@ export default defineComponent({
         episodeId: selectors.episode.id,
         plusFeatures: selectors.plus.features
       }),
-      dispatch: injectStore().dispatch,
+      dispatch: injectAppDispatch(),
     }
   },
 
@@ -224,12 +224,16 @@ export default defineComponent({
   },
 
   computed: {
-    production(): Production {
-      return this.state.production || {}
+    production(): Production | null {
+      return this.state.production
     },
     entries(): any {
-      const production = this.state.production
+      const production = this.production
       const state = this.state
+
+      if (!production) {
+        return []
+      }
 
       return [
         { key: 1, title: 'title', here: state.title, there: production.metadata.title },

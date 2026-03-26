@@ -59,22 +59,21 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import { mapState, injectStore } from 'redux-vuex'
-
 import { selectors } from '@store'
 import { update as updateEpisode } from '@store/episode.store'
 import { disableSlugAutogen, unfreezeSlug } from '@store/mediafiles.store'
+import { injectAppDispatch, mapAppState } from '@store/vue'
 
 export default defineComponent({
   setup() {
     return {
-      state: mapState({
+      state: mapAppState({
         slug: selectors.episode.slug,
         slugFrozen: selectors.episode.slugFrozen,
         id: selectors.episode.id,
         baseUri: selectors.settings.mediaFileBaseUri,
       }),
-      dispatch: injectStore().dispatch,
+      dispatch: injectAppDispatch(),
     }
   },
 

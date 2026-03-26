@@ -130,10 +130,10 @@
 
 <script lang="ts">
 import { defineComponent, nextTick } from 'vue'
-import { mapState, injectStore } from 'redux-vuex'
 import Timestamp from '@lib/timestamp'
 import { get } from 'lodash'
 import { selectors } from '@store'
+import { injectAppDispatch, mapAppState } from '@store/vue'
 import {
   select as selectChapter,
   update as updateChapter,
@@ -155,7 +155,7 @@ interface Chapter {
   title: string
   duration: string
   start: string
-  image: string
+  image?: string
 }
 
 export default defineComponent({
@@ -163,18 +163,18 @@ export default defineComponent({
 
   setup() {
     return {
-      state: mapState({
+      state: mapAppState({
         chapters: selectors.chapters.list,
         selected: selectors.chapters.selected,
         selectedIndex: selectors.chapters.selectedIndex,
         episodeDuration: selectors.episode.duration,
       }),
-      dispatch: injectStore().dispatch,
+      dispatch: injectAppDispatch(),
     }
   },
 
   computed: {
-    selectedIndex(): number {
+    selectedIndex(): number | null {
       return this.state.selectedIndex
     },
     episodeDuration(): number {
@@ -183,13 +183,8 @@ export default defineComponent({
         : 0
     },
     chapters(): Chapter[] {
-      return this.state.chapters.reduce(
-        (
-          result: Chapter[],
-          chapter: PodloveChapter,
-          chapterIndex: number,
-          chapters: PodloveChapter[]
-        ) => {
+      return this.state.chapters.reduce<Chapter[]>(
+        (result, chapter, chapterIndex, chapters) => {
           const next = get(chapters, chapterIndex + 1)
           const isLastChapter: boolean = next === undefined
           let durationMs: number
@@ -214,7 +209,7 @@ export default defineComponent({
             },
           ]
         },
-        []
+        [] as Chapter[]
       )
     },
     hasChapterImages(): boolean {
@@ -258,6 +253,10 @@ export default defineComponent({
       )
     },
     removeChapter() {
+      if (this.state.selectedIndex === null) {
+        return
+      }
+
       this.dispatch(removeChapter(this.state.selectedIndex))
     },
     async addChapter() {

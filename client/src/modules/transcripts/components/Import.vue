@@ -18,12 +18,12 @@
 
 <script lang="ts">
 import { get } from 'lodash'
-import { injectStore } from 'redux-vuex'
 import { defineComponent } from '@vue/runtime-core'
 import { CloudArrowUpIcon as UploadIcon, DocumentTextIcon } from '@heroicons/vue/24/outline'
 
 import PodloveButton from '@components/button/Button.vue'
 import { importTranscripts, importTranscriptFromAsset } from '@store/transcripts.store'
+import { injectAppDispatch } from '@store/vue'
 
 export default defineComponent({
   props: {
@@ -39,7 +39,7 @@ export default defineComponent({
 
   setup() {
     return {
-      dispatch: injectStore().dispatch,
+      dispatch: injectAppDispatch(),
     }
   },
 

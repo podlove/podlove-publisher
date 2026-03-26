@@ -31,24 +31,24 @@
 </template>
 
 <script lang="ts">
-import { injectStore, mapState } from 'redux-vuex'
 import { computed, defineComponent } from 'vue'
 
 import { update as updateEpisode } from '@store/episode.store'
 import { selectors } from '@store'
+import { injectAppDispatch, mapAppState } from '@store/vue'
 
 export default defineComponent({
   setup() {
-    const state =  mapState({
-        subtitle: selectors.episode.subtitle,
-      })
+    const state = mapAppState({
+      subtitle: selectors.episode.subtitle,
+    })
 
-    const charactersLeft = computed(() => 255 - (state?.subtitle?.length || ''));
+    const charactersLeft = computed(() => 255 - (state.subtitle?.length || 0))
 
     return {
       state,
       charactersLeft,
-      dispatch: injectStore().dispatch,
+      dispatch: injectAppDispatch(),
     }
   },
 

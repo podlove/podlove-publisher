@@ -15,11 +15,11 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import { injectStore, mapState } from 'redux-vuex'
 import { selectors } from '@store'
 import { PlusTransferFile, triggerPlusTransfer, loadPlusTransferStatus } from '@store/auphonic.store'
 import { verifyAll } from '@store/mediafiles.store'
 import type { Production } from '@store/auphonic.store'
+import { injectAppDispatch, mapAppState } from '@store/vue'
 
 import TransferHeader from './TransferHeader.vue'
 import TransferStatusPanel from './TransferStatusPanel.vue'
@@ -33,13 +33,13 @@ export default defineComponent({
 
   setup() {
     return {
-      state: mapState({
+      state: mapAppState({
         production: selectors.auphonic.production,
         plusTransferStatus: selectors.auphonic.plusTransferStatus,
         plusTransferFiles: selectors.auphonic.plusTransferFiles,
         plusTransferErrors: selectors.auphonic.plusTransferErrors,
       }),
-      dispatch: injectStore().dispatch,
+      dispatch: injectAppDispatch(),
     }
   },
 
@@ -49,7 +49,7 @@ export default defineComponent({
 
   methods: {
     loadPlusTransferStatus() {
-      if (!this.production.uuid) return
+      if (!this.production?.uuid) return
 
       this.dispatch(loadPlusTransferStatus({
         production_uuid: this.production.uuid
@@ -57,7 +57,7 @@ export default defineComponent({
     },
 
     triggerManualTransfer() {
-      if (this.production.uuid) {
+      if (this.production?.uuid) {
         this.dispatch(triggerPlusTransfer({ production_uuid: this.production.uuid }))
       }
     },
@@ -68,8 +68,8 @@ export default defineComponent({
   },
 
   computed: {
-    production(): Production {
-      return this.state.production || {}
+    production(): Production | null {
+      return this.state.production
     },
     plusTransferStatus(): 'waiting_for_webhook' | 'in_progress' | 'completed' | 'completed_with_errors' | 'failed' | undefined {
       return this.state.plusTransferStatus
@@ -81,7 +81,7 @@ export default defineComponent({
       return this.state.plusTransferErrors
     },
     showPlusTransferStatus(): boolean {
-      return this.production.status === 3
+      return this.production?.status === 3
     },
   },
 })

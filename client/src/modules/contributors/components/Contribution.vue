@@ -113,12 +113,12 @@
 </template>
 
 <script lang="ts">
-import { injectStore, mapState } from 'redux-vuex'
 import { defineComponent } from 'vue'
 import { selectors } from '@store'
 import * as episode from '@store/episode.store'
-import { PodloveRole, PodloveGroup } from '../../../types/contributors.types'
+import { PodloveContributor, PodloveRole, PodloveGroup } from '../../../types/contributors.types'
 import { PodloveEpisodeContribution } from '../../../types/episode.types'
+import { injectAppDispatch, mapAppState } from '@store/vue'
 
 import {
   ArrowUpIcon,
@@ -129,6 +129,10 @@ import {
 } from '@heroicons/vue/24/outline'
 
 import { get } from 'lodash'
+
+type ContributionViewModel = PodloveEpisodeContribution & Partial<PodloveContributor> & {
+  id: string | number | null
+}
 
 export default defineComponent({
   components: {
@@ -175,12 +179,12 @@ export default defineComponent({
     state: {
       roles: PodloveRole[]
       groups: PodloveGroup[]
-      baseUrl: string
+      baseUrl: string | null
     }
   } {
     return {
-      dispatch: injectStore().dispatch,
-      state: mapState({
+      dispatch: injectAppDispatch(),
+      state: mapAppState({
         roles: selectors.contributors.roles,
         groups: selectors.contributors.groups,
         baseUrl: selectors.runtime.baseUrl,
@@ -190,7 +194,7 @@ export default defineComponent({
 
   computed: {
     editLink() {
-      return `${this.state.baseUrl}/wp-admin/admin.php?page=podlove_contributor_settings&action=edit&contributor=${this.data.contributor_id}`
+      return `${this.state.baseUrl || ''}/wp-admin/admin.php?page=podlove_contributor_settings&action=edit&contributor=${this.data.contributor_id}`
     },
   },
 

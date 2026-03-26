@@ -25,9 +25,8 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import { injectStore, mapState } from 'redux-vuex'
-
 import { selectors } from '@store'
+import { injectAppDispatch, mapAppState } from '@store/vue'
 
 import Module from '@components/module/Module.vue'
 import { PodloveLicense, PodloveLicenseVersion } from '../../../types/license.types'
@@ -52,10 +51,10 @@ export default defineComponent({
   },
   setup() {
     return {
-      state: mapState({
+      state: mapAppState({
         baseUrl: selectors.runtime.baseUrl,
       }),
-      dispatch: injectStore().dispatch,
+      dispatch: injectAppDispatch(),
     }
   },
 
@@ -64,10 +63,10 @@ export default defineComponent({
       return getLicenseUrl(this.licenseData)
     },
     imageUrl() : string | null {
-      return getImageUrl(this.licenseData, this.state.baseUrl)
+      return getImageUrl(this.licenseData, this.state.baseUrl || '')
     },
     isImageAvailable() : boolean {
-      if (getImageUrl(this.licenseData, this.state.baseUrl) !== null)
+      if (getImageUrl(this.licenseData, this.state.baseUrl || '') !== null)
         return true
       return false
     }
