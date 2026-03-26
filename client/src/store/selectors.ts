@@ -17,6 +17,7 @@ import * as mediafilesStore from './mediafiles.store'
 import * as relatedEpisodesStore from './relatedEpisodes.store'
 import * as showsStore from './shows.store'
 import * as adminStore from './admin.store'
+import * as assemblyaiStore from './assemblyai.store'
 
 const root = {
   lifecycle: (state: State) => state.lifecycle,
@@ -36,6 +37,7 @@ const root = {
   admin: (state: State) => state.admin,
   plusFileMigration: (state: State) => state.plusFileMigration,
   plus: (state: State) => state.plus,
+  assemblyai: (state: State) => state.assemblyai,
 }
 
 const lifecycle = {
@@ -243,6 +245,14 @@ const plus = {
   isSaving: createSelector(root.plus, plusStore.selectors.isSaving),
 }
 
+const assemblyai = {
+  status: createSelector(root.assemblyai, assemblyaiStore.selectors.status),
+  error: createSelector(root.assemblyai, assemblyaiStore.selectors.error),
+  transcript_id: createSelector(root.assemblyai, assemblyaiStore.selectors.transcript_id),
+  assemblyai_status: createSelector(root.assemblyai, assemblyaiStore.selectors.assemblyai_status),
+  has_api_key: createSelector(root.assemblyai, assemblyaiStore.selectors.has_api_key),
+}
+
 export default {
   lifecycle,
   podcast,
@@ -261,4 +271,5 @@ export default {
   admin,
   plusFileMigration,
   plus,
+  assemblyai,
 }
