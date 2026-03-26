@@ -123,6 +123,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 4.3.6 =
+
+* new: "Recent Downloads" chart can now be added to the WordPress dashboard
+
 = 4.3.5 =
 
 * new: the "Repair" function in "Tools" now checks for missing database columns and adds missing ones
