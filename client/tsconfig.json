@@ -10,6 +10,7 @@
     "sourceMap": true,
     "resolveJsonModule": true,
     "esModuleInterop": true,
+    "types": [],
     "lib": ["esnext", "dom"],
     "paths": {
       "@components/*": ["src/components/*"],
