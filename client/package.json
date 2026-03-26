@@ -33,10 +33,10 @@
     "axios": "^1.13.6",
     "lodash": "^4.17.23",
     "redux": "^5.0.1",
-    "redux-actions": "2.6.5",
+    "redux-actions": "^3.0.3",
     "redux-saga": "^1.4.2",
     "redux-vuex": "^4.0.1",
-    "reselect": "4.1.5",
+    "reselect": "^5.1.1",
     "vue": "^3.5.31",
     "vue3-popper": "^1.5.0"
   }
