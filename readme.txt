@@ -126,6 +126,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 = 4.3.6 =
 
 * new: "Recent Downloads" chart can now be added to the WordPress dashboard
+* new: Auphonic module now supports providing an API key in addition to the OAuth flow
 * maintenance: update various javascript dependencies
 
 
