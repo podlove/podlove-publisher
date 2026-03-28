@@ -6,6 +6,7 @@ use Podlove\Http;
 
 class Auphonic extends \Podlove\Modules\Base
 {
+    private const OAUTH_CLIENT_ID = '517dfd1a3074f9cf551ef1bf81d681';
     protected $module_name = 'Auphonic';
     protected $module_description = 'Auphonic is an audio post production web service. This module adds an interface to episodes, so you can create and manage productions right from Podlove Publisher.';
     protected $module_group = 'external services';
@@ -63,16 +64,16 @@ class Auphonic extends \Podlove\Modules\Base
         }
 
         $this->register_option('auphonic_api_key', 'hidden', [
-            'label' => __('Authorization', 'podlove-podcasting-plugin-for-wordpress'),
+            'label' => __('Authentication', 'podlove-podcasting-plugin-for-wordpress'),
             'description' => $this->get_authorization_description(),
             'html' => ['class' => 'regular-text'],
         ]);
 
         $this->register_option('auphonic_manual_api_key', 'password', [
-            'label' => __('API Key', 'podlove-podcasting-plugin-for-wordpress'),
+            'label' => __('Or Use an API Key', 'podlove-podcasting-plugin-for-wordpress'),
             'description' => sprintf(
                 '%s<br>%s',
-                __('Paste an Auphonic API key from your account settings. If you save a new key here, it replaces the current Auphonic connection after validation.', 'podlove-podcasting-plugin-for-wordpress'),
+                __('Instead of OAuth, paste an Auphonic API key from your account settings. You only need one method. Saving a new key here replaces the current Auphonic connection after validation.', 'podlove-podcasting-plugin-for-wordpress'),
                 sprintf(
                     '<a href="%s" target="_blank" rel="noopener noreferrer">%s</a>',
                     esc_url('https://auphonic.com/accounts/settings/'),
@@ -529,6 +530,41 @@ class Auphonic extends \Podlove\Modules\Base
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
             $result = curl_exec($ch);
+            $status_code = (int) curl_getinfo($ch, CURLINFO_RESPONSE_CODE);
+            $curl_error = curl_error($ch);
+            curl_close($ch);
+
+            $result = is_string($result) ? trim($result) : '';
+
+            if ($result === '' || $status_code < 200 || $status_code >= 300) {
+                \Podlove\Log::get()->addError(
+                    'Auphonic OAuth token exchange failed.',
+                    [
+                        'status_code' => $status_code,
+                        'curl_error' => $curl_error,
+                        'response' => $result,
+                    ]
+                );
+
+                return;
+            }
+
+            \Podlove\Log::get()->addInfo('Auphonic OAuth token exchange returned a candidate token.', [
+                'token_length' => strlen($result),
+                'token_sha1_prefix' => substr(sha1($result), 0, 12),
+            ]);
+
+            if (!$this->validate_api_key($result)) {
+                \Podlove\Log::get()->addError(
+                    'Auphonic OAuth returned a token that could not be verified.',
+                    [
+                        'token_length' => strlen($result),
+                        'token_sha1_prefix' => substr(sha1($result), 0, 12),
+                    ]
+                );
+
+                return;
+            }
 
             $this->update_module_option('auphonic_api_key', $result);
             $this->clear_auphonic_cache();
@@ -544,28 +580,45 @@ class Auphonic extends \Podlove\Modules\Base
 
     private function get_authorization_description()
     {
-        $auth_url = 'https://auphonic.com/oauth2/authorize/?client_id=0e7fac528c570c2f2b85c07ca854d9&redirect_uri='.urlencode(get_site_url().'/wp-admin/admin.php?page=podlove_settings_modules_handle').'&response_type=code';
+        $auth_url = add_query_arg([
+            'client_id' => self::OAUTH_CLIENT_ID,
+            'redirect_uri' => get_site_url().'/wp-admin/admin.php?page=podlove_settings_modules_handle',
+            'response_type' => 'code',
+        ], 'https://auphonic.com/oauth2/authorize/');
         $user = $this->api->fetch_authorized_user();
         $reset_link = '<a href="'.esc_url(admin_url('admin.php?page=podlove_settings_modules_handle&reset_auphonic_auth_code=1')).'">'.__('Reset connection', 'podlove-podcasting-plugin-for-wordpress').'</a>';
+        // Build a temporary form on click because the module settings page is already inside the main WordPress options form.
+        $oauth_button = sprintf(
+            '<button type="button" class="button button-primary" onclick="%s">%s</button>',
+            esc_attr(
+                "var form=document.createElement('form');"
+                ."form.method='post';"
+                ."form.action='".esc_js($auth_url)."';"
+                ."document.body.appendChild(form);"
+                ."form.submit();"
+            ),
+            esc_html__('Authorize with OAuth', 'podlove-podcasting-plugin-for-wordpress')
+        );
 
         if (isset($user) && is_object($user) && is_object($user->data)) {
             $status = '<i class="podlove-icon-ok"></i> '
                     .sprintf(
-                        __('Auphonic is connected as %s.', 'podlove-podcasting-plugin-for-wordpress'),
+                        __('Publisher is connected to Auphonic as %s.', 'podlove-podcasting-plugin-for-wordpress'),
                         '<strong>'.esc_html($user->data->username).'</strong>'
                     );
         } elseif ($this->get_module_option('auphonic_api_key') != '') {
             $status = '<i class="podlove-icon-remove"></i> '
-                    .__('A stored Auphonic token could not be verified. Reauthorize with OAuth, replace it with an API key, or reset the connection.', 'podlove-podcasting-plugin-for-wordpress');
+                    .__('A stored Auphonic token could not be verified. Use OAuth, replace it with an API key, or reset the connection.', 'podlove-podcasting-plugin-for-wordpress');
         } else {
             $status = '<i class="podlove-icon-remove"></i> '
-                    .__('No Auphonic credentials configured yet. Connect with OAuth or paste an API key below.', 'podlove-podcasting-plugin-for-wordpress');
+                    .__('No Auphonic credentials configured yet. Use OAuth or an API key to connect Publisher to Auphonic.', 'podlove-podcasting-plugin-for-wordpress');
         }
 
         return implode('<br>', array_filter([
             $status,
-            __('Authorize via OAuth. You will be redirected back here after Auphonic completes the authorization flow.', 'podlove-podcasting-plugin-for-wordpress'),
-            '<a href="'.esc_url($auth_url).'" class="button button-primary">'.__('Authorize with OAuth', 'podlove-podcasting-plugin-for-wordpress').'</a>',
+            '<span style="display:block; margin-top:0.75em;"><strong>'.__('Use OAuth', 'podlove-podcasting-plugin-for-wordpress').'</strong></span>',
+            __('Authorize Publisher with your Auphonic account via OAuth. You will be redirected back here after Auphonic completes the authorization flow.', 'podlove-podcasting-plugin-for-wordpress'),
+            $oauth_button,
             $this->get_module_option('auphonic_api_key') != '' ? $reset_link : '',
         ]));
     }

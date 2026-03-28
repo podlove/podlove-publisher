@@ -131,6 +131,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 * new: Codeberg support as contributor social service
 * new: repair tool detects missing permission to alter tables, which prevents some database migrations to run successfully
 * new: add some situational notices that PLUS exists
+* fix: new OAuth service for Auphonic under auth.podlove.org, the old one disintegrated (OAuth in older versions of the Publisher will not work any more)
 * maintenance: update various javascript dependencies
 
 = 4.3.5 =

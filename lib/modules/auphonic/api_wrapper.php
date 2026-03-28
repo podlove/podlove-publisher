@@ -3,6 +3,7 @@
 namespace Podlove\Modules\Auphonic;
 
 use Podlove\Http;
+use Podlove\Log;
 
 class API_Wrapper
 {
@@ -30,8 +31,20 @@ class API_Wrapper
             if ($curl->isSuccessful()) {
                 $decoded_user = json_decode($response['body']);
 
+                if (!$decoded_user || !isset($decoded_user->data)) {
+                    Log::get()->addWarning('Auphonic user verification returned unexpected payload.', [
+                        'token_debug' => self::token_debug(self::$auth_key),
+                        'body' => is_array($response) && isset($response['body']) ? $response['body'] : null,
+                    ]);
+                }
+
                 return $decoded_user ? $decoded_user : false;
             }
+
+            Log::get()->addWarning('Auphonic user verification failed.', [
+                'token_debug' => self::token_debug(self::$auth_key),
+                'response' => $response,
+            ]);
 
             return false;
         });
@@ -53,8 +66,28 @@ class API_Wrapper
                 return json_decode($response['body']);
             }
 
+            Log::get()->addWarning('Auphonic preset fetch failed.', [
+                'token_debug' => self::token_debug(self::$auth_key),
+                'response' => $response,
+            ]);
+
             return [];
         }, 10);
+    }
+
+    private static function token_debug($token)
+    {
+        if (!$token) {
+            return [
+                'present' => false,
+            ];
+        }
+
+        return [
+            'present' => true,
+            'length' => strlen($token),
+            'sha1_prefix' => substr(sha1($token), 0, 12),
+        ];
     }
 
     private static function cache_for($cache_key, $callback, $duration = 31536000 /* 1 year */)
