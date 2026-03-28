@@ -126,6 +126,8 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 = 4.3.6 =
 
 * new: "Recent Downloads" chart can now be added to the WordPress dashboard
+* maintenance: update various javascript dependencies
+
 
 = 4.3.5 =
 
