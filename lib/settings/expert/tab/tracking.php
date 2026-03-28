@@ -254,7 +254,7 @@ class Tracking extends Tab
             function () {
                 ?>
         <div>
-          <input class="large-text" type="text" name="podlove_tracking[matomo_token]" value="<?php echo \Podlove\get_setting('tracking', 'matomo_token'); ?>" />
+          <input class="large-text" type="password" name="podlove_tracking[matomo_token]" value="<?php echo \Podlove\get_setting('tracking', 'matomo_token'); ?>" />
         </div>
         <div>
           <?php
