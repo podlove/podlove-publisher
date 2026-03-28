@@ -375,8 +375,7 @@ function getProductionPayload(state: State): object {
 
   // remove output_files from payload, because it doubles them
   const { output_files, ...newPayload } = payload
-  const episode_poster =
-    state.episode.episode_poster || state.episode.poster || state.podcast.poster
+  const episode_poster = selectors.episode.effectivePoster(state)
   const maybe_output_basename = state.episode.slug ? { output_basename: state.episode.slug } : {}
 
   return {

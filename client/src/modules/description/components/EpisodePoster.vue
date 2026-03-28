@@ -100,7 +100,7 @@ export default defineComponent({
   setup() {
     return {
       state: mapAppState({
-        poster: selectors.episode.poster,
+        effectivePoster: selectors.episode.effectivePoster,
         episodePoster: selectors.episode.episodePoster,
         asset: selectors.settings.imageAsset,
       }),
@@ -117,7 +117,7 @@ export default defineComponent({
 
   computed: {
     posterStyle(): StyleValue {
-      const url = this.state.episodePoster || this.state.poster
+      const url = this.state.effectivePoster
 
       if (url === null) {
         return {}

@@ -116,6 +116,12 @@ const episode = {
   type: createSelector(root.episode, episodeStore.selectors.type),
   poster: createSelector(root.episode, episodeStore.selectors.poster),
   episodePoster: createSelector(root.episode, episodeStore.selectors.episodePoster),
+  effectivePoster: createSelector(
+    createSelector(root.episode, episodeStore.selectors.episodePoster),
+    createSelector(root.episode, episodeStore.selectors.poster),
+    podcast.poster,
+    (episodePoster, poster, podcastPoster) => episodePoster || poster || podcastPoster
+  ),
   mnemonic: createSelector(root.episode, episodeStore.selectors.mnemonic),
   explicit: createSelector(root.episode, episodeStore.selectors.explicit),
   soundbite_start: createSelector(root.episode, episodeStore.selectors.soundbite_start),
