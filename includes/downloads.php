@@ -104,6 +104,72 @@ function ga_track_download($request_id, $media_file, $ua_string, $ptm_context, $
     }
 }
 
+function matomo_track_download($request_id, $media_file, $ua_string, $ptm_context, $ptm_source)
+{
+    // Matomo Tracking
+    $matomo_url = trim(\Podlove\get_setting('tracking', 'matomo_url') ?? '');
+    $matomo_site_id = trim(\Podlove\get_setting('tracking', 'matomo_site_id') ?? '');
+    $matomo_token = trim(\Podlove\get_setting('tracking', 'matomo_token') ?? '');
+
+    if (!$matomo_url || !$matomo_site_id) {
+        return;
+    }
+
+    $episode = $media_file->episode();
+    $title = $episode->title();
+
+    // see https://developer.matomo.org/api-reference/tracking-api
+    $matomo_params = [
+        'idsite' => $matomo_site_id,
+        'rec' => '1',
+        'apiv' => '1',
+        'action_name' => $title,
+        'download' => $media_file->get_file_url(),
+        'url' => $media_file->get_file_url(),
+        'ua' => $ua_string,
+        'cip' => podlove_get_remote_addr(),
+        'send_image' => '0',
+    ];
+
+    if ($matomo_token) {
+        $matomo_params['token_auth'] = $matomo_token;
+    }
+
+    if ($ptm_context) {
+        $matomo_params['mtm_campaign'] = $ptm_context;
+    }
+
+    if ($ptm_source) {
+        $matomo_params['mtm_kwd'] = $ptm_source;
+    }
+
+    $matomo_params = apply_filters('podlove_matomo_track_params', $matomo_params, $episode);
+
+    $matomo_param_fragments = [];
+    array_walk($matomo_params, function ($item, $key) use (&$matomo_param_fragments) {
+        array_push($matomo_param_fragments, sprintf('%s=%s', $key, rawurlencode($item)));
+    });
+
+    $body = implode('&', $matomo_param_fragments);
+    $curl = new \Podlove\Http\Curl();
+    $curl->request($matomo_url, [
+        'method' => 'POST',
+        'body' => $body,
+    ]);
+
+    if (!$curl->isSuccessful()) {
+        \Podlove\Log::get()->addDebug('Matomo Tracking request failed.');
+    } else {
+        // Strip token_auth from URL encoded body for logging
+        $log_body = $body;
+        if ($matomo_token) {
+            $log_body = str_replace('token_auth=' . rawurlencode($matomo_token), 'token_auth=[SECRET]', $body);
+        }
+
+        \Podlove\Log::get()->addDebug('Matomo Tracking request successful: ' . $log_body);
+    }
+}
+
 function podlove_handle_media_file_tracking(Podlove\Model\MediaFile $media_file)
 {
     if (\Podlove\get_setting('tracking', 'mode') !== 'ptm_analytics') {
@@ -156,6 +222,7 @@ function podlove_handle_media_file_tracking(Podlove\Model\MediaFile $media_file)
     $intent->save();
 
     ga_track_download($intent->request_id, $media_file, $ua_string, $ptm_context, $ptm_source);
+    matomo_track_download($intent->request_id, $media_file, $ua_string, $ptm_context, $ptm_source);
 }
 
 function podlove_handle_media_file_download()
