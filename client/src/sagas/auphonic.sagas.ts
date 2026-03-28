@@ -375,7 +375,8 @@ function getProductionPayload(state: State): object {
 
   // remove output_files from payload, because it doubles them
   const { output_files, ...newPayload } = payload
-  const episode_poster = state.episode.poster || state.podcast.poster
+  const episode_poster =
+    state.episode.episode_poster || state.episode.poster || state.podcast.poster
   const maybe_output_basename = state.episode.slug ? { output_basename: state.episode.slug } : {}
 
   return {
@@ -397,11 +398,22 @@ function getProductionPayload(state: State): object {
       track: state.episode.number,
     },
     chapters: state.chapters.chapters.map((chapter) => {
-      return {
+      const payload: {
+        title: string
+        url?: string
+        start: string
+        image?: string
+      } = {
         title: chapter.title,
         url: chapter.href,
         start: new Timestamp(chapter.start).pretty,
       }
+
+      if (chapter.image) {
+        payload.image = chapter.image
+      }
+
+      return payload
     }),
   }
 }
@@ -447,7 +459,17 @@ async function uploadProductionImage(
   }
 
   const res = await fetch(posterFile)
+
+  if (!res.ok) {
+    throw new Error(`Failed to fetch production image: ${res.status} ${res.statusText}`)
+  }
+
   const blob = await res.blob()
+
+  if (!blob.type.startsWith('image/')) {
+    throw new Error(`Invalid production image response type: ${blob.type || 'unknown'}`)
+  }
+
   const ext = blob.type.includes('png') ? 'png' : 'jpg'
   const filename = `image.${ext}`
   const imageFile = new File([blob], filename, { type: blob.type })
@@ -459,10 +481,85 @@ async function uploadProductionImage(
   )
 }
 
+function shouldInlineChapterImage(imageUrl: string): boolean {
+  try {
+    const resolvedUrl = new URL(imageUrl, window.location.href)
+    const localHosts = new Set(['localhost', '127.0.0.1', '::1'])
+
+    return (
+      resolvedUrl.origin === window.location.origin ||
+      localHosts.has(resolvedUrl.hostname)
+    )
+  } catch (_error) {
+    return false
+  }
+}
+
+async function blobToBase64(blob: Blob): Promise<string> {
+  return await new Promise((resolve, reject) => {
+    const reader = new FileReader()
+
+    reader.onloadend = () => {
+      if (typeof reader.result === 'string') {
+        const [, base64] = reader.result.split(',', 2)
+
+        if (base64) {
+          resolve(base64)
+        } else {
+          reject(new Error('Failed to extract base64 data from chapter image'))
+        }
+      } else {
+        reject(new Error('Failed to convert chapter image to base64'))
+      }
+    }
+
+    reader.onerror = () => reject(reader.error || new Error('Failed to read chapter image'))
+    reader.readAsDataURL(blob)
+  })
+}
+
+async function inlineChapterImages(chapters: any[] | undefined): Promise<any[] | undefined> {
+  if (!chapters?.length) {
+    return chapters
+  }
+
+  return await Promise.all(
+    chapters.map(async (chapter) => {
+      if (!chapter.image || !shouldInlineChapterImage(chapter.image)) {
+        return chapter
+      }
+
+      try {
+        const response = await fetch(chapter.image)
+
+        if (!response.ok) {
+          throw new Error(`Failed to fetch chapter image: ${response.status} ${response.statusText}`)
+        }
+
+        const blob = await response.blob()
+
+        if (!blob.type.startsWith('image/')) {
+          throw new Error(`Invalid chapter image response type: ${blob.type || 'unknown'}`)
+        }
+
+        return {
+          ...chapter,
+          image: await blobToBase64(blob),
+        }
+      } catch (error) {
+        console.warn('Skipping Auphonic chapter image after inline conversion failed', error)
+
+        const { image, ...chapterWithoutImage } = chapter
+        return chapterWithoutImage
+      }
+    })
+  )
+}
+
 function* handleSaveProduction(
   auphonicApi: AuphonicApiClient,
   action: { type: string; payload: any }
-) {
+): any {
   yield put(auphonic.startSaving())
 
   const uuid = action.payload.uuid
@@ -470,6 +567,8 @@ function* handleSaveProduction(
   const productionPayload = yield select(getSaveProductionPayload)
   //@ts-ignore
   const tracksPayload = yield select(getTracksPayload)
+
+  productionPayload.chapters = yield call(inlineChapterImages, productionPayload.chapters)
 
   // delete all existing chapters, otherwise we append them
   //@ts-ignore
