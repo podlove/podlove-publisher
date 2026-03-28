@@ -7,7 +7,7 @@ use Podlove\Modules\Networks\Model\PodcastList;
 
 class PodcastLists
 {
-    const MENU_SLUG = 'podlove_settings_list_handle';
+    public const MENU_SLUG = 'podlove_settings_list_handle';
     public static $pagehook;
     private static $nonce = 'update_podcast_list';
 

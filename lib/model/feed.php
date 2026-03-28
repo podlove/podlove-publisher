@@ -8,9 +8,9 @@ class Feed extends Base
 {
     use KeepsBlogReferenceTrait;
 
-    const ITEMS_WP_LIMIT = 0;
-    const ITEMS_NO_LIMIT = -1;
-    const ITEMS_GLOBAL_LIMIT = -2;
+    public const ITEMS_WP_LIMIT = 0;
+    public const ITEMS_NO_LIMIT = -1;
+    public const ITEMS_GLOBAL_LIMIT = -2;
 
     public function __construct()
     {

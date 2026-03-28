@@ -166,19 +166,19 @@ class PodcastImporter
 		<?php } else { ?>
 			<p>
 				<?php echo sprintf(
-            __('Total import progress: %d/%d', 'podlove-podcasting-plugin-for-wordpress'),
-            $finished_count,
-            $all_count
-        ); ?>
+				    __('Total import progress: %d/%d', 'podlove-podcasting-plugin-for-wordpress'),
+				    $finished_count,
+				    $all_count
+				); ?>
 			</p>
 			<?php foreach ($jobs as $jobClass) { ?>
 				<?php $job = Job::find_one_recent_unfinished_job($jobClass); ?>
 					<?php if ($job && $job->steps_progress > 0) { ?>
 						<p>
 						<?php echo sprintf(
-            __('Currently working on: %s', 'podlove-podcasting-plugin-for-wordpress'),
-            $jobClass::title()
-        ); ?>
+						    __('Currently working on: %s', 'podlove-podcasting-plugin-for-wordpress'),
+						    $jobClass::title()
+						); ?>
 						<?php if ($job->steps_progress > 0) { ?>
 							<i class="clickable podlove-icon-spinner rotate"></i>
 						<?php } ?>

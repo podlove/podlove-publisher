@@ -12,6 +12,7 @@ class TemplateExtensions
      * List of Related Episodes.
      *
      * @accessor
+     *
      * @dynamicAccessor episode.relatedEpisodes
      *
      * @param mixed $return

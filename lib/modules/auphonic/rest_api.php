@@ -4,8 +4,8 @@ namespace Podlove\Modules\Auphonic;
 
 class REST_API
 {
-    const api_namespace = 'podlove/v2';
-    const api_base = 'auphonic';
+    public const api_namespace = 'podlove/v2';
+    public const api_base = 'auphonic';
 
     private $module;
 

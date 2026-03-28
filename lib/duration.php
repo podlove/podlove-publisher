@@ -94,7 +94,7 @@ class Duration
 
                 return $duration_string;
 
-            break;
+                break;
             case 'full': // full is default
             default:
                 return $this->format();

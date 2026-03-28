@@ -6,14 +6,12 @@ use Podlove\Modules\Contributors\Model\Contributor;
 use Podlove\Modules\Contributors\Model\ContributorGroup;
 use Podlove\Modules\Contributors\Model\ContributorRole;
 use Podlove\Modules\Contributors\Model\DefaultContribution;
-
 use Podlove\Modules\Contributors\Model\EpisodeContribution;
-use WP_REST_Controller;
 
 class REST_API
 {
-    const api_namespace = 'podlove/v1';
-    const api_base = 'contributors';
+    public const api_namespace = 'podlove/v1';
+    public const api_base = 'contributors';
 
     // todo: delete
     // todo: create
@@ -157,7 +155,7 @@ class REST_API
     }
 }
 
-class WP_REST_PodloveContributors_Controller extends WP_REST_Controller
+class WP_REST_PodloveContributors_Controller extends \WP_REST_Controller
 {
     public function __construct()
     {
@@ -397,7 +395,7 @@ class WP_REST_PodloveContributors_Controller extends WP_REST_Controller
                         'type' => 'integer',
                         'required' => 'true',
                     ],
-                     'group_id' => [
+                    'group_id' => [
                         'description' => __('Group ID of the default contributor', 'podlove-podcasting-plugin-for-wordpress'),
                         'type' => 'integer',
                         'validate_callback' => '\Podlove\Api\Validation::isContributorGroupIdExist'
@@ -415,7 +413,7 @@ class WP_REST_PodloveContributors_Controller extends WP_REST_Controller
                         'description' => __('Comment to the default contributor', 'podlove-podcasting-plugin-for-wordpress'),
                         'type' => 'string',
                     ],
-                  ],
+                ],
             ],
             [
                 'methods' => \WP_REST_Server::DELETABLE,
@@ -532,7 +530,7 @@ class WP_REST_PodloveContributors_Controller extends WP_REST_Controller
     {
         $defaults = DefaultContribution::all();
 
-        $entries = array_map(function($entry) {
+        $entries = array_map(function ($entry) {
             return $entry->to_array();
         }, $defaults);
 
@@ -583,10 +581,11 @@ class WP_REST_PodloveContributors_Controller extends WP_REST_Controller
             }
         }
 
-        if ($filter == 'all')
+        if ($filter == 'all') {
             $result = $this->get_contributor_data_full($contributor);
-        else
+        } else {
             $result = $this->get_contributor_data($contributor);
+        }
 
         return new \Podlove\Api\Response\OkResponse([
             '_version' => 'v2',
@@ -802,7 +801,7 @@ class WP_REST_PodloveContributors_Controller extends WP_REST_Controller
     public function update_item_default($request)
     {
         $id = $request->get_param('id');
-        $default = DefaultContribution::find_by_id(($id));
+        $default = DefaultContribution::find_by_id($id);
 
         if (!isset($default)) {
             return new \Podlove\Api\Error\NotFound();
@@ -900,7 +899,7 @@ class WP_REST_PodloveContributors_Controller extends WP_REST_Controller
     public function delete_item_default($request)
     {
         $id = $request->get_param('id');
-        $default = DefaultContribution::find_by_id(($id));
+        $default = DefaultContribution::find_by_id($id);
 
         if (!isset($default)) {
             return new \Podlove\Api\Error\NotFound();
@@ -974,5 +973,4 @@ class WP_REST_PodloveContributors_Controller extends WP_REST_Controller
             'count' => $contributor->contributioncount,
         ];
     }
-
 }

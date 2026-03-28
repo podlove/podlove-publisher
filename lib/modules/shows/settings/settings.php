@@ -8,7 +8,7 @@ class Settings
 {
     use \Podlove\HasPageDocumentationTrait;
 
-    const MENU_SLUG = 'podlove_shows_settings';
+    public const MENU_SLUG = 'podlove_shows_settings';
     private static $nonce = 'update_shows';
 
     public function __construct($handle)

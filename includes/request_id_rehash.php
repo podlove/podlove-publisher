@@ -39,21 +39,13 @@ function podlove_rehash_process_actions()
 
 class PodloveSilentProgressBar
 {
-    public function __construct($x = null)
-    {
-    }
+    public function __construct($x = null) {}
 
-    public function display()
-    {
-    }
+    public function display() {}
 
-    public function progress()
-    {
-    }
+    public function progress() {}
 
-    public function end()
-    {
-    }
+    public function end() {}
 }
 
 /**
@@ -198,10 +190,10 @@ function podlove_rehash_total_remaining($table)
 function podlove_rehash_progress_class()
 {
     if (php_sapi_name() == 'cli') {
-        return '\\Dariuszp\\CliProgressBar';
+        return '\Dariuszp\CliProgressBar';
     }
 
-    return '\\PodloveSilentProgressBar';
+    return '\PodloveSilentProgressBar';
 }
 
 function podlove_rehash_log($message)

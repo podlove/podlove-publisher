@@ -15,9 +15,7 @@ use Podlove\Template\Wrapper;
  */
 class Network extends Wrapper
 {
-    public function __construct()
-    {
-    }
+    public function __construct() {}
 
     /**
      * Network Lists.
@@ -42,6 +40,7 @@ class Network extends Wrapper
      * ```
      *
      * @see list
+     *
      * @accessor
      *
      * @param mixed $args

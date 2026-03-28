@@ -36,9 +36,9 @@ class Title_Migration extends \Podlove\Modules\Base
 				<div id="message" class="notice notice-success">
 					<p>
 						<strong><?php echo sprintf(
-                    __('Module "%s" was deactivated.', 'podlove-podcasting-plugin-for-wordpress'),
-                    $this->get_module_name()
-                ); ?></strong>
+						    __('Module "%s" was deactivated.', 'podlove-podcasting-plugin-for-wordpress'),
+						    $this->get_module_name()
+						); ?></strong>
 					</p>
 				</div>
 				<?php
@@ -137,10 +137,10 @@ class Title_Migration extends \Podlove\Modules\Base
 
 	<p class="description">
 		<?php echo sprintf(
-            __('You can find this setting later at %sPodcast Settings%s.', 'podlove-podcasting-plugin-for-wordpress'),
-            '<a href="'.admin_url('admin.php?page=podlove_settings_podcast_handle').'">',
-            '</a>'
-        ); ?>
+		    __('You can find this setting later at %sPodcast Settings%s.', 'podlove-podcasting-plugin-for-wordpress'),
+		    '<a href="'.admin_url('admin.php?page=podlove_settings_podcast_handle').'">',
+		    '</a>'
+		); ?>
 		
 	</p>
 
@@ -154,10 +154,10 @@ class Title_Migration extends \Podlove\Modules\Base
 
 	<p class="description">
 		<?php echo sprintf(
-            __('You can find this setting later at %sExpert Settings > Website > Blog Episode Titles%s.', 'podlove-podcasting-plugin-for-wordpress'),
-            '<a href="'.admin_url('admin.php?page=podlove_settings_settings_handle').'">',
-            '</a>'
-        ); ?>
+		    __('You can find this setting later at %sExpert Settings > Website > Blog Episode Titles%s.', 'podlove-podcasting-plugin-for-wordpress'),
+		    '<a href="'.admin_url('admin.php?page=podlove_settings_settings_handle').'">',
+		    '</a>'
+		); ?>
 		
 	</p>
 
@@ -233,7 +233,7 @@ max_input_vars = <?php echo $input_count + $buffer; ?>
 
         $title = substr($post_title, $offset);
         $title = trim($title);
-        $title = preg_replace('/^[-–~\\s|:]+/', '', $title);
+        $title = preg_replace('/^[-–~\s|:]+/', '', $title);
 
         return [
             'title' => $title,

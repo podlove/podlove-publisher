@@ -20,8 +20,8 @@ class ToolsSectionCronDiagnostics
         }
 
         if (!wp_verify_nonce($_REQUEST['nonce'], 'podlove_ajax')) {
-          http_response_code(401);
-          exit;
+            http_response_code(401);
+            exit;
         }
 
         update_option('podlove_cron_diagnosis', 'started');
@@ -37,8 +37,8 @@ class ToolsSectionCronDiagnostics
         }
 
         if (!wp_verify_nonce($_REQUEST['nonce'], 'podlove_ajax')) {
-          http_response_code(401);
-          exit;
+            http_response_code(401);
+            exit;
         }
 
         $tries = get_option('podlove_cron_diagnosis_tries', 0);

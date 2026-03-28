@@ -2,6 +2,11 @@
 
 use Podlove\Modules\SlackShownotes\Message;
 
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 class SlackMessageTest extends WP_UnitTestCase
 {
     public function testExtractLinkMatchedWithAttachment()

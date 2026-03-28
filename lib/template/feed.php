@@ -71,6 +71,7 @@ class Feed extends Wrapper
      * Asset.
      *
      * @see asset
+     *
      * @accessor
      */
     public function asset()

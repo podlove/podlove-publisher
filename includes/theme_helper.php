@@ -5,8 +5,7 @@ namespace Podlove;
 /**
  * Get Podlove episode template object.
  *
- * @param int|WP_Post $post Optional. Post ID or post object. Defaults to global $post.
- * @param null|mixed  $id
+ * @param null|mixed $id
  *
  * @return \Podlove\Template\Episode
  */

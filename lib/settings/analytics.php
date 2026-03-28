@@ -112,7 +112,7 @@ class Analytics
         header('Content-type: application/json');
         echo wp_wp_json_encode($data);
 
-        exit();
+        exit;
     }
 
     // needs to be initialized here so columns become configurable
@@ -238,22 +238,22 @@ class Analytics
 		<div class="wrap">
 			<?php
 if (Model\DownloadIntentClean::first() === null) {
-            $this->blank_template();
-        } else {
-            $action = (isset($_REQUEST['action'])) ? $_REQUEST['action'] : null;
+    $this->blank_template();
+} else {
+    $action = (isset($_REQUEST['action'])) ? $_REQUEST['action'] : null;
 
-            switch ($action) {
-                case 'show':
-                    $this->show_template();
+    switch ($action) {
+        case 'show':
+            $this->show_template();
 
-                    break;
-                case 'index':
-                default:
-                    $this->view_template();
+            break;
+        case 'index':
+        default:
+            $this->view_template();
 
-                    break;
-            }
-        } ?>
+            break;
+    }
+} ?>
 		</div>
 		<?php
     }
@@ -609,10 +609,10 @@ $this->table->prepare_items();
 			<?php echo $post->post_title; ?>
 			<br><small>
 				<?php echo sprintf(
-            __('Released on %s (%d days ago)', 'podlove-podcasting-plugin-for-wordpress'),
-            mysql2date(get_option('date_format').' '.get_option('time_format'), $post->post_date),
-            number_format_i18n($episode->days_since_release())
-        ); ?>
+				    __('Released on %s (%d days ago)', 'podlove-podcasting-plugin-for-wordpress'),
+				    mysql2date(get_option('date_format').' '.get_option('time_format'), $post->post_date),
+				    number_format_i18n($episode->days_since_release())
+				); ?>
 			</small>
 		</h2>
 

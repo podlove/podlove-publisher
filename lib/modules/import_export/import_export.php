@@ -113,10 +113,10 @@ class Import_Export extends \Podlove\Modules\Base
 		<ol>
 			<li>
 				<?php echo sprintf(
-            __('Go to the %sWordPress export tool%s and export all data.', 'podlove-podcasting-plugin-for-wordpress'),
-            '<a href="'.admin_url('export.php').'">',
-            '</a>'
-        ); ?>
+				    __('Go to the %sWordPress export tool%s and export all data.', 'podlove-podcasting-plugin-for-wordpress'),
+				    '<a href="'.admin_url('export.php').'">',
+				    '</a>'
+				); ?>
 			</li>
 			<li><?php echo __('Import this file to your new WordPress instance.', 'podlove-podcasting-plugin-for-wordpress'); ?></li>
 			<li><?php echo __('Use the button below to export the podcast data file.', 'podlove-podcasting-plugin-for-wordpress'); ?></li>

@@ -224,9 +224,8 @@ class Contributor extends Base
 					'.$joins.'
 				WHERE '.$where.'
 				GROUP BY ec.episode_id
-				ORDER BY '.$orderby.' '.$order.
-                $limit
-            ;
+				ORDER BY '.$orderby.' '.$order
+                .$limit;
 
             $episode_ids = $wpdb->get_col($sql);
 
@@ -333,6 +332,7 @@ class Contributor extends Base
      *
      * @param string     $s     Size in pixels, defaults to 80px [ 1 - 2048 ]
      * @param null|mixed $email
+     *
      * @source http://gravatar.com/site/implement/images/php/
      */
     private function getGravatarUrl($s = 80, $email = null)

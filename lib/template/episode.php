@@ -186,6 +186,7 @@ class Episode extends Wrapper
      * Uses WordPress datetime format by default or custom format: `{{ episode.publicationDate.format('Y-m-d') }}`
      *
      * @see  datetime
+     *
      * @accessor
      *
      * @param mixed $format
@@ -201,6 +202,7 @@ class Episode extends Wrapper
      * Uses WordPress datetime format by default or custom format: `{{ episode.recordingDate.format('Y-m-d') }}`
      *
      * @see  datetime
+     *
      * @accessor
      *
      * @param mixed $format
@@ -239,6 +241,7 @@ class Episode extends Wrapper
      * Alternatively, use the duration accessors for custom rendering.
      *
      * @see duration
+     *
      * @accessor
      */
     public function duration()
@@ -268,6 +271,7 @@ class Episode extends Wrapper
      * ```
      *
      * @see  image
+     *
      * @accessor
      *
      * @param mixed $args
@@ -291,6 +295,7 @@ class Episode extends Wrapper
      * Image URL.
      *
      * @deprecated since 2.2.0, use `episode.image.url` instead
+     *
      * @accessor
      */
     public function imageUrl()
@@ -306,6 +311,7 @@ class Episode extends Wrapper
      * Image URL with fallback.
      *
      * @deprecated since 2.2.0, use `episode.image({fallback: true}).url` instead
+     *
      * @accessor
      */
     public function imageUrlWithFallback()
@@ -384,6 +390,7 @@ class Episode extends Wrapper
      * ```
      *
      * @see  tag
+     *
      * @accessor
      *
      * @param mixed $args
@@ -412,6 +419,7 @@ class Episode extends Wrapper
      * ```
      *
      * @see  category
+     *
      * @accessor
      *
      * @param mixed $args
@@ -427,6 +435,7 @@ class Episode extends Wrapper
      * List of episode files.
      *
      * @see  file
+     *
      * @accessor
      */
     public function files()
@@ -450,6 +459,7 @@ class Episode extends Wrapper
      * ```
      *
      * @see  file
+     *
      * @accessor
      *
      * @param mixed $asset_name
@@ -474,6 +484,7 @@ class Episode extends Wrapper
      * List of episode chapters.
      *
      * @see  chapter
+     *
      * @accessor
      */
     public function chapters()
@@ -498,6 +509,7 @@ class Episode extends Wrapper
      * for the episode license only.
      *
      * @see  license
+     *
      * @accessor
      */
     public function license()

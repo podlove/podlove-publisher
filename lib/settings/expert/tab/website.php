@@ -15,7 +15,7 @@ class Website extends Tab
     public function init()
     {
         // always flush rewrite rules here for custom_episode_slug setting
-        add_action('update_option_podlove_website', function($old, $new) {
+        add_action('update_option_podlove_website', function ($old, $new) {
             set_transient('podlove_needs_to_flush_rewrite_rules', true);
         }, 10, 2);
 
@@ -164,7 +164,7 @@ class Website extends Tab
 
                 $landing_page_options = [
                     ['value' => 'homepage', 'text' => __('Front page', 'podlove-podcasting-plugin-for-wordpress')],
-                    ['value' => 'archive',  'text' => __('Episode pages', 'podlove-podcasting-plugin-for-wordpress')],
+                    ['value' => 'archive', 'text' => __('Episode pages', 'podlove-podcasting-plugin-for-wordpress')],
                     ['text' => '––––––––––', 'disabled' => true],
                 ];
 

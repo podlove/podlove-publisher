@@ -59,8 +59,8 @@
 			<td class="podlove-dashboard-number-column">
 				<?php
                 $days = round($statistics['total_episode_length'] / 3600 / 24, 1);
-                echo sprintf(_n('%s day', '%s days', $days, 'podlove-podcasting-plugin-for-wordpress'), $days);
-                ?>
+	echo sprintf(_n('%s day', '%s days', $days, 'podlove-podcasting-plugin-for-wordpress'), $days);
+	?>
 			</td>
 			<td>
 				<?php _e('is the total playback time of all episodes', 'podlove-podcasting-plugin-for-wordpress'); ?>.

@@ -14,9 +14,7 @@ class Affiliate extends \Podlove\Modules\Base
     }
 
     // Was activated
-    public function was_activated($module_name = 'affiliate')
-    {
-    }
+    public function was_activated($module_name = 'affiliate') {}
 
     public function load()
     {

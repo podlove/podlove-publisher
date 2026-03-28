@@ -26,6 +26,7 @@ class TemplateExtensions
      * ```
      *
      * @accessor
+     *
      * @dynamicAccessor contributor.services
      *
      * @param mixed $return
@@ -88,6 +89,7 @@ class TemplateExtensions
      * ```
      *
      * @accessor
+     *
      * @dynamicAccessor podcast.services
      *
      * @param mixed $return

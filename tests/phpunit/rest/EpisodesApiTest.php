@@ -2,6 +2,11 @@
 
 use Podlove\Model\Episode;
 
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 class EpisodesApiTest extends WP_UnitTestCase
 {
     private $server;
@@ -26,7 +31,7 @@ class EpisodesApiTest extends WP_UnitTestCase
         parent::tearDown();
     }
 
-    public function test_create_episode()
+    public function testCreateEpisode()
     {
         $create_request = new WP_REST_Request('POST', '/podlove/v2/episodes');
         $create_response = $this->server->dispatch($create_request);
@@ -40,7 +45,7 @@ class EpisodesApiTest extends WP_UnitTestCase
         $this->assertNotNull($episode);
     }
 
-    public function test_update_episode()
+    public function testUpdateEpisode()
     {
         $episode = $this->create_episode();
 
@@ -71,7 +76,7 @@ class EpisodesApiTest extends WP_UnitTestCase
         $this->assertEquals('Updated Episode Title', $post->post_title);
     }
 
-    public function test_delete_episode()
+    public function testDeleteEpisode()
     {
         $episode = $this->create_episode();
 
@@ -83,7 +88,7 @@ class EpisodesApiTest extends WP_UnitTestCase
         $this->assertEquals('trash', $post->post_status);
     }
 
-    public function test_create_episode_requires_permissions()
+    public function testCreateEpisodeRequiresPermissions()
     {
         wp_set_current_user(0);
 
@@ -93,7 +98,7 @@ class EpisodesApiTest extends WP_UnitTestCase
         $this->assertEquals(401, $response->get_status());
     }
 
-    public function test_update_episode_requires_permissions()
+    public function testUpdateEpisodeRequiresPermissions()
     {
         $episode = $this->create_episode();
         wp_set_current_user(0);
@@ -105,7 +110,7 @@ class EpisodesApiTest extends WP_UnitTestCase
         $this->assertEquals(401, $response->get_status());
     }
 
-    public function test_delete_episode_requires_permissions()
+    public function testDeleteEpisodeRequiresPermissions()
     {
         $episode = $this->create_episode();
         wp_set_current_user(0);
@@ -116,7 +121,7 @@ class EpisodesApiTest extends WP_UnitTestCase
         $this->assertEquals(401, $response->get_status());
     }
 
-    public function test_update_episode_not_found()
+    public function testUpdateEpisodeNotFound()
     {
         $request = new WP_REST_Request('PUT', '/podlove/v2/episodes/999999');
         $request->set_param('title', 'Missing Episode');
@@ -125,7 +130,7 @@ class EpisodesApiTest extends WP_UnitTestCase
         $this->assertEquals(404, $response->get_status());
     }
 
-    public function test_delete_episode_not_found()
+    public function testDeleteEpisodeNotFound()
     {
         $request = new WP_REST_Request('DELETE', '/podlove/v2/episodes/999999');
         $response = $this->server->dispatch($request);
@@ -133,7 +138,7 @@ class EpisodesApiTest extends WP_UnitTestCase
         $this->assertEquals(404, $response->get_status());
     }
 
-    public function test_update_episode_rejects_invalid_duration()
+    public function testUpdateEpisodeRejectsInvalidDuration()
     {
         $episode = $this->create_episode();
 

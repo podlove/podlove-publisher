@@ -59,8 +59,7 @@ class Modules
                 add_settings_section(
                     'podlove_setting_module_group_'.$group,
                     ucwords($group),
-                    function () {
-                    },
+                    function () {},
                     Modules::$pagehook
                 );
             }
@@ -74,8 +73,8 @@ class Modules
                     // $id
                     'podlove_setting_module_'.$module_name,
                     // $title
-                    '<input name="podlove_active_modules['.$module_name.']" id="'.$module_name.'" type="checkbox" '.checked(\Podlove\Modules\Base::is_active($module_name), true, false).'>'.
-                    sprintf(
+                    '<input name="podlove_active_modules['.$module_name.']" id="'.$module_name.'" type="checkbox" '.checked(\Podlove\Modules\Base::is_active($module_name), true, false).'>'
+                    .sprintf(
                         '<label for="'.$module_name.'">%s</label><a name="'.$module_name.'"></a>',
                         $module->get_module_name()
                     ),

@@ -4,7 +4,7 @@ namespace Podlove;
 
 class Repair
 {
-    const REPAIR_LOG_KEY = 'podlove_repair_log';
+    public const REPAIR_LOG_KEY = 'podlove_repair_log';
 
     /**
      * Register hooks.
@@ -28,12 +28,12 @@ class Repair
     public static function do_repair()
     {
         if (!current_user_can('administrator')) {
-          exit;
+            exit;
         }
 
         if (!wp_verify_nonce($_REQUEST['nonce'], 'podlove_tools')) {
-          http_response_code(401);
-          exit;
+            http_response_code(401);
+            exit;
         }
 
         self::clear_repair_log();
@@ -279,6 +279,7 @@ class Repair
                     || stripos($error['error'], 'permission') !== false
                 ) {
                     $has_permission_error = true;
+
                     break;
                 }
             }

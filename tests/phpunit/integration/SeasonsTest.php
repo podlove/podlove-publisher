@@ -2,6 +2,11 @@
 
 use Podlove\Modules\Seasons\Model\Season;
 
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 class SeasonsTest extends WP_UnitTestCase
 {
     private $episode_factory;
@@ -196,5 +201,4 @@ class SeasonsTest extends WP_UnitTestCase
 
         return $episodes;
     }
-
 }

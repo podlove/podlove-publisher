@@ -47,19 +47,19 @@ class PodcastSettingsDonationTab extends Tab
         ]; ?>
 		<p>
 			<?php echo sprintf(
-            __('These are the possibilities to donate for your Podcast. Display this list using the shortcode %s', 'podlove-podcasting-plugin-for-wordpress'),
-            '<code>[podlove-podcast-donations-list]</code>'
-        ); ?>
+			    __('These are the possibilities to donate for your Podcast. Display this list using the shortcode %s', 'podlove-podcasting-plugin-for-wordpress'),
+			    '<code>[podlove-podcast-donations-list]</code>'
+			); ?>
 		</p>
 		<?php
 
-			\Podlove\Form\build_for($podcast, $form_attributes, function ($form) {
-			    $wrapper = new \Podlove\Form\Input\DivWrapper($form);
+			    \Podlove\Form\build_for($podcast, $form_attributes, function ($form) {
+			        $wrapper = new \Podlove\Form\Input\DivWrapper($form);
 
-			    $wrapper->callback('services', [
-			        'callback' => [__CLASS__, 'podcast_form_extension_form'],
-			    ]);
-			});
+			        $wrapper->callback('services', [
+			            'callback' => [__CLASS__, 'podcast_form_extension_form'],
+			        ]);
+			    });
     }
 
     public static function podcast_form_extension_form()

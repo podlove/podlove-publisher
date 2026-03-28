@@ -7,8 +7,8 @@ use Podlove\Modules\Shows\Model\Show;
 
 class REST_API
 {
-    const api_namespace = 'podlove/v2';
-    const api_base = 'shows';
+    public const api_namespace = 'podlove/v2';
+    public const api_base = 'shows';
 
     public function register_routes()
     {

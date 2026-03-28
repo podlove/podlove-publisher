@@ -26,9 +26,7 @@ class AssetAssignment
         $this->fetch();
     }
 
-    private function __clone()
-    {
-    }
+    private function __clone() {}
 
     public function __set($name, $value)
     {

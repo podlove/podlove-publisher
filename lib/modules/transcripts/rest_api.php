@@ -9,8 +9,8 @@ use Podlove\Modules\Transcripts\Model\VoiceAssignment;
 
 class REST_API
 {
-    const api_namespace = 'podlove/v1';
-    const api_base = 'transcripts';
+    public const api_namespace = 'podlove/v1';
+    public const api_base = 'transcripts';
 
     public function register_routes()
     {

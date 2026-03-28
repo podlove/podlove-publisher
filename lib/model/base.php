@@ -44,7 +44,7 @@ abstract class Base
     public static function __callStatic($name, $arguments)
     {
         $property = preg_replace_callback(
-            '/^find_one_by_(\\w+)$/',
+            '/^find_one_by_(\w+)$/',
             function ($p) {
                 return $p[1];
             },
@@ -56,7 +56,7 @@ abstract class Base
         }
 
         $property = preg_replace_callback(
-            '/^find_all_by_(\\w+)$/',
+            '/^find_all_by_(\w+)$/',
             function ($p) {
                 return $p[1];
             },
@@ -346,8 +346,7 @@ abstract class Base
                  .'VALUES'
                  .' ( '
                  .implode(',', array_map([$this, 'property_name_to_sql_value'], self::property_names()))
-                 .' );'
-            ;
+                 .' );';
             $success = $wpdb->query($sql);
             if ($success) {
                 $this->id = $wpdb->insert_id;
@@ -356,8 +355,7 @@ abstract class Base
             $sql = 'UPDATE '.static::table_name()
                  .' SET '
                  .implode(',', array_map([$this, 'property_name_to_sql_update_statement'], self::property_names()))
-                 .' WHERE id = '.(int) $this->id
-            ;
+                 .' WHERE id = '.(int) $this->id;
             $success = $wpdb->query($sql);
         }
 
@@ -421,8 +419,7 @@ abstract class Base
              .static::table_name()
              .' ('
              .implode(',', $property_sql)
-             .' ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;'
-        ;
+             .' ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;';
 
         $wpdb->query($sql);
 
@@ -490,6 +487,7 @@ abstract class Base
         $table_name = str_replace('\\', '_', $table_name);
         // remove Models subnamespace from name
         $table_name = str_replace('Model_', '', $table_name);
+
         // all lowercase
         return strtolower($table_name);
     }

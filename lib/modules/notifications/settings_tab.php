@@ -99,12 +99,12 @@ class SettingsTab extends Tab
 				<p>
 					<span class="description">
 						<?php echo sprintf(
-                    __('Additionally to %sall standard template tags%s you have access to the receiving %scontributor%s in notification content.', 'podlove-podcasting-plugin-for-wordpress'),
-                    '<a href="http://docs.podlove.org/podlove-publisher/reference/template-tags.html" target="_blank">',
-                    '</a>',
-                    '<a href="http://docs.podlove.org/podlove-publisher/reference/template-tags.html#contributor" target="_blank">',
-                    '</a>'
-                ); ?>
+						    __('Additionally to %sall standard template tags%s you have access to the receiving %scontributor%s in notification content.', 'podlove-podcasting-plugin-for-wordpress'),
+						    '<a href="http://docs.podlove.org/podlove-publisher/reference/template-tags.html" target="_blank">',
+						    '</a>',
+						    '<a href="http://docs.podlove.org/podlove-publisher/reference/template-tags.html#contributor" target="_blank">',
+						    '</a>'
+						); ?>
 					</span>
 
 				</p>
@@ -239,9 +239,9 @@ class SettingsTab extends Tab
 					<?php foreach ($contributors as $contributor) { ?>
                         <?php
                         $selected = selected($selected_contributor_id, $contributor->id);
-                        $avatar = $contributor->avatar()->setWidth(10)->url();
-                        $name = $contributor->getName();
-                        ?>
+					    $avatar = $contributor->avatar()->setWidth(10)->url();
+					    $name = $contributor->getName();
+					    ?>
 						<option value="<?php echo $contributor->id; ?>" data-img-src="<?php echo $avatar; ?>" <?php echo $selected; ?>><?php echo $name; ?></option>
 					<?php } ?>
 				</select>
@@ -257,9 +257,9 @@ class SettingsTab extends Tab
 					<option value=""><?php echo __('Choose Contributor', 'podlove-podcasting-plugin-for-wordpress'); ?></option>
 					<?php foreach ($contributors as $contributor) { ?>
                         <?php
-                        $avatar = $contributor->avatar()->setWidth(10)->url();
-                        $name = $contributor->getName();
-                        ?>
+					    $avatar = $contributor->avatar()->setWidth(10)->url();
+					    $name = $contributor->getName();
+					    ?>
 						<option value="<?php echo $contributor->id; ?>" data-img-src="<?php echo $avatar; ?>"><?php echo $name; ?></option>
 					<?php } ?>
 				</select>

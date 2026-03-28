@@ -7,7 +7,7 @@ use Podlove\Model;
 class EpisodeAsset
 {
     use \Podlove\HasPageDocumentationTrait;
-    const MENU_SLUG = 'podlove_episode_assets_settings_handle';
+    public const MENU_SLUG = 'podlove_episode_assets_settings_handle';
 
     public static $pagehook;
     private static $nonce = 'update_assets';

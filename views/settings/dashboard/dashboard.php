@@ -37,8 +37,8 @@
 	<form style='display: none' method='get' action=''>
 		<?php
         wp_nonce_field('closedpostboxes', 'closedpostboxesnonce', false);
-        wp_nonce_field('meta-box-order', 'meta-box-order-nonce', false);
-        ?>
+	wp_nonce_field('meta-box-order', 'meta-box-order-nonce', false);
+	?>
 	</form>
 
 </div>

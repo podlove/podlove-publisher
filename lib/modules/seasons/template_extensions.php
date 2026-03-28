@@ -14,6 +14,7 @@ class TemplateExtensions
      * - **order:** (optional) "DESC" or "ASC". Default: "ASC"
      *
      * @accessor
+     *
      * @dynamicAccessor podcast.seasons
      *
      * @param mixed $return
@@ -37,6 +38,7 @@ class TemplateExtensions
      * Get season for an episode.
      *
      * @accessor
+     *
      * @dynamicAccessor episode.season
      *
      * @param mixed $return

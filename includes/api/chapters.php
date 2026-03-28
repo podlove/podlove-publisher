@@ -7,15 +7,13 @@ use Podlove\Chapters\Chapters;
 use Podlove\Chapters\Printer;
 use Podlove\Model\Episode;
 use Podlove\NormalPlayTime;
-use WP_REST_Controller;
-use WP_REST_Server;
 
 add_action('rest_api_init', function () {
     $controller = new WP_REST_PodloveChapters_Controller();
     $controller->register_routes();
 });
 
-class WP_REST_PodloveChapters_Controller extends WP_REST_Controller
+class WP_REST_PodloveChapters_Controller extends \WP_REST_Controller
 {
     public function __construct()
     {
@@ -34,7 +32,7 @@ class WP_REST_PodloveChapters_Controller extends WP_REST_Controller
                 ],
             ],
             [
-                'methods' => WP_REST_Server::READABLE,
+                'methods' => \WP_REST_Server::READABLE,
                 'callback' => [$this, 'get_item'],
                 'permission_callback' => [$this, 'get_item_permissions_check'],
             ],
@@ -70,7 +68,7 @@ class WP_REST_PodloveChapters_Controller extends WP_REST_Controller
                         'validate_callback' => '\Podlove\Api\Validation::chapters'
                     ]
                 ],
-                'methods' => WP_REST_Server::CREATABLE,
+                'methods' => \WP_REST_Server::CREATABLE,
                 'callback' => [$this, 'create_item'],
                 'permission_callback' => [$this, 'create_item_permissions_check'],
             ],
@@ -107,12 +105,12 @@ class WP_REST_PodloveChapters_Controller extends WP_REST_Controller
                     ]
                 ],
                 'description' => __('Edit the chapters list to an epsiode, old chapter list will be deleted.', 'podlove-podcasting-plugin-for-wordpress'),
-                'methods' => WP_REST_Server::EDITABLE,
+                'methods' => \WP_REST_Server::EDITABLE,
                 'callback' => [$this, 'update_item'],
                 'permission_callback' => [$this, 'update_item_permissions_check'],
             ],
             [
-                'methods' => WP_REST_Server::DELETABLE,
+                'methods' => \WP_REST_Server::DELETABLE,
                 'callback' => [$this, 'delete_item'],
                 'permission_callback' => [$this, 'delete_item_permissions_check'],
             ]

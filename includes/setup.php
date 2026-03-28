@@ -1,11 +1,11 @@
 <?php
+
 /**
  * Plugin Setup.
  */
 
 use Podlove\Model;
 use Podlove\Model\AssetAssignment;
-
 use Ramsey\Uuid\Uuid as UUID;
 
 function podlove_setup_database_tables()
@@ -31,32 +31,32 @@ function podlove_setup_file_types()
     }
 
     $default_types = [
-        ['name' => 'MP3 Audio',              'type' => 'audio',    'mime_type' => 'audio/mpeg',  'extension' => 'mp3'],
-        ['name' => 'BitTorrent (MP3 Audio)', 'type' => 'audio',    'mime_type' => 'application/x-bittorrent',  'extension' => 'mp3.torrent'],
-        ['name' => 'MPEG-1 Video',           'type' => 'video',    'mime_type' => 'video/mpeg',  'extension' => 'mpg'],
-        ['name' => 'MPEG-4 AAC Audio',       'type' => 'audio',    'mime_type' => 'audio/mp4',   'extension' => 'm4a'],
-        ['name' => 'MPEG-4 ALAC Audio',      'type' => 'audio',    'mime_type' => 'audio/mp4',   'extension' => 'm4a'],
-        ['name' => 'MPEG-4 Video',           'type' => 'video',    'mime_type' => 'video/mp4',   'extension' => 'mp4'],
-        ['name' => 'M4V Video (Apple)',      'type' => 'video',    'mime_type' => 'video/x-m4v', 'extension' => 'm4v'],
-        ['name' => 'Ogg Vorbis Audio',       'type' => 'audio',    'mime_type' => 'audio/ogg',   'extension' => 'oga'],
-        ['name' => 'Ogg Vorbis Audio',       'type' => 'audio',    'mime_type' => 'audio/ogg',   'extension' => 'ogg'],
-        ['name' => 'Ogg Theora Video',       'type' => 'video',    'mime_type' => 'video/ogg',   'extension' => 'ogv'],
-        ['name' => 'WebM Audio',             'type' => 'audio',    'mime_type' => 'audio/webm',  'extension' => 'webm'],
-        ['name' => 'WebM Video',             'type' => 'video',    'mime_type' => 'video/webm',  'extension' => 'webm'],
-        ['name' => 'FLAC Audio',             'type' => 'audio',    'mime_type' => 'audio/flac',  'extension' => 'flac'],
-        ['name' => 'Opus Audio',             'type' => 'audio',    'mime_type' => 'audio/ogg;codecs=opus',  'extension' => 'opus'],
-        ['name' => 'Matroska Audio',         'type' => 'audio',    'mime_type' => 'audio/x-matroska',  'extension' => 'mka'],
-        ['name' => 'Matroska Video',         'type' => 'video',    'mime_type' => 'video/x-matroska',  'extension' => 'mkv'],
-        ['name' => 'PDF Document',           'type' => 'ebook',    'mime_type' => 'application/pdf',  'extension' => 'pdf'],
-        ['name' => 'ePub Document',          'type' => 'ebook',    'mime_type' => 'application/epub+zip',  'extension' => 'epub'],
-        ['name' => 'PNG Image',              'type' => 'image',    'mime_type' => 'image/png',   'extension' => 'png'],
-        ['name' => 'JPEG Image',             'type' => 'image',    'mime_type' => 'image/jpeg',  'extension' => 'jpg'],
-        ['name' => 'mp4chaps Chapter File',  'type' => 'chapters', 'mime_type' => 'text/plain',  'extension' => 'chapters.txt'],
-        ['name' => 'Podlove Simple Chapters', 'type' => 'chapters', 'mime_type' => 'application/xml',  'extension' => 'psc'],
-        ['name' => 'Subrip Captions',        'type' => 'captions', 'mime_type' => 'application/x-subrip',  'extension' => 'srt'],
-        ['name' => 'WebVTT Captions',        'type' => 'captions', 'mime_type' => 'text/vtt',  'extension' => 'vtt'],
-        ['name' => 'Auphonic Production Description', 'type' => 'metadata', 'mime_type' => 'application/json',  'extension' => 'json'],
-        ['name' => 'Podigee Transcript', 'type' => 'transcript', 'mime_type' => 'plain/text',  'extension' => 'txt'],
+        ['name' => 'MP3 Audio', 'type' => 'audio', 'mime_type' => 'audio/mpeg', 'extension' => 'mp3'],
+        ['name' => 'BitTorrent (MP3 Audio)', 'type' => 'audio', 'mime_type' => 'application/x-bittorrent', 'extension' => 'mp3.torrent'],
+        ['name' => 'MPEG-1 Video', 'type' => 'video', 'mime_type' => 'video/mpeg', 'extension' => 'mpg'],
+        ['name' => 'MPEG-4 AAC Audio', 'type' => 'audio', 'mime_type' => 'audio/mp4', 'extension' => 'm4a'],
+        ['name' => 'MPEG-4 ALAC Audio', 'type' => 'audio', 'mime_type' => 'audio/mp4', 'extension' => 'm4a'],
+        ['name' => 'MPEG-4 Video', 'type' => 'video', 'mime_type' => 'video/mp4', 'extension' => 'mp4'],
+        ['name' => 'M4V Video (Apple)', 'type' => 'video', 'mime_type' => 'video/x-m4v', 'extension' => 'm4v'],
+        ['name' => 'Ogg Vorbis Audio', 'type' => 'audio', 'mime_type' => 'audio/ogg', 'extension' => 'oga'],
+        ['name' => 'Ogg Vorbis Audio', 'type' => 'audio', 'mime_type' => 'audio/ogg', 'extension' => 'ogg'],
+        ['name' => 'Ogg Theora Video', 'type' => 'video', 'mime_type' => 'video/ogg', 'extension' => 'ogv'],
+        ['name' => 'WebM Audio', 'type' => 'audio', 'mime_type' => 'audio/webm', 'extension' => 'webm'],
+        ['name' => 'WebM Video', 'type' => 'video', 'mime_type' => 'video/webm', 'extension' => 'webm'],
+        ['name' => 'FLAC Audio', 'type' => 'audio', 'mime_type' => 'audio/flac', 'extension' => 'flac'],
+        ['name' => 'Opus Audio', 'type' => 'audio', 'mime_type' => 'audio/ogg;codecs=opus', 'extension' => 'opus'],
+        ['name' => 'Matroska Audio', 'type' => 'audio', 'mime_type' => 'audio/x-matroska', 'extension' => 'mka'],
+        ['name' => 'Matroska Video', 'type' => 'video', 'mime_type' => 'video/x-matroska', 'extension' => 'mkv'],
+        ['name' => 'PDF Document', 'type' => 'ebook', 'mime_type' => 'application/pdf', 'extension' => 'pdf'],
+        ['name' => 'ePub Document', 'type' => 'ebook', 'mime_type' => 'application/epub+zip', 'extension' => 'epub'],
+        ['name' => 'PNG Image', 'type' => 'image', 'mime_type' => 'image/png', 'extension' => 'png'],
+        ['name' => 'JPEG Image', 'type' => 'image', 'mime_type' => 'image/jpeg', 'extension' => 'jpg'],
+        ['name' => 'mp4chaps Chapter File', 'type' => 'chapters', 'mime_type' => 'text/plain', 'extension' => 'chapters.txt'],
+        ['name' => 'Podlove Simple Chapters', 'type' => 'chapters', 'mime_type' => 'application/xml', 'extension' => 'psc'],
+        ['name' => 'Subrip Captions', 'type' => 'captions', 'mime_type' => 'application/x-subrip', 'extension' => 'srt'],
+        ['name' => 'WebVTT Captions', 'type' => 'captions', 'mime_type' => 'text/vtt', 'extension' => 'vtt'],
+        ['name' => 'Auphonic Production Description', 'type' => 'metadata', 'mime_type' => 'application/json', 'extension' => 'json'],
+        ['name' => 'Podigee Transcript', 'type' => 'transcript', 'mime_type' => 'plain/text', 'extension' => 'txt'],
     ];
 
     foreach ($default_types as $file_type) {

@@ -4,9 +4,7 @@ namespace Podlove\Modules\AnalyticsHeartbeat\Model;
 
 use Podlove\Model\Base;
 
-class Heartbeat extends Base
-{
-}
+class Heartbeat extends Base {}
 
 Heartbeat::property('id', 'INT NOT NULL AUTO_INCREMENT PRIMARY KEY');
 Heartbeat::property('status_start', 'DATETIME');

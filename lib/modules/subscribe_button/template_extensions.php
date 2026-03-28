@@ -30,6 +30,7 @@ class TemplateExtensions
      * - **buttonid:** Use this if you want to trigger the button by clicking an element controlled by you.
      *
      * @accessor
+     *
      * @dynamicAccessor podcast.subscribeButton
      *
      * @param mixed $return

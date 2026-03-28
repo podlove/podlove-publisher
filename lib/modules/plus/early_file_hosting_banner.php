@@ -4,8 +4,8 @@ namespace Podlove\Modules\Plus;
 
 class EarlyFileHostingBanner
 {
-    const BANNER_NAME = PromotionCoordinator::EARLY_FILE_HOSTING_BANNER;
-    const DISMISS_NONCE_ACTION = 'podlove_plus_early_file_hosting_banner_dismiss';
+    public const BANNER_NAME = PromotionCoordinator::EARLY_FILE_HOSTING_BANNER;
+    public const DISMISS_NONCE_ACTION = 'podlove_plus_early_file_hosting_banner_dismiss';
 
     private $coordinator;
 

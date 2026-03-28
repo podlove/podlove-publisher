@@ -50,6 +50,7 @@ class TemplateExtensions
      * ```
      *
      * @accessor
+     *
      * @dynamicAccessor episode.shownotes
      *
      * @param mixed $return
@@ -141,6 +142,7 @@ class TemplateExtensions
      * ```
      *
      * @accessor
+     *
      * @dynamicAccessor episode.hasShownotes
      *
      * @param mixed $return

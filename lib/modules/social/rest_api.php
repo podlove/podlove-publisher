@@ -6,13 +6,11 @@ use Podlove\Modules\Contributors\Model\Contributor;
 use Podlove\Modules\Social\Model\ContributorService;
 use Podlove\Modules\Social\Model\Service;
 use Podlove\Modules\Social\Model\ShowService;
-use WP_REST_Controller;
-use WP_REST_Server;
 
 class REST_API
 {
-    const api_namespace = 'podlove/v1';
-    const api_base = 'social';
+    public const api_namespace = 'podlove/v1';
+    public const api_base = 'social';
 
     // todo: delete
     // todo: create
@@ -85,13 +83,12 @@ class REST_API
     }
 }
 
-
-class WP_REST_PodloveContributorService_Controller extends WP_REST_Controller
+class WP_REST_PodloveContributorService_Controller extends \WP_REST_Controller
 {
     public function __construct()
     {
-        $this->namespace = "podlove/v2";
-        $this->rest_base = "social";
+        $this->namespace = 'podlove/v2';
+        $this->rest_base = 'social';
     }
 
     public function register_routes()
@@ -300,8 +297,9 @@ class WP_REST_PodloveContributorService_Controller extends WP_REST_Controller
     {
         $id = $request->get_param('id');
         $contributor = Contributor::find_by_id($id);
-        if (!$contributor)
+        if (!$contributor) {
             return new \Podlove\Api\Error\NotFound();
+        }
 
         $category = $request->get_param('category');
         $services = ContributorService::find_by_contributor_id_and_category($id, $category);
@@ -344,7 +342,7 @@ class WP_REST_PodloveContributorService_Controller extends WP_REST_Controller
     {
         $id = $request->get_param('id');
         $service = Service::find_by_id($id);
-        
+
         if (!$service) {
             return new \Podlove\Api\Error\NotFound();
         }
@@ -365,7 +363,7 @@ class WP_REST_PodloveContributorService_Controller extends WP_REST_Controller
     {
         $id = $request->get_param('id');
         $service = ContributorService::find_by_id($id);
-        
+
         if (!$service) {
             return new \Podlove\Api\Error\NotFound();
         }
@@ -385,7 +383,7 @@ class WP_REST_PodloveContributorService_Controller extends WP_REST_Controller
     {
         $id = $request->get_param('id');
         $service = ShowService::find_by_id($id);
-        
+
         if (!$service) {
             return new \Podlove\Api\Error\NotFound();
         }
@@ -413,13 +411,14 @@ class WP_REST_PodloveContributorService_Controller extends WP_REST_Controller
     {
         $id = $request->get_param('id');
         $contributor = Contributor::find_by_id($id);
-        if (!$contributor)
+        if (!$contributor) {
             return new \Podlove\Api\Error\NotFound();
+        }
 
         $service = new ContributorService();
         $service->contributor_id = $id;
         $service->save();
-    
+
         return new \Podlove\Api\Response\CreateResponse([
             'status' => 'ok',
             'id' => $service->id
@@ -450,7 +449,7 @@ class WP_REST_PodloveContributorService_Controller extends WP_REST_Controller
     {
         $id = $request->get_param('id');
         $service = ContributorService::find_by_id($id);
-        
+
         if (!$service) {
             return new \Podlove\Api\Error\NotFound();
         }
@@ -491,7 +490,7 @@ class WP_REST_PodloveContributorService_Controller extends WP_REST_Controller
     {
         $id = $request->get_param('id');
         $service = ShowService::find_by_id($id);
-        
+
         if (!$service) {
             return new \Podlove\Api\Error\NotFound();
         }
@@ -536,7 +535,7 @@ class WP_REST_PodloveContributorService_Controller extends WP_REST_Controller
     {
         $id = $request->get_param('id');
         $service = ContributorService::find_by_id($id);
-        
+
         if (!$service) {
             return new \Podlove\Api\Error\NotFound();
         }
@@ -552,7 +551,7 @@ class WP_REST_PodloveContributorService_Controller extends WP_REST_Controller
     {
         $id = $request->get_param('id');
         $service = ShowService::find_by_id($id);
-        
+
         if (!$service) {
             return new \Podlove\Api\Error\NotFound();
         }
@@ -563,5 +562,4 @@ class WP_REST_PodloveContributorService_Controller extends WP_REST_Controller
             'status' => 'ok'
         ]);
     }
-
 }

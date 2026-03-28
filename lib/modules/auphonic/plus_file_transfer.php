@@ -125,10 +125,10 @@ class PlusFileTransfer
     /**
      * Set final transfer status after frontend processing completes.
      *
-     * @param int $post_id
-     * @param string $status
-     * @param array|null $files
-     * @param string|null $errors
+     * @param int         $post_id
+     * @param string      $status
+     * @param null|array  $files
+     * @param null|string $errors
      */
     public function set_final_transfer_status($post_id, $status, $files = null, $errors = null)
     {
@@ -315,7 +315,7 @@ class PlusFileTransfer
             // "extensions" is "chapters.txt" and that would not match.
             return array_reduce(
                 $configured_extensions,
-                 fn ($carry, $extension) => $carry || str_ends_with($filename, $extension),
+                fn ($carry, $extension) => $carry || str_ends_with($filename, $extension),
                 false
             );
         });

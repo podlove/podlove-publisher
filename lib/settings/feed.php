@@ -9,7 +9,7 @@ class Feed
 {
     use \Podlove\HasPageDocumentationTrait;
 
-    const MENU_SLUG = 'podlove_feeds_settings_handle';
+    public const MENU_SLUG = 'podlove_feeds_settings_handle';
 
     public static $pagehook;
 

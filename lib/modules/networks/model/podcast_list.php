@@ -25,7 +25,7 @@ class PodcastList extends Base
                 default: case 'wplist':
                     $podcast_objects[] = Podcast::get($podcast->podcast);
 
-                break;
+                    break;
             }
         }
 

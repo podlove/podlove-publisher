@@ -7,10 +7,9 @@ use Podlove\Settings\Expert\Tab;
 
 class Contributors extends Tab
 {
-    private $page;
-
     public $object;
     public $table;
+    private $page;
 
     public function get_slug()
     {

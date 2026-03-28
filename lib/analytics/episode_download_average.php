@@ -12,7 +12,7 @@ namespace Podlove\Analytics;
  */
 class EpisodeDownloadAverage
 {
-    const HOURS_TO_CALCULATE = 800; // roughly a month
+    public const HOURS_TO_CALCULATE = 800; // roughly a month
 
     public static function init()
     {

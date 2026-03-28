@@ -47,21 +47,21 @@ class PodcastContributorsSettingsTab extends Tab
         ]; ?>
 		<p>
 			<?php echo sprintf(
-            __('This is the current team of your podcast. Display this list using the shortcode %s', 'podlove-podcasting-plugin-for-wordpress'),
-            '<code>[podlove-podcast-contributor-list]</code>'
-        ); ?>
+			    __('This is the current team of your podcast. Display this list using the shortcode %s', 'podlove-podcasting-plugin-for-wordpress'),
+			    '<code>[podlove-podcast-contributor-list]</code>'
+			); ?>
 		</p>
 		<?php
 
-			\Podlove\Form\build_for($podcast, $form_attributes, function ($form) {
-			    $wrapper = new \Podlove\Form\Input\DivWrapper($form);
-			    $podcast = $form->object;
+			    \Podlove\Form\build_for($podcast, $form_attributes, function ($form) {
+			        $wrapper = new \Podlove\Form\Input\DivWrapper($form);
+			        $podcast = $form->object;
 
-			    $wrapper->callback('contributors', [
-			        // 'label'    => __( 'Contributors', 'podlove-podcasting-plugin-for-wordpress' ),
-			        'callback' => [__CLASS__, 'podcast_form_extension_form'],
-			    ]);
-			});
+			        $wrapper->callback('contributors', [
+			            // 'label'    => __( 'Contributors', 'podlove-podcasting-plugin-for-wordpress' ),
+			            'callback' => [__CLASS__, 'podcast_form_extension_form'],
+			        ]);
+			    });
     }
 
     public static function podcast_form_extension_form()

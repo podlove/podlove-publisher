@@ -4,9 +4,9 @@ namespace Podlove\Modules\Plus;
 
 class GrowthBanner
 {
-    const MIN_EPISODES = 10;
-    const DISMISS_NONCE_ACTION = 'podlove_plus_growth_banner_dismiss';
-    const BANNER_NAME = PromotionCoordinator::GROWTH_BANNER;
+    public const MIN_EPISODES = 10;
+    public const DISMISS_NONCE_ACTION = 'podlove_plus_growth_banner_dismiss';
+    public const BANNER_NAME = PromotionCoordinator::GROWTH_BANNER;
 
     private $coordinator;
 

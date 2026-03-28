@@ -52,6 +52,7 @@ class TemplateExtensions
      *   - 'comment' - Order by the contributors comment in the episode.
      *
      * @accessor
+     *
      * @dynamicAccessor episode.contributors
      *
      * @param mixed $return
@@ -123,6 +124,7 @@ class TemplateExtensions
      *   - 'name' - Order by public name.
      *
      * @accessor
+     *
      * @dynamicAccessor podcast.contributors
      *
      * @param mixed $return
@@ -214,6 +216,7 @@ class TemplateExtensions
      * ```
      *
      * @accessor
+     *
      * @dynamicAccessor podcast.contributor
      *
      * @param mixed $return

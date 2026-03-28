@@ -13,13 +13,13 @@ return [
         function (string $filePath, string $prefix, string $content): string {
             $content = str_replace(
                 'class_exists(\'DeviceDetector',
-                'class_exists(\''.$prefix.'\\\\DeviceDetector',
+                'class_exists(\''.$prefix.'\\\DeviceDetector',
                 $content
             );
 
             $content = str_replace(
                 '$className = \'DeviceDetector',
-                '$className = \''.$prefix.'\\\\DeviceDetector',
+                '$className = \''.$prefix.'\\\DeviceDetector',
                 $content
             );
 

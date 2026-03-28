@@ -40,17 +40,17 @@ class Support
 				<ul>
 					<li>
 						<?php echo sprintf(
-            __('Please report bugs at %sGitHub Issues%s.', 'podlove-podcasting-plugin-for-wordpress'),
-            '<a href="https://github.com/podlove/podlove-publisher/issues" target="_blank">',
-            '</a>'
-        ); ?>
+						    __('Please report bugs at %sGitHub Issues%s.', 'podlove-podcasting-plugin-for-wordpress'),
+						    '<a href="https://github.com/podlove/podlove-publisher/issues" target="_blank">',
+						    '</a>'
+						); ?>
 					</li>
 					<li>
 						<?php echo sprintf(
-            __('%sPodlove Community%s is the best place to find answers, ask the community for help and discuss features.', 'podlove-podcasting-plugin-for-wordpress'),
-            '<a target="_blank" href="//community.podlove.org">',
-            '</a>'
-        ); ?>
+						    __('%sPodlove Community%s is the best place to find answers, ask the community for help and discuss features.', 'podlove-podcasting-plugin-for-wordpress'),
+						    '<a target="_blank" href="//community.podlove.org">',
+						    '</a>'
+						); ?>
 					</li>
 					<li>
 						<?php echo sprintf(

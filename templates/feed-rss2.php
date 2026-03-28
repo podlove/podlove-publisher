@@ -5,7 +5,7 @@
 header('Content-Type: application/rss+xml; charset='.get_option('blog_charset'), true);
 $more = 1;
 
-echo '<?xml version="1.0" encoding="'.get_option('blog_charset').'"?'.'>'; ?>
+echo '<?xml version="1.0" encoding="'.get_option('blog_charset').'"?>'; ?>
 <rss version="2.0"
 	xmlns:atom="http://www.w3.org/2005/Atom"
 	<?php do_action('rss2_ns'); ?>
@@ -19,7 +19,7 @@ echo '<?xml version="1.0" encoding="'.get_option('blog_charset').'"?'.'>'; ?>
 	<?php do_action('rss2_head'); ?>
 
 	<?php while (have_posts()) {
-    the_post(); ?>
+	    the_post(); ?>
 
 	<item>
         <?php echo \Podlove\Feeds\get_xml_text_node('title', \Podlove\Feeds\get_episode_title())."\n"; ?>
@@ -29,6 +29,6 @@ echo '<?xml version="1.0" encoding="'.get_option('blog_charset').'"?'.'>'; ?>
     	<?php do_action('rss2_item'); ?>
 	</item>
 	<?php
-} ?>
+	} ?>
 </channel>
 </rss>

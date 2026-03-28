@@ -319,10 +319,10 @@ class Auphonic extends \Podlove\Modules\Base
     /**
      * Set final PLUS transfer status after frontend processing.
      *
-     * @param int $post_id
-     * @param string $status
-     * @param array|null $files
-     * @param string|null $errors
+     * @param int         $post_id
+     * @param string      $status
+     * @param null|array  $files
+     * @param null|string $errors
      */
     public function set_plus_transfer_final_status($post_id, $status, $files = null, $errors = null)
     {
@@ -594,8 +594,8 @@ class Auphonic extends \Podlove\Modules\Base
                 "var form=document.createElement('form');"
                 ."form.method='post';"
                 ."form.action='".esc_js($auth_url)."';"
-                ."document.body.appendChild(form);"
-                ."form.submit();"
+                .'document.body.appendChild(form);'
+                .'form.submit();'
             ),
             esc_html__('Authorize with OAuth', 'podlove-podcasting-plugin-for-wordpress')
         );

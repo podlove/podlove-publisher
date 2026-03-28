@@ -57,6 +57,7 @@ class Asset extends Wrapper
      * File type.
      *
      * @see  file_type
+     *
      * @accessor
      */
     public function fileType()

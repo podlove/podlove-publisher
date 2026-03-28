@@ -10,7 +10,7 @@ class Settings
 {
     use \Podlove\HasPageDocumentationTrait;
 
-    const MENU_SLUG = 'podlove_seasons_settings';
+    public const MENU_SLUG = 'podlove_seasons_settings';
 
     private static $nonce = 'update_seasons';
 

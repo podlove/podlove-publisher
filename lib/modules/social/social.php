@@ -146,7 +146,7 @@ class Social extends \Podlove\Modules\Base
             $position = 0;
 
             if (isset($_POST['podlove_contributor'][$type])) {
-                $delete_service(($type == 'donations' ? 'donation' : 'social'));
+                $delete_service($type == 'donations' ? 'donation' : 'social');
                 foreach ($_POST['podlove_contributor'][$type] as $service_appearance) {
                     foreach ($service_appearance as $service_id => $service) {
                         $c = new \Podlove\Modules\Social\Model\ContributorService();
@@ -219,12 +219,12 @@ class Social extends \Podlove\Modules\Base
         $insertIndex = array_search('gender', $keys) + 1; // after author column
 
         // insert contributors at that index
-        return array_slice($columns, 0, $insertIndex, true) +
-                   [
+        return array_slice($columns, 0, $insertIndex, true)
+                   + [
                        'social' => __('Social', 'podlove-podcasting-plugin-for-wordpress'),
                        'donation' => __('Donation', 'podlove-podcasting-plugin-for-wordpress'),
-                   ] +
-                   array_slice($columns, $insertIndex, count($columns) - 1, true);
+                   ]
+                   + array_slice($columns, $insertIndex, count($columns) - 1, true);
     }
 
     public function register_contributor_sections($sections)

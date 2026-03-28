@@ -17,7 +17,7 @@ return [
     'patchers' => [
         function (string $filePath, string $prefix, string $content): string {
             // suppress warnings for class_alias
-            $content = preg_replace('/(\\\\class_alias)/', '@${1}', $content);
+            $content = preg_replace('/(\\\class_alias)/', '@${1}', $content);
 
             if (stristr($filePath, 'CoreExtension.php') || stristr($filePath, 'EscaperExtension.php') || stristr($filePath, 'DebugExtension.php')) {
                 $pattern = '/TwigFilter\((\'[^\']+\'),\s+\'(_?twig[^\']+)\'/';
@@ -51,33 +51,33 @@ return [
             if (stristr($filePath, 'ForNode.php')) {
                 $content = str_replace(
                     ' = twig_ensure_traversable',
-                    ' = '.$prefix.'\\\\twig_ensure_traversable',
+                    ' = '.$prefix.'\\\twig_ensure_traversable',
                     $content
                 );
             }
 
             if (stristr($filePath, 'CaptureNode.php')) {
                 $content = str_replace(
-                    '\\\\Twig',
-                    $prefix.'\\\\Twig',
+                    '\\\Twig',
+                    $prefix.'\\\Twig',
                     $content
                 );
-            }            
+            }
 
             if (stristr($filePath, 'IncludeNode.php') || stristr($filePath, 'WithNode.php')) {
                 $content = str_replace(
                     'twig_array_merge(',
-                    $prefix.'\\\\twig_array_merge(',
+                    $prefix.'\\\twig_array_merge(',
                     $content
                 );
                 $content = str_replace(
                     'twig_to_array(',
-                    $prefix.'\\\\twig_to_array(',
+                    $prefix.'\\\twig_to_array(',
                     $content
                 );
                 $content = str_replace(
                     'twig_test_iterable(',
-                    $prefix.'\\\\twig_test_iterable(',
+                    $prefix.'\\\twig_test_iterable(',
                     $content
                 );
             }
@@ -85,7 +85,7 @@ return [
             if (stristr($filePath, 'InBinary.php')) {
                 $content = str_replace(
                     'twig_in_filter(',
-                    $prefix.'\\\\twig_in_filter(',
+                    $prefix.'\\\twig_in_filter(',
                     $content
                 );
             }
@@ -93,7 +93,7 @@ return [
             if (stristr($filePath, 'MethodCallExpression.php')) {
                 $content = str_replace(
                     'twig_call_macro(',
-                    $prefix.'\\\\twig_call_macro(',
+                    $prefix.'\\\twig_call_macro(',
                     $content
                 );
             }
@@ -101,7 +101,7 @@ return [
             if (stristr($filePath, 'ModuleNode.php')) {
                 $content = str_replace(
                     'use Twig\\',
-                    'use '.$prefix.'\\\\Twig\\',
+                    'use '.$prefix.'\\\Twig\\',
                     $content
                 );
             }
@@ -109,7 +109,7 @@ return [
             if (stristr($filePath, 'GetAttrExpression.php')) {
                 $content = str_replace(
                     'twig_get_attribute',
-                    $prefix.'\\\\twig_get_attribute',
+                    $prefix.'\\\twig_get_attribute',
                     $content
                 );
             }

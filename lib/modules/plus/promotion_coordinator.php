@@ -7,11 +7,11 @@ use Podlove\Modules\Onboarding\Onboarding;
 
 class PromotionCoordinator
 {
-    const STATE_OPTION = 'podlove_plus_promo_state';
-    const LEGACY_GROWTH_DISMISSED_OPTION = 'podlove_plus_growth_banner_dismissed';
-    const DEFAULT_COOLDOWN_DAYS = 30;
-    const EARLY_FILE_HOSTING_BANNER = 'early_file_hosting';
-    const GROWTH_BANNER = 'growth';
+    public const STATE_OPTION = 'podlove_plus_promo_state';
+    public const LEGACY_GROWTH_DISMISSED_OPTION = 'podlove_plus_growth_banner_dismissed';
+    public const DEFAULT_COOLDOWN_DAYS = 30;
+    public const EARLY_FILE_HOSTING_BANNER = 'early_file_hosting';
+    public const GROWTH_BANNER = 'growth';
 
     private $module;
 

@@ -3,6 +3,11 @@
 use Podlove\Modules\Seasons\Model\Season;
 use Podlove\Modules\Seasons\Model\SeasonsValidator;
 
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 class SeasonsValidatorTest extends WP_UnitTestCase
 {
     public function setUp(): void
@@ -51,5 +56,4 @@ class SeasonsValidatorTest extends WP_UnitTestCase
         $this->assertEquals('duplicate_start_dates', $issue->type);
         $this->assertEquals('Some of your seasons have the same start date.', $issue->message());
     }
-
 }

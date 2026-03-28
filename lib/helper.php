@@ -79,10 +79,11 @@ function get_help_link($tab_id, $title = '<sup>?</sup>')
  * Checks if given file is an image based on mime type.
  *
  * @param string $file
+ * @param mixed  $filename
  *
  * @return bool
  */
-function is_image($file, $filename = "")
+function is_image($file, $filename = '')
 {
     // simple PHP based checks
     $type = get_image_type($file);
@@ -91,23 +92,23 @@ function is_image($file, $filename = "")
 
     // more checks using WP helpers
     if (!$filename) {
-      $filename = basename($file);
+        $filename = basename($file);
     }
-    
+
     $check = wp_check_filetype_and_ext($file, $filename);
     $ext = isset($check['ext']) && $check['ext'] ? strtolower($check['ext']) : null;
     $wp_type = isset($check['type']) && $check['type'] ? strtolower($check['type']) : null;
 
     $wp_type_looks_correct = stripos($wp_type, 'image/') === 0;
-    
+
     // denylist some exts for extra safety
     $danger_exts = [
-      'php', 'php3', 'php4', 'php5', 'phtml', 'phar', 'pl', 'py', 'rb', 'cgi', 'asp', 'aspx', 'jsp',
+        'php', 'php3', 'php4', 'php5', 'phtml', 'phar', 'pl', 'py', 'rb', 'cgi', 'asp', 'aspx', 'jsp',
     ];
 
     $ext_looks_dangerous = empty($ext) || in_array($ext, $danger_exts, true);
 
-    return $mime_is_image && !$ext_looks_dangerous && $wp_type_looks_correct; 
+    return $mime_is_image && !$ext_looks_dangerous && $wp_type_looks_correct;
 }
 
 function get_image_type($file)
@@ -328,7 +329,7 @@ function slugify($slug)
 {
     $slug = trim($slug);
     // replace everything but unreserved characters (RFC 3986 section 2.3) and slashes by a hyphen
-    $slug = preg_replace('~[^\\pL\d_\.\~/]~u', '-', $slug);
+    $slug = preg_replace('~[^\pL\d_\.\~/]~u', '-', $slug);
     $slug = rawurlencode($slug);
     $slug = str_replace('%2F', '/', $slug);
 

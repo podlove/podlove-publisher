@@ -30,7 +30,7 @@ class Debug
     public static function url_resolves_correctly($start_url, $target_url)
     {
         $result = \wp_remote_head($start_url, [
-          'user-agent' => \Podlove\Http\Curl::user_agent()
+            'user-agent' => \Podlove\Http\Curl::user_agent()
         ]);
         $final_url = $result['headers']['location'];
 

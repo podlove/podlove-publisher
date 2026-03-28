@@ -3,15 +3,13 @@
 namespace Podlove\Api\Podcast;
 
 use Podlove\Model\Podcast;
-use WP_REST_Controller;
-use WP_REST_Server;
 
 add_action('rest_api_init', function () {
     $controller = new WP_REST_Podlove_Controller();
     $controller->register_routes();
 });
 
-class WP_REST_Podlove_Controller extends WP_REST_Controller
+class WP_REST_Podlove_Controller extends \WP_REST_Controller
 {
     /**
      * Constructor.
@@ -29,22 +27,21 @@ class WP_REST_Podlove_Controller extends WP_REST_Controller
     {
         $categories = \Podlove\Itunes\categories(false);
         $categories_val = array_values($categories);
-        $categories_enum = array_map(function($val) {
+        $categories_enum = array_map(function ($val) {
             return str_replace('&', 'and', $val);
         }, $categories_val);
-
 
         $locales = \Podlove\Locale\locales();
         $locales_enum = array_keys($locales);
 
         register_rest_route($this->namespace, '/'.$this->rest_base, [
             [
-                'methods' => WP_REST_Server::READABLE,
+                'methods' => \WP_REST_Server::READABLE,
                 'callback' => [$this, 'get_item'],
                 'permission_callback' => [$this, 'get_item_permissions_check'],
             ],
             [
-                'methods' => WP_REST_Server::EDITABLE,
+                'methods' => \WP_REST_Server::EDITABLE,
                 'callback' => [$this, 'update_item'],
                 'permission_callback' => [$this, 'update_item_permissions_check'],
                 'args' => [
@@ -148,8 +145,8 @@ class WP_REST_Podlove_Controller extends WP_REST_Controller
         }
 
         $feeds = $podcast->feeds(['only_discoverable' => true]);
-        $feed_urls = array_map( function($feed) {
-            return ["$feed->slug" => $feed->get_subscribe_url()];
+        $feed_urls = array_map(function ($feed) {
+            return ["{$feed->slug}" => $feed->get_subscribe_url()];
         }, $feeds);
 
         $res = [];
@@ -166,10 +163,11 @@ class WP_REST_Podlove_Controller extends WP_REST_Controller
         $res['link'] = \Podlove\get_landing_page_url();
         $res['funding_url'] = $podcast->funding_url;
         $res['funding_label'] = $podcast->funding_label;
-        if (!$podcast->copyright)
+        if (!$podcast->copyright) {
             $res['copyright'] = $podcast->default_copyright_claim();
-        else
+        } else {
             $res['copyright'] = $podcast->copyright;
+        }
         $res['explicit'] = $explicit;
         $res['category'] = $this->getCategoryName($podcast->category_1);
         $res['language'] = $this->getLanguageName($podcast->language);
@@ -269,7 +267,7 @@ class WP_REST_Podlove_Controller extends WP_REST_Controller
     private function getCategoryKey($category)
     {
         $categories = \Podlove\Itunes\categories(false);
-        foreach($categories as $key => $val) {
+        foreach ($categories as $key => $val) {
             if ($val == $category) {
                 return $key;
             }
@@ -279,25 +277,24 @@ class WP_REST_Podlove_Controller extends WP_REST_Controller
     private function getCategoryName($category_key)
     {
         $categories = \Podlove\Itunes\categories(true);
-        foreach($categories as $key => $val) {
+        foreach ($categories as $key => $val) {
             if ($key == $category_key) {
                 return $val;
             }
         }
 
-        return "";
+        return '';
     }
 
-    private function getLanguageName($language_key) 
+    private function getLanguageName($language_key)
     {
         $language = \Podlove\Locale\locales();
-        foreach($language as $key => $val) {
+        foreach ($language as $key => $val) {
             if ($key == $language_key) {
                 return $val;
             }
         }
 
-        return "";
+        return '';
     }
-
 }

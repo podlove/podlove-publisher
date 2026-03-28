@@ -62,6 +62,6 @@ class Message
     {
         $host = wp_parse_url($url)['host'];
 
-        return preg_replace('/^www\\./', '', $host);
+        return preg_replace('/^www\./', '', $host);
     }
 }

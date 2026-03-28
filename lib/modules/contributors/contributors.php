@@ -187,11 +187,11 @@ class Contributors extends \Podlove\Modules\Base
 
             switch (strtoupper($args['orderby'])) {
                 case 'COMMENT':
-                    $comperareFunc = 'Podlove\\Modules\\Contributors\\Model\\EpisodeContribution::sortByComment';
+                    $comperareFunc = 'Podlove\Modules\Contributors\Model\EpisodeContribution::sortByComment';
 
                     break;
                 case 'POSITION':
-                    $comperareFunc = 'Podlove\\Modules\\Contributors\\Model\\EpisodeContribution::sortByPosition';
+                    $comperareFunc = 'Podlove\Modules\Contributors\Model\EpisodeContribution::sortByPosition';
 
                     break;
             }
@@ -677,9 +677,9 @@ class Contributors extends \Podlove\Modules\Base
         $insertIndex = array_search('author', $keys) + 1; // after author column
 
         // insert contributors at that index
-        return array_slice($columns, 0, $insertIndex, true) +
-                   ['contributors' => __('Contributors', 'podlove-podcasting-plugin-for-wordpress')] +
-                   array_slice($columns, $insertIndex, count($columns) - 1, true);
+        return array_slice($columns, 0, $insertIndex, true)
+                   + ['contributors' => __('Contributors', 'podlove-podcasting-plugin-for-wordpress')]
+                   + array_slice($columns, $insertIndex, count($columns) - 1, true);
     }
 
     public function manage_podcast_columns($column_name)
@@ -714,12 +714,12 @@ class Contributors extends \Podlove\Modules\Base
         if (!current_user_can('podlove_manage_contributors')) {
             return;
         }
-        
+
         if (!\wp_verify_nonce($_REQUEST['nonce'], 'podlove_ajax')) {
             http_response_code(401);
             exit;
         }
-      
+
         $object_id = (int) $_REQUEST['object_id'];
 
         if (!$object_id) {
@@ -734,14 +734,14 @@ class Contributors extends \Podlove\Modules\Base
     public function delete_default_contributor()
     {
         if (!current_user_can('podlove_manage_contributors')) {
-          return;
+            return;
         }
-        
+
         if (!\wp_verify_nonce($_REQUEST['nonce'], 'podlove_ajax')) {
             http_response_code(401);
             exit;
         }
-        
+
         $object_id = (int) $_REQUEST['object_id'];
 
         if (!$object_id) {

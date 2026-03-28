@@ -130,14 +130,13 @@ class Tools
 
         switch (filter_input(INPUT_GET, 'action')) {
             case 'clear_caches':
-
                 if (!current_user_can('administrator')) {
-                  exit;
+                    exit;
                 }
 
                 if (!wp_verify_nonce($_REQUEST['nonce'], 'podlove_tools')) {
-                  http_response_code(401);
-                  exit;
+                    http_response_code(401);
+                    exit;
                 }
 
                 \Podlove\Repair::clear_podlove_cache();

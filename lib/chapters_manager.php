@@ -41,16 +41,20 @@ class ChaptersManager
         switch ($format) {
             case 'psc':
                 $this->chapters_object->setPrinter(new Printer\PSC());
+
                 return (string) $this->chapters_object;
             case 'mp4chaps':
                 $this->chapters_object->setPrinter(new Printer\Mp4chaps());
+
                 return (string) $this->chapters_object;
             case 'json':
                 $this->chapters_object->setPrinter(new Printer\JSON());
+
                 return (string) $this->chapters_object;
             case 'pijson':
                 $this->chapters_object->setPrinter(new Printer\PodcastIndexJSON());
-                return (string) $this->chapters_object;      
+
+                return (string) $this->chapters_object;
         }
 
         return $this->chapters_object;

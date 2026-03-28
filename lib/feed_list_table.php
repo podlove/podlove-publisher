@@ -129,7 +129,7 @@ class Feed_List_Table extends \Podlove\List_Table
         // get total items
         $total_items = count($data);
         // extrage page for current page only
-        $data = array_slice($data, (($current_page - 1) * $per_page), $per_page);
+        $data = array_slice($data, ($current_page - 1) * $per_page, $per_page);
         // add items to table
         $this->items = $data;
 

@@ -174,6 +174,7 @@ class Contributor extends Wrapper
      * `{% include '@contributors/avatar.twig' with {'avatar': contributor.avatar, 'size': 150} only %}`
      *
      * @deprecated use contributor.image instead
+     *
      * @accessor
      *
      * @param mixed $size
@@ -187,6 +188,7 @@ class Contributor extends Wrapper
      * Avatar Image.
      *
      * @see image
+     *
      * @accessor
      */
     public function image()
@@ -253,6 +255,7 @@ class Contributor extends Wrapper
      *	 - 'limit' - Limit the number of returned episodes.
      *
      * @see  episode
+     *
      * @accessor
      *
      * @param mixed $args

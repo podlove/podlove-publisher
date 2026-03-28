@@ -110,19 +110,19 @@ add_action('podlove_append_to_feed_entry', function ($podcast, $episode, $feed, 
     // PSC
     $chapters = new \Podlove\Feeds\Chapters($episode);
     $chapters->render('inline');
- 
+
     // podcastindex
     $doc = new \DOMDocument();
     $node = $doc->createElement('podcast:chapters');
-    
+
     $url = $episode->permalink().'?chapters_format=pijson';
     $attr = $doc->createAttribute('url');
     $attr->value = esc_attr($url);
     $node->appendChild($attr);
-    
+
     $attr2 = $doc->createAttribute('type');
-    $attr2->value = "application/json+chapters";
+    $attr2->value = 'application/json+chapters';
     $node->appendChild($attr2);
-    
-    echo "\n".$doc->saveXML($node); 
+
+    echo "\n".$doc->saveXML($node);
 }, 10, 4);

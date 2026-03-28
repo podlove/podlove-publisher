@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Extracts template reference and saves them to JSON files.
  *

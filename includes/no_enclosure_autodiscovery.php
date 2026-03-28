@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Don't autodiscover enclosures in posts.
  *

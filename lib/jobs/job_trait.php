@@ -25,9 +25,7 @@ trait JobTrait
      *
      * Does nothing by default. Override for custom setup behaviour.
      */
-    public function setup()
-    {
-    }
+    public function setup() {}
 
     /**
      * Human readable title.

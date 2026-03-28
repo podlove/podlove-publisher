@@ -27,9 +27,7 @@ class SeasonMap
         $this->init();
     }
 
-    private function __clone()
-    {
-    }
+    private function __clone() {}
 
     public static function get()
     {

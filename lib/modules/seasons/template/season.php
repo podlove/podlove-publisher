@@ -79,6 +79,7 @@ class Season extends Wrapper
      * If you were looking for that, use `season.firstEpisode.publicationDate`.
      *
      * @see  datetime
+     *
      * @accessor
      */
     public function startDate()
@@ -90,6 +91,7 @@ class Season extends Wrapper
      * First episode of the season.
      *
      * @see  episode
+     *
      * @accessor
      */
     public function firstEpisode()
@@ -101,6 +103,7 @@ class Season extends Wrapper
      * Last episode of the season.
      *
      * @see  episode
+     *
      * @accessor
      */
     public function lastEpisode()

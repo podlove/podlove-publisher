@@ -52,6 +52,7 @@ class ContributorGroup extends Wrapper
      * Depending on context *all* contributors or just the contributors relevant to the current context.
      *
      * @see  contributor
+     *
      * @accessor
      */
     public function contributors()

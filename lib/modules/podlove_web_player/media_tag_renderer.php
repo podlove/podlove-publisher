@@ -45,8 +45,7 @@ class MediaTagRenderer
 
     public function add_sources($xml, $files)
     {
-        $flash_fallback_func = function (&$xml) {
-        };
+        $flash_fallback_func = function (&$xml) {};
 
         foreach ($files as $file) {
             $mime_type = $file['mime_type'];

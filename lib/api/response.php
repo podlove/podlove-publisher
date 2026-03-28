@@ -2,15 +2,12 @@
 
 namespace Podlove\Api\Response;
 
-use WP_REST_Response;
-
-class OkResponse extends WP_REST_Response
+class OkResponse extends \WP_REST_Response
 {
     /**
      * Constructor.
      *
-     * @param $data
-     * @param $headers
+     * @param null|mixed $data
      */
     public function __construct($data = null, array $headers = [])
     {
@@ -18,13 +15,12 @@ class OkResponse extends WP_REST_Response
     }
 }
 
-class CreateResponse extends WP_REST_Response
+class CreateResponse extends \WP_REST_Response
 {
     /**
      * Constructor.
      *
-     * @param $data
-     * @param $headers
+     * @param null|mixed $data
      */
     public function __construct($data = null, array $headers = [])
     {

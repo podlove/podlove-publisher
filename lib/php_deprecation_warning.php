@@ -31,14 +31,14 @@ class PhpDeprecationWarning
 			</p>
 			<p>
 				<?php echo sprintf(
-            __('You are running PHP %s, which is deprecated.', 'podlove-podcasting-plugin-for-wordpress'),
-            phpversion()
-        ); ?>
+				    __('You are running PHP %s, which is deprecated.', 'podlove-podcasting-plugin-for-wordpress'),
+				    phpversion()
+				); ?>
 				<?php echo sprintf(
-            __('Read %sour blogpost%s for further details.'),
-            '<a target="_blank" href="http://podlove.org/2014/08/14/podlove-publisher-2-phasing-out-php-5-3/">',
-            '</a>'
-        ); ?>
+				    __('Read %sour blogpost%s for further details.'),
+				    '<a target="_blank" href="http://podlove.org/2014/08/14/podlove-publisher-2-phasing-out-php-5-3/">',
+				    '</a>'
+				); ?>
 			</p>
 			<p>
 				<?php echo __('As long as you opt to not upgrade, do not attempt to update to Podlove Publisher 2.0 and above.', 'podlove-podcasting-plugin-for-wordpress'); ?>

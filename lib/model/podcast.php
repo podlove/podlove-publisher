@@ -399,8 +399,8 @@ class Podcast implements Licensable
 				WHERE
 					'.$where.'
 					AND p.post_type = "podcast"
-				ORDER BY '.$orderby.' '.$order.
-                $limit;
+				ORDER BY '.$orderby.' '.$order
+                .$limit;
 
             $rows = $wpdb->get_results($sql);
 

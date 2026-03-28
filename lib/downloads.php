@@ -46,9 +46,9 @@ class Downloads
         $insertIndex = array_search('date', $keys) + 1; // after date column
 
         // insert downloads at that index
-        return array_slice($columns, 0, $insertIndex, true) +
-                   ['downloads' => __('Downloads', 'podlove-podcasting-plugin-for-wordpress')] +
-                   array_slice($columns, $insertIndex, count($columns) - 1, true);
+        return array_slice($columns, 0, $insertIndex, true)
+                   + ['downloads' => __('Downloads', 'podlove-podcasting-plugin-for-wordpress')]
+                   + array_slice($columns, $insertIndex, count($columns) - 1, true);
     }
 
     public static function add_column_content_to_episodes_table($column_name)
@@ -62,7 +62,7 @@ class Downloads
                     echo number_format_i18n($total);
                 }
 
-            break;
+                break;
         }
     }
 }

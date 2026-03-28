@@ -497,7 +497,7 @@ class Episode extends Base implements Licensable
     }
 
     /**
-     * Check if slug is frozen
+     * Check if slug is frozen.
      *
      * @return bool
      */
@@ -507,7 +507,7 @@ class Episode extends Base implements Licensable
     }
 
     /**
-     * Freeze the slug to prevent automatic changes
+     * Freeze the slug to prevent automatic changes.
      */
     public function freeze_slug()
     {
@@ -518,7 +518,7 @@ class Episode extends Base implements Licensable
     }
 
     /**
-     * Unfreeze the slug to allow automatic changes
+     * Unfreeze the slug to allow automatic changes.
      */
     public function unfreeze_slug()
     {

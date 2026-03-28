@@ -79,6 +79,7 @@ class Podcast extends Wrapper
      * Image URL.
      *
      * @deprecated since 2.2.0, use `image` instead
+     *
      * @accessor
      */
     public function imageUrl()
@@ -90,6 +91,7 @@ class Podcast extends Wrapper
      * Image.
      *
      * @see  image
+     *
      * @accessor
      */
     public function image()
@@ -203,6 +205,7 @@ class Podcast extends Wrapper
      * ```
      *
      * @see episode
+     *
      * @accessor
      *
      * @param mixed $args
@@ -224,6 +227,7 @@ class Podcast extends Wrapper
      * Feeds.
      *
      * @see  feed
+     *
      * @accessor
      */
     public function feeds()
@@ -244,6 +248,7 @@ class Podcast extends Wrapper
      * ```
      *
      * @see  feed
+     *
      * @accessor
      *
      * @param mixed $id
@@ -260,6 +265,7 @@ class Podcast extends Wrapper
      * `{% include '@core/license.twig' with {'license': podcast.license} %}`
      *
      * @see  license
+     *
      * @accessor
      */
     public function license()

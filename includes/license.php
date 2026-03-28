@@ -28,4 +28,3 @@ function podlove_episode_license_extend_form($form_data, $episode)
 
     return $form_data;
 }
-

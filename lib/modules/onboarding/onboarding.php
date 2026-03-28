@@ -3,47 +3,46 @@
 namespace Podlove\Modules\Onboarding;
 
 use Podlove\Modules\Onboarding\Settings\OnboardingPage;
-use Podlove\Modules\Onboarding\WP_REST_PodloveOnboarding_Controller;
 
 class Onboarding extends \Podlove\Modules\Base
 {
-  protected $module_name = 'Onboarding';
-  protected $module_description = 'Handling the onboarding to the Podlove Publisher';
-  protected $module_group = 'system';
+    protected $module_name = 'Onboarding';
+    protected $module_description = 'Handling the onboarding to the Podlove Publisher';
+    protected $module_group = 'system';
 
-  public function load()
-  {
-    add_action('admin_enqueue_scripts', [$this, 'add_scripts_and_styles']);
-    add_action('admin_notices', [$this, 'onboarding_banner']);
-    add_action('admin_menu', [$this, 'add_onboarding_menu'], 20);
-    add_action('rest_api_init', [$this, 'api_init']);
-  }
-
-  public static function is_visible()
-  {
-    return true;
-  }
-
-  public function onboarding_banner()
-  {
-    if (self::is_banner_hide()) {
-      return;
+    public function load()
+    {
+        add_action('admin_enqueue_scripts', [$this, 'add_scripts_and_styles']);
+        add_action('admin_notices', [$this, 'onboarding_banner']);
+        add_action('admin_menu', [$this, 'add_onboarding_menu'], 20);
+        add_action('rest_api_init', [$this, 'api_init']);
     }
 
-    if (apply_filters('podlove_admin_promo_banner_active', false)) {
-      return;
+    public static function is_visible()
+    {
+        return true;
     }
 
-    if (isset($_REQUEST['page']) && $_REQUEST['page'] === 'podlove_settings_onboarding_handle') {
-      return;
-    } ?>
+    public function onboarding_banner()
+    {
+        if (self::is_banner_hide()) {
+            return;
+        }
+
+        if (apply_filters('podlove_admin_promo_banner_active', false)) {
+            return;
+        }
+
+        if (isset($_REQUEST['page']) && $_REQUEST['page'] === 'podlove_settings_onboarding_handle') {
+            return;
+        } ?>
 
     <div id="podlove-panel-wrap" class=podlove-panel-wrap>
       <div class="podlove-panel">
         <?php
-          echo sprintf(
-          '<a id="podlove-panel-banner-dismiss" class="podlove-panel-banner-dismiss" href="#"></a>'
-          ); ?>
+              echo sprintf(
+                  '<a id="podlove-panel-banner-dismiss" class="podlove-panel-banner-dismiss" href="#"></a>'
+              ); ?>
         <div class="podlove-panel-content">
           <div class="podlove-panel-header">
             <div class="podlove-panel-header-image">
@@ -52,15 +51,15 @@ class Onboarding extends \Podlove\Modules\Base
             <div class="podlove-panel-banner">
               <div class="podlove-panel-banner-left">
                 <div class="podlove-panel-banner-image">
-                  <img src="<?php print \Podlove\PLUGIN_URL.'/images/logo/podlove-publisher-icon-500.png'; ?>" />
+                  <img src="<?php echo \Podlove\PLUGIN_URL.'/images/logo/podlove-publisher-icon-500.png'; ?>" />
                 </div>
               </div>
               <div class="podlove-panel-banner-right">
-                <h2 class="podlove-panel-banner-head"><?php print(__('Welcome to Podlove', 'podlove-podcasting-plugin-for-wordpress')); ?></h2>
+                <h2 class="podlove-panel-banner-head"><?php echo __('Welcome to Podlove', 'podlove-podcasting-plugin-for-wordpress'); ?></h2>
                 <p class="podlove-panel-banner-text">
-                  <?php print(__('Ready to share your voice with the world? Let\'s start your podcasting journey! Explore our new Onboarding Assistant for a seamless setup. Choose between starting a new podcast or importing an existing one, and let\'s get your stories out there!', 'podlove-podcasting-plugin-for-wordpress')); ?>
+                  <?php echo __('Ready to share your voice with the world? Let\'s start your podcasting journey! Explore our new Onboarding Assistant for a seamless setup. Choose between starting a new podcast or importing an existing one, and let\'s get your stories out there!', 'podlove-podcasting-plugin-for-wordpress'); ?>
                 </p>
-                <a id="podlove-panel-banner-button" class="podlove-panel-banner-button" href="<?php print \Podlove\Modules\Onboarding\Settings\OnboardingPage::get_page_link() ?>"><?php print __('Get started', 'podlove-podcasting-plugin-for-wordpress'); ?></a>
+                <a id="podlove-panel-banner-button" class="podlove-panel-banner-button" href="<?php echo \Podlove\Modules\Onboarding\Settings\OnboardingPage::get_page_link(); ?>"><?php echo __('Get started', 'podlove-podcasting-plugin-for-wordpress'); ?></a>
               </div>
             </div>
           </div>
@@ -90,105 +89,103 @@ class Onboarding extends \Podlove\Modules\Base
       }
     </script>
 <?php
-  }
-
-  public function add_scripts_and_styles()
-  {
-    wp_register_style('podlove-onboarding-banner-style', $this->get_module_url().'/css/podlove-onboarding-banner.css');
-    wp_enqueue_style('podlove-onboarding-banner-style');
-  }
-
-  public function add_onboarding_menu()
-  {
-    new OnboardingPage(\Podlove\Podcast_Post_Type::SETTINGS_PAGE_HANDLE);
-  }
-
-  /**
-   * Onboarding options:
-   *    - hide banner
-   *    - type: start / import
-   *    - feedurl
-   */
-  public static function is_banner_hide()
-  {
-    $onboarding_options = self::get_options();
-    if (isset($onboarding_options['hide_banner'])) {
-      return $onboarding_options['hide_banner'];
     }
 
-    return false;
-  }
-
-  public static function set_banner_hide($option)
-  {
-    $onboarding_options = self::get_options();
-    if (strtolower($option) == 'true') {
-      $onboarding_options['hide_banner'] = true;
-    } else {
-      if (isset($onboarding_options['hide_banner'])) {
-        unset($onboarding_options['hide_banner']);
-      }
+    public function add_scripts_and_styles()
+    {
+        wp_register_style('podlove-onboarding-banner-style', $this->get_module_url().'/css/podlove-onboarding-banner.css');
+        wp_enqueue_style('podlove-onboarding-banner-style');
     }
-    self::update_options($onboarding_options);
-  }
 
-  /** PHP 8.1 change this to an enum */
-  public static function get_onboarding_type()
-  {
-    $onboarding_options = self::get_options();
-    if (isset($onboarding_options['type'])) {
-      return $onboarding_options['type'];
+    public function add_onboarding_menu()
+    {
+        new OnboardingPage(\Podlove\Podcast_Post_Type::SETTINGS_PAGE_HANDLE);
     }
-  }
 
-  public static function set_onboarding_type($option)
-  {
-    $onboarding_options = self::get_options();
-    switch (strtolower($option)) {
-      case 'start':
-      case 'import':
-        $onboarding_options['type'] = $option;
-
-        break;
-
-      default:
-        if (isset($onboarding_options['type'])) {
-          unset($onboarding_options['type']);
+    /**
+     * Onboarding options:
+     *    - hide banner
+     *    - type: start / import
+     *    - feedurl
+     */
+    public static function is_banner_hide()
+    {
+        $onboarding_options = self::get_options();
+        if (isset($onboarding_options['hide_banner'])) {
+            return $onboarding_options['hide_banner'];
         }
 
-        break;
+        return false;
     }
-    self::update_options($onboarding_options);
-  }
 
-  public static function get_acknowlegde_option($user_id)
-  {
-    $option = get_user_meta($user_id, "podlove_onboarding_acknowledge", true);
-    return $option;
-  }
+    public static function set_banner_hide($option)
+    {
+        $onboarding_options = self::get_options();
+        if (strtolower($option) == 'true') {
+            $onboarding_options['hide_banner'] = true;
+        } else {
+            if (isset($onboarding_options['hide_banner'])) {
+                unset($onboarding_options['hide_banner']);
+            }
+        }
+        self::update_options($onboarding_options);
+    }
 
-  public static function set_acknowledge_option($user_id, $option)
-  {
-    update_user_meta($user_id, "podlove_onboarding_acknowledge", $option);
-  }
+    /** PHP 8.1 change this to an enum */
+    public static function get_onboarding_type()
+    {
+        $onboarding_options = self::get_options();
+        if (isset($onboarding_options['type'])) {
+            return $onboarding_options['type'];
+        }
+    }
 
+    public static function set_onboarding_type($option)
+    {
+        $onboarding_options = self::get_options();
+        switch (strtolower($option)) {
+            case 'start':
+            case 'import':
+                $onboarding_options['type'] = $option;
 
-  private static function get_options()
-  {
-    return get_option('podlove_modules_onboarding', []);
-  }
+                break;
 
-  private static function update_options($onboarding_options)
-  {
-    update_option('podlove_modules_onboarding', $onboarding_options);
-  }
+            default:
+                if (isset($onboarding_options['type'])) {
+                    unset($onboarding_options['type']);
+                }
 
-  /**
-   * Onboarding API init (add to admin-route).
-   */
-  public function api_init()
-  {
-    $api_onboarding = new WP_REST_PodloveOnboarding_Controller();
-    $api_onboarding->register_routes();
-  }
+                break;
+        }
+        self::update_options($onboarding_options);
+    }
+
+    public static function get_acknowlegde_option($user_id)
+    {
+        return get_user_meta($user_id, 'podlove_onboarding_acknowledge', true);
+    }
+
+    public static function set_acknowledge_option($user_id, $option)
+    {
+        update_user_meta($user_id, 'podlove_onboarding_acknowledge', $option);
+    }
+
+    /**
+     * Onboarding API init (add to admin-route).
+     */
+    public function api_init()
+    {
+        $api_onboarding = new WP_REST_PodloveOnboarding_Controller();
+        $api_onboarding->register_routes();
+    }
+
+    private static function get_options()
+    {
+        return get_option('podlove_modules_onboarding', []);
+    }
+
+    private static function update_options($onboarding_options)
+    {
+        update_option('podlove_modules_onboarding', $onboarding_options);
+    }
 }

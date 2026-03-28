@@ -54,12 +54,12 @@ class Tracking extends Tab
 						</div>
 						<div>
 							<?php echo sprintf(
-                    '<div><strong>%s</strong><br>%s</div>',
-                    __('Tracking URL Parameters &amp; Analytics', 'podlove-podcasting-plugin-for-wordpress'),
-                    __('Instead of the original file URLs, users and clients see a link that points to Podlove Publisher.
+							    '<div><strong>%s</strong><br>%s</div>',
+							    __('Tracking URL Parameters &amp; Analytics', 'podlove-podcasting-plugin-for-wordpress'),
+							    __('Instead of the original file URLs, users and clients see a link that points to Podlove Publisher.
 									Podlove Publisher logs the download intent and redirects the user to the original file.
 									That way Podlove Publisher is able to generate download statistics. ', 'podlove-podcasting-plugin-for-wordpress')
-                ); ?>
+							); ?>
 						</div>
 					</div>
 				</label>
@@ -71,12 +71,12 @@ class Tracking extends Tab
 						</div>
 						<div>
 							<?php echo sprintf(
-                    '<div><strong>%s</strong><br>%s</div>',
-                    __('Tracking URL Parameters', 'podlove-podcasting-plugin-for-wordpress'),
-                    __('Original file URLs are extended by tracking parameters before presenting them to users and clients.
+							    '<div><strong>%s</strong><br>%s</div>',
+							    __('Tracking URL Parameters', 'podlove-podcasting-plugin-for-wordpress'),
+							    __('Original file URLs are extended by tracking parameters before presenting them to users and clients.
 									This is useful if you are using your server log files for download analytics.
 									No download-data is tracked.', 'podlove-podcasting-plugin-for-wordpress')
-                ); ?>
+							); ?>
 						</div>
 					</div>
 				</label>
@@ -88,10 +88,10 @@ class Tracking extends Tab
 						</div>
 						<div>
 							<?php echo sprintf(
-                    '<div><strong>%s</strong><br>%s</div>',
-                    __('No Tracking', 'podlove-podcasting-plugin-for-wordpress'),
-                    __('Original file URLs are presented to users and clients. No download-data is tracked.', 'podlove-podcasting-plugin-for-wordpress')
-                ); ?>
+							    '<div><strong>%s</strong><br>%s</div>',
+							    __('No Tracking', 'podlove-podcasting-plugin-for-wordpress'),
+							    __('Original file URLs are presented to users and clients. No download-data is tracked.', 'podlove-podcasting-plugin-for-wordpress')
+							); ?>
 						</div>
 					</div>
 				</label>
@@ -118,12 +118,12 @@ class Tracking extends Tab
 
 				<p class="description" style="margin-bottom: 15px;">
 				  <?php echo sprintf(
-                    __('A request counts as identical when the same IP and user agent are used to access the same file in a certain time window.
+				      __('A request counts as identical when the same IP and user agent are used to access the same file in a certain time window.
 					Podlove Publisher has traditionally used an hourly time window but IAB recommends daily. Beware: Once changed you need to
 					do a full Download Intent Cleanup and Download Aggregation for the change to take effect. Do this at the %stools page%s.'),
-                    '<a href="'.admin_url('admin.php?page=podlove_tools_settings_handle#the_tools_section').'">',
-                    '</a>'
-                ); ?>
+				      '<a href="'.admin_url('admin.php?page=podlove_tools_settings_handle#the_tools_section').'">',
+				      '</a>'
+				  ); ?>
 				</p>
 
 				<label class="aligned-radio">
@@ -133,10 +133,10 @@ class Tracking extends Tab
 						</div>
 						<div>
 							<?php echo sprintf(
-                    '<div><strong>%s</strong><br>%s</div>',
-                    __('Hour', 'podlove-podcasting-plugin-for-wordpress'),
-                    __('Identical requests during the same hour are counted once.', 'podlove-podcasting-plugin-for-wordpress')
-                ); ?>
+							    '<div><strong>%s</strong><br>%s</div>',
+							    __('Hour', 'podlove-podcasting-plugin-for-wordpress'),
+							    __('Identical requests during the same hour are counted once.', 'podlove-podcasting-plugin-for-wordpress')
+							); ?>
 						</div>
 					</div>
 				</label>
@@ -148,10 +148,10 @@ class Tracking extends Tab
 						</div>
 						<div>
 							<?php echo sprintf(
-                    '<div><strong>%s</strong><br>%s</div>',
-                    __('Day', 'podlove-podcasting-plugin-for-wordpress'),
-                    __('Identical requests during the same day are counted once.', 'podlove-podcasting-plugin-for-wordpress')
-                ); ?>
+							    '<div><strong>%s</strong><br>%s</div>',
+							    __('Day', 'podlove-podcasting-plugin-for-wordpress'),
+							    __('Identical requests during the same day are counted once.', 'podlove-podcasting-plugin-for-wordpress')
+							); ?>
 						</div>
 					</div>
 				</label>
@@ -215,9 +215,9 @@ class Tracking extends Tab
 					</p>
 					<p>
 						<?php echo sprintf(
-                    __('The database is updated automatically once a month. Next scheduled update: %s', 'podlove-podcasting-plugin-for-wordpress'),
-                    date(get_option('date_format').' '.get_option('time_format'), wp_next_scheduled('podlove_geoip_db_update'))
-                ); ?>
+						    __('The database is updated automatically once a month. Next scheduled update: %s', 'podlove-podcasting-plugin-for-wordpress'),
+						    date(get_option('date_format').' '.get_option('time_format'), wp_next_scheduled('podlove_geoip_db_update'))
+						); ?>
 					</p>
 					<p>
 						<button name="update_geo_database" class="button button-primary" value="1"><?php echo __('Update Now', 'podlove-podcasting-plugin-for-wordpress'); ?></button>
@@ -237,9 +237,9 @@ class Tracking extends Tab
 					<!-- This snippet must be included, as stated here: http://dev.maxmind.com/geoip/geoip2/geolite2/ -->
 					<em>
 						<?php echo sprintf(
-                    __('This product includes GeoLite2 data created by MaxMind, available from %s.', 'podlove-podcasting-plugin-for-wordpress'),
-                    '<a href="http://www.maxmind.com">http://www.maxmind.com</a>'
-                ); ?>
+						    __('This product includes GeoLite2 data created by MaxMind, available from %s.', 'podlove-podcasting-plugin-for-wordpress'),
+						    '<a href="http://www.maxmind.com">http://www.maxmind.com</a>'
+						); ?>
 					</em>
 				</p>
 				<?php
@@ -267,11 +267,11 @@ class Tracking extends Tab
 							<b><?php echo __('Please Change Permalink Structure', 'podlove-podcasting-plugin-for-wordpress'); ?></b>
 							<?php
                             echo sprintf(
-                        __('You are using the default WordPress permalink structure.
+                                __('You are using the default WordPress permalink structure.
 								This may cause problems with some podcast clients when you activate tracking.
 								Go to %s and set it to anything but default (for example "Post name") before activating Tracking.', 'podlove-podcasting-plugin-for-wordpress'),
-                        '<a href="'.admin_url('options-permalink.php').'">'.__('Permalink Settings').'</a>'
-                    ); ?>
+                                '<a href="'.admin_url('options-permalink.php').'">'.__('Permalink Settings').'</a>'
+                            ); ?>
 						</p>
 					</div>
 					<?php
@@ -340,10 +340,10 @@ class Tracking extends Tab
 								<?php Geo_Ip::disable_tracking(); ?>
 								✘ <strong><?php _e('Geolocation database invalid or outdated', 'podlove-podcasting-plugin-for-wordpress'); ?></strong>:
 								<?php echo sprintf(
-                    __('Try updating it using the button above. If that doesn\'t work, delete it manually: %s, then redownload it in the section above. If that fails, you can download it with your web browser, unzip it, and upload it to WordPress using sFTP: %s', 'podlove-podcasting-plugin-for-wordpress'),
-                    '<code>'.esc_html(Geo_Ip::get_upload_file_path()).'</code>',
-                    '<a href="'.esc_url(Geo_Ip::SOURCE_URL).'" download>'.esc_html(Geo_Ip::SOURCE_URL).'</a>'
-                ); ?>
+								    __('Try updating it using the button above. If that doesn\'t work, delete it manually: %s, then redownload it in the section above. If that fails, you can download it with your web browser, unzip it, and upload it to WordPress using sFTP: %s', 'podlove-podcasting-plugin-for-wordpress'),
+								    '<code>'.esc_html(Geo_Ip::get_upload_file_path()).'</code>',
+								    '<a href="'.esc_url(Geo_Ip::SOURCE_URL).'" download>'.esc_html(Geo_Ip::SOURCE_URL).'</a>'
+								); ?>
 							<?php } ?>
 						</li>
 					</ul>

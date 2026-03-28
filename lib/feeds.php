@@ -15,7 +15,7 @@ function register_podcast_feeds()
 {
     foreach (Model\Feed::all() as $feed) {
         if ($feed->slug) {
-            add_feed($feed->slug, '\\Podlove\\Feeds\\generate_podcast_feed');
+            add_feed($feed->slug, '\Podlove\Feeds\generate_podcast_feed');
         }
     }
 }

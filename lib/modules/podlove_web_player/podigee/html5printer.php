@@ -98,20 +98,20 @@ class Html5Printer implements \Podlove\Modules\PodloveWebPlayer\PlayerPrinterInt
             switch ($file['mime_type']) {
                 case 'audio/mp4':  $ext = 'm4a';
 
-break;
+                    break;
                 case 'audio/opus': $ext = 'opus';
 
-break;
+                    break;
                 case 'audio/ogg':  $ext = 'ogg';
 
-break;
+                    break;
                 case 'audio/mpeg': $ext = 'mp3';
 
-break;
+                    break;
 
                 default: $ext = false;
 
-break;
+                    break;
             }
 
             if ($ext) {

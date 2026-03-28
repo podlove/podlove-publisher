@@ -11,13 +11,9 @@ abstract class Base
      */
     protected $options = [];
 
-    protected function __construct()
-    {
-    }
+    protected function __construct() {}
 
-    private function __clone()
-    {
-    }
+    private function __clone() {}
 
     /**
      * All Modules are singletons.

@@ -14,12 +14,12 @@ namespace Podlove\Modules\TitleMigration;
  */
 class State
 {
-    const INITIALIZED = 'initialized';
-    const INITIALIZED_HIDDEN = 'initialized_hidden';
-    const FINISHED = 'finished';
-    const FINISHED_HIDDEN = 'finished_hidden';
+    public const INITIALIZED = 'initialized';
+    public const INITIALIZED_HIDDEN = 'initialized_hidden';
+    public const FINISHED = 'finished';
+    public const FINISHED_HIDDEN = 'finished_hidden';
 
-    const OPTION = 'podlove_title_migration_state';
+    public const OPTION = 'podlove_title_migration_state';
 
     public function is_initialized()
     {

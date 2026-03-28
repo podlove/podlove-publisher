@@ -4,7 +4,7 @@ namespace Podlove\Modules\SlackShownotes\Settings;
 
 class Settings
 {
-    const MENU_SLUG = 'podlove_slackshownotes_settings';
+    public const MENU_SLUG = 'podlove_slackshownotes_settings';
 
     public function __construct($handle)
     {

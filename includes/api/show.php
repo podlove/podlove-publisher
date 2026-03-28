@@ -4,14 +4,14 @@ namespace Podlove\Api\Show;
 
 use Podlove\Model\Podcast;
 
-add_action('rest_api_init', __NAMESPACE__.'\\api_init');
+add_action('rest_api_init', __NAMESPACE__.'\api_init');
 
 function api_init()
 {
     // FIXME: why is this called "show", not "podcast"? 🤔
     register_rest_route('podlove/v1', 'show', [
         'methods' => 'GET',
-        'callback' => __NAMESPACE__.'\\show_api',
+        'callback' => __NAMESPACE__.'\show_api',
         'permission_callback' => '__return_true',
     ]);
 }

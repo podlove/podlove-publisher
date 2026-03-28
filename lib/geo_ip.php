@@ -4,9 +4,9 @@ namespace Podlove;
 
 class Geo_Ip
 {
-    const GEO_FILENAME = 'GeoLite2-City_20180206/GeoLite2-City.mmdb';
-    const SOURCE_URL = 'http://cdn.podlove.org/publisher/GeoLite2-City_20180206.tar.gz';
-    const TAR_NAME = '/tmp/GeoLite2-City_20180206.tar';
+    public const GEO_FILENAME = 'GeoLite2-City_20180206/GeoLite2-City.mmdb';
+    public const SOURCE_URL = 'http://cdn.podlove.org/publisher/GeoLite2-City_20180206.tar.gz';
+    public const TAR_NAME = '/tmp/GeoLite2-City_20180206.tar';
 
     /**
      * Register hooks.
@@ -105,7 +105,7 @@ class Geo_Ip
         }
 
         if (file_exists(self::TAR_NAME)) {
-          wp_delete_file(self::TAR_NAME);
+            wp_delete_file(self::TAR_NAME);
         }
 
         try {

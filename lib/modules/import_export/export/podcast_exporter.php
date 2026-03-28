@@ -4,7 +4,7 @@ namespace Podlove\Modules\ImportExport\Export;
 
 class PodcastExporter
 {
-    const XML_NAMESPACE = 'http://podlove.org/podlove-podcast-publisher/export';
+    public const XML_NAMESPACE = 'http://podlove.org/podlove-podcast-publisher/export';
     private $compression = false;
 
     public function __construct()

@@ -8,8 +8,8 @@ use Podlove\Modules\Shownotes\Model\Entry;
 
 class REST_API
 {
-    const api_namespace = 'podlove/v1';
-    const api_base = 'shownotes';
+    public const api_namespace = 'podlove/v1';
+    public const api_base = 'shownotes';
 
     public function register_routes()
     {
@@ -662,8 +662,8 @@ class REST_API
 
 class REST_API_V2
 {
-    const api_namespace = 'podlove/v2';
-    const api_base = 'shownotes';
+    public const api_namespace = 'podlove/v2';
+    public const api_base = 'shownotes';
 
     public function register_routes()
     {

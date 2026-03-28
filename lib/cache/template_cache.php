@@ -29,8 +29,8 @@ use Podlove\Model;
  */
 class TemplateCache
 {
-    const CACHE_NAMESPACE = 'podlove_cachev2_';
-    const CRON_PURGE_HOOK = 'podlove_purge_template_cache';
+    public const CACHE_NAMESPACE = 'podlove_cachev2_';
+    public const CRON_PURGE_HOOK = 'podlove_purge_template_cache';
     private static $instance;
 
     /**
@@ -47,9 +47,7 @@ class TemplateCache
         add_action('podlove_model_change', [$this, 'handle_model_change']);
     }
 
-    private function __clone()
-    {
-    }
+    private function __clone() {}
 
     /**
      * Singleton.

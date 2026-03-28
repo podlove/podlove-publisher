@@ -239,15 +239,15 @@ if (typeof SubscribeButton == 'undefined') {
         switch ($extension) {
             case 'm4a': return 'aac';
 
-break;
+                break;
             case 'oga': return 'ogg';
 
-break;
+                break;
 
             default:
                 return $extension;
 
-            break;
+                break;
         }
     }
 

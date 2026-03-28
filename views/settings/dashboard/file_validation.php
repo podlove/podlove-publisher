@@ -28,27 +28,27 @@ define('ASSET_STATUS_ERROR', '<i class="clickable podlove-icon-remove"></i>');
                             } else {
                                 echo $episode->slug();
                             }
-                            ?>
+			    ?>
 						</a>
 					</td>
 					<?php foreach ($assets as $asset) { ?>
 						<?php
-                        if (isset($media_files[$episode->id][$asset->id])) {
-                            $file = $media_files[$episode->id][$asset->id];
-                        } else {
-                            $file = false;
-                        }
-                        ?>
+			            if (isset($media_files[$episode->id][$asset->id])) {
+			                $file = $media_files[$episode->id][$asset->id];
+			            } else {
+			                $file = false;
+			            }
+					    ?>
 						<td class="media_file_status" data-media-file-id="<?php echo $file ? $file['media_file_id'] : ''; ?>">
 							<?php
-                            if (!$file || !$file['active']) {
-                                echo ASSET_STATUS_INACTIVE;
-                            } elseif ($file['size'] > 0) {
-                                echo ASSET_STATUS_OK;
-                            } else {
-                                echo ASSET_STATUS_ERROR;
-                            }
-                            ?>
+					        if (!$file || !$file['active']) {
+					            echo ASSET_STATUS_INACTIVE;
+					        } elseif ($file['size'] > 0) {
+					            echo ASSET_STATUS_OK;
+					        } else {
+					            echo ASSET_STATUS_ERROR;
+					        }
+					    ?>
 						</td>
 					<?php } ?>
 					<td>

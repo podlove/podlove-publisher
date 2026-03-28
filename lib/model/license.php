@@ -221,7 +221,7 @@ class License
         $license_attributions = '';
 
         if (empty($license['version'])) {
-          return '';
+            return '';
         }
 
         if ($license['version'] == 'pdmark') {

@@ -44,9 +44,8 @@ class CronJobRunner
     /**
      * Create new job.
      *
-     * @param JobTrait $job
-     * @param array    $args
-     * @param mixed    $job_class
+     * @param array $args
+     * @param mixed $job_class
      */
     public static function create_job($job_class, $args = [])
     {

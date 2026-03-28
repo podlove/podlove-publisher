@@ -26,9 +26,9 @@ class Asset_Validation extends \Podlove\Modules\Base
 				<em>
 					<?php
                     echo sprintf(
-                __('Next scheduled validation: %s'),
-                date(get_option('date_format').' '.get_option('time_format'), wp_next_scheduled('podlove_asset_validation'))
-            ); ?>
+                        __('Next scheduled validation: %s'),
+                        date(get_option('date_format').' '.get_option('time_format'), wp_next_scheduled('podlove_asset_validation'))
+                    ); ?>
 				</em>
 			</div>
 			<?php

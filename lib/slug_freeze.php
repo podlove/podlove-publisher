@@ -75,7 +75,7 @@ class SlugFreeze
             // If episode has valid media files, freeze the slug
             if ($has_valid_media) {
                 $episode->freeze_slug();
-                $frozen_count++;
+                ++$frozen_count;
 
                 \Podlove\Log::get()->addInfo(
                     'Migration 162: Auto-freezing slug for existing episode',

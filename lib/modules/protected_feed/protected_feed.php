@@ -40,7 +40,7 @@ class Protected_Feed extends \Podlove\Modules\Base
                             self::send_authentication_headers();
                         }
 
-                    break;
+                        break;
                     case '1':
                         // The WordPress User db is used for authentification
                         if (!username_exists($_SERVER['PHP_AUTH_USER'])) {
@@ -55,12 +55,12 @@ class Protected_Feed extends \Podlove\Modules\Base
                             }
                         }
 
-                    break;
+                        break;
 
                     default:
                         exit; // If the feed is protected and no auth method is selected exit the script
 
-                    break;
+                        break;
                 }
             }
         } else {
@@ -116,8 +116,8 @@ class Protected_Feed extends \Podlove\Modules\Base
         $insertIndex = array_search('discoverable', $keys) + 1; // after discoverable column
 
         // insert at that index
-        return array_slice($columns, 0, $insertIndex, true) +
-               ['protected' => __('Protected', 'podlove-podcasting-plugin-for-wordpress')] +
-               array_slice($columns, $insertIndex, count($columns) - 1, true);
+        return array_slice($columns, 0, $insertIndex, true)
+               + ['protected' => __('Protected', 'podlove-podcasting-plugin-for-wordpress')]
+               + array_slice($columns, $insertIndex, count($columns) - 1, true);
     }
 }

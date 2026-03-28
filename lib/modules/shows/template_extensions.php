@@ -19,6 +19,7 @@ class TemplateExtensions
      * ```
      *
      * @accessor
+     *
      * @dynamicAccessor podcast.shows
      *
      * @param mixed $return
@@ -45,6 +46,7 @@ class TemplateExtensions
      * ```
      *
      * @accessor
+     *
      * @dynamicAccessor episode.show
      *
      * @param mixed $return

@@ -127,19 +127,19 @@ class Dashboard
                     case 'publish':
                         $episodes_total_per_status['publish'] += $posts;
 
-                    break;
+                        break;
                     case 'publish':
                         $episodes_total_per_status['private'] += $posts;
 
-                    break;
+                        break;
                     case 'future':
                         $episodes_total_per_status['future'] += $posts;
 
-                    break;
+                        break;
                     case 'draft':
                         $episodes_total_per_status['draft'] += $posts;
 
-                    break;
+                        break;
                 }
             });
 

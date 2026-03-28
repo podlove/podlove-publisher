@@ -9,8 +9,8 @@ use Podlove\Model\Episode;
  */
 class Podcast_Post_Type
 {
-    const SETTINGS_PAGE_HANDLE = 'podlove_settings_handle';
-    const NETWORK_SETTINGS_PAGE_HANDLE = 'podlove_network_settings_handle';
+    public const SETTINGS_PAGE_HANDLE = 'podlove_settings_handle';
+    public const NETWORK_SETTINGS_PAGE_HANDLE = 'podlove_network_settings_handle';
 
     public function __construct()
     {

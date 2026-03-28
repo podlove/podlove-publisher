@@ -1,8 +1,13 @@
 <?php
 
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 class PluginActivationTest extends WP_UnitTestCase
 {
-    public function test_activation_enables_default_modules()
+    public function testActivationEnablesDefaultModules()
     {
         delete_option('podlove_active_modules');
 

@@ -44,7 +44,7 @@ class RecentEpisodes extends \WP_Widget
 						<i class="podlove-icon-calendar"></i> <?php echo get_the_date(get_option('date_format'), $episode->post_id); ?>
 						<?php
                         if ($instance['show_duration']) {
-                            echo "<br /><i class='podlove-icon-time'></i> ".($episode_duration->get('human-readable'));
+                            echo "<br /><i class='podlove-icon-time'></i> ".$episode_duration->get('human-readable');
                         } ?>
 					</p>
 					<?php if ($instance['show_image']) { ?>

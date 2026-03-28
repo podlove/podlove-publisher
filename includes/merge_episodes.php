@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Handle "Merge Episodes" setting.
  */
