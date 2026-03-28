@@ -1,0 +1,29 @@
+{
+  "languages": {
+    "PHP": {
+      "language_servers": [
+        "phpactor",
+        "!intelephense",
+        "!phptools",
+        "..."
+      ],
+      "formatter": [
+        {
+          "language_server": {
+            "name": "phpactor"
+          }
+        }
+      ],
+      "format_on_save": "on"
+    }
+  },
+  "lsp": {
+    "phpactor": {
+      "initialization_options": {
+        "language_server_php_cs_fixer.enabled": true,
+        "language_server_php_cs_fixer.bin": "%project_root%/vendor-bin/php-cs-fixer/vendor/friendsofphp/php-cs-fixer/php-cs-fixer",
+        "language_server_php_cs_fixer.config": "%project_root%/.php-cs-fixer.dist.php"
+      }
+    }
+  }
+}

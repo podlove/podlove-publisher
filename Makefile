@@ -1,11 +1,13 @@
+PHP_CS_FIXER = vendor-bin/php-cs-fixer/vendor/friendsofphp/php-cs-fixer/php-cs-fixer
+
 release:
 	bin/release.sh
 
 format:
-	php-cs-fixer fix . --config .php-cs-fixer.dist.php
+	$(PHP_CS_FIXER) fix . --config .php-cs-fixer.dist.php
 
 validateFormat:
-	php-cs-fixer fix . --config .php-cs-fixer.dist.php -v --dry-run --stop-on-violation --using-cache=no
+	$(PHP_CS_FIXER) fix . --config .php-cs-fixer.dist.php -v --dry-run --stop-on-violation --using-cache=no
 
 update_subscribe_button:
 	rm -rf .tmppsb
@@ -41,6 +43,9 @@ install_php_scoper:
 	composer bin php-scoper config minimum-stability dev
 	composer bin php-scoper config prefer-stable true
 	composer bin php-scoper require --dev --update-with-all-dependencies humbug/php-scoper:0.17.5
+
+install_php_cs_fixer:
+	composer bin php-cs-fixer install
 
 client_legacy:
 	cd js && npm install
@@ -101,4 +106,4 @@ build:
 	find dist -iname "*.jar" | xargs rm -rf
 
 
-install: install_php_scoper composer_with_prefixing
+install: install_php_scoper install_php_cs_fixer composer_with_prefixing

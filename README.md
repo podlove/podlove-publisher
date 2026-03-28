@@ -60,6 +60,7 @@ First-time setup:
 ```
 composer install
 composer bin php-scoper install
+composer bin php-cs-fixer install
 composer prefix-dependencies
 npm install
 npm run wp-env:start
