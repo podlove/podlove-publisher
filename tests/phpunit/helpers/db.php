@@ -10,6 +10,22 @@ function podlove_test_truncate_seasons_table(): void
     $wpdb->query('TRUNCATE TABLE '.\Podlove\Modules\Seasons\Model\Season::table_name());
 }
 
+function podlove_test_truncate_locations_table(): void
+{
+    if (!class_exists(\Podlove\Modules\Locations\Model\Location::class)) {
+        return;
+    }
+
+    global $wpdb;
+    $table = \Podlove\Modules\Locations\Model\Location::table_name();
+    $found = $wpdb->get_var($wpdb->prepare('SHOW TABLES LIKE %s', $table));
+    if ($found !== $table) {
+        return;
+    }
+
+    $wpdb->query('DELETE FROM '.$table);
+}
+
 function podlove_test_reset_podcast_episodes(): void
 {
     $posts = get_posts([
