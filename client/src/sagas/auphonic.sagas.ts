@@ -436,6 +436,29 @@ function getSaveProductionPayload(state: State): object {
   }
 }
 
+async function uploadProductionImage(
+  auphonicApi: AuphonicApiClient,
+  uuid: string,
+  posterFile: string | null | undefined,
+  handleProgress: (key: string) => (progress: any) => void
+) {
+  if (!posterFile) {
+    return
+  }
+
+  const res = await fetch(posterFile)
+  const blob = await res.blob()
+  const ext = blob.type.includes('png') ? 'png' : 'jpg'
+  const filename = `image.${ext}`
+  const imageFile = new File([blob], filename, { type: blob.type })
+
+  await auphonicApi.upload(
+    `production/${uuid}/upload.json`,
+    { image: imageFile },
+    { hooks: { onUploadProgress: handleProgress('poster') } }
+  )
+}
+
 function* handleSaveProduction(
   auphonicApi: AuphonicApiClient,
   action: { type: string; payload: any }
@@ -483,19 +506,7 @@ function* handleSaveProduction(
   // upload cover image
   const poster_file = productionPayload.image
 
-  fetch(poster_file)
-    .then((res) => res.blob())
-    .then((blob) => {
-      const ext = blob.type.includes('png') ? 'png' : 'jpg'
-      const filename = 'image.' + ext
-      const image_file = new File([blob], filename, { type: blob.type })
-
-      auphonicApi.upload(
-        `production/${uuid}/upload.json`,
-        { image: image_file },
-        { hooks: { onUploadProgress: handleProgress('poster') } }
-      )
-    })
+  yield call(uploadProductionImage, auphonicApi, uuid, poster_file, handleProgress)
 
   delete productionPayload.image
 
