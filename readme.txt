@@ -123,13 +123,15 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
-= 4.3.6 =
+= 4.4.0 =
 
 * new: "Recent Downloads" chart can now be added to the WordPress dashboard
 * new: Auphonic module now supports providing an API key in addition to the OAuth flow
 * new: Auphonic module now supports chapter images in the production
+* new: Codeberg support as contributor social service
+* new: repair tool detects missing permission to alter tables, which prevents some database migrations to run successfully
+* new: add some situational notices that PLUS exists
 * maintenance: update various javascript dependencies
-
 
 = 4.3.5 =
 
