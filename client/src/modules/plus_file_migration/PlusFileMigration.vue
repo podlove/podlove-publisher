@@ -134,7 +134,7 @@ import { defineComponent } from 'vue'
 import { injectStore, mapState } from 'redux-vuex'
 import Module from '@components/module/Module.vue'
 import * as plusFileMigration from '@store/plusFileMigration.store'
-import { selectors } from '@store'
+import selectors from '@store/plus.selectors'
 
 import PodloveButton from '@components/button/Button.vue'
 

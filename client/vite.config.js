@@ -30,10 +30,14 @@ export default defineConfig({
   },
   build: {
     outDir: path.resolve(root, 'dist'),
-    cssCodeSplit: false,
+    cssCodeSplit: true,
     rollupOptions: {
+      input: {
+        client: path.resolve(root, 'src', 'client.ts'),
+        plus: path.resolve(root, 'src', 'plus.ts'),
+      },
       output: {
-        entryFileNames: `client.js`,
+        entryFileNames: `[name].js`,
         chunkFileNames: `chunk-[name].js`,
         assetFileNames: `[name].[ext]`
       }
