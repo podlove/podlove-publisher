@@ -50,7 +50,7 @@ import TokenInput from './TokenInput.vue'
 import { CheckCircleIcon, XCircleIcon, InformationCircleIcon } from '@heroicons/vue/24/solid'
 import { injectStore, mapState } from 'redux-vuex'
 import * as plus from '@store/plus.store'
-import { selectors } from '@store'
+import selectors from '@store/plus.selectors'
 
 export default defineComponent({
   components: {

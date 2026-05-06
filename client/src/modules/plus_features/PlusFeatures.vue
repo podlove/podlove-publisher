@@ -67,7 +67,7 @@ import PlusFileMigration from '../plus_file_migration/PlusFileMigration.vue'
 import * as plusFileMigration from '@store/plusFileMigration.store'
 import { injectStore, mapState } from 'redux-vuex'
 import * as plus from '@store/plus.store'
-import { selectors } from '@store'
+import selectors from '@store/plus.selectors'
 import type { PlusFeatures } from '@store/plus.store'
 
 export default defineComponent({
