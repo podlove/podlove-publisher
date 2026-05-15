@@ -125,7 +125,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
-= 4.5.0
+= 4.5.0 =
 
 * new: "Optimize HTML Content" in feed settings strips non-essential attributes from episode shownotes in the RSS feed
 * new: show podcast guid in podcast settings
