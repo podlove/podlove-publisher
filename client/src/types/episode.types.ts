@@ -6,6 +6,13 @@ export interface PodloveEpisode {
   subtitle: string
   summary: string
   poster: string
+  auphonic_chapter_timing_maps?: Record<
+    string,
+    {
+      source_starts_ms: number[]
+      output_starts_ms: number[]
+    }
+  >
 }
 
 export interface PodloveEpisodeContribution {

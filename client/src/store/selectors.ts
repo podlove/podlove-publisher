@@ -132,6 +132,10 @@ const episode = {
     root.episode,
     episodeStore.selectors.isAuphonicProductionRunning
   ),
+  auphonicChapterTimingMaps: createSelector(
+    root.episode,
+    episodeStore.selectors.auphonicChapterTimingMaps
+  ),
   auphonicWebhookConfig: createSelector(root.episode, episodeStore.selectors.auphonicWebhookConfig),
   auphonicPlusTransferChangeTime: createSelector(
     root.episode,

@@ -149,6 +149,40 @@ class EpisodesApiTest extends WP_UnitTestCase
         $this->assertEquals(400, $response->get_status());
     }
 
+    public function testEpisodeReturnsEmptyAuphonicChapterTimingMapsByDefault()
+    {
+        $episode = $this->create_episode();
+
+        $request = new WP_REST_Request('GET', '/podlove/v2/episodes/'.$episode->id);
+        $response = $this->server->dispatch($request);
+
+        $this->assertEquals(200, $response->get_status());
+        $this->assertEquals(new stdClass(), $response->get_data()['auphonic_chapter_timing_maps']);
+    }
+
+    public function testUpdateEpisodePersistsAuphonicChapterTimingMaps()
+    {
+        $episode = $this->create_episode();
+        $timing_maps = [
+            'production-uuid' => [
+                'source_starts_ms' => [0, 5000, 10000],
+                'output_starts_ms' => [0, 4000, 8000],
+            ],
+        ];
+
+        $update_request = new WP_REST_Request('PUT', '/podlove/v2/episodes/'.$episode->id);
+        $update_request->set_param('auphonic_chapter_timing_maps', $timing_maps);
+        $update_response = $this->server->dispatch($update_request);
+
+        $this->assertEquals(200, $update_response->get_status());
+        $this->assertEquals($timing_maps, get_post_meta($episode->post_id, 'auphonic_chapter_timing_maps', true));
+
+        $get_request = new WP_REST_Request('GET', '/podlove/v2/episodes/'.$episode->id);
+        $get_response = $this->server->dispatch($get_request);
+
+        $this->assertEquals($timing_maps, $get_response->get_data()['auphonic_chapter_timing_maps']);
+    }
+
     private function create_episode(): Episode
     {
         $post_id = wp_insert_post([

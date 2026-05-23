@@ -326,6 +326,10 @@ class WP_REST_PodloveEpisode_Controller extends \WP_REST_Controller
                         'description' => 'Tracks if Auphonic production is running',
                         'type' => 'boolean'
                     ],
+                    'auphonic_chapter_timing_maps' => [
+                        'description' => 'Auphonic chapter source/output timing maps keyed by production UUID',
+                        'type' => 'object'
+                    ],
                     'auphonic_webhook_config' => [
                         'description' => 'Auphonic Webhook after Production is done',
                         'type' => 'object',
@@ -597,6 +601,11 @@ class WP_REST_PodloveEpisode_Controller extends \WP_REST_Controller
 
         $postterms = get_the_terms($episode->post_id, 'shows');
         $show = (is_array($postterms) && isset($postterms[0]) ? $postterms[0]->slug : '');
+        $auphonic_chapter_timing_maps = get_post_meta($episode->post_id, 'auphonic_chapter_timing_maps', true);
+
+        if (!is_array($auphonic_chapter_timing_maps)) {
+            $auphonic_chapter_timing_maps = [];
+        }
 
         $data = [
             '_version' => 'v2',
@@ -628,6 +637,7 @@ class WP_REST_PodloveEpisode_Controller extends \WP_REST_Controller
             'license_url' => $episode->license_url,
             'auphonic_production_id' => get_post_meta($episode->post_id, 'auphonic_production_id', true),
             'is_auphonic_production_running' => get_post_meta($episode->post_id, 'is_auphonic_production_running', true),
+            'auphonic_chapter_timing_maps' => empty($auphonic_chapter_timing_maps) ? new \stdClass() : $auphonic_chapter_timing_maps,
             'auphonic_plus_transfer_status' => get_post_meta($episode->post_id, 'auphonic_plus_transfer_status', true),
             'auphonic_plus_transfer_files' => get_post_meta($episode->post_id, 'auphonic_plus_transfer_files', true),
             'auphonic_plus_transfer_errors' => get_post_meta($episode->post_id, 'auphonic_plus_transfer_errors', true),
@@ -939,6 +949,10 @@ class WP_REST_PodloveEpisode_Controller extends \WP_REST_Controller
 
         if (isset($request['is_auphonic_production_running'])) {
             update_post_meta($episode->post_id, 'is_auphonic_production_running', $request['is_auphonic_production_running']);
+        }
+
+        if (isset($request['auphonic_chapter_timing_maps'])) {
+            update_post_meta($episode->post_id, 'auphonic_chapter_timing_maps', (array) $request['auphonic_chapter_timing_maps']);
         }
 
         if (isset($request['show'])) {

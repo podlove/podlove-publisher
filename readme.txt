@@ -125,6 +125,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 4.5.1 =
+
+* fix: Auphonic module is now aware of source and output timings in chapter marks. This is relevant if you use Automatic Cutting, which affects chapter timings. Re-running a production now also produces the expected results.
+
 = 4.5.0 =
 
 * new: "Optimize HTML Content" in feed settings strips non-essential attributes from episode shownotes in the RSS feed

@@ -22,6 +22,8 @@ import { createErrorResponse, createTransferErrorResponse, getApiErrorMessage } 
 import { determineTransferStatus, countSuccessfulResults } from '@lib/statusHelpers'
 import { Channel } from 'redux-saga'
 import { verifyAll } from './mediafiles.verification.sagas'
+import { PodloveChapter } from '../types/chapters.types'
+import { AuphonicChapterTimingMap, AuphonicChapterTimingMaps } from '../store/episode.store'
 
 function* auphonicSaga(): any {
   const apiClient: PodloveApiClient = yield createApi()
@@ -370,6 +372,60 @@ function getTracksPayload(state: State): any {
     .filter((t) => Object.keys(t).length > 0)
 }
 
+function arraysEqual(left: number[], right: number[]): boolean {
+  return left.length === right.length && left.every((value, index) => value === right[index])
+}
+
+function getChapterStarts(chapters: PodloveChapter[]): number[] {
+  return chapters.map((chapter) => chapter.start)
+}
+
+function getSelectedProductionUuid(state: State): string | null {
+  return get(state, ['auphonic', 'production', 'uuid'], null)
+}
+
+function getChapterTimingMap(state: State): AuphonicChapterTimingMap | null {
+  const uuid = getSelectedProductionUuid(state)
+
+  if (!uuid) {
+    return null
+  }
+
+  return get(state, ['episode', 'auphonic_chapter_timing_maps', uuid], null)
+}
+
+function getReusableChapterTimingMap(state: State): AuphonicChapterTimingMap | null {
+  const timingMap = getChapterTimingMap(state)
+
+  if (!timingMap) {
+    return null
+  }
+
+  const outputStarts = getChapterStarts(state.chapters.chapters)
+
+  if (
+    timingMap.source_starts_ms.length !== outputStarts.length ||
+    !arraysEqual(timingMap.output_starts_ms, outputStarts)
+  ) {
+    return null
+  }
+
+  return timingMap
+}
+
+function getInvalidatedChapterTimingMaps(state: State): AuphonicChapterTimingMaps | null {
+  const uuid = getSelectedProductionUuid(state)
+  const timingMaps = state.episode.auphonic_chapter_timing_maps
+
+  if (!uuid || !timingMaps[uuid] || getReusableChapterTimingMap(state)) {
+    return null
+  }
+
+  const { [uuid]: _timingMap, ...remainingTimingMaps } = timingMaps
+
+  return remainingTimingMaps
+}
+
 function getProductionPayload(state: State): object {
   let payload = get(state, ['auphonic', 'productionPayload'], {})
 
@@ -377,6 +433,7 @@ function getProductionPayload(state: State): object {
   const { output_files, ...newPayload } = payload
   const episode_poster = selectors.episode.effectivePoster(state)
   const maybe_output_basename = state.episode.slug ? { output_basename: state.episode.slug } : {}
+  const reusableTimingMap = getReusableChapterTimingMap(state)
 
   return {
     ...newPayload,
@@ -396,7 +453,7 @@ function getProductionPayload(state: State): object {
       url: state.podcast.link,
       track: state.episode.number,
     },
-    chapters: state.chapters.chapters.map((chapter) => {
+    chapters: state.chapters.chapters.map((chapter, index) => {
       const payload: {
         title: string
         url?: string
@@ -405,7 +462,7 @@ function getProductionPayload(state: State): object {
       } = {
         title: chapter.title,
         url: chapter.href,
-        start: new Timestamp(chapter.start).pretty,
+        start: new Timestamp(reusableTimingMap?.source_starts_ms[index] ?? chapter.start).pretty,
       }
 
       if (chapter.image) {
@@ -563,6 +620,20 @@ function* handleSaveProduction(
 
   try {
     const uuid = action.payload.uuid
+    const invalidatedChapterTimingMaps: AuphonicChapterTimingMaps | null = yield select(
+      getInvalidatedChapterTimingMaps
+    )
+
+    if (invalidatedChapterTimingMaps) {
+      yield put(
+        episode.update({
+          prop: 'auphonic_chapter_timing_maps',
+          value: invalidatedChapterTimingMaps,
+        })
+      )
+      yield put(episode.quicksave())
+    }
+
     //@ts-ignore
     const productionPayload = yield select(getSaveProductionPayload)
     //@ts-ignore

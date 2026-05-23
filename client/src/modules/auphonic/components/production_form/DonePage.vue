@@ -98,7 +98,11 @@
 import { defineComponent } from 'vue'
 import { selectors } from '@store'
 import { AuphonicChapter, Production } from '@store/auphonic.store'
-import { update as updateEpisode } from '@store/episode.store'
+import {
+  AuphonicChapterTimingMaps,
+  quicksave as quicksaveEpisode,
+  update as updateEpisode,
+} from '@store/episode.store'
 import { parsed as parsedChapters } from '@store/chapters.store'
 import * as plus from '@store/plus.store'
 import { injectAppDispatch, mapAppState } from '@store/vue'
@@ -138,6 +142,7 @@ export default defineComponent({
         license_name: selectors.episode.license_name,
         license_url: selectors.episode.license_url,
         chapters: selectors.chapters.list,
+        auphonicChapterTimingMaps: selectors.episode.auphonicChapterTimingMaps,
         episodeId: selectors.episode.id,
         plusFeatures: selectors.plus.features
       }),
@@ -156,7 +161,7 @@ export default defineComponent({
           const here = entry.here
             .map((chapter: PodloveChapter) => {
               return (
-                chapter.start + (chapter.title || '') + (chapter.href || '') + (chapter.image || '')
+                chapter.start + (chapter.title || '') + (chapter.href || '')
               )
             })
             .join(';')
@@ -166,8 +171,7 @@ export default defineComponent({
               return (
                 Math.round((chapter.start_output_sec || 0) * 1000) +
                 (chapter.title || '') +
-                (chapter.url || '') +
-                (chapter.image || '')
+                (chapter.url || '')
               )
             })
             .join(';')
@@ -196,17 +200,36 @@ export default defineComponent({
       switch (prop) {
         case 'chapters':
           const auphonicChapters: AuphonicChapter[] = value
-          const chapters: PodloveChapter[] = auphonicChapters.map((chapter) => {
+          const chapters: PodloveChapter[] = auphonicChapters.map((chapter, index) => {
             return {
               start: Math.round((chapter.start_output_sec || 0) * 1000),
               title: chapter.title || '',
               href: chapter.url || '',
-              // FIXME: chapter.image is an Auphonic URL which we can't use. We
-              // have to download the image and serve from WordPress.
-              // image: chapter.image || '',
-              image: '',
+              // Keep the local image URL. Auphonic returns hosted image URLs
+              // that we cannot reuse directly in WordPress.
+              image: this.state.chapters[index]?.image || '',
             }
           })
+
+          if (this.production?.uuid) {
+            const timingMaps: AuphonicChapterTimingMaps = {
+              ...this.state.auphonicChapterTimingMaps,
+              [this.production.uuid]: {
+                source_starts_ms: auphonicChapters.map((chapter) =>
+                  Math.round((chapter.start_sec || 0) * 1000)
+                ),
+                output_starts_ms: chapters.map((chapter) => chapter.start),
+              },
+            }
+
+            this.dispatch(
+              updateEpisode({
+                prop: 'auphonic_chapter_timing_maps',
+                value: timingMaps,
+              })
+            )
+            this.dispatch(quicksaveEpisode())
+          }
 
           this.dispatch(parsedChapters(chapters))
           break

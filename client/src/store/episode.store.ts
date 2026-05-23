@@ -22,6 +22,13 @@ export const UPDATE_CONTRIBUTION = 'podlove/publisher/episode/UPDATE_CONTRIBUTIO
 export const ADD_CONTRIBUTION = 'podlove/publisher/episode/ADD_CONTRIBUTION'
 export const CREATE_CONTRIBUTION = 'podlove/publisher/episode/CREATE_CONTRIBUTION'
 
+export type AuphonicChapterTimingMap = {
+  source_starts_ms: number[]
+  output_starts_ms: number[]
+}
+
+export type AuphonicChapterTimingMaps = Record<string, AuphonicChapterTimingMap>
+
 export type State = {
   id: string | null
   slug: string | null
@@ -38,6 +45,7 @@ export type State = {
   explicit: boolean | null
   auphonic_production_id: 'string' | null
   is_auphonic_production_running: boolean
+  auphonic_chapter_timing_maps: AuphonicChapterTimingMaps
   auphonic_webhook_config: object | null
   auphonic_plus_transfer_change_time: string | null
   soundbite_start: number | null
@@ -65,6 +73,7 @@ export const initialState: State = {
   explicit: null,
   auphonic_production_id: null,
   is_auphonic_production_running: false,
+  auphonic_chapter_timing_maps: {},
   auphonic_webhook_config: null,
   auphonic_plus_transfer_change_time: null,
   soundbite_start: null,
@@ -95,6 +104,7 @@ export const set = createAction<{
   contributions?: object
   auphonic_production_id?: string
   is_auphonic_production_running?: boolean
+  auphonic_chapter_timing_maps?: AuphonicChapterTimingMaps
   auphonic_webhook_config?: object
   auphonic_plus_transfer_change_time?: string
   soundbite_start?: string
@@ -134,6 +144,7 @@ export const reducer = handleActions(
         'slug_frozen',
         'auphonic_webhook_config',
         'is_auphonic_production_running',
+        'auphonic_chapter_timing_maps',
         'auphonic_plus_transfer_change_time',
         'soundbite_start',
         'soundbite_duration',
@@ -177,6 +188,11 @@ export const reducer = handleActions(
         action,
         ['payload', 'is_auphonic_production_running'],
         state.is_auphonic_production_running
+      ),
+      auphonic_chapter_timing_maps: get(
+        action,
+        ['payload', 'auphonic_chapter_timing_maps'],
+        state.auphonic_chapter_timing_maps
       ),
       auphonic_plus_transfer_change_time: get(
         action,
@@ -285,6 +301,7 @@ export const selectors = {
   explicit: (state: State) => state.explicit,
   auphonicProductionId: (state: State) => state.auphonic_production_id,
   isAuphonicProductionRunning: (state: State) => state.is_auphonic_production_running,
+  auphonicChapterTimingMaps: (state: State) => state.auphonic_chapter_timing_maps,
   auphonicWebhookConfig: (state: State) => state.auphonic_webhook_config,
   auphonicPlusTransferChangeTime: (state: State) => state.auphonic_plus_transfer_change_time,
   soundbite_start: (state: State) => state.soundbite_start,
