@@ -338,7 +338,7 @@ class Image
         $original = $orig_sizes['width'].'x'.$orig_sizes['height'];
 
         if (!$this->height && !$this->width) {
-            //keep original size
+            // keep original size
             $this->height = $orig_sizes['height'];
             $this->width = $orig_sizes['width'];
         }

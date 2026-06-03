@@ -2,8 +2,8 @@
 Contributors: eteubert
 Donate link: https://opencollective.com/podlove
 Tags: podlove, podcast, publishing, rss, audio
-Tested up to: 6.9.4
-Stable tag: 4.5.0
+Tested up to: 7.0
+Stable tag: 4.5.1
 Requires at least: 4.9.6
 Requires PHP: 8.0
 License: MIT
@@ -127,7 +127,14 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 = 4.5.1 =
 
+* improve: The "Get from Asset" transcript import has improved UX.
+    * It has a separate state when it is waiting for results, so it cannot accidentally be triggered multiple times.
+    * It is faster, through HTTP request optimization.
+    * Should errors occur, they are now shown inline. There also much more error handling internally.
+    * If the asset is a WordPress upload, the file is now fetched via filesystem functions instead of http calls. This is a follow-up to this feature introduced in 4.5.0 for file validation.
 * fix: Auphonic module is now aware of source and output timings in chapter marks. This is relevant if you use Automatic Cutting, which affects chapter timings. Re-running a production now also produces the expected results.
+* fix: Contributor selection UI positioning (WP 7.0 regression)
+* fix:
 
 = 4.5.0 =
 
@@ -140,6 +147,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 * improve: WordPress File Upload now shows the selected media file and warns when its filename does not match the episode file slug
 * fix: transcription format "VTT" can now be found under "transcript" type, not just "caption"
 * fix: uninstalling the plugin removes all database tables
+* fix: image cache key issue when height or width were empty, resulting in faulty cache misses
 
 Note: This release includes a database migration that adds a table column.
 
