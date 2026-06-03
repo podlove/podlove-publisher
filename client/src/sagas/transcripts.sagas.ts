@@ -46,15 +46,41 @@ function* importTranscripts(
 }
 
 function* importTranscriptFromAsset(
-  api: PodloveApiClient,
-  action: { type: string }
+  api: PodloveApiClient
 ) {
   const episodeId: string = yield select(selectors.episode.id)
-  const { result } = yield api.put(`transcripts/${episodeId}`, { asset: 1})
 
-  if (result) {
-    yield fork(initialize, api)
+  yield put(transcriptsStore.setAssetImportLoading(true))
+  yield put(transcriptsStore.setAssetImportError(null))
+
+  try {
+    const { result, error } = yield api.put(`transcripts/${episodeId}`, { asset: 1 })
+
+    if (error) {
+      yield put(transcriptsStore.setAssetImportError(importErrorMessage(error)))
+      return
+    }
+
+    if (result) {
+      const transcript = get(result, ['transcript'], [])
+
+      if (Array.isArray(transcript)) {
+        yield put(transcriptsStore.setTranscripts(transcript))
+      }
+
+      yield fork(initialize, api)
+    }
+  } catch (err: any) {
+    yield put(transcriptsStore.setAssetImportError(importErrorMessage(err)))
+  } finally {
+    yield put(transcriptsStore.setAssetImportLoading(false))
   }
+}
+
+const importErrorMessage = (error: any): string => {
+  const message = get(error, ['message']) || get(error, ['error', 'message']) || error?.toString()
+
+  return message || 'Sorry, we can not import the transcript from an asset.'
 }
 
 function* updateVoice(api: PodloveApiClient, action: { type: string, payload: { voice: string; contributor: string } }) {
@@ -80,4 +106,3 @@ export default function () {
     yield takeFirst(transcriptsStore.INIT, transcriptsSaga)
   }
 }
-

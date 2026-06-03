@@ -8,6 +8,8 @@ export const SET_VOICES = 'podlove/publisher/transcript/SET_VOICES'
 export const UPDATE_VOICE = 'podlove/publisher/transcript/UPDATE_VOICE'
 export const IMPORT_TRANSCRIPTS = 'podlove/publisher/transcript/IMPORT_TRANSCRIPTS'
 export const IMPORT_ASSET_TRANSCRIPTS = 'podlove/publisher/transcript/IMPORT_ASSET_TRANSCRIPTS'
+export const SET_ASSET_IMPORT_LOADING = 'podlove/publisher/transcript/SET_ASSET_IMPORT_LOADING'
+export const SET_ASSET_IMPORT_ERROR = 'podlove/publisher/transcript/SET_ASSET_IMPORT_ERROR'
 export const DELETE_TRANSCRIPTS = 'podlove/publisher/transcript/DELETE_TRANSCRIPTS'
 
 export const init = createAction<void>(INIT)
@@ -16,16 +18,22 @@ export const setVoices = createAction<PodloveTranscriptVoice[]>(SET_VOICES)
 export const updateVoice = createAction<{ voice: string; contributor: string }>(UPDATE_VOICE)
 export const importTranscripts = createAction<string>(IMPORT_TRANSCRIPTS)
 export const importTranscriptFromAsset = createAction<void>(IMPORT_ASSET_TRANSCRIPTS)
+export const setAssetImportLoading = createAction<boolean>(SET_ASSET_IMPORT_LOADING)
+export const setAssetImportError = createAction<string | null>(SET_ASSET_IMPORT_ERROR)
 export const deleteTranscripts = createAction<void>(DELETE_TRANSCRIPTS)
 
 export type State = {
   transcripts: PodloveTranscript[]
   voices: { voice: string, contributor: string }[]
+  isImportingFromAsset: boolean
+  assetImportError: string | null
 }
 
 export const initialState: State = {
   transcripts: [],
   voices: [],
+  isImportingFromAsset: false,
+  assetImportError: null,
 }
 
 export const reducer = handleActions(
@@ -54,6 +62,14 @@ export const reducer = handleActions(
         return voice
       }),
     }),
+    [SET_ASSET_IMPORT_LOADING]: (state: State, action: { payload: boolean }): State => ({
+      ...state,
+      isImportingFromAsset: action.payload,
+    }),
+    [SET_ASSET_IMPORT_ERROR]: (state: State, action: { payload: string | null }): State => ({
+      ...state,
+      assetImportError: action.payload,
+    }),
   },
   initialState
 )
@@ -61,4 +77,6 @@ export const reducer = handleActions(
 export const selectors = {
   transcripts: (state: State) => state.transcripts,
   voices: (state: State) => state.voices,
+  isImportingFromAsset: (state: State) => state.isImportingFromAsset,
+  assetImportError: (state: State) => state.assetImportError,
 }

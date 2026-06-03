@@ -143,43 +143,148 @@ class Transcripts extends \Podlove\Modules\Base
         $asset_assignment = Model\AssetAssignment::get_instance();
 
         if (!$transcript_asset = Model\EpisodeAsset::find_one_by_id($asset_assignment->transcript)) {
-            return [
-                'error' => sprintf(
-                    __('No asset is assigned for transcripts yet. Fix this in %s', 'podlove-podcasting-plugin-for-wordpress'),
-                    sprintf(
-                        '%s%s%s',
-                        '<a href="'.admin_url('admin.php?page=podlove_episode_assets_settings_handle').'" target="_blank">',
-                        __('Episode Assets', 'podlove-podcasting-plugin-for-wordpress'),
-                        '</a>'
-                    )
-                ),
-            ];
+            return self::transcript_import_error(
+                'podlove_transcript_asset_not_configured',
+                __('No asset is assigned for transcripts yet. Configure a transcript asset in Episode Assets.', 'podlove-podcasting-plugin-for-wordpress'),
+                400
+            );
         }
 
         if (!$transcript_file = Model\MediaFile::find_by_episode_id_and_episode_asset_id($episode->id, $transcript_asset->id)) {
-            return ['error' => __('No transcript file is available for this episode.', 'podlove-podcasting-plugin-for-wordpress')];
+            return self::transcript_import_error(
+                'podlove_transcript_file_missing',
+                sprintf(
+                    __('No transcript file is available for this episode using the assigned asset "%s".', 'podlove-podcasting-plugin-for-wordpress'),
+                    $transcript_asset->title
+                ),
+                404
+            );
         }
 
-        $transcript = wp_remote_get($transcript_file->get_file_url());
+        $transcript_url = $transcript_file->get_file_url();
 
-        if (is_wp_error($transcript)) {
-            return ['error' => $transcript->get_error_message()];
+        if (!$transcript_url) {
+            return self::transcript_import_error(
+                'podlove_transcript_file_url_missing',
+                __('The transcript asset has no usable file URL.', 'podlove-podcasting-plugin-for-wordpress'),
+                400
+            );
         }
 
-        self::parse_and_import_webvtt($episode, $transcript['body']);
+        $local_path = Model\LocalUploadFile::path_for_url($transcript_url);
+
+        if ($local_path) {
+            if (!is_file($local_path)) {
+                return self::transcript_import_error(
+                    'podlove_transcript_local_file_missing',
+                    sprintf(
+                        __('The transcript asset URL points to a local upload, but the file does not exist at %s inside WordPress.', 'podlove-podcasting-plugin-for-wordpress'),
+                        $local_path
+                    ),
+                    404
+                );
+            }
+
+            if (!is_readable($local_path)) {
+                return self::transcript_import_error(
+                    'podlove_transcript_local_file_unreadable',
+                    sprintf(
+                        __('The transcript asset URL points to a local upload, but the file is not readable at %s inside WordPress.', 'podlove-podcasting-plugin-for-wordpress'),
+                        $local_path
+                    ),
+                    403
+                );
+            }
+
+            $body = file_get_contents($local_path);
+
+            if ($body === false) {
+                return self::transcript_import_error(
+                    'podlove_transcript_local_file_read_failed',
+                    sprintf(
+                        __('Could not read the transcript asset file at %s inside WordPress.', 'podlove-podcasting-plugin-for-wordpress'),
+                        $local_path
+                    ),
+                    500
+                );
+            }
+        } else {
+            $transcript = wp_remote_get($transcript_url);
+
+            if (is_wp_error($transcript)) {
+                return self::transcript_import_error(
+                    'podlove_transcript_fetch_failed',
+                    sprintf(
+                        __('Could not fetch the transcript asset from %1$s. WordPress reported: %2$s', 'podlove-podcasting-plugin-for-wordpress'),
+                        $transcript_url,
+                        $transcript->get_error_message()
+                    ),
+                    502
+                );
+            }
+
+            $response_code = (int) wp_remote_retrieve_response_code($transcript);
+
+            if ($response_code < 200 || $response_code >= 300) {
+                return self::transcript_import_error(
+                    'podlove_transcript_fetch_failed',
+                    sprintf(
+                        __('Could not fetch the transcript asset from %1$s. The server responded with HTTP %2$d.', 'podlove-podcasting-plugin-for-wordpress'),
+                        $transcript_url,
+                        $response_code
+                    ),
+                    502
+                );
+            }
+
+            $body = wp_remote_retrieve_body($transcript);
+        }
+
+        if ($body === '') {
+            return self::transcript_import_error(
+                'podlove_transcript_file_empty',
+                sprintf(
+                    __('The transcript asset at %s is empty.', 'podlove-podcasting-plugin-for-wordpress'),
+                    $transcript_url
+                ),
+                422
+            );
+        }
+
+        if (function_exists('mb_check_encoding') && !mb_check_encoding($body, 'UTF-8')) {
+            return self::transcript_import_error(
+                'podlove_transcript_invalid_encoding',
+                __('Error parsing WebVTT file: the transcript asset must be UTF-8 encoded.', 'podlove-podcasting-plugin-for-wordpress'),
+                415
+            );
+        }
+
+        $parse_error = null;
+        $result = self::parse_webvtt($body, $parse_error);
+
+        if ($result === false) {
+            return self::transcript_import_error(
+                'podlove_transcript_parse_failed',
+                $parse_error ?: __('Error parsing WebVTT file.', 'podlove-podcasting-plugin-for-wordpress'),
+                422
+            );
+        }
+
+        self::import_parsed_webvtt($episode, $result);
 
         return true;
     }
 
-    public static function parse_webvtt($content)
+    public static function parse_webvtt($content, &$error_message = null)
     {
         $parser = new Parser();
 
         try {
             $result = $parser->parse($content);
         } catch (ParserException $e) {
-            $error = 'Error parsing webvtt file: '.$e->getMessage();
+            $error = 'Error parsing WebVTT file: '.$e->getMessage();
             \Podlove\Log::get()->addError($error);
+            $error_message = $error;
 
             return false;
         }
@@ -191,6 +296,8 @@ class Transcripts extends \Podlove\Modules\Base
     {
         if (function_exists('mb_check_encoding') && !mb_check_encoding($content, 'UTF-8')) {
             \Podlove\AJAX\Ajax::respond_with_json(['error' => 'Error parsing webvtt file: must be UTF-8 encoded']);
+
+            return false;
         }
 
         $result = self::parse_webvtt($content);
@@ -203,33 +310,9 @@ class Transcripts extends \Podlove\Modules\Base
             return;
         }
 
-        Transcript::delete_for_episode($episode->id);
+        self::import_parsed_webvtt($episode, $result);
 
-        foreach ($result['cues'] as $cue) {
-            $line = new Transcript();
-            $line->episode_id = $episode->id;
-            $line->start = $cue['start'] * 1000;
-            $line->end = $cue['end'] * 1000;
-            $line->voice = $cue['voice'];
-            $line->content = $cue['text'];
-            $line->save();
-        }
-
-        $voices = array_unique(array_map(function ($cue) {
-            return $cue['voice'];
-        }, $result['cues']));
-
-        foreach ($voices as $voice) {
-            $contributor = Contributor::find_one_by_property('identifier', $voice);
-
-            if (!VoiceAssignment::is_voice_set($episode->id, $voice) && $contributor) {
-                $voice_assignment = new VoiceAssignment();
-                $voice_assignment->episode_id = $episode->id;
-                $voice_assignment->voice = $voice;
-                $voice_assignment->contributor_id = $contributor->id;
-                $voice_assignment->save();
-            }
-        }
+        return true;
     }
 
     public function serve_transcript_file()
@@ -413,6 +496,46 @@ class Transcripts extends \Podlove\Modules\Base
         $jobs[] = '\Podlove\Modules\Transcripts\Jobs\ImportVoiceAssignmentsJob';
 
         return $jobs;
+    }
+
+    private static function import_parsed_webvtt(Episode $episode, $result)
+    {
+        Transcript::delete_for_episode($episode->id);
+
+        foreach ($result['cues'] as $cue) {
+            $line = new Transcript();
+            $line->episode_id = $episode->id;
+            $line->start = $cue['start'] * 1000;
+            $line->end = $cue['end'] * 1000;
+            $line->voice = $cue['voice'];
+            $line->content = $cue['text'];
+            $line->save();
+        }
+
+        $voices = array_unique(array_map(function ($cue) {
+            return $cue['voice'];
+        }, $result['cues']));
+
+        foreach ($voices as $voice) {
+            $contributor = Contributor::find_one_by_property('identifier', $voice);
+
+            if (!VoiceAssignment::is_voice_set($episode->id, $voice) && $contributor) {
+                $voice_assignment = new VoiceAssignment();
+                $voice_assignment->episode_id = $episode->id;
+                $voice_assignment->voice = $voice;
+                $voice_assignment->contributor_id = $contributor->id;
+                $voice_assignment->save();
+            }
+        }
+    }
+
+    private static function transcript_import_error($code, $message, $status)
+    {
+        return [
+            'code' => $code,
+            'error' => $message,
+            'status' => $status,
+        ];
     }
 
     private function print_rss_feed_links($podcast, $episode)

@@ -439,13 +439,18 @@ class WP_REST_PodloveTranscripts_Controller extends \WP_REST_Controller
             $file_content = $request['content'];
 
             if (function_exists('mb_check_encoding') && !mb_check_encoding($file_content, 'UTF-8')) {
-                \Podlove\Api\Error\NotSupported('not_supported', 'Error parsing webvtt file: must be UTF-8 encoded.');
+                return new \Podlove\Api\Error\NotSupported('not_supported', 'Error parsing WebVTT file: must be UTF-8 encoded.');
             }
 
-            $result = Transcripts::parse_webvtt($file_content);
+            $parse_error = null;
+            $result = Transcripts::parse_webvtt($file_content, $parse_error);
 
             if ($result === false) {
-                return new \Podlove\Api\Error\InternalServerError('internal_server_error', 'Sorry, we can not parse your vtt content.');
+                return new \WP_Error(
+                    'podlove_transcript_parse_failed',
+                    $parse_error ?: 'Sorry, we can not parse your WebVTT content.',
+                    ['status' => 422]
+                );
             }
 
             Transcript::delete_for_episode($episode->id);
@@ -478,8 +483,14 @@ class WP_REST_PodloveTranscripts_Controller extends \WP_REST_Controller
             }
         } else {
             if (isset($request['asset'])) {
-                if (Transcripts::transcript_import_from_asset($episode) !== true) {
-                    return new \Podlove\Api\Error\InternalServerError('internal_server_error', 'Sorry, we can not import the transcript from an asset.');
+                $import_result = Transcripts::transcript_import_from_asset($episode);
+
+                if ($import_result !== true) {
+                    return new \WP_Error(
+                        $import_result['code'] ?? 'podlove_transcript_import_failed',
+                        $import_result['error'] ?? 'Sorry, we can not import the transcript from an asset.',
+                        ['status' => $import_result['status'] ?? 500]
+                    );
                 }
             }
         }

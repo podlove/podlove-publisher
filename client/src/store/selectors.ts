@@ -188,6 +188,11 @@ const post = {
 const transcripts = {
   list: createSelector(root.transcripts, transcriptsStore.selectors.transcripts),
   voices: createSelector(root.transcripts, transcriptsStore.selectors.voices),
+  isImportingFromAsset: createSelector(
+    root.transcripts,
+    transcriptsStore.selectors.isImportingFromAsset
+  ),
+  assetImportError: createSelector(root.transcripts, transcriptsStore.selectors.assetImportError),
 }
 
 const settings = {
