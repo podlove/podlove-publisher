@@ -7,9 +7,8 @@
             <ComboboxLabel class="block text-sm font-medium leading-6 text-gray-900">{{
               __('Select Contributor', 'podlove-podcasting-plugin-for-wordpress')
             }}</ComboboxLabel>
-            <div class="relative mt-2 max-w-sm">
+            <div ref="trigger" class="relative mt-2 max-w-sm">
               <ComboboxInput
-                ref="trigger"
                 class="w-full rounded-md border-0 bg-white py-1.5 pl-3 pr-12 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 @change="filterContributors($event)"
                 :displayValue="() => query"
@@ -20,54 +19,56 @@
                 <ChevronDownIcon class="h-5 w-5 text-gray-400" aria-hidden="true" />
               </ComboboxButton>
             </div>
-            <div ref="container">
-              <ComboboxOptions
-                v-if="filteredContributors.length > 0"
-                class="absolute max-w-sm z-50 mt-1 max-h-56 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
-              >
-                <ComboboxOption
-                  v-for="contributor in filteredContributors"
-                  :key="contributor.id || 'create'"
-                  :value="contributor"
-                  as="template"
-                  v-slot="{ active, selected }"
+            <Teleport to="body">
+              <div ref="container" data-client="podlove" style="z-index: 100000">
+                <ComboboxOptions
+                  v-if="filteredContributors.length > 0"
+                  class="max-h-56 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
                 >
-                  <li
-                    :class="[
-                      'relative cursor-default select-none py-2 pl-3 pr-9',
-                      active ? 'bg-indigo-600 text-white' : 'text-gray-900',
-                    ]"
+                  <ComboboxOption
+                    v-for="contributor in filteredContributors"
+                    :key="contributor.id || 'create'"
+                    :value="contributor"
+                    as="template"
+                    v-slot="{ active, selected }"
                   >
-                    <div class="flex items-center">
-                      <img
-                        v-if="contributor.avatar_url"
-                        :src="contributor.avatar_url"
-                        alt=""
-                        class="h-6 w-6 flex-shrink-0 rounded-full"
-                        @error="contributor.avatar_url = ''"
-                      />
-                      <UserCircleIcon
-                        v-if="!contributor.avatar_url"
-                        class="h-6 w-6 flex-shrink-0 rounded-full text-gray-500"
-                      />
-                      <span :class="['ml-3 truncate', selected && 'font-semibold']">
-                        {{ contributorName(contributor) }}
-                      </span>
-                    </div>
-
-                    <span
-                      v-if="selected"
+                    <li
                       :class="[
-                        'absolute inset-y-0 right-0 flex items-center pr-4',
-                        active ? 'text-white' : 'text-indigo-600',
+                        'relative cursor-default select-none py-2 pl-3 pr-9',
+                        active ? 'bg-indigo-600 text-white' : 'text-gray-900',
                       ]"
                     >
-                      <CheckIcon class="h-5 w-5" aria-hidden="true" />
-                    </span>
-                  </li>
-                </ComboboxOption>
-              </ComboboxOptions>
-            </div>
+                      <div class="flex items-center">
+                        <img
+                          v-if="contributor.avatar_url"
+                          :src="contributor.avatar_url"
+                          alt=""
+                          class="h-6 w-6 flex-shrink-0 rounded-full"
+                          @error="contributor.avatar_url = ''"
+                        />
+                        <UserCircleIcon
+                          v-if="!contributor.avatar_url"
+                          class="h-6 w-6 flex-shrink-0 rounded-full text-gray-500"
+                        />
+                        <span :class="['ml-3 truncate', selected && 'font-semibold']">
+                          {{ contributorName(contributor) }}
+                        </span>
+                      </div>
+
+                      <span
+                        v-if="selected"
+                        :class="[
+                          'absolute inset-y-0 right-0 flex items-center pr-4',
+                          active ? 'text-white' : 'text-indigo-600',
+                        ]"
+                      >
+                        <CheckIcon class="h-5 w-5" aria-hidden="true" />
+                      </span>
+                    </li>
+                  </ComboboxOption>
+                </ComboboxOptions>
+              </div>
+            </Teleport>
           </Combobox>
         </div>
       </div>
@@ -142,7 +143,7 @@ export default defineComponent({
       modifiers: [
         {
           name: 'offset',
-          options: { offset: [0, 10] },
+          options: { offset: [0, 4] },
         },
         {
           name: 'sameWidth',
