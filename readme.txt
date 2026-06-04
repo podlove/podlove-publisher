@@ -134,7 +134,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
     * If the asset is a WordPress upload, the file is now fetched via filesystem functions instead of http calls. This is a follow-up to this feature introduced in 4.5.0 for file validation.
 * fix: Auphonic module is now aware of source and output timings in chapter marks. This is relevant if you use Automatic Cutting, which affects chapter timings. Re-running a production now also produces the expected results.
 * fix: Contributor selection UI positioning (WP 7.0 regression)
-* fix:
+* fix: image cache key issue when height or width were empty, resulting in faulty cache misses
 
 = 4.5.0 =
 
@@ -147,7 +147,6 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 * improve: WordPress File Upload now shows the selected media file and warns when its filename does not match the episode file slug
 * fix: transcription format "VTT" can now be found under "transcript" type, not just "caption"
 * fix: uninstalling the plugin removes all database tables
-* fix: image cache key issue when height or width were empty, resulting in faulty cache misses
 
 Note: This release includes a database migration that adds a table column.
 
