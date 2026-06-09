@@ -125,6 +125,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 4.5.2 =
+
+* improve: warning tool that detects issues in database migrations is now less sensitive and does not report minor issues any more that have no consequences
+
 = 4.5.1 =
 
 * improve: The "Get from Asset" transcript import has improved UX.
