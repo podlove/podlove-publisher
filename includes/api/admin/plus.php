@@ -33,7 +33,7 @@ class WP_REST_PodlovePlus_Controller extends \WP_REST_Controller
             [
                 'methods' => \WP_REST_Server::READABLE,
                 'callback' => [$this, 'get_features'],
-                'permission_callback' => [$this, 'get_item_permissions_check'],
+                'permission_callback' => [$this, 'get_features_permissions_check'],
             ],
         ]);
 
@@ -203,7 +203,16 @@ class WP_REST_PodlovePlus_Controller extends \WP_REST_Controller
 
     public function get_item_permissions_check($request)
     {
-        if (!current_user_can('administrator')) {
+        if (!current_user_can('manage_options')) {
+            return new \Podlove\Api\Error\ForbiddenAccess();
+        }
+
+        return true;
+    }
+
+    public function get_features_permissions_check($request)
+    {
+        if (!current_user_can('edit_posts')) {
             return new \Podlove\Api\Error\ForbiddenAccess();
         }
 
