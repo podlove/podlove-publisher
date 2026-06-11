@@ -209,7 +209,8 @@ class Episode extends Wrapper
      */
     public function recordingDate($format = '')
     {
-        return new \Podlove\Template\DateTime(strtotime($this->episode->recording_date), $format);
+        $date = $this->episode->recording_date;
+        return new \Podlove\Template\DateTime($date ? strtotime($date) : false, $format);
     }
 
     /**

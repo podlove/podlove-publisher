@@ -70,7 +70,7 @@ class Season extends Base
             $format = get_option('date_format');
         }
 
-        if ($time = strtotime($this->start_date)) {
+        if ($this->start_date && $time = strtotime($this->start_date)) {
             return date($format, $time);
         }
 
