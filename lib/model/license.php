@@ -180,7 +180,7 @@ class License
     public static function get_license_from_url($url)
     {
         // only parse cc licenses
-        if (stripos($url, 'creativecommons.org') === false) {
+        if (!$url || stripos($url, 'creativecommons.org') === false) {
             return [
                 'version' => null,
                 'commercial_use' => null,
