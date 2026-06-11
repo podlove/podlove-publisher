@@ -117,7 +117,7 @@ class Entry extends Wrapper
      */
     public function image()
     {
-        $data = \unserialize($this->entry->unfurl_data);
+        $data = \unserialize($this->entry->unfurl_data ?? '');
 
         if (!$data) {
             return false;
