@@ -76,7 +76,7 @@ class TemplateExtensions
             // ensure it's not hidden
             $entries = array_filter($entries, function ($e) {
                 $unfurl_failed = $e->state == 'failed';
-                $has_manual_url = strlen($e->url) > 0;
+                $has_manual_url = strlen($e->url ?? '') > 0;
                 $is_hidden = $e->hidden;
 
                 // return !$e->hidden && (!$unfurl_failed || $has_manual_url);
