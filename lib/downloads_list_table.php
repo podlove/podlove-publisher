@@ -237,9 +237,10 @@ class Downloads_List_Table extends \Podlove\List_Table
         $totals_cron = $get_cron_info('podlove_calc_hourly_download_sums');
         $prev_totals_job = Job::find_one_recent_finished_job('Podlove\Jobs\DownloadTimedAggregatorJob');
 
+        $prev_job_time = ($prev_totals_job && $prev_totals_job->updated_at) ? strtotime($prev_totals_job->updated_at) : 0;
         echo sprintf(
             __('Analytics data is %s old.', 'podlove-podcasting-plugin-for-wordpress'),
-            human_time_diff(max($totals_cron['prev'], strtotime($prev_totals_job->updated_at)), time())
+            human_time_diff(max($totals_cron['prev'], $prev_job_time), time())
         );
         echo ' ';
         echo sprintf(
