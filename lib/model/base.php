@@ -20,23 +20,12 @@ abstract class Base
 
     public function __set($name, $value)
     {
-        if (self::has_property($name)) {
-            $this->set_property($name, $value);
-        } else {
-            $this->{$name} = $value;
-        }
+        $this->set_property($name, $value);
     }
 
     public function __get($name)
     {
-        if (self::has_property($name)) {
-            return $this->get_property($name);
-        }
-        if (property_exists($this, $name)) {
-            return $this->{$name};
-        }
-
-        return null;
+        return $this->get_property($name);
     }
 
     // mimic ::find_one_by_<property>
