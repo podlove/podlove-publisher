@@ -99,7 +99,7 @@ function is_image($file, $filename = '')
     $ext = isset($check['ext']) && $check['ext'] ? strtolower($check['ext']) : null;
     $wp_type = isset($check['type']) && $check['type'] ? strtolower($check['type']) : null;
 
-    $wp_type_looks_correct = stripos($wp_type, 'image/') === 0;
+    $wp_type_looks_correct = $wp_type !== null && stripos($wp_type, 'image/') === 0;
 
     // denylist some exts for extra safety
     $danger_exts = [
