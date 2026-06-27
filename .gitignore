@@ -26,3 +26,4 @@ lib/modules/podlove_web_player/player_v2/
 /.vs
 config.local.js
 *.cache
+.venv
