@@ -83,12 +83,16 @@ function get_help_link($tab_id, $title = '<sup>?</sup>')
  *
  * @return bool
  */
-function is_image($file, $filename = '')
+function image_file_extension($file, $filename = '')
 {
     // simple PHP based checks
     $type = get_image_type($file);
     $mime = get_image_mime_type($type);
     $mime_is_image = substr($mime, 0, 5) == 'image';
+
+    if (!$mime_is_image) {
+        return false;
+    }
 
     // more checks using WP helpers
     if (!$filename) {
@@ -108,11 +112,30 @@ function is_image($file, $filename = '')
 
     $ext_looks_dangerous = empty($ext) || in_array($ext, $danger_exts, true);
 
-    return $mime_is_image && !$ext_looks_dangerous && $wp_type_looks_correct;
+    if ($ext_looks_dangerous || !$wp_type_looks_correct) {
+        return false;
+    }
+
+    return $ext;
+}
+
+function is_image($file, $filename = '')
+{
+    return false !== image_file_extension($file, $filename);
 }
 
 function get_image_type($file)
 {
+    if (!is_file($file) || !is_readable($file)) {
+        return false;
+    }
+
+    $file_size = filesize($file);
+    // exif_imagetype() emits a notice for files shorter than 12 bytes.
+    if (false === $file_size || $file_size < 12) {
+        return false;
+    }
+
     if (function_exists('exif_imagetype')) {
         return exif_imagetype($file);
     }

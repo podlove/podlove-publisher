@@ -42,7 +42,7 @@ namespace Podlove;
 
 use Podlove\Jobs\CronJobRunner;
 
-define('Podlove\DATABASE_VERSION', 165);
+define('Podlove\DATABASE_VERSION', 166);
 
 add_action('admin_init', '\Podlove\maybe_run_database_migrations');
 add_action('admin_init', '\Podlove\run_database_migrations', 5);
@@ -1732,6 +1732,10 @@ function run_migrations_for_version($version)
                 }
                 $f->save();
             }
+
+            break;
+        case 166:
+            Model\Image::flush_cache();
 
             break;
     }

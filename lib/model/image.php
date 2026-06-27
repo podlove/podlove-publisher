@@ -73,6 +73,7 @@ class Image
 
         $this->upload_basedir = self::cache_dir().$id_directory;
         $this->upload_baseurl = content_url('cache/podlove/').$id_directory;
+        $this->load_cached_file_extension();
     }
 
     public function source_url()
@@ -292,11 +293,17 @@ class Image
 
     public function file_name($size_slug)
     {
+        $base = $size_slug;
+
         if ($this->file_name) {
-            return $this->file_name.'_'.$size_slug.'.'.$this->file_extension;
+            $base = $this->file_name.'_'.$size_slug;
         }
 
-        return $size_slug.'.'.$this->file_extension;
+        if (!$this->file_extension) {
+            return $base;
+        }
+
+        return $base.'.'.$this->file_extension;
     }
 
     public function source_exists()
@@ -392,7 +399,7 @@ class Image
                 $path = explode($plugin_dirname, $source_url)[1];
                 $file = untrailingslashit(\Podlove\PLUGIN_DIR).$path;
 
-                if (file_exists($file) && \Podlove\is_image($file, basename($this->source_url))) {
+                if (file_exists($file) && $this->set_file_extension_from_validated_image($file, basename($this->source_url))) {
                     $this->create_basedir();
                     $this->save_cache_data();
                     $this->copy_as_original_file($file);
@@ -434,7 +441,7 @@ class Image
             );
         }
 
-        if (!\Podlove\is_image($temp_file, basename($this->source_url))) {
+        if (!$this->set_file_extension_from_validated_image($temp_file, basename($this->source_url))) {
             Log::get()->addWarning(
                 sprintf(__('Podlove Image Cache: Downloaded file is not an image.')),
                 ['url' => $this->source_url]
@@ -460,6 +467,8 @@ class Image
                     $this->upload_basedir
                 )
             );
+
+            return;
         }
     }
 
@@ -643,6 +652,10 @@ class Image
             'filename' => $this->file_name,
         ];
 
+        if ($this->file_extension) {
+            $cache_info['extension'] = $this->file_extension;
+        }
+
         if (!empty($response)) {
             $cache_info['etag'] = wp_remote_retrieve_header($response, 'etag');
             $cache_info['last-modified'] = wp_remote_retrieve_header($response, 'last-modified');
@@ -657,9 +670,56 @@ class Image
         $url = wp_parse_url($this->source_url);
 
         if (isset($url['path'])) {
-            return pathinfo($url['path'], PATHINFO_EXTENSION);
+            $extension = strtolower(pathinfo($url['path'], PATHINFO_EXTENSION));
+
+            if ($this->is_safe_image_extension($extension)) {
+                return $extension;
+            }
         }
 
         return '';
+    }
+
+    private function load_cached_file_extension()
+    {
+        if (!file_exists($this->cache_file())) {
+            return;
+        }
+
+        $cache = Yaml::parse(file_get_contents($this->cache_file()));
+
+        if (!isset($cache['extension'])) {
+            return;
+        }
+
+        $extension = strtolower($cache['extension']);
+
+        if ($this->is_safe_image_extension($extension)) {
+            $this->file_extension = $extension;
+        }
+    }
+
+    private function set_file_extension_from_validated_image($file, $filename)
+    {
+        $extension = \Podlove\image_file_extension($file, $filename);
+
+        if (!$extension || !$this->is_safe_image_extension($extension)) {
+            return false;
+        }
+
+        $this->file_extension = $extension;
+
+        return true;
+    }
+
+    private function is_safe_image_extension($extension)
+    {
+        if (!$extension) {
+            return false;
+        }
+
+        $type = wp_check_filetype('file.'.$extension);
+
+        return isset($type['type']) && 0 === strpos($type['type'], 'image/');
     }
 }

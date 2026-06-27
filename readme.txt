@@ -127,6 +127,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 = 4.5.2 =
 
+* security: Fixed CVE-2026-13001, a remote code execution vulnerability in the image cache caused by unsafe handling of cached image file extensions.
 * improve: warning tool that detects issues in database migrations is now less sensitive and does not report minor issues any more that have no consequences
 
 = 4.5.1 =
