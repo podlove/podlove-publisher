@@ -19,6 +19,7 @@ class EpisodesApiTest extends WP_UnitTestCase
         $this->server = rest_get_server();
 
         podlove_setup_database_tables();
+        \Podlove\Modules\Base::deactivate('seasons');
         podlove_test_reset_podcast_episodes();
 
         $this->admin_user_id = $this->factory->user->create(['role' => 'administrator']);
