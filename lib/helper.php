@@ -105,12 +105,7 @@ function image_file_extension($file, $filename = '')
 
     $wp_type_looks_correct = stripos($wp_type, 'image/') === 0;
 
-    // denylist some exts for extra safety
-    $danger_exts = [
-        'php', 'php3', 'php4', 'php5', 'phtml', 'phar', 'pl', 'py', 'rb', 'cgi', 'asp', 'aspx', 'jsp',
-    ];
-
-    $ext_looks_dangerous = empty($ext) || in_array($ext, $danger_exts, true);
+    $ext_looks_dangerous = empty($ext) || is_dangerous_file_extension($ext);
 
     if ($ext_looks_dangerous || !$wp_type_looks_correct) {
         return false;
@@ -122,6 +117,15 @@ function image_file_extension($file, $filename = '')
 function is_image($file, $filename = '')
 {
     return false !== image_file_extension($file, $filename);
+}
+
+function is_dangerous_file_extension($extension)
+{
+    $danger_exts = [
+        'php', 'php3', 'php4', 'php5', 'phtml', 'phar', 'pl', 'py', 'rb', 'cgi', 'asp', 'aspx', 'jsp',
+    ];
+
+    return in_array(strtolower($extension), $danger_exts, true);
 }
 
 function get_image_type($file)

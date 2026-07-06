@@ -30,7 +30,7 @@ class HttpHeaderValidator
 
     public function validate()
     {
-        $response = wp_remote_head($this->url);
+        $response = wp_safe_remote_head($this->url);
 
         // Might just be unavailable right now, so ignore.
         // It would be great to track this over time and create conflicts.

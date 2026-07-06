@@ -55,6 +55,57 @@ class ImageCacheSecurityTest extends WP_UnitTestCase
         $this->assertNotSame('.php', substr($cached_image->original_file(), -4));
     }
 
+    public function testFilterableWordPressMimesCannotMakeUnsafeUrlPathSafe(): void
+    {
+        $allow_unsafe_extensions_as_image = function ($mimes) {
+            $mimes['html'] = 'image/jpeg';
+            $mimes['php'] = 'image/jpeg';
+            $mimes['phtml'] = 'image/jpeg';
+
+            return $mimes;
+        };
+
+        add_filter('mime_types', $allow_unsafe_extensions_as_image);
+
+        try {
+            foreach (['html', 'php', 'phtml'] as $extension) {
+                $image = new Image('https://example.test/heic_evil.'.$extension, 'space');
+
+                $this->assertSame('space_original', basename($image->original_file()));
+            }
+        } finally {
+            remove_filter('mime_types', $allow_unsafe_extensions_as_image);
+        }
+    }
+
+    public function testUnsafeCachedExtensionIsIgnoredEvenWhenWordPressMimeIsFilterable(): void
+    {
+        $allow_unsafe_extensions_as_image = function ($mimes) {
+            $mimes['html'] = 'image/jpeg';
+            $mimes['php'] = 'image/jpeg';
+
+            return $mimes;
+        };
+
+        add_filter('mime_types', $allow_unsafe_extensions_as_image);
+
+        try {
+            foreach (['html', 'php', 'php.jpg'] as $extension) {
+                $url = 'https://example.test/heic_evil_'.$extension.'.php';
+                $image = new Image($url, 'space');
+                $image->create_basedir();
+
+                file_put_contents(dirname($image->original_file()).'/cache.yml', "source: '{$url}'\nfilename: space\nextension: {$extension}\n");
+
+                $cached_image = new Image($url, 'space');
+
+                $this->assertSame('space_original', basename($cached_image->original_file()));
+            }
+        } finally {
+            remove_filter('mime_types', $allow_unsafe_extensions_as_image);
+        }
+    }
+
     public function testEmptyImageFileIsRejectedWithoutPhpNotice(): void
     {
         $this->payload_file = wp_tempnam('empty-image.jpg');

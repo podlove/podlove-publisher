@@ -718,6 +718,17 @@ class Image
             return false;
         }
 
+        $extension = strtolower($extension);
+
+        if (!preg_match('/^[a-z0-9]+$/', $extension) || \Podlove\is_dangerous_file_extension($extension)) {
+            return false;
+        }
+
+        $image_extensions = wp_get_ext_types()['image'] ?? [];
+        if (!in_array($extension, $image_extensions, true)) {
+            return false;
+        }
+
         $type = wp_check_filetype('file.'.$extension);
 
         return isset($type['type']) && 0 === strpos($type['type'], 'image/');
