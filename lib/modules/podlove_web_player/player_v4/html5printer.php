@@ -125,15 +125,15 @@ class Html5Printer implements \Podlove\Modules\PodloveWebPlayer\PlayerPrinterInt
 
             $config = array_merge($config, [
                 'title' => $episode_title,
-                'subtitle' => trim($episode->subtitle),
-                'summary' => trim($episode->summary),
+                'subtitle' => trim($episode->subtitle ?? ''),
+                'summary' => trim($episode->summary ?? ''),
                 'publicationDate' => mysql2date('c', $post->post_date),
                 'poster' => $episode->cover_art_with_fallback()->setWidth(500)->url(),
                 'duration' => $episode->get_duration('full'),
                 'link' => get_permalink($episode->post_id),
                 'audio' => $media_file_urls,
                 'chapters' => array_map(function ($c) {
-                    $c->title = html_entity_decode(trim($c->title));
+                    $c->title = html_entity_decode(trim($c->title ?? ''));
 
                     return $c;
                 }, (array) json_decode($episode->get_chapters('json'))),

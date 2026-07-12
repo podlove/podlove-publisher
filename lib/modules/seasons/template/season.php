@@ -84,7 +84,8 @@ class Season extends Wrapper
      */
     public function startDate()
     {
-        return new \Podlove\Template\DateTime(strtotime($this->season->start_date));
+        $date = $this->season->start_date;
+        return new \Podlove\Template\DateTime($date ? strtotime($date) : false);
     }
 
     /**

@@ -105,6 +105,6 @@ class Statistics
 
     public static function duration_to_seconds($timestring)
     {
-        return \Podlove\NormalPlayTime\Parser::parse($timestring, 's');
+        return \Podlove\NormalPlayTime\Parser::parse($timestring ?? '', 's');
     }
 }

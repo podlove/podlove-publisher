@@ -7,6 +7,8 @@ use Podlove\Modules\PodloveWebPlayer\PlayerV3\PlayerMediaFiles;
 
 class MediaTagRenderer
 {
+    private Episode $episode;
+
     public function __construct(Episode $episode)
     {
         $this->episode = $episode;

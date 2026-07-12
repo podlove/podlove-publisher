@@ -103,7 +103,7 @@ function image_file_extension($file, $filename = '')
     $ext = isset($check['ext']) && $check['ext'] ? strtolower($check['ext']) : null;
     $wp_type = isset($check['type']) && $check['type'] ? strtolower($check['type']) : null;
 
-    $wp_type_looks_correct = stripos($wp_type, 'image/') === 0;
+    $wp_type_looks_correct = $wp_type !== null && stripos($wp_type, 'image/') === 0;
 
     $ext_looks_dangerous = empty($ext) || is_dangerous_file_extension($ext);
 

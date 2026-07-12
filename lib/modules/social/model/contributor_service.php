@@ -46,7 +46,11 @@ class ContributorService extends Base
     {
         $service = $this->get_service();
 
-        return str_replace('%account-placeholder%', $this->value, $service->url_scheme);
+        if (!$service || !$service->url_scheme) {
+            return '';
+        }
+
+        return str_replace('%account-placeholder%', $this->value ?? '', $service->url_scheme);
     }
 
     public static function find_by_contributor_id_and_category($contributor_id, $category = 'social')
