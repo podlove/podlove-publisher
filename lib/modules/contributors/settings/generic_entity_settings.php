@@ -56,11 +56,28 @@ class GenericEntitySettings
 
     public function process_form()
     {
-        if (!isset($_REQUEST[$this->get_entity_slug()])) {
+        if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
             return;
         }
 
-        $action = isset($_REQUEST['action']) ? $_REQUEST['action'] : null;
+        $slug = $this->get_entity_slug();
+        if (!isset($_POST[$slug])) {
+            return;
+        }
+
+        $action = isset($_POST['action']) ? sanitize_key(wp_unslash($_POST['action'])) : null;
+        if (!in_array($action, ['save', 'create', 'delete'], true)) {
+            return;
+        }
+
+        if (!current_user_can('podlove_manage_contributors')) {
+            return;
+        }
+
+        $nonce = isset($_POST['_podlove_nonce']) ? sanitize_text_field(wp_unslash($_POST['_podlove_nonce'])) : '';
+        if (!wp_verify_nonce($nonce, self::$nonce)) {
+            return;
+        }
 
         if ($action === 'save') {
             $this->save();
@@ -87,10 +104,10 @@ class GenericEntitySettings
 						<?php echo sprintf($this->labels['delete_confirm'], $title); ?>
 					</strong>
 				</p>
-				<p>
-					<?php echo self::get_action_link($this->get_entity_slug(), $entity->id, $this->labels['delete_button_delete'], 'delete', 'button'); ?>
+				<div>
+					<?php $this->delete_form($entity->id); ?>
 					<?php echo self::get_action_link($this->get_entity_slug(), $entity->id, $this->labels['delete_button_keep'], 'keep', 'button-primary'); ?>
-				</p>
+				</div>
 			</div>
 			<?php
         } ?>
@@ -144,17 +161,20 @@ class GenericEntitySettings
     {
         $slug = $this->get_entity_slug();
 
-        if (!isset($_REQUEST[$slug])) {
-            return;
-        }
-
-        if (!wp_verify_nonce($_REQUEST['_podlove_nonce'], self::$nonce)) {
+        if (!isset($_POST[$slug])) {
             return;
         }
 
         $class = $this->get_entity_class();
 
-        $entity = $class::find_by_id($_REQUEST[$slug]);
+        $entity = $class::find_by_id(absint($_POST[$slug]));
+        if (!$entity) {
+            return;
+        }
+
+        if (!isset($_POST['podlove_'.$slug]) || !is_array($_POST['podlove_'.$slug])) {
+            return;
+        }
 
         $attributes = $_POST['podlove_'.$slug];
         $attributes = apply_filters('podlove_generic_entity_attributes', $attributes);
@@ -176,10 +196,15 @@ class GenericEntitySettings
      */
     protected function create()
     {
+        $attributes_key = 'podlove_'.$this->get_entity_slug();
+        if (!isset($_POST[$attributes_key]) || !is_array($_POST[$attributes_key])) {
+            return;
+        }
+
         $class = $this->get_entity_class();
 
         $entity = new $class();
-        $entity->update_attributes($_POST['podlove_'.$this->get_entity_slug()]);
+        $entity->update_attributes($_POST[$attributes_key]);
 
         do_action('podlove_create_entity_'.$this->get_entity_slug(), $entity);
 
@@ -195,12 +220,17 @@ class GenericEntitySettings
      */
     protected function delete()
     {
-        if (!isset($_REQUEST[$this->get_entity_slug()])) {
+        if (!isset($_POST[$this->get_entity_slug()])) {
             return;
         }
 
         $class = $this->get_entity_class();
-        $class::find_by_id($_REQUEST[$this->get_entity_slug()])->delete();
+        $entity = $class::find_by_id(absint($_POST[$this->get_entity_slug()]));
+        if (!$entity) {
+            return;
+        }
+
+        $entity->delete();
 
         $this->redirect('index');
     }
@@ -284,5 +314,22 @@ class GenericEntitySettings
 
         $cb = $this->form_callback;
         $cb($form_args, $entity, $action);
+    }
+
+    private function delete_form($entity_id)
+    {
+        $query = ['page' => sanitize_key(wp_unslash($_GET['page'] ?? ''))];
+        if ($this->is_tab) {
+            $query['podlove_tab'] = $this->tab_slug;
+        }
+
+        ?>
+		<form action="<?php echo esc_url(add_query_arg($query, admin_url('admin.php'))); ?>" method="post" style="display: inline;">
+			<?php wp_nonce_field(self::$nonce, '_podlove_nonce'); ?>
+			<input type="hidden" name="action" value="delete">
+			<input type="hidden" name="<?php echo esc_attr($this->get_entity_slug()); ?>" value="<?php echo esc_attr($entity_id); ?>">
+			<?php submit_button($this->labels['delete_button_delete'], 'delete', 'submit', false); ?>
+		</form>
+		<?php
     }
 }

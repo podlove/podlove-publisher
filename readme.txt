@@ -125,6 +125,11 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 4.5.3 =
+
+* security: fix CSRF in contributors management UI (reported by Ryan Fabella)
+* improve: fix some PHP warnings
+
 = 4.5.2 =
 
 * security: Fixed CVE-2026-13001, a remote code execution vulnerability in the image cache caused by unsafe handling of cached image file extensions.
