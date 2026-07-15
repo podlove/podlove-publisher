@@ -25,7 +25,8 @@
     "phpunit/phpunit": "^9.6",
     "yoast/phpunit-polyfills": "^4.0",
     "php-stubs/wordpress-stubs": "^6.9",
-    "php-stubs/wordpress-tests-stubs": "^6.9"
+    "php-stubs/wordpress-tests-stubs": "^6.9",
+    "eduardovillao/wp-since": "^1.5"
   },
   "autoload": {
     "classmap": [
