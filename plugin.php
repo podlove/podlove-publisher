@@ -218,6 +218,9 @@ add_action('admin_init', ['\Podlove\PhpDeprecationWarning', 'init']);
 // init cache (after plugins_loaded, so modules have a chance to hook)
 add_action('init', ['\Podlove\Cache\TemplateCache', 'get_instance']);
 
+require_once \Podlove\PLUGIN_DIR.'lib/image_cache/request.php';
+require_once \Podlove\PLUGIN_DIR.'lib/image_cache/generation_guard.php';
+
 // require_once \Podlove\PLUGIN_DIR . 'includes/about.php';
 require_once \Podlove\PLUGIN_DIR.'includes/api/api.php';
 require_once \Podlove\PLUGIN_DIR.'includes/auto_post_titles.php';

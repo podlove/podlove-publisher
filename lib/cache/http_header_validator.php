@@ -2,6 +2,8 @@
 
 namespace Podlove\Cache;
 
+use Podlove\ImageCache\Request as ImageCacheRequest;
+
 /**
  * Checks HTTP header of URL for changrs in etag or last_modified.
  *
@@ -30,7 +32,10 @@ class HttpHeaderValidator
 
     public function validate()
     {
-        $response = wp_safe_remote_head($this->url);
+        $response = wp_safe_remote_head($this->url, [
+            'timeout' => ImageCacheRequest::download_timeout(),
+            'redirection' => ImageCacheRequest::redirect_limit(),
+        ]);
 
         // Might just be unavailable right now, so ignore.
         // It would be great to track this over time and create conflicts.

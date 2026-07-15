@@ -1,6 +1,8 @@
 <?php
 
 use Podlove\Cache\HttpHeaderValidator;
+use Podlove\ImageCache\GenerationGuard;
+use Podlove\ImageCache\Request as ImageCacheRequest;
 use Podlove\Log;
 use Podlove\Model\Image;
 use Symfony\Component\Yaml\Yaml;
@@ -53,6 +55,11 @@ function podlove_refetch_cached_image($url, $filename)
 // add routes
 add_action('init', function () {
     add_rewrite_rule(
+        '^podlove/image/([^/]+)/([0-9]+)/([0-9]+)/([0-9])/([^/]+)/([a-f0-9]{32})/?$',
+        'index.php?podlove_image_cache_url=$matches[1]&podlove_width=$matches[2]&podlove_height=$matches[3]&podlove_crop=$matches[4]&podlove_file_name=$matches[5]&podlove_image_cache_signature=$matches[6]',
+        'top'
+    );
+    add_rewrite_rule(
         '^podlove/image/([^/]+)/([0-9]+)/([0-9]+)/([0-9])/([^/]+)/?$',
         'index.php?podlove_image_cache_url=$matches[1]&podlove_width=$matches[2]&podlove_height=$matches[3]&podlove_crop=$matches[4]&podlove_file_name=$matches[5]',
         'top'
@@ -65,6 +72,7 @@ add_filter('query_vars', function ($query_vars) {
     $query_vars[] = 'podlove_height';
     $query_vars[] = 'podlove_crop';
     $query_vars[] = 'podlove_file_name';
+    $query_vars[] = 'podlove_image_cache_signature';
 
     return $query_vars;
 }, 10, 1);
@@ -73,14 +81,22 @@ add_action('wp', 'podlove_handle_cache_files');
 
 function podlove_handle_cache_files()
 {
-    $source_url = \Podlove\PHP\hex2str(podlove_get_query_var('podlove_image_cache_url'));
-    $file_name = urldecode(podlove_get_query_var('podlove_file_name'));
-    $width = (int) podlove_get_query_var('podlove_width');
-    $height = (int) podlove_get_query_var('podlove_height');
-    $crop = (bool) podlove_get_query_var('podlove_crop');
-
-    if (!$source_url) {
+    $encoded_source_url = podlove_get_query_var('podlove_image_cache_url');
+    if (!$encoded_source_url) {
         return;
+    }
+
+    $request = ImageCacheRequest::from_query_vars(
+        $encoded_source_url,
+        podlove_get_query_var('podlove_width'),
+        podlove_get_query_var('podlove_height'),
+        podlove_get_query_var('podlove_crop'),
+        podlove_get_query_var('podlove_file_name'),
+        podlove_get_query_var('podlove_image_cache_signature')
+    );
+
+    if (is_wp_error($request)) {
+        podlove_image_cache_fail(404);
     }
 
     // Tell WP Super Cache to not cache download links
@@ -88,31 +104,74 @@ function podlove_handle_cache_files()
         define('DONOTCACHEPAGE', true);
     }
 
-    $image = new Image($source_url, $file_name);
+    if ($request->has_signature() && !$request->has_valid_signature()) {
+        podlove_image_cache_fail(404);
+    }
+
+    $file = podlove_resolve_image_cache_file($request, $request->has_valid_signature());
+    if (is_wp_error($file)) {
+        $status = 'podlove_image_cache_busy' === $file->get_error_code() ? 503 : 404;
+        podlove_image_cache_fail($status, 503 === $status ? 5 : null);
+    }
+
+    podlove_serve_cached_image($file);
+}
+
+/**
+ * Resolve an image cache request to an existing local rendition.
+ *
+ * When $allow_generation is false, this function performs no network requests
+ * and creates no cache files. This is the compatibility path for unsigned URLs.
+ *
+ * @param bool $allow_generation
+ *
+ * @return string|WP_Error
+ */
+function podlove_resolve_image_cache_file(ImageCacheRequest $request, $allow_generation)
+{
+    $image = new Image($request->source_url(), $request->file_name());
 
     if (!$image->source_exists()) {
-        $image->download_source();
+        if (!$allow_generation) {
+            return new WP_Error('podlove_image_cache_legacy_miss', __('Unsigned image cache miss.'));
+        }
+
+        $source_guard = new GenerationGuard($request->source_key());
+        if ($source_guard->is_backed_off()) {
+            return new WP_Error('podlove_image_cache_backoff', __('Image source is temporarily unavailable.'));
+        }
+
+        if (!$source_guard->acquire()) {
+            return new WP_Error('podlove_image_cache_busy', __('Image source is currently being generated.'));
+        }
+
+        if (!$image->source_exists()) {
+            $image->download_source();
+        }
+
+        if (!$image->source_exists()) {
+            $source_guard->record_failure();
+            $source_guard->release();
+
+            return new WP_Error('podlove_image_cache_download_failed', __('Image download failed.'));
+        }
+
+        $source_guard->clear_failure();
+        $source_guard->release();
     }
 
-    // Bail if download fails
-    if (!$image->source_exists()) {
-        Log::get()->error('Download failed for image: '.$image->url());
-        status_header(307);
-        header('Location: '.$source_url);
-        exit;
+    $image_info = @getimagesize($image->original_file());
+    if (false === $image_info) {
+        return new WP_Error('podlove_image_cache_invalid_source', __('Cached image source is invalid.'));
     }
 
-    $imageinfo = getimagesize($image->original_file());
-
-    // Bail if we cannot determine image meta
-    if ($imageinfo === false) {
-        Log::get()->error('Image size cannot be determined for file: '.$image->original_file());
-        status_header(307);
-        header('Location: '.$source_url);
-        exit;
+    list($orig_width, $orig_height) = $image_info;
+    if (!$request->source_dimensions_are_allowed($orig_width, $orig_height)) {
+        return new WP_Error('podlove_image_cache_source_too_large', __('Cached image source exceeds the pixel limit.'));
     }
 
-    list($orig_width, $orig_height) = $imageinfo;
+    $width = $request->width();
+    $height = $request->height();
 
     // Do not try to enlarge images
     if ($width > $orig_width) {
@@ -123,66 +182,112 @@ function podlove_handle_cache_files()
         $height = $orig_height;
     }
 
+    if (!$request->output_dimensions_are_allowed($orig_width, $orig_height, $width, $height)) {
+        return new WP_Error('podlove_image_cache_output_too_large', __('Requested image exceeds the pixel limit.'));
+    }
+
     $image
         ->setWidth($width)
         ->setHeight($height)
-        ->setCrop($crop)
+        ->setCrop($request->crop())
     ;
 
     if (!file_exists($image->resized_file())) {
-        $image->generate_resized_copy();
+        if (!$allow_generation) {
+            return new WP_Error('podlove_image_cache_legacy_miss', __('Unsigned image rendition does not exist.'));
+        }
+
+        $rendition_guard = new GenerationGuard($request->rendition_key($width, $height));
+        if ($rendition_guard->is_backed_off()) {
+            return new WP_Error('podlove_image_cache_backoff', __('Image rendition is temporarily unavailable.'));
+        }
+
+        if (!$rendition_guard->acquire()) {
+            return new WP_Error('podlove_image_cache_busy', __('Image rendition is currently being generated.'));
+        }
+
+        if (!file_exists($image->resized_file())) {
+            $image->generate_resized_copy();
+        }
+
+        if (!file_exists($image->resized_file())) {
+            $rendition_guard->record_failure();
+            $rendition_guard->release();
+
+            return new WP_Error('podlove_image_cache_resize_failed', __('Image resize failed.'));
+        }
+
+        $rendition_guard->clear_failure();
+        $rendition_guard->release();
     }
 
-    $file = $image->resized_file();
+    return $image->resized_file();
+}
 
-    // Bail if resize fails
-    if (!file_exists($file)) {
-        Log::get()->error('Image resize failed for file: '.$file);
-        status_header(307);
-        header('Location: '.$source_url);
+function podlove_serve_cached_image($file)
+{
+    $cache_root = realpath(Image::cache_dir());
+    $real_file = realpath($file);
+    if (false === $cache_root || false === $real_file || !is_file($real_file)) {
+        podlove_image_cache_fail(404);
+    }
+
+    $normalized_cache_root = trailingslashit(wp_normalize_path($cache_root));
+    $normalized_real_file = wp_normalize_path($real_file);
+    if (0 !== strpos($normalized_real_file, $normalized_cache_root)) {
+        podlove_image_cache_fail(404);
+    }
+
+    $image_info = @getimagesize($real_file);
+    if (false === $image_info) {
+        podlove_image_cache_fail(404);
+    }
+
+    $mime_type = image_type_to_mime_type($image_info[2]);
+    $allowed_mime_types = ['image/jpeg', 'image/gif', 'image/png', 'image/webp', 'image/avif'];
+    if (!in_array($mime_type, $allowed_mime_types, true)) {
+        Log::get()->error('Unsupported image type for cached image.');
+        podlove_image_cache_fail(404);
+    }
+
+    $time = filemtime($real_file);
+    $etag = '"'.hash_file('sha256', $real_file).'"';
+    $last_modified = gmdate('D, d M Y H:i:s \G\M\T', $time);
+    $if_none_match = trim((string) ($_SERVER['HTTP_IF_NONE_MATCH'] ?? ''));
+    $if_modified_since = (string) ($_SERVER['HTTP_IF_MODIFIED_SINCE'] ?? '');
+    $not_modified = $if_none_match && hash_equals($etag, $if_none_match);
+
+    if (!$if_none_match && $if_modified_since) {
+        $modified_since = strtotime($if_modified_since);
+        $not_modified = false !== $modified_since && $modified_since >= $time;
+    }
+
+    header('Content-Type: '.$mime_type);
+    header('X-Content-Type-Options: nosniff');
+    header('Cache-Control: public, max-age=86400');
+    header('Expires: '.gmdate('D, d M Y H:i:s \G\M\T', time() + 86400));
+    header("Last-Modified: {$last_modified}");
+    header("ETag: {$etag}");
+
+    if ($not_modified) {
+        status_header(304);
         exit;
     }
 
-    $imageInfo = getimagesize($file);
-    switch ($imageInfo[2]) {
-        case IMAGETYPE_JPEG:
-            header('Content-Type: image/jpeg');
+    header('Content-Length: '.filesize($real_file));
+    readfile($real_file);
+    exit;
+}
 
-            break;
-        case IMAGETYPE_GIF:
-            header('Content-Type: image/gif');
+function podlove_image_cache_fail($status, $retry_after = null)
+{
+    status_header((int) $status);
+    header('X-Content-Type-Options: nosniff');
+    header('Cache-Control: no-store');
 
-            break;
-        case IMAGETYPE_PNG:
-            header('Content-Type: image/png');
-
-            break;
-
-        default:
-            Log::get()->error('Unsupported image type for file: '.$file);
-
-            return;
+    if ($retry_after) {
+        header('Retry-After: '.(int) $retry_after);
     }
 
-    header('Content-Length: '.filesize($file));
-    header('Cache-Control: public, max-age=86400');
-    header('Expires: '.gmdate('D, d M Y H:i:s \G\M\T', time() + 86400));
-
-    $time = filemtime($file);
-    $etag = md5($time.$source_url);
-    $last_modified = gmdate('D, d M Y H:i:s \G\M\T', $time);
-
-    $if_modified_since = isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) ?? false;
-    $if_none_match = isset($_SERVER['HTTP_IF_NONE_MATCH']) ?? false;
-
-    if ((($if_none_match && $if_none_match == $etag) || (!$if_none_match))
-        && ($if_modified_since && $if_modified_since == $last_modified)) {
-        header('HTTP/1.1 304 Not Modified');
-    } else {
-        header("Last-Modified: {$last_modified}");
-        header("ETag: {$etag}");
-
-        readfile($file);
-    }
     exit;
 }

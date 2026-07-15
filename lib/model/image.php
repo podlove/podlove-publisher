@@ -3,6 +3,7 @@
 namespace Podlove\Model;
 
 use Podlove\Cache\TemplateCache;
+use Podlove\ImageCache\Request as ImageCacheRequest;
 use Podlove\Log;
 use Symfony\Component\Yaml\Yaml;
 
@@ -55,18 +56,10 @@ class Image
     {
         // FIXME: if $file_name is empty, the url will not work. I must not treat this silently!
         $this->source_url = trim($url ?? '');
-        $this->file_name = sanitize_title($file_name);
-
-        // manually remove troublemaking characters
-        // @see https://community.podlove.org/t/solved-kind-of-cover-art-disappears-caching-issue/478/
-        // @see https://sendegate.de/t/problem-mit-caching-von-grafiken/2947
-        if (function_exists('iconv')) {
-            $this->file_name = iconv('UTF-8', 'ASCII//TRANSLIT', $this->file_name);
-        }
-        $this->file_name = preg_replace('~[^-a-z0-9_]+~', '', $this->file_name);
+        $this->file_name = ImageCacheRequest::sanitize_file_name($file_name);
 
         $this->file_extension = $this->extract_file_extension();
-        $this->id = md5($url.$this->file_name);
+        $this->id = md5($this->source_url.$this->file_name);
 
         // create subdirectories to avoid too many directories in the root directory
         $id_directory = substr($this->id, 0, 2).'/'.substr($this->id, 2);
@@ -202,28 +195,36 @@ class Image
         if (!$force_dynamic_url && file_exists($this->resized_file())) {
             $url = $this->resized_url();
         } else {
-            $source_url = \Podlove\PHP\str2hex($this->source_url);
-            $width = (int) $this->width;
-            $height = (int) $this->height;
-            $crop = (int) $this->crop;
-            $file_name = urlencode($this->file_name);
+            $request = ImageCacheRequest::from_values(
+                $this->source_url,
+                $this->width,
+                $this->height,
+                $this->crop,
+                $this->file_name
+            );
 
-            // FIXME: some generated urls have an empty $file_name, which leads to the url not resolving
-            // example: (new \Podlove\Model\Image("https://pbs.twimg.com/media/Dz2U-vTXgAATlqd.jpg:large"))->setWidth(100)->url();
+            if (is_wp_error($request)) {
+                Log::get()->addWarning('Unable to create signed image cache URL: '.$request->get_error_message());
+
+                return apply_filters('podlove_image_url', $this->source_url);
+            }
+
             if (get_option('permalink_structure')) {
                 $path = '/podlove/image/'
-                    .$source_url
-                    .'/'.$width
-                    .'/'.$height
-                    .'/'.$crop
-                    .'/'.$file_name;
+                    .$request->encoded_source_url()
+                    .'/'.$request->width()
+                    .'/'.$request->height()
+                    .'/'.$request->crop_flag()
+                    .'/'.$request->encoded_file_name()
+                    .'/'.$request->signature();
             } else {
                 $path = add_query_arg([
-                    'podlove_image_cache_url' => $source_url,
-                    'podlove_width' => $width,
-                    'podlove_height' => $height,
-                    'podlove_crop' => $crop,
-                    'podlove_file_name' => $file_name,
+                    'podlove_image_cache_url' => $request->encoded_source_url(),
+                    'podlove_width' => $request->width(),
+                    'podlove_height' => $request->height(),
+                    'podlove_crop' => $request->crop_flag(),
+                    'podlove_file_name' => $request->encoded_file_name(),
+                    'podlove_image_cache_signature' => $request->signature(),
                 ], 'index.php');
             }
 
@@ -385,10 +386,9 @@ class Image
     public function download_source()
     {
         $source_url = $this->source_url;
-        $current_url = $this->source_url;
 
         $source_domain = wp_parse_url($source_url, PHP_URL_HOST);
-        $current_domain = explode(':', $_SERVER['HTTP_HOST'])[0];
+        $current_domain = wp_parse_url(home_url(), PHP_URL_HOST);
 
         // if domains match, see if the image is part of the Publisher
         // and can be copied on the filesystem, skipping http
@@ -399,7 +399,9 @@ class Image
                 $path = explode($plugin_dirname, $source_url)[1];
                 $file = untrailingslashit(\Podlove\PLUGIN_DIR).$path;
 
-                if (file_exists($file) && $this->set_file_extension_from_validated_image($file, basename($this->source_url))) {
+                if (file_exists($file)
+                    && $this->source_is_within_resource_limits($file)
+                    && $this->set_file_extension_from_validated_image($file, basename($this->source_url))) {
                     $this->create_basedir();
                     $this->save_cache_data();
                     $this->copy_as_original_file($file);
@@ -441,7 +443,8 @@ class Image
             );
         }
 
-        if (!$this->set_file_extension_from_validated_image($temp_file, basename($this->source_url))) {
+        if (!$this->source_is_within_resource_limits($temp_file)
+            || !$this->set_file_extension_from_validated_image($temp_file, basename($this->source_url))) {
             Log::get()->addWarning(
                 sprintf(__('Podlove Image Cache: Downloaded file is not an image.')),
                 ['url' => $this->source_url]
@@ -509,12 +512,12 @@ class Image
      * unfortunately the original implementation does not expose it.
      *
      * @param string $url        the URL of the file to download
-     * @param int    $timeout    The timeout for the request to download the file default 300 seconds
+     * @param int    $timeout    The timeout for the request to download the file
      * @param mixed  $extra_args
      *
      * @return mixed WP_Error on failure, array with Filename & http response on success
      */
-    public static function download_url($url, $timeout = 300, $extra_args = [])
+    public static function download_url($url, $timeout = null, $extra_args = [])
     {
         // WARNING: The file is not automatically deleted, The script must unlink() the file.
         if (!$url) {
@@ -526,10 +529,13 @@ class Image
             return new \WP_Error('http_no_file', __('Could not create Temporary file.'));
         }
 
+        $max_source_bytes = ImageCacheRequest::max_source_bytes();
         $default_args = [
-            'timeout' => $timeout,
+            'timeout' => null === $timeout ? ImageCacheRequest::download_timeout() : $timeout,
+            'redirection' => ImageCacheRequest::redirect_limit(),
             'stream' => true,
             'filename' => $tmpfname,
+            'limit_response_size' => $max_source_bytes + 1,
             'sslverify' => \Podlove\get_setting('website', 'ssl_verify_peer') == 'on',
         ];
         $args = array_merge($default_args, $extra_args);
@@ -546,6 +552,14 @@ class Image
             wp_delete_file($tmpfname);
 
             return new \WP_Error('http_404', trim(wp_remote_retrieve_response_message($response)));
+        }
+
+        $content_length = (int) wp_remote_retrieve_header($response, 'content-length');
+        $file_size = file_exists($tmpfname) ? filesize($tmpfname) : false;
+        if ($content_length > $max_source_bytes || false === $file_size || $file_size > $max_source_bytes) {
+            wp_delete_file($tmpfname);
+
+            return new \WP_Error('http_image_too_large', __('The downloaded image exceeds the size limit.'));
         }
 
         return [$tmpfname, $response];
@@ -732,5 +746,23 @@ class Image
         $type = wp_check_filetype('file.'.$extension);
 
         return isset($type['type']) && 0 === strpos($type['type'], 'image/');
+    }
+
+    private function source_is_within_resource_limits($file)
+    {
+        $file_size = is_file($file) ? filesize($file) : false;
+        if (false === $file_size || $file_size > ImageCacheRequest::max_source_bytes()) {
+            return false;
+        }
+
+        $image_info = @getimagesize($file);
+        if (false === $image_info) {
+            return false;
+        }
+
+        $width = (int) $image_info[0];
+        $height = (int) $image_info[1];
+
+        return $width > 0 && $height > 0 && $width * $height <= ImageCacheRequest::max_source_pixels();
     }
 }

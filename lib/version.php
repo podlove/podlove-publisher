@@ -42,7 +42,7 @@ namespace Podlove;
 
 use Podlove\Jobs\CronJobRunner;
 
-define('Podlove\DATABASE_VERSION', 166);
+define('Podlove\DATABASE_VERSION', 167);
 
 add_action('admin_init', '\Podlove\maybe_run_database_migrations');
 add_action('admin_init', '\Podlove\run_database_migrations', 5);
@@ -1737,6 +1737,10 @@ function run_migrations_for_version($version)
         case 166:
             Model\Image::flush_cache();
 
+            break;
+        case 167:
+            // The signed image-cache route needs fresh rewrite rules. The
+            // migration runner schedules that flush and purges template caches.
             break;
     }
 }
