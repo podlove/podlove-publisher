@@ -125,6 +125,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 4.5.4 =
+
+* security: constrain image cache lock deletion to the lock directory.
+
 = 4.5.3 =
 
 * security: sign image cache URLs, make unsigned legacy URLs cache-read-only, and add resource limits for image downloads and resizing.

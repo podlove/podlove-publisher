@@ -33,7 +33,7 @@ class GenerationGuard
 
         $handle = @fopen($this->lock_file, 'x');
         if (false === $handle && $this->lock_is_stale()) {
-            wp_delete_file($this->lock_file);
+            $this->delete_lock_file();
             $handle = @fopen($this->lock_file, 'x');
         }
 
@@ -54,7 +54,7 @@ class GenerationGuard
             return;
         }
 
-        wp_delete_file($this->lock_file);
+        $this->delete_lock_file();
         $this->locked = false;
     }
 
@@ -95,6 +95,11 @@ class GenerationGuard
     private function lock_dir()
     {
         return trailingslashit(Image::cache_dir()).'.locks';
+    }
+
+    private function delete_lock_file()
+    {
+        return wp_delete_file_from_directory($this->lock_file, $this->lock_dir());
     }
 
     private function failure_dir()
