@@ -39,6 +39,47 @@ class Entry extends Base
         }
     }
 
+    public function to_array()
+    {
+        return array_combine(
+            static::property_names(),
+            array_map(
+                function ($property) {
+                    if ($property === 'unfurl_data') {
+                        return $this->unfurl_data_array();
+                    }
+
+                    return $this->{$property};
+                },
+                static::property_names()
+            )
+        );
+    }
+
+    public function unfurl_data_array()
+    {
+        if (is_array($this->unfurl_data)) {
+            return $this->unfurl_data;
+        }
+
+        if (!is_string($this->unfurl_data) || $this->unfurl_data === '') {
+            return null;
+        }
+
+        $json = json_decode($this->unfurl_data, true);
+        if (json_last_error() === JSON_ERROR_NONE && is_array($json)) {
+            return $json;
+        }
+
+        if (!is_serialized($this->unfurl_data)) {
+            return null;
+        }
+
+        $data = @unserialize($this->unfurl_data, ['allowed_classes' => false]);
+
+        return is_array($data) ? $data : null;
+    }
+
     public static function get_new_position_for_episode($episode_id)
     {
         global $wpdb;

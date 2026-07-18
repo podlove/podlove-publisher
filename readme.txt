@@ -128,6 +128,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 = 4.5.4 =
 
 * security: constrain image cache lock deletion to the lock directory.
+* security: harden shownotes REST input handling against PHP object injection (CVE-2026-16099).
 
 = 4.5.3 =
 

@@ -310,6 +310,14 @@ class REST_API
 
     public function create_item($request)
     {
+        if ($this->has_client_unfurl_data($request)) {
+            return $this->invalid_unfurl_data_response();
+        }
+
+        if ($this->has_serialized_request_value($request)) {
+            return $this->invalid_serialized_data_response();
+        }
+
         if (!$request['episode_id']) {
             return new \WP_Error(
                 'podlove_rest_missing_episode_id',
@@ -499,6 +507,15 @@ class REST_API
     public function update_item($request)
     {
         $params = $request->get_params();
+
+        if (array_key_exists('unfurl_data', $params)) {
+            return $this->invalid_unfurl_data_response();
+        }
+
+        if ($this->has_serialized_request_value($request)) {
+            return $this->invalid_serialized_data_response();
+        }
+
         $entry = Entry::find_by_id($params['id']);
 
         if (is_wp_error($entry)) {
@@ -580,11 +597,19 @@ class REST_API
             }
         }
 
-        foreach (Entry::property_names() as $property) {
-            if (isset($request[$property]) && $request[$property]) {
-                $entry->{$property} = $request[$property];
-            }
-        }
+        $this->assign_create_properties($entry, $request, [
+            'original_url',
+            'url',
+            'title',
+            'description',
+            'site_name',
+            'site_url',
+            'icon',
+            'image',
+            'created_at',
+            'position',
+            'hidden',
+        ]);
 
         // fixme: there is probably a race condition here when adding multiple episodes at once
         if (!$entry->position) {
@@ -627,11 +652,11 @@ class REST_API
 
         $entry = new Entry();
 
-        foreach (Entry::property_names() as $property) {
-            if (isset($request[$property]) && $request[$property]) {
-                $entry->{$property} = $request[$property];
-            }
-        }
+        $this->assign_create_properties($entry, $request, [
+            'title',
+            'position',
+            'hidden',
+        ]);
         // fixme: there is probably a race condition here when adding multiple episodes at once
         $entry->position = Entry::get_new_position_for_episode($episode->id);
         $entry->episode_id = $episode->id;
@@ -657,6 +682,58 @@ class REST_API
         $response->header('Location', rest_url($url));
 
         return $response;
+    }
+
+    private function assign_create_properties(Entry $entry, $request, array $properties)
+    {
+        foreach ($properties as $property) {
+            if (isset($request[$property]) && $request[$property]) {
+                $entry->{$property} = $request[$property];
+            }
+        }
+    }
+
+    private function has_client_unfurl_data($request)
+    {
+        return array_key_exists('unfurl_data', $request->get_params());
+    }
+
+    private function invalid_unfurl_data_response()
+    {
+        return new \WP_Error(
+            'podlove_rest_invalid_unfurl_data',
+            'unfurl_data cannot be set directly',
+            ['status' => 400]
+        );
+    }
+
+    private function has_serialized_request_value($request)
+    {
+        return $this->contains_serialized_value($request->get_params());
+    }
+
+    private function contains_serialized_value($value)
+    {
+        if (is_array($value)) {
+            foreach ($value as $item) {
+                if ($this->contains_serialized_value($item)) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        return is_string($value) && is_serialized($value);
+    }
+
+    private function invalid_serialized_data_response()
+    {
+        return new \WP_Error(
+            'podlove_rest_invalid_serialized_data',
+            'serialized data cannot be set directly',
+            ['status' => 400]
+        );
     }
 }
 
@@ -929,6 +1006,14 @@ class REST_API_V2
 
     public function create_item($request)
     {
+        if ($this->has_client_unfurl_data($request)) {
+            return $this->invalid_unfurl_data_response();
+        }
+
+        if ($this->has_serialized_request_value($request)) {
+            return $this->invalid_serialized_data_response();
+        }
+
         if (!$request['episode_id']) {
             return new \WP_Error(
                 'podlove_rest_missing_episode_id',
@@ -1104,6 +1189,14 @@ class REST_API_V2
 
     public function update_item($request)
     {
+        if ($this->has_client_unfurl_data($request)) {
+            return $this->invalid_unfurl_data_response();
+        }
+
+        if ($this->has_serialized_request_value($request)) {
+            return $this->invalid_serialized_data_response();
+        }
+
         $entry = Entry::find_by_id($request['id']);
         if (is_wp_error($entry)) {
             return $entry;
@@ -1185,11 +1278,19 @@ class REST_API_V2
             }
         }
 
-        foreach (Entry::property_names() as $property) {
-            if (isset($request[$property]) && $request[$property]) {
-                $entry->{$property} = $request[$property];
-            }
-        }
+        $this->assign_create_properties($entry, $request, [
+            'original_url',
+            'url',
+            'title',
+            'description',
+            'site_name',
+            'site_url',
+            'icon',
+            'image',
+            'created_at',
+            'position',
+            'hidden',
+        ]);
 
         // fixme: there is probably a race condition here when adding multiple episodes at once
         if (!$entry->position) {
@@ -1232,11 +1333,11 @@ class REST_API_V2
 
         $entry = new Entry();
 
-        foreach (Entry::property_names() as $property) {
-            if (isset($request[$property]) && $request[$property]) {
-                $entry->{$property} = $request[$property];
-            }
-        }
+        $this->assign_create_properties($entry, $request, [
+            'title',
+            'position',
+            'hidden',
+        ]);
         // fixme: there is probably a race condition here when adding multiple episodes at once
         $entry->position = Entry::get_new_position_for_episode($episode->id);
         $entry->episode_id = $episode->id;
@@ -1262,5 +1363,57 @@ class REST_API_V2
         $response->header('Location', rest_url($url));
 
         return $response;
+    }
+
+    private function assign_create_properties(Entry $entry, $request, array $properties)
+    {
+        foreach ($properties as $property) {
+            if (isset($request[$property]) && $request[$property]) {
+                $entry->{$property} = $request[$property];
+            }
+        }
+    }
+
+    private function has_client_unfurl_data($request)
+    {
+        return array_key_exists('unfurl_data', $request->get_params());
+    }
+
+    private function invalid_unfurl_data_response()
+    {
+        return new \WP_Error(
+            'podlove_rest_invalid_unfurl_data',
+            'unfurl_data cannot be set directly',
+            ['status' => 400]
+        );
+    }
+
+    private function has_serialized_request_value($request)
+    {
+        return $this->contains_serialized_value($request->get_params());
+    }
+
+    private function contains_serialized_value($value)
+    {
+        if (is_array($value)) {
+            foreach ($value as $item) {
+                if ($this->contains_serialized_value($item)) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        return is_string($value) && is_serialized($value);
+    }
+
+    private function invalid_serialized_data_response()
+    {
+        return new \WP_Error(
+            'podlove_rest_invalid_serialized_data',
+            'serialized data cannot be set directly',
+            ['status' => 400]
+        );
     }
 }
