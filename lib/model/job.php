@@ -140,6 +140,15 @@ class Job extends Base
         return new $classname($job->args, $job);
     }
 
+    public function to_array()
+    {
+        $data = parent::to_array();
+        $data['args'] = $this->decode_serialized_property($this->args);
+        $data['state'] = $this->decode_serialized_property($this->state);
+
+        return $data;
+    }
+
     public static function clean()
     {
         global $wpdb;
@@ -191,6 +200,15 @@ class Job extends Base
         global $wpdb;
         ++$this->sleeps;
         $wpdb->query('UPDATE '.self::table_name().' SET sleeps = sleeps + 1 WHERE id = '.(int) $this->id);
+    }
+
+    private function decode_serialized_property($value)
+    {
+        if (!is_string($value) || !is_serialized($value)) {
+            return $value;
+        }
+
+        return @unserialize($value, ['allowed_classes' => false]);
     }
 }
 
