@@ -64,6 +64,16 @@ class BaseModelSerializationTest extends WP_UnitTestCase
         $this->assertSame('Created', $model->title);
     }
 
+    public function testJobToArrayRejectsSerializedObjects(): void
+    {
+        $job = new Job();
+        $job->args = serialize((object) ['batch' => 10]);
+
+        $data = $job->to_array();
+
+        $this->assertNull($data['args']);
+    }
+
     public function testCheckboxPostsExplicitBooleanValueWithoutGlobalMetadata(): void
     {
         $model = new BaseModelMassAssignmentTestModel();

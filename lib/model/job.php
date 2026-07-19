@@ -128,8 +128,8 @@ class Job extends Base
             return null;
         }
 
-        $job->args = maybe_unserialize($job->args);
-        $job->state = maybe_unserialize($job->state);
+        $job->args = $job->decode_serialized_property($job->args);
+        $job->state = $job->decode_serialized_property($job->state);
 
         $classname = $job->class;
 
@@ -208,7 +208,30 @@ class Job extends Base
             return $value;
         }
 
-        return @unserialize($value, ['allowed_classes' => false]);
+        $decoded = @unserialize($value, ['allowed_classes' => false]);
+
+        return $this->contains_object($decoded) ? null : $decoded;
+    }
+
+    private function contains_object($value, $depth = 0)
+    {
+        if ($depth > 20) {
+            return true;
+        }
+
+        if (is_object($value)) {
+            return true;
+        }
+
+        if (is_array($value)) {
+            foreach ($value as $item) {
+                if ($this->contains_object($item, $depth + 1)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 }
 
