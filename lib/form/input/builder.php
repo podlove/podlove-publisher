@@ -113,9 +113,9 @@ class Builder
     public function checkbox($object_key, $arguments)
     {
         $this->build_input_values($object_key, $arguments); ?>
-		<input type="checkbox" name="<?php echo $this->field_name; ?>" id="<?php echo $this->field_id; ?>" <?php if (in_array($this->field_value, [true, 1, 'on'])) { ?>checked="checked"<?php } ?> <?php echo $this->html_attributes; ?>>
-		<input type="hidden" name="checkboxes[]" value="<?php echo esc_attr($this->object_key); ?>">
-		<?php
+			<input type="hidden" name="<?php echo $this->field_name; ?>" value="0">
+			<input type="checkbox" name="<?php echo $this->field_name; ?>" id="<?php echo $this->field_id; ?>" value="1" <?php if (in_array($this->field_value, [true, 1, '1', 'on'], true)) { ?>checked="checked"<?php } ?> <?php echo $this->html_attributes; ?>>
+			<?php
     }
 
     public function select($object_key, $arguments)

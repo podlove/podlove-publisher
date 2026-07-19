@@ -38,7 +38,8 @@ class Roles extends Tab
     {
         $this->page = new \Podlove\Modules\Contributors\Settings\GenericEntitySettings(
             'role',
-            '\Podlove\Modules\Contributors\Model\ContributorRole'
+            '\Podlove\Modules\Contributors\Model\ContributorRole',
+            ['title', 'slug']
         );
 
         $this->page->set_form(function ($form_args, $role, $action) {

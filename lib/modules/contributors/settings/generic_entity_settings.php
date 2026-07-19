@@ -12,6 +12,7 @@ class GenericEntitySettings
 {
     private $entity_slug;
     private $entity_class;
+    private $allowed_attributes;
     private $form_callback;
     private $labels = [];
 
@@ -20,10 +21,11 @@ class GenericEntitySettings
 
     private static $nonce = 'update_podcast_generic_settings';
 
-    public function __construct($entity_slug, $entity_class)
+    public function __construct($entity_slug, $entity_class, $allowed_attributes)
     {
         $this->entity_slug = $entity_slug;
         $this->entity_class = $entity_class;
+        $this->allowed_attributes = $allowed_attributes;
 
         $default_labels = [
             'delete_confirm' => __('You selected to delete the entity "%s". Please confirm this action.', 'podlove-podcasting-plugin-for-wordpress'),
@@ -180,7 +182,8 @@ class GenericEntitySettings
         $attributes = apply_filters('podlove_generic_entity_attributes', $attributes);
         $attributes = apply_filters('podlove_generic_entity_attributes_'.$slug, $attributes);
 
-        $entity->update_attributes($attributes);
+        $this->assign_attributes($entity, $attributes);
+        $entity->save();
 
         do_action('podlove_update_entity_'.$slug, $entity);
 
@@ -204,7 +207,8 @@ class GenericEntitySettings
         $class = $this->get_entity_class();
 
         $entity = new $class();
-        $entity->update_attributes($_POST[$attributes_key]);
+        $this->assign_attributes($entity, $_POST[$attributes_key]);
+        $entity->save();
 
         do_action('podlove_create_entity_'.$this->get_entity_slug(), $entity);
 
@@ -292,6 +296,23 @@ class GenericEntitySettings
     private function get_entity_class()
     {
         return $this->entity_class;
+    }
+
+    private function get_allowed_attributes()
+    {
+        $attributes = apply_filters('podlove_generic_entity_allowed_attributes', $this->allowed_attributes, $this->entity_slug);
+        $attributes = apply_filters('podlove_generic_entity_allowed_attributes_'.$this->entity_slug, $attributes);
+
+        return array_values(array_intersect($attributes, $this->entity_class::property_names()));
+    }
+
+    private function assign_attributes($entity, $attributes)
+    {
+        foreach ($this->get_allowed_attributes() as $attribute) {
+            if (array_key_exists($attribute, $attributes)) {
+                $entity->{$attribute} = $attributes[$attribute];
+            }
+        }
     }
 
     private function form_template($entity, $action)

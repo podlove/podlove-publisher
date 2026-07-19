@@ -132,7 +132,12 @@ class Podcast_Post_Meta_Box
 
         // save changes
         $episode = \Podlove\Model\Episode::find_or_create_by_post_id($post_id);
-        $episode->update_attributes($episode_data);
+        foreach (array_keys($episode_data_filter) as $attribute) {
+            if (array_key_exists($attribute, $episode_data) && $episode::has_property($attribute)) {
+                $episode->{$attribute} = $episode_data[$attribute];
+            }
+        }
+        $episode->save();
     }
 
     private static function get_form_data($episode)

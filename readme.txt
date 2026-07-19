@@ -129,6 +129,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 * security: constrain image cache lock deletion to the lock directory.
 * security: harden shownotes REST input handling against PHP object injection (CVE-2026-16099).
+* security: replace internal model mass assignment with explicit field assignment; legacy model assignment helpers are deprecated.
 
 = 4.5.3 =
 

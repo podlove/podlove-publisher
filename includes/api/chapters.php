@@ -198,8 +198,8 @@ class WP_REST_PodloveChapters_Controller extends \WP_REST_Controller
         }
 
         $chapters->setPrinter(new Printer\Mp4chaps());
-        $episode_data['chapters'] = (string) $chapters;
-        $episode->update_attributes($episode_data);
+        $episode->chapters = (string) $chapters;
+        $episode->save();
 
         return new \Podlove\Api\Response\CreateResponse([
             'status' => 'ok'
@@ -263,8 +263,8 @@ class WP_REST_PodloveChapters_Controller extends \WP_REST_Controller
         }
 
         $chapters->setPrinter(new Printer\JSON());
-        $episode_data['chapters'] = (string) $chapters;
-        $episode->update_attributes($episode_data);
+        $episode->chapters = (string) $chapters;
+        $episode->save();
 
         return new \Podlove\Api\Response\OkResponse([
             'status' => 'ok'
@@ -293,8 +293,8 @@ class WP_REST_PodloveChapters_Controller extends \WP_REST_Controller
             return new \Podlove\Api\Error\NotFound();
         }
 
-        $episode_data['chapters'] = '';
-        $episode->update_attributes($episode_data);
+        $episode->chapters = '';
+        $episode->save();
 
         return new \Podlove\Api\Response\OkResponse([
             'status' => 'ok'

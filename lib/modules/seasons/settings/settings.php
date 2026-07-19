@@ -105,7 +105,8 @@ class Settings
         }
 
         $season = Season::find_by_id($_REQUEST['season']);
-        $season->update_attributes($_POST['podlove_season']);
+        $this->assign_form_data($season, $_POST['podlove_season']);
+        $season->save();
 
         if (isset($_POST['submit_and_stay'])) {
             $this->redirect('edit', $season->id);
@@ -122,7 +123,8 @@ class Settings
         global $wpdb;
 
         $season = new Season();
-        $season->update_attributes($_POST['podlove_season']);
+        $this->assign_form_data($season, $_POST['podlove_season']);
+        $season->save();
 
         if (isset($_POST['submit_and_stay'])) {
             $this->redirect('edit', $season->id);
@@ -145,6 +147,25 @@ class Settings
         }
 
         $this->redirect('index');
+    }
+
+    private function assign_form_data($season, $data)
+    {
+        if (array_key_exists('title', $data)) {
+            $season->title = $data['title'];
+        }
+        if (array_key_exists('subtitle', $data)) {
+            $season->subtitle = $data['subtitle'];
+        }
+        if (array_key_exists('summary', $data)) {
+            $season->summary = $data['summary'];
+        }
+        if (array_key_exists('image', $data)) {
+            $season->image = $data['image'];
+        }
+        if (array_key_exists('start_date', $data)) {
+            $season->start_date = $data['start_date'];
+        }
     }
 
     /**

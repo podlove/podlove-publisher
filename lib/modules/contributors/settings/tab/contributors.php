@@ -53,7 +53,21 @@ class Contributors extends Tab
     {
         $this->page = new \Podlove\Modules\Contributors\Settings\GenericEntitySettings(
             'contributor',
-            '\Podlove\Modules\Contributors\Model\Contributor'
+            '\Podlove\Modules\Contributors\Model\Contributor',
+            [
+                'realname',
+                'publicname',
+                'nickname',
+                'gender',
+                'privateemail',
+                'avatar',
+                'identifier',
+                'guid',
+                'visibility',
+                'organisation',
+                'department',
+                'jobtitle',
+            ]
         );
 
         $this->page->enable_tabs('contributors');

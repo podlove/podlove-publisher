@@ -110,12 +110,12 @@ class ShownotesApiTest extends WP_UnitTestCase
     public function testUpdateRejectsClientUnfurlData(string $route): void
     {
         $episode = $this->create_episode();
-        $entry = Entry::create([
-            'episode_id' => $episode->id,
-            'type' => 'link',
-            'original_url' => 'https://example.test/update-unfurl',
-            'title' => 'Update Unfurl',
-        ]);
+        $entry = new Entry();
+        $entry->episode_id = $episode->id;
+        $entry->type = 'link';
+        $entry->original_url = 'https://example.test/update-unfurl';
+        $entry->title = 'Update Unfurl';
+        $entry->save();
 
         $request = new WP_REST_Request('PUT', $route.'/'.$entry->id);
         $request->set_param('title', 'Updated');

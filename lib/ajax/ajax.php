@@ -886,9 +886,9 @@ class Ajax
         $asset_id = (int) $_REQUEST['asset_id'];
         $position = (float) $_REQUEST['position'];
 
-        Model\EpisodeAsset::find_by_id($asset_id)
-            ->update_attributes(['position' => $position])
-        ;
+        $asset = Model\EpisodeAsset::find_by_id($asset_id);
+        $asset->position = $position;
+        $asset->save();
 
         exit;
     }
@@ -904,9 +904,9 @@ class Ajax
         $feed_id = (int) $_REQUEST['feed_id'];
         $position = (float) $_REQUEST['position'];
 
-        Model\Feed::find_by_id($feed_id)
-            ->update_attributes(['position' => $position])
-        ;
+        $feed = Model\Feed::find_by_id($feed_id);
+        $feed->position = $position;
+        $feed->save();
 
         exit;
     }

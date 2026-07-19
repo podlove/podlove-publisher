@@ -38,7 +38,8 @@ class Groups extends Tab
     {
         $this->page = new \Podlove\Modules\Contributors\Settings\GenericEntitySettings(
             'group',
-            '\Podlove\Modules\Contributors\Model\ContributorGroup'
+            '\Podlove\Modules\Contributors\Model\ContributorGroup',
+            ['title', 'slug']
         );
 
         $this->page->set_form(function ($form_args, $group, $action) {

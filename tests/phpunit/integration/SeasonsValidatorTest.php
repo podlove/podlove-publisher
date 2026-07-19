@@ -25,8 +25,8 @@ class SeasonsValidatorTest extends WP_UnitTestCase
 
     public function testDetectsMultipleFirstSeasons()
     {
-        Season::create();
-        Season::create();
+        $this->createSeason();
+        $this->createSeason();
 
         $validator = new SeasonsValidator();
         $validator->validate();
@@ -42,8 +42,8 @@ class SeasonsValidatorTest extends WP_UnitTestCase
 
     public function testDetectsDuplicateStartDates()
     {
-        Season::create(['start_date' => '2011-01-01']);
-        Season::create(['start_date' => '2011-01-01']);
+        $this->createSeason('2011-01-01');
+        $this->createSeason('2011-01-01');
 
         $validator = new SeasonsValidator();
         $validator->validate();
@@ -55,5 +55,16 @@ class SeasonsValidatorTest extends WP_UnitTestCase
 
         $this->assertEquals('duplicate_start_dates', $issue->type);
         $this->assertEquals('Some of your seasons have the same start date.', $issue->message());
+    }
+
+    private function createSeason($start_date = null)
+    {
+        $season = new Season();
+        if ($start_date !== null) {
+            $season->start_date = $start_date;
+        }
+        $season->save();
+
+        return $season;
     }
 }

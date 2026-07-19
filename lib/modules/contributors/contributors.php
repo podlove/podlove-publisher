@@ -419,7 +419,13 @@ class Contributors extends \Podlove\Modules\Base
                 'privateemail' => $privateemail, ];
 
             $contributor_entry = new \Podlove\Modules\Contributors\Contributor();
-            $contributor_entry->update_attributes($contributor_infos);
+            $contributor_entry->realname = $contributor_infos['realname'];
+            $contributor_entry->publicname = $contributor_infos['publicname'];
+            $contributor_entry->identifier = $contributor_infos['identifier'];
+            $contributor_entry->id = $contributor_infos['id'];
+            $contributor_entry->visibility = $contributor_infos['visibility'];
+            $contributor_entry->privateemail = $contributor_infos['privateemail'];
+            $contributor_entry->save();
         }
 
         foreach ($episodes as $episode_id => $episode_details) {

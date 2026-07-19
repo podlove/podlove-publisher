@@ -171,7 +171,8 @@ class Feed
         }
 
         $feed = \Podlove\Model\Feed::find_by_id($_REQUEST['feed']);
-        $feed->update_attributes($_POST['podlove_feed']);
+        $this->assign_form_data($feed, $_POST['podlove_feed']);
+        $feed->save();
 
         if (isset($_POST['submit_and_stay'])) {
             $this->redirect('edit', $feed->id);
@@ -188,7 +189,8 @@ class Feed
         global $wpdb;
 
         $feed = new \Podlove\Model\Feed();
-        $feed->update_attributes($_POST['podlove_feed']);
+        $this->assign_form_data($feed, $_POST['podlove_feed']);
+        $feed->save();
 
         if (isset($_POST['submit_and_stay'])) {
             $this->redirect('edit', $feed->id);
@@ -209,6 +211,46 @@ class Feed
         \Podlove\Model\Feed::find_by_id($_REQUEST['feed'])->delete();
 
         $this->redirect('index');
+    }
+
+    private function assign_form_data($feed, $data)
+    {
+        if (array_key_exists('episode_asset_id', $data)) {
+            $feed->episode_asset_id = $data['episode_asset_id'];
+        }
+        if (array_key_exists('name', $data)) {
+            $feed->name = $data['name'];
+        }
+        if (array_key_exists('append_name_to_podcast_title', $data)) {
+            $feed->append_name_to_podcast_title = $data['append_name_to_podcast_title'];
+        }
+        if (array_key_exists('slug', $data)) {
+            $feed->slug = $data['slug'];
+        }
+        if (array_key_exists('discoverable', $data)) {
+            $feed->discoverable = $data['discoverable'];
+        }
+        if (array_key_exists('embed_content_encoded', $data)) {
+            $feed->embed_content_encoded = $data['embed_content_encoded'];
+        }
+        if (array_key_exists('optimize_content_encoded_html', $data)) {
+            $feed->optimize_content_encoded_html = $data['optimize_content_encoded_html'];
+        }
+        if (array_key_exists('limit_items', $data)) {
+            $feed->limit_items = $data['limit_items'];
+        }
+        if (array_key_exists('enable', $data)) {
+            $feed->enable = $data['enable'];
+        }
+        if (array_key_exists('itunes_feed_id', $data)) {
+            $feed->itunes_feed_id = $data['itunes_feed_id'];
+        }
+        if (array_key_exists('redirect_http_status', $data)) {
+            $feed->redirect_http_status = $data['redirect_http_status'];
+        }
+        if (array_key_exists('redirect_url', $data)) {
+            $feed->redirect_url = $data['redirect_url'];
+        }
     }
 
     /**

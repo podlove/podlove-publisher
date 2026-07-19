@@ -185,7 +185,8 @@ class EpisodeAsset
         }
 
         $episode_asset = \Podlove\Model\EpisodeAsset::find_by_id($_REQUEST['episode_asset']);
-        $episode_asset->update_attributes($_POST['podlove_episode_asset']);
+        $this->assign_form_data($episode_asset, $_POST['podlove_episode_asset']);
+        $episode_asset->save();
 
         if (isset($_POST['submit_and_stay'])) {
             $this->redirect('edit', $episode_asset->id);
@@ -200,7 +201,8 @@ class EpisodeAsset
     private function create()
     {
         $episode_asset = new \Podlove\Model\EpisodeAsset();
-        $episode_asset->update_attributes($_POST['podlove_episode_asset']);
+        $this->assign_form_data($episode_asset, $_POST['podlove_episode_asset']);
+        $episode_asset->save();
 
         if (isset($_POST['submit_and_stay'])) {
             $this->redirect('edit', $episode_asset->id);
@@ -225,6 +227,25 @@ class EpisodeAsset
             $this->redirect('index');
         } else {
             $this->redirect('index', null, ['message' => 'media_file_relation_warning', 'deleted_id' => $asset->id]);
+        }
+    }
+
+    private function assign_form_data($episode_asset, $data)
+    {
+        if (array_key_exists('file_type_id', $data)) {
+            $episode_asset->file_type_id = $data['file_type_id'];
+        }
+        if (array_key_exists('title', $data)) {
+            $episode_asset->title = $data['title'];
+        }
+        if (array_key_exists('identifier', $data)) {
+            $episode_asset->identifier = $data['identifier'];
+        }
+        if (array_key_exists('downloadable', $data)) {
+            $episode_asset->downloadable = $data['downloadable'];
+        }
+        if (array_key_exists('suffix', $data)) {
+            $episode_asset->suffix = $data['suffix'];
         }
     }
 

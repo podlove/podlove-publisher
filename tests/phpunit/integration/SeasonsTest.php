@@ -30,9 +30,9 @@ class SeasonsTest extends WP_UnitTestCase
 
     public function testSeasonsAreNumberedCorrectly()
     {
-        $season1 = Season::create(['start_date' => '2011-01-01']);
-        $season2 = Season::create(['start_date' => '2012-01-01']);
-        $season3 = Season::create(['start_date' => '2013-01-01']);
+        $season1 = $this->createSeason('2011-01-01');
+        $season2 = $this->createSeason('2012-01-01');
+        $season3 = $this->createSeason('2013-01-01');
 
         $this->assertEquals($season1->number(), 1);
         $this->assertEquals($season2->number(), 2);
@@ -41,8 +41,8 @@ class SeasonsTest extends WP_UnitTestCase
 
     public function testPreviousSeason()
     {
-        $season1 = Season::create(['start_date' => '2011-01-01']);
-        $season2 = Season::create(['start_date' => '2012-01-01']);
+        $season1 = $this->createSeason('2011-01-01');
+        $season2 = $this->createSeason('2012-01-01');
 
         $this->assertEquals($season2->previous_season()->id, $season1->id);
         $this->assertNull($season1->previous_season());
@@ -50,9 +50,9 @@ class SeasonsTest extends WP_UnitTestCase
 
     public function testNextSeason()
     {
-        $season0 = Season::create();
-        $season1 = Season::create(['start_date' => '2011-01-01']);
-        $season2 = Season::create(['start_date' => '2012-01-01']);
+        $season0 = $this->createSeason();
+        $season1 = $this->createSeason('2011-01-01');
+        $season2 = $this->createSeason('2012-01-01');
 
         $this->assertEquals($season0->next_season()->id, $season1->id);
         $this->assertEquals($season1->next_season()->id, $season2->id);
@@ -61,7 +61,7 @@ class SeasonsTest extends WP_UnitTestCase
 
     public function testEpisodesForSingleSeason()
     {
-        $season = Season::create();
+        $season = $this->createSeason();
 
         $this->episode_factory->create();
         $this->episode_factory->create();
@@ -71,8 +71,8 @@ class SeasonsTest extends WP_UnitTestCase
 
     public function testEpisodesForFirstSeason()
     {
-        $season0 = Season::create();
-        Season::create(['start_date' => '2011-01-01']);
+        $season0 = $this->createSeason();
+        $this->createSeason('2011-01-01');
 
         $this->_generate_episodes_for_dates([
             '2010-10-10',
@@ -85,8 +85,8 @@ class SeasonsTest extends WP_UnitTestCase
 
     public function testEpisodesForRunningSeason()
     {
-        Season::create();
-        $season1 = Season::create(['start_date' => '2011-01-01']);
+        $this->createSeason();
+        $season1 = $this->createSeason('2011-01-01');
 
         $this->_generate_episodes_for_dates([
             '2010-10-10',
@@ -99,9 +99,9 @@ class SeasonsTest extends WP_UnitTestCase
 
     public function testEpisodesForInbetweenSeason()
     {
-        Season::create();
-        $season1 = Season::create(['start_date' => '2011-01-01']);
-        Season::create(['start_date' => '2014-01-01']);
+        $this->createSeason();
+        $season1 = $this->createSeason('2011-01-01');
+        $this->createSeason('2014-01-01');
 
         $this->_generate_episodes_for_dates([
             '2010-10-10',
@@ -115,8 +115,8 @@ class SeasonsTest extends WP_UnitTestCase
 
     public function testEpisodesFreakShow()
     {
-        $season1 = Season::create(['start_date' => '2008-04-01']);
-        $season2 = Season::create(['start_date' => '2014-08-08']);
+        $season1 = $this->createSeason('2008-04-01');
+        $season2 = $this->createSeason('2014-08-08');
 
         $this->_generate_episodes_for_dates([
             '2008-04-01 19:33',
@@ -130,7 +130,7 @@ class SeasonsTest extends WP_UnitTestCase
 
     public function testCurrentSeasonHasNoEndDate()
     {
-        $season = Season::create();
+        $season = $this->createSeason();
         $this->episode_factory->create();
 
         $this->assertTrue($season->is_running());
@@ -139,8 +139,8 @@ class SeasonsTest extends WP_UnitTestCase
 
     public function testEndDateOfSeason()
     {
-        $season0 = Season::create();
-        Season::create(['start_date' => '2011-01-01']);
+        $season0 = $this->createSeason();
+        $this->createSeason('2011-01-01');
 
         $this->_generate_episodes_for_dates(['2010-10-10']);
 
@@ -149,8 +149,8 @@ class SeasonsTest extends WP_UnitTestCase
 
     public function testLastEpisode()
     {
-        $season0 = Season::create();
-        $season1 = Season::create(['start_date' => '2011-01-01']);
+        $season0 = $this->createSeason();
+        $season1 = $this->createSeason('2011-01-01');
 
         $episodes = $this->_generate_episodes_for_dates(['2010-10-10', '2010-10-11', '2013-01-01']);
 
@@ -160,8 +160,8 @@ class SeasonsTest extends WP_UnitTestCase
 
     public function testFirstEpisode()
     {
-        $season0 = Season::create();
-        $season1 = Season::create(['start_date' => '2011-01-01']);
+        $season0 = $this->createSeason();
+        $season1 = $this->createSeason('2011-01-01');
 
         $episodes = $this->_generate_episodes_for_dates([
             '2010-10-10',
@@ -175,8 +175,8 @@ class SeasonsTest extends WP_UnitTestCase
 
     public function testGetByDate()
     {
-        $season0 = Season::create();
-        $season1 = Season::create(['start_date' => '2011-01-01']);
+        $season0 = $this->createSeason();
+        $season1 = $this->createSeason('2011-01-01');
 
         $this->_generate_episodes_for_dates([
             '2010-10-10',
@@ -200,5 +200,16 @@ class SeasonsTest extends WP_UnitTestCase
         }
 
         return $episodes;
+    }
+
+    private function createSeason($start_date = null)
+    {
+        $season = new Season();
+        if ($start_date !== null) {
+            $season->start_date = $start_date;
+        }
+        $season->save();
+
+        return $season;
     }
 }

@@ -8,6 +8,7 @@ use Podlove\Modules\Networks\Model\PodcastList;
 class PodcastLists
 {
     public const MENU_SLUG = 'podlove_settings_list_handle';
+
     public static $pagehook;
     private static $nonce = 'update_podcast_list';
 
@@ -126,7 +127,8 @@ class PodcastLists
 
         PodcastList::activate_network_scope();
         $list = PodcastList::find_by_id($_REQUEST['list']);
-        $list->update_attributes($_POST['podlove_list']);
+        $this->assign_form_data($list, $_POST['podlove_list']);
+        $list->save();
         PodcastList::deactivate_network_scope();
 
         $this->redirect('index', $list->id);
@@ -148,7 +150,8 @@ class PodcastLists
 
         PodcastList::activate_network_scope();
         $list = new PodcastList();
-        $list->update_attributes($_POST['podlove_list']);
+        $this->assign_form_data($list, $_POST['podlove_list']);
+        $list->save();
         PodcastList::deactivate_network_scope();
 
         $this->redirect('index');
@@ -168,6 +171,31 @@ class PodcastLists
         PodcastList::deactivate_network_scope();
 
         $this->redirect('index');
+    }
+
+    private function assign_form_data($list, $data)
+    {
+        if (array_key_exists('slug', $data)) {
+            $list->slug = $data['slug'];
+        }
+        if (array_key_exists('title', $data)) {
+            $list->title = $data['title'];
+        }
+        if (array_key_exists('subtitle', $data)) {
+            $list->subtitle = $data['subtitle'];
+        }
+        if (array_key_exists('description', $data)) {
+            $list->description = $data['description'];
+        }
+        if (array_key_exists('logo', $data)) {
+            $list->logo = $data['logo'];
+        }
+        if (array_key_exists('url', $data)) {
+            $list->url = $data['url'];
+        }
+        if (array_key_exists('podcasts', $data)) {
+            $list->podcasts = $data['podcasts'];
+        }
     }
 
     /**

@@ -247,12 +247,16 @@ abstract class Base
      *
      * Takes an array of form values and takes care of serializing it.
      *
-     * @param array $attributes
+     * @deprecated 4.5.4 Use explicit property assignment followed by save().
+     *
+     * @param array $attributes attributes to update
      *
      * @return bool
      */
     public function update_attributes($attributes)
     {
+        _deprecated_function(__METHOD__, '4.5.4', 'explicit property assignment followed by save()');
+
         if (!is_array($attributes)) {
             return false;
         }
@@ -261,21 +265,13 @@ abstract class Base
             $this->{$key} = $value;
         }
 
-        if (isset($_REQUEST['checkboxes']) && is_array($_REQUEST['checkboxes'])) {
-            foreach ($_REQUEST['checkboxes'] as $checkbox) {
-                if (isset($attributes[$checkbox]) && $attributes[$checkbox] === 'on') {
-                    $this->{$checkbox} = 1;
-                } else {
-                    $this->{$checkbox} = 0;
-                }
-            }
-        }
-
         return $this->save();
     }
 
     /**
      * Update and save a single attribute.
+     *
+     * @deprecated 4.5.4 Use explicit property assignment followed by save().
      *
      * @param string $attribute attribute name
      * @param mixed  $value
@@ -284,6 +280,8 @@ abstract class Base
      */
     public function update_attribute($attribute, $value)
     {
+        _deprecated_function(__METHOD__, '4.5.4', 'explicit property assignment followed by save()');
+
         global $wpdb;
 
         $this->{$attribute} = $value;
@@ -301,8 +299,15 @@ abstract class Base
         return $wpdb->query($sql);
     }
 
+    /**
+     * @deprecated 4.5.4 Instantiate the model, assign properties explicitly, and call save().
+     *
+     * @param mixed $attributes
+     */
     public static function create($attributes = [])
     {
+        _deprecated_function(__METHOD__, '4.5.4', 'explicit model construction and save()');
+
         $class = get_called_class();
         $instance = new $class();
 

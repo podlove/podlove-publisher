@@ -3,6 +3,14 @@
 use Podlove\Model\Job;
 use Podlove\Modules\Contributors\Model\ContributorRole;
 
+class BaseModelMassAssignmentTestModel extends \Podlove\Model\Base
+{
+    public function save()
+    {
+        return true;
+    }
+}
+
 /**
  * @internal
  *
@@ -31,5 +39,44 @@ class BaseModelSerializationTest extends WP_UnitTestCase
 
         $this->assertSame(['batch' => 10], $data['args']);
         $this->assertSame(['offset' => 20], $data['state']);
+    }
+
+    public function testDeprecatedUpdateAttributesRemainsCompatible(): void
+    {
+        $model = new BaseModelMassAssignmentTestModel();
+        $model->title = 'Before';
+        $this->setExpectedDeprecated('Podlove\Model\Base::update_attributes');
+
+        $result = $model->update_attributes([
+            'title' => 'After',
+        ]);
+
+        $this->assertTrue($result);
+        $this->assertSame('After', $model->title);
+    }
+
+    public function testDeprecatedCreateRemainsCompatible(): void
+    {
+        $this->setExpectedDeprecated('Podlove\Model\Base::create');
+
+        $model = BaseModelMassAssignmentTestModel::create(['title' => 'Created']);
+
+        $this->assertSame('Created', $model->title);
+    }
+
+    public function testCheckboxPostsExplicitBooleanValueWithoutGlobalMetadata(): void
+    {
+        $model = new BaseModelMassAssignmentTestModel();
+        $model->enabled = 1;
+        $builder = new \Podlove\Form\Input\Builder($model, 'settings');
+
+        ob_start();
+        $builder->checkbox('enabled', []);
+        $html = ob_get_clean();
+
+        $this->assertStringContainsString('name="settings[enabled]" value="0"', $html);
+        $this->assertStringContainsString('name="settings[enabled]"', $html);
+        $this->assertStringContainsString('value="1"', $html);
+        $this->assertStringNotContainsString('checkboxes[]', $html);
     }
 }

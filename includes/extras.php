@@ -61,7 +61,8 @@ add_filter('pre_update_option_podlove_asset_assignment', function ($new, $old) {
         if ($cover_art = $episode->cover_art()) {
             $url = $cover_art->source_url();
             \Podlove\Log::get()->addInfo('Copying cover art '.$url.' from asset to manual for episode '.$episode->id);
-            $episode->update_attribute('cover_art', $url);
+            $episode->cover_art = $url;
+            $episode->save();
         }
     }
 

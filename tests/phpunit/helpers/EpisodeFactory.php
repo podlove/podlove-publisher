@@ -38,7 +38,12 @@ class EpisodeFactory
         }
 
         $args = array_merge($this->defaults, $args);
+        $episode = new \Podlove\Model\Episode();
+        foreach ($args as $key => $value) {
+            $episode->{$key} = $value;
+        }
+        $episode->save();
 
-        return \Podlove\Model\Episode::create($args);
+        return $episode;
     }
 }
