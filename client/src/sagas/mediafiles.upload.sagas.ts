@@ -33,15 +33,16 @@ export function* selectMediaFromLibrary() {
 export function* triggerPlusUpload(api: PodloveApiClient, action: Action): Generator<any, void, any> {
   const file = get(action, ['payload'])
   const progressKey = `plus-upload-${file.name}`
+  const episodeId: string = yield select(selectors.episode.id)
 
   // Reset any previous progress for this file
   yield put(progress.resetProgress(progressKey))
 
   try {
-    const uploadUrl = yield call(getUploadUrl, api, file.name)
+    const uploadUrl = yield call(getUploadUrl, api, file.name, episodeId)
     const fileUrl = yield call(uploadFileToUrl, uploadUrl, file, progressKey)
     yield put(mediafiles.setUploadUrl(fileUrl))
-    const completeResult = yield call(completeFileUpload, api, file.name)
+    const completeResult = yield call(completeFileUpload, api, file.name, episodeId)
 
     console.log('completeResult', completeResult)
   } catch (error) {
@@ -59,9 +60,10 @@ export function* triggerPlusUpload(api: PodloveApiClient, action: Action): Gener
 /**
  * Gets a pre-signed upload URL from the Plus API
  */
-function* getUploadUrl(api: PodloveApiClient, filename: string): Generator<any, string, any> {
+function* getUploadUrl(api: PodloveApiClient, filename: string, episodeId: string): Generator<any, string, any> {
   const { result: upload_url } = yield api.post(`plus/create_file_upload`, {
     filename,
+    episode_id: episodeId,
   })
 
   if (!upload_url) {
@@ -99,9 +101,10 @@ function* uploadFileToUrl(uploadUrl: string, file: File, progressKey: string): G
 /**
  * Completes the file upload process via Plus API
  */
-function* completeFileUpload(api: PodloveApiClient, filename: string): Generator<any, any, any> {
+function* completeFileUpload(api: PodloveApiClient, filename: string, episodeId: string): Generator<any, any, any> {
   const { result: completeResult } = yield api.post(`plus/complete_file_upload`, {
     filename,
+    episode_id: episodeId,
   })
 
   if (!completeResult) {

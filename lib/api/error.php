@@ -18,7 +18,7 @@ class ForbiddenAccess extends \WP_Error
         if (strlen($message) == 0) {
             $message = esc_html__('sorry, you do not have permissions to use this REST API endpoint');
         }
-        parent::__construct($code, $message, ['status' => 401]);
+        parent::__construct($code, $message, ['status' => rest_authorization_required_code()]);
     }
 }
 

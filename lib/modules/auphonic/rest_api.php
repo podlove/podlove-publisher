@@ -20,7 +20,7 @@ class REST_API
             [
                 'methods' => \WP_REST_Server::READABLE,
                 'callback' => [$this, 'get_token'],
-                'permission_callback' => [$this, 'permission_check'],
+                'permission_callback' => [$this, 'token_permissions_check'],
             ]
         ]);
 
@@ -28,7 +28,7 @@ class REST_API
             [
                 'methods' => \WP_REST_Server::CREATABLE,
                 'callback' => [$this, 'init_plus_file_transfer'],
-                'permission_callback' => [$this, 'permission_check'],
+                'permission_callback' => [$this, 'episode_permissions_check'],
                 'args' => [
                     'production_uuid' => [
                         'required' => true,
@@ -49,7 +49,7 @@ class REST_API
             [
                 'methods' => \WP_REST_Server::CREATABLE,
                 'callback' => [$this, 'transfer_single_file'],
-                'permission_callback' => [$this, 'permission_check'],
+                'permission_callback' => [$this, 'episode_permissions_check'],
                 'args' => [
                     'production_uuid' => [
                         'required' => true,
@@ -75,7 +75,7 @@ class REST_API
             [
                 'methods' => \WP_REST_Server::CREATABLE,
                 'callback' => [$this, 'set_plus_transfer_status'],
-                'permission_callback' => [$this, 'permission_check'],
+                'permission_callback' => [$this, 'episode_permissions_check'],
                 'args' => [
                     'production_uuid' => [
                         'required' => true,
@@ -258,13 +258,18 @@ class REST_API
         }
     }
 
-    public function permission_check()
+    public function token_permissions_check()
     {
-        if (!current_user_can('edit_posts')) {
-            return new \WP_Error('rest_forbidden', 'sorry, you do not have permissions to use this REST API endpoint', ['status' => 401]);
+        if (!current_user_can('manage_options')) {
+            return new \Podlove\Api\Error\ForbiddenAccess();
         }
 
         return true;
+    }
+
+    public function episode_permissions_check($request)
+    {
+        return \Podlove\Api\EpisodeMutationAccess::rest_check_edit_by_post_id($request->get_param('post_id'));
     }
 
     /**

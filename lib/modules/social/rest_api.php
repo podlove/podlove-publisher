@@ -144,7 +144,7 @@ class WP_REST_PodloveContributorService_Controller extends \WP_REST_Controller
                         'type' => 'string',
                     ]
                 ],
-                'permission_callback' => [$this, 'create_item_permissions_check'],
+                'permission_callback' => [$this, 'manage_contributors_permissions_check'],
             ],
         ]);
 
@@ -177,7 +177,7 @@ class WP_REST_PodloveContributorService_Controller extends \WP_REST_Controller
                         'type' => 'string',
                     ]
                 ],
-                'permission_callback' => [$this, 'update_item_permissions_check'],
+                'permission_callback' => [$this, 'manage_contributors_permissions_check'],
             ],
             [
                 'methods' => \WP_REST_Server::DELETABLE,
@@ -192,7 +192,7 @@ class WP_REST_PodloveContributorService_Controller extends \WP_REST_Controller
                         'type' => 'string',
                     ]
                 ],
-                'permission_callback' => [$this, 'delete_item_permissions_check'],
+                'permission_callback' => [$this, 'manage_contributors_permissions_check'],
             ],
         ]);
 
@@ -217,7 +217,7 @@ class WP_REST_PodloveContributorService_Controller extends \WP_REST_Controller
                         'type' => 'string',
                     ]
                 ],
-                'permission_callback' => [$this, 'create_item_permissions_check'],
+                'permission_callback' => [$this, 'manage_podcast_permissions_check'],
             ],
         ]);
 
@@ -250,7 +250,7 @@ class WP_REST_PodloveContributorService_Controller extends \WP_REST_Controller
                         'type' => 'string',
                     ]
                 ],
-                'permission_callback' => [$this, 'update_item_permissions_check'],
+                'permission_callback' => [$this, 'manage_podcast_permissions_check'],
             ],
             [
                 'methods' => \WP_REST_Server::DELETABLE,
@@ -265,7 +265,7 @@ class WP_REST_PodloveContributorService_Controller extends \WP_REST_Controller
                         'type' => 'string',
                     ]
                 ],
-                'permission_callback' => [$this, 'delete_item_permissions_check'],
+                'permission_callback' => [$this, 'manage_podcast_permissions_check'],
             ],
         ]);
     }
@@ -398,9 +398,9 @@ class WP_REST_PodloveContributorService_Controller extends \WP_REST_Controller
         return new \Podlove\Api\Response\OkResponse($data);
     }
 
-    public function create_item_permissions_check($request)
+    public function manage_contributors_permissions_check($request)
     {
-        if (!current_user_can('edit_posts')) {
+        if (!current_user_can('podlove_manage_contributors')) {
             return new \Podlove\Api\Error\ForbiddenAccess();
         }
 
@@ -436,9 +436,9 @@ class WP_REST_PodloveContributorService_Controller extends \WP_REST_Controller
         ]);
     }
 
-    public function update_item_permissions_check($request)
+    public function manage_podcast_permissions_check($request)
     {
-        if (!current_user_can('edit_posts')) {
+        if (!current_user_can('manage_options')) {
             return new \Podlove\Api\Error\ForbiddenAccess();
         }
 
@@ -520,15 +520,6 @@ class WP_REST_PodloveContributorService_Controller extends \WP_REST_Controller
         return new \Podlove\Api\Response\OkResponse([
             'status' => 'ok'
         ]);
-    }
-
-    public function delete_item_permissions_check($request)
-    {
-        if (!current_user_can('edit_posts')) {
-            return new \Podlove\Api\Error\ForbiddenAccess();
-        }
-
-        return true;
     }
 
     public function delete_contributor_service($request)

@@ -59,7 +59,7 @@ class WP_REST_PodloveOnboarding_Controller extends \WP_REST_Controller
      */
     public function get_item_permissions_check($request)
     {
-        if (!current_user_can('administrator')) {
+        if (!current_user_can('manage_options')) {
             return new \Podlove\Api\Error\ForbiddenAccess();
         }
 
@@ -84,7 +84,7 @@ class WP_REST_PodloveOnboarding_Controller extends \WP_REST_Controller
      */
     public function update_item_permissions_check($request)
     {
-        if (!current_user_can('administrator')) {
+        if (!current_user_can('manage_options')) {
             return new \Podlove\Api\Error\ForbiddenAccess();
         }
 

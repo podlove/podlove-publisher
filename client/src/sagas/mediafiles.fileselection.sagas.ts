@@ -71,9 +71,10 @@ function* setEpisodeSlugIfNeeded(files: File[], providedSlug: string | null): Ge
   return extractedSlug
 }
 
-export function* checkFileExists(api: PodloveApiClient, fileInfo: any): Generator<any, any, any> {
+export function* checkFileExists(api: PodloveApiClient, fileInfo: any, episodeId: string): Generator<any, any, any> {
   const { result: fileExists } = yield api.post(`plus/check_file_exists`, {
     filename: fileInfo.file.name,
+    episode_id: episodeId,
   })
 
   return {
@@ -110,7 +111,7 @@ export function* generateFilenameForFile(api: PodloveApiClient, file: File, epis
       newName: newFileName,
     }
 
-    const fileInfoWithExistenceCheck = yield call(checkFileExists, api, fileInfo)
+    const fileInfoWithExistenceCheck = yield call(checkFileExists, api, fileInfo, episodeId)
 
     // Update the specific file in the selectedFiles array
     yield call(updateFileInSelection, file.name, fileInfoWithExistenceCheck)

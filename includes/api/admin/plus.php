@@ -212,7 +212,7 @@ class WP_REST_PodlovePlus_Controller extends \WP_REST_Controller
 
     public function get_features_permissions_check($request)
     {
-        if (!current_user_can('edit_posts')) {
+        if (!current_user_can('manage_options')) {
             return new \Podlove\Api\Error\ForbiddenAccess();
         }
 

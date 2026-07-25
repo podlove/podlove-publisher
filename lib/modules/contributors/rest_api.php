@@ -598,7 +598,7 @@ class WP_REST_PodloveContributors_Controller extends \WP_REST_Controller
         $filter = $request->get_param('filter');
         if ($filter) {
             if ($filter == 'all') {
-                if (!current_user_can('edit_posts')) {
+                if (!current_user_can('podlove_manage_contributors')) {
                     return new \Podlove\Api\Error\ForbiddenAccess();
                 }
 
@@ -659,7 +659,7 @@ class WP_REST_PodloveContributors_Controller extends \WP_REST_Controller
 
     public function create_item_permissions_check($request)
     {
-        if (!current_user_can('edit_posts')) {
+        if (!current_user_can('podlove_manage_contributors')) {
             return new \Podlove\Api\Error\ForbiddenAccess();
         }
 
@@ -841,7 +841,7 @@ class WP_REST_PodloveContributors_Controller extends \WP_REST_Controller
 
     public function update_item_permissions_check($request)
     {
-        if (!current_user_can('edit_posts')) {
+        if (!current_user_can('podlove_manage_contributors')) {
             return new \Podlove\Api\Error\ForbiddenAccess();
         }
 
@@ -914,7 +914,7 @@ class WP_REST_PodloveContributors_Controller extends \WP_REST_Controller
 
     public function delete_item_permissions_check($request)
     {
-        if (!current_user_can('edit_posts')) {
+        if (!current_user_can('podlove_manage_contributors')) {
             return new \Podlove\Api\Error\ForbiddenAccess();
         }
 

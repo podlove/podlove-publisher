@@ -127,10 +127,17 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 = 4.5.4 =
 
-* security: constrain image cache lock deletion to the lock directory.
-* security: harden shownotes REST input handling against PHP object injection (CVE-2026-16099).
-* security: replace internal model mass assignment with explicit field assignment; legacy model assignment helpers are deprecated.
-* security: prevent unpublished episode metadata and media URLs from being disclosed through REST, player, and download routes.
+Various security related improvements:
+
+* constrain image cache lock deletion to the lock directory.
+* harden shownotes REST input handling against PHP object injection (CVE-2026-16099).
+* replace internal model mass assignment with explicit field assignment; legacy model assignment helpers are deprecated.
+* prevent unpublished episode metadata and media URLs from being disclosed through REST, player, and download routes.
+* prevent users from modifying episodes and episode-owned data belonging to other authors.
+* restrict podcast-wide settings and external-service operations to the appropriate capabilities.
+* require the contributor-management capability for contributor directory changes.
+
+Note: Episode and episode-metadata editing now follows WordPress post ownership and capability rules. Users editing episodes owned by someone else need the Editor role or equivalent edit_others_posts and edit_published_posts capabilities.
 
 = 4.5.3 =
 

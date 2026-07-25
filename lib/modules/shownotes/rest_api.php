@@ -28,7 +28,7 @@ class REST_API
             [
                 'methods' => \WP_REST_Server::CREATABLE,
                 'callback' => [$this, 'create_item'],
-                'permission_callback' => [$this, 'permission_check'],
+                'permission_callback' => [$this, 'create_item_permissions_check'],
             ],
         ]);
         register_rest_route(self::api_namespace, self::api_base.'/(?P<id>[\d]+)', [
@@ -46,12 +46,12 @@ class REST_API
             [
                 'methods' => \WP_REST_Server::DELETABLE,
                 'callback' => [$this, 'delete_item'],
-                'permission_callback' => [$this, 'permission_check'],
+                'permission_callback' => [$this, 'mutate_item_permissions_check'],
             ],
             [
                 'methods' => \WP_REST_Server::EDITABLE,
                 'callback' => [$this, 'update_item'],
-                'permission_callback' => [$this, 'permission_check'],
+                'permission_callback' => [$this, 'mutate_item_permissions_check'],
             ],
         ]);
         register_rest_route(self::api_namespace, self::api_base.'/(?P<id>[\d]+)/unfurl', [
@@ -64,28 +64,28 @@ class REST_API
             [
                 'methods' => \WP_REST_Server::EDITABLE,
                 'callback' => [$this, 'unfurl_item'],
-                'permission_callback' => [$this, 'permission_check'],
+                'permission_callback' => [$this, 'mutate_item_permissions_check'],
             ],
         ]);
         register_rest_route(self::api_namespace, self::api_base.'/osf', [
             [
                 'methods' => \WP_REST_Server::CREATABLE,
                 'callback' => [$this, 'import_osf'],
-                'permission_callback' => [$this, 'permission_check'],
+                'permission_callback' => [$this, 'import_permissions_check'],
             ],
         ]);
         register_rest_route(self::api_namespace, self::api_base.'/html', [
             [
                 'methods' => \WP_REST_Server::CREATABLE,
                 'callback' => [$this, 'import_html'],
-                'permission_callback' => [$this, 'permission_check'],
+                'permission_callback' => [$this, 'import_permissions_check'],
             ],
         ]);
         register_rest_route(self::api_namespace, self::api_base.'/render/html', [
             [
                 'methods' => \WP_REST_Server::READABLE,
                 'callback' => [$this, 'render_html'],
-                'permission_callback' => [$this, 'permission_check'],
+                'permission_callback' => [$this, 'import_permissions_check'],
             ],
         ]);
     }
@@ -96,7 +96,7 @@ class REST_API
 
         $post_id = $request['post_id'];
 
-        if (!$episode = \Podlove\Model\Episode::find_or_create_by_post_id($post_id)) {
+        if (!$episode = \Podlove\Model\Episode::find_one_by_post_id($post_id)) {
             return new \WP_Error(
                 'podlove_rest_html_no_episode',
                 'episode cannot be found',
@@ -122,7 +122,7 @@ class REST_API
     {
         $post_id = $request['post_id'];
 
-        if (!$episode = \Podlove\Model\Episode::find_or_create_by_post_id($post_id)) {
+        if (!$episode = \Podlove\Model\Episode::find_one_by_post_id($post_id)) {
             return new \WP_Error(
                 'podlove_rest_html_no_episode',
                 'episode cannot be found',
@@ -251,7 +251,7 @@ class REST_API
         }, $links);
         $links = array_filter($links);
 
-        if (!$episode = \Podlove\Model\Episode::find_or_create_by_post_id($post_id)) {
+        if (!$episode = \Podlove\Model\Episode::find_one_by_post_id($post_id)) {
             return new \WP_Error(
                 'podlove_rest_osf_no_episode',
                 'episode cannot be found',
@@ -561,6 +561,28 @@ class REST_API
         return true;
     }
 
+    public function create_item_permissions_check($request)
+    {
+        return \Podlove\Api\EpisodeMutationAccess::rest_check_edit($request->get_param('episode_id'));
+    }
+
+    public function mutate_item_permissions_check($request)
+    {
+        $entry = Entry::find_by_id($request->get_param('id'));
+        if (!$entry) {
+            return new \Podlove\Api\Error\NotFound();
+        }
+
+        $access = \Podlove\Api\EpisodeMutationAccess::rest_check_edit($entry->episode_id);
+
+        return is_wp_error($access) ? new \Podlove\Api\Error\NotFound() : true;
+    }
+
+    public function import_permissions_check($request)
+    {
+        return \Podlove\Api\EpisodeMutationAccess::rest_check_edit_by_post_id($request->get_param('post_id'));
+    }
+
     private function create_link_item($request, $episode)
     {
         $original_url = esc_sql($request['original_url']);
@@ -759,7 +781,7 @@ class REST_API_V2
             [
                 'methods' => \WP_REST_Server::CREATABLE,
                 'callback' => [$this, 'create_item'],
-                'permission_callback' => [$this, 'permission_check'],
+                'permission_callback' => [$this, 'create_item_permissions_check'],
             ],
         ]);
         register_rest_route(self::api_namespace, self::api_base.'/(?P<id>[\d]+)', [
@@ -777,12 +799,12 @@ class REST_API_V2
             [
                 'methods' => \WP_REST_Server::DELETABLE,
                 'callback' => [$this, 'delete_item'],
-                'permission_callback' => [$this, 'permission_check'],
+                'permission_callback' => [$this, 'mutate_item_permissions_check'],
             ],
             [
                 'methods' => \WP_REST_Server::EDITABLE,
                 'callback' => [$this, 'update_item'],
-                'permission_callback' => [$this, 'permission_check'],
+                'permission_callback' => [$this, 'mutate_item_permissions_check'],
             ],
         ]);
         register_rest_route(self::api_namespace, self::api_base.'/(?P<id>[\d]+)/unfurl', [
@@ -795,21 +817,21 @@ class REST_API_V2
             [
                 'methods' => \WP_REST_Server::EDITABLE,
                 'callback' => [$this, 'unfurl_item'],
-                'permission_callback' => [$this, 'permission_check'],
+                'permission_callback' => [$this, 'mutate_item_permissions_check'],
             ],
         ]);
         register_rest_route(self::api_namespace, self::api_base.'/osf', [
             [
                 'methods' => \WP_REST_Server::CREATABLE,
                 'callback' => [$this, 'import_osf'],
-                'permission_callback' => [$this, 'permission_check'],
+                'permission_callback' => [$this, 'import_permissions_check'],
             ],
         ]);
         register_rest_route(self::api_namespace, self::api_base.'/html', [
             [
                 'methods' => \WP_REST_Server::CREATABLE,
                 'callback' => [$this, 'import_html'],
-                'permission_callback' => [$this, 'permission_check'],
+                'permission_callback' => [$this, 'import_permissions_check'],
             ],
         ]);
     }
@@ -818,7 +840,7 @@ class REST_API_V2
     {
         $post_id = $request['post_id'];
 
-        if (!$episode = \Podlove\Model\Episode::find_or_create_by_post_id($post_id)) {
+        if (!$episode = \Podlove\Model\Episode::find_one_by_post_id($post_id)) {
             return new \WP_Error(
                 'podlove_rest_html_no_episode',
                 'episode cannot be found',
@@ -947,7 +969,7 @@ class REST_API_V2
         }, $links);
         $links = array_filter($links);
 
-        if (!$episode = \Podlove\Model\Episode::find_or_create_by_post_id($post_id)) {
+        if (!$episode = \Podlove\Model\Episode::find_one_by_post_id($post_id)) {
             return new \WP_Error(
                 'podlove_rest_osf_no_episode',
                 'episode cannot be found',
@@ -1240,6 +1262,28 @@ class REST_API_V2
         }
 
         return true;
+    }
+
+    public function create_item_permissions_check($request)
+    {
+        return \Podlove\Api\EpisodeMutationAccess::rest_check_edit($request->get_param('episode_id'));
+    }
+
+    public function mutate_item_permissions_check($request)
+    {
+        $entry = Entry::find_by_id($request->get_param('id'));
+        if (!$entry) {
+            return new \Podlove\Api\Error\NotFound();
+        }
+
+        $access = \Podlove\Api\EpisodeMutationAccess::rest_check_edit($entry->episode_id);
+
+        return is_wp_error($access) ? new \Podlove\Api\Error\NotFound() : true;
+    }
+
+    public function import_permissions_check($request)
+    {
+        return \Podlove\Api\EpisodeMutationAccess::rest_check_edit_by_post_id($request->get_param('post_id'));
     }
 
     private function create_link_item($request, $episode)

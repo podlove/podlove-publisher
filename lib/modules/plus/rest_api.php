@@ -20,12 +20,15 @@ class RestApi extends \WP_REST_Controller
             [
                 'methods' => \WP_REST_Server::CREATABLE,
                 'callback' => [$this, 'create_upload_url'],
-                'permission_callback' => [$this, 'get_permissions_check'],
-                [
-                    'args' => [
-                        'filename' => [
-                            'type' => 'string'
-                        ]
+                'permission_callback' => [$this, 'episode_permissions_check'],
+                'args' => [
+                    'filename' => [
+                        'type' => 'string',
+                        'required' => true,
+                    ],
+                    'episode_id' => [
+                        'type' => 'integer',
+                        'required' => true,
                     ]
                 ]
             ]
@@ -35,12 +38,15 @@ class RestApi extends \WP_REST_Controller
             [
                 'methods' => \WP_REST_Server::CREATABLE,
                 'callback' => [$this, 'check_file_exists'],
-                'permission_callback' => [$this, 'get_permissions_check'],
-                [
-                    'args' => [
-                        'filename' => [
-                            'type' => 'string'
-                        ]
+                'permission_callback' => [$this, 'episode_permissions_check'],
+                'args' => [
+                    'filename' => [
+                        'type' => 'string',
+                        'required' => true,
+                    ],
+                    'episode_id' => [
+                        'type' => 'integer',
+                        'required' => true,
                     ]
                 ]
             ]
@@ -50,12 +56,15 @@ class RestApi extends \WP_REST_Controller
             [
                 'methods' => \WP_REST_Server::CREATABLE,
                 'callback' => [$this, 'complete_upload'],
-                'permission_callback' => [$this, 'get_permissions_check'],
-                [
-                    'args' => [
-                        'filename' => [
-                            'type' => 'string'
-                        ]
+                'permission_callback' => [$this, 'episode_permissions_check'],
+                'args' => [
+                    'filename' => [
+                        'type' => 'string',
+                        'required' => true,
+                    ],
+                    'episode_id' => [
+                        'type' => 'integer',
+                        'required' => true,
                     ]
                 ]
             ]
@@ -89,7 +98,7 @@ class RestApi extends \WP_REST_Controller
             [
                 'methods' => \WP_REST_Server::CREATABLE,
                 'callback' => [$this, 'generate_filename'],
-                'permission_callback' => [$this, 'get_permissions_check'],
+                'permission_callback' => [$this, 'episode_permissions_check'],
                 'args' => [
                     'original_filename' => [
                         'type' => 'string',
@@ -139,18 +148,14 @@ class RestApi extends \WP_REST_Controller
         return $this->api->complete_file_upload($filename);
     }
 
-    public function get_permissions_check($request)
+    public function episode_permissions_check($request)
     {
-        if (!current_user_can('edit_posts')) {
-            return new \Podlove\Api\Error\ForbiddenAccess();
-        }
-
-        return true;
+        return \Podlove\Api\EpisodeMutationAccess::rest_check_edit($request->get_param('episode_id'));
     }
 
     public function get_migration_permissions_check($request)
     {
-        if (!current_user_can('administrator')) {
+        if (!current_user_can('manage_options')) {
             return new \Podlove\Api\Error\ForbiddenAccess();
         }
 

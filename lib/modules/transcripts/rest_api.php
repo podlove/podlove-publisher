@@ -84,13 +84,9 @@ class REST_API
         return Transcript::prepare_transcript(Transcript::get_transcript($episode_id));
     }
 
-    public function permission_check()
+    public function permission_check($request)
     {
-        if (!current_user_can('edit_posts')) {
-            return new \WP_Error('rest_forbidden', 'sorry, you do not have permissions to use this REST API endpoint', ['status' => 401]);
-        }
-
-        return true;
+        return \Podlove\Api\EpisodeMutationAccess::rest_check_edit_by_post_id($request->get_param('id'));
     }
 }
 
@@ -241,13 +237,13 @@ class WP_REST_PodloveTranscripts_Controller extends \WP_REST_Controller
                 'description' => __('Edit a chaption of the transcript', 'podlove-podcasting-plugin-for-wordpress'),
                 'methods' => \WP_REST_Server::EDITABLE,
                 'callback' => [$this, 'update_item_transcripts'],
-                'permission_callback' => [$this, 'update_item_permissions_check'],
+                'permission_callback' => [$this, 'mutate_paragraph_permissions_check'],
             ],
             [
                 'description' => __('Delete a chaption of the transcript', 'podlove-podcasting-plugin-for-wordpress'),
                 'methods' => \WP_REST_Server::DELETABLE,
                 'callback' => [$this, 'delete_item_transcripts'],
-                'permission_callback' => [$this, 'delete_item_permissions_check'],
+                'permission_callback' => [$this, 'mutate_paragraph_permissions_check'],
             ]
         ]);
     }
@@ -418,11 +414,7 @@ class WP_REST_PodloveTranscripts_Controller extends \WP_REST_Controller
 
     public function create_item_permissions_check($request)
     {
-        if (!current_user_can('edit_posts')) {
-            return new \Podlove\Api\Error\ForbiddenAccess();
-        }
-
-        return true;
+        return \Podlove\Api\EpisodeMutationAccess::rest_check_edit($request->get_param('id'));
     }
 
     public function create_item($request)
@@ -432,11 +424,7 @@ class WP_REST_PodloveTranscripts_Controller extends \WP_REST_Controller
 
     public function update_item_permissions_check($request)
     {
-        if (!current_user_can('edit_posts')) {
-            return new \Podlove\Api\Error\ForbiddenAccess();
-        }
-
-        return true;
+        return \Podlove\Api\EpisodeMutationAccess::rest_check_edit($request->get_param('id'));
     }
 
     public function update_item($request)
@@ -615,11 +603,19 @@ class WP_REST_PodloveTranscripts_Controller extends \WP_REST_Controller
 
     public function delete_item_permissions_check($request)
     {
-        if (!current_user_can('edit_posts')) {
-            return new \Podlove\Api\Error\ForbiddenAccess();
+        return \Podlove\Api\EpisodeMutationAccess::rest_check_edit($request->get_param('id'));
+    }
+
+    public function mutate_paragraph_permissions_check($request)
+    {
+        $transcript = Transcript::find_by_id($request->get_param('id'));
+        if (!$transcript) {
+            return new \Podlove\Api\Error\NotFound();
         }
 
-        return true;
+        $access = \Podlove\Api\EpisodeMutationAccess::rest_check_edit($transcript->episode_id);
+
+        return is_wp_error($access) ? new \Podlove\Api\Error\NotFound() : true;
     }
 
     public function delete_item($request)

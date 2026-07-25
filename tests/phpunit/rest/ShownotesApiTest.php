@@ -127,11 +127,143 @@ class ShownotesApiTest extends WP_UnitTestCase
         $this->assertSame('podlove_rest_invalid_unfurl_data', $response->get_data()['code']);
     }
 
+    /**
+     * @dataProvider shownotesCreateRoutes
+     */
+    public function testCreateUsesEpisodeOwnership(string $route): void
+    {
+        $owner_id = $this->factory->user->create(['role' => 'author']);
+        $other_author_id = $this->factory->user->create(['role' => 'author']);
+        $episode = $this->create_episode($owner_id);
+
+        wp_set_current_user($other_author_id);
+        $denied_response = $this->server->dispatch($this->create_request($route, $episode));
+
+        $this->assertSame(403, $denied_response->get_status());
+        $this->assertSame(0, Entry::count());
+
+        wp_set_current_user($owner_id);
+        $allowed_response = $this->server->dispatch($this->create_request($route, $episode));
+
+        $this->assertSame(201, $allowed_response->get_status());
+        $this->assertSame(1, Entry::count());
+    }
+
+    /**
+     * @dataProvider shownotesCreateRoutes
+     */
+    public function testChildMutationHidesForeignAndMissingEntries(string $route): void
+    {
+        $owner_id = $this->factory->user->create(['role' => 'author']);
+        $other_author_id = $this->factory->user->create(['role' => 'author']);
+        $editor_id = $this->factory->user->create(['role' => 'editor']);
+        $episode = $this->create_episode($owner_id);
+        $entry = $this->create_entry($episode, 'Original');
+
+        wp_set_current_user($other_author_id);
+        $foreign_request = new WP_REST_Request('PUT', $route.'/'.$entry->id);
+        $foreign_request->set_param('title', 'Foreign update');
+        $foreign_response = $this->server->dispatch($foreign_request);
+        $missing_response = $this->server->dispatch(new WP_REST_Request('DELETE', $route.'/999999'));
+
+        $this->assertSame(404, $foreign_response->get_status());
+        $this->assertSame(404, $missing_response->get_status());
+        $this->assertSame('Original', Entry::find_by_id($entry->id)->title);
+
+        wp_set_current_user($editor_id);
+        $editor_request = new WP_REST_Request('PUT', $route.'/'.$entry->id);
+        $editor_request->set_param('title', 'Editor update');
+        $editor_response = $this->server->dispatch($editor_request);
+
+        $this->assertSame(200, $editor_response->get_status());
+        $this->assertSame('Editor update', Entry::find_by_id($entry->id)->title);
+    }
+
+    /**
+     * @dataProvider shownotesCreateRoutes
+     */
+    public function testUnfurlDenialOccursBeforeHttpRequest(string $route): void
+    {
+        $owner_id = $this->factory->user->create(['role' => 'author']);
+        $other_author_id = $this->factory->user->create(['role' => 'author']);
+        $episode = $this->create_episode($owner_id);
+        $entry = $this->create_entry($episode, 'Original');
+        $http_requests = 0;
+        $block_http = function () use (&$http_requests) {
+            ++$http_requests;
+
+            return new WP_Error('unexpected_http_request');
+        };
+        add_filter('pre_http_request', $block_http);
+
+        wp_set_current_user($other_author_id);
+        $response = $this->server->dispatch(new WP_REST_Request('PUT', $route.'/'.$entry->id.'/unfurl'));
+
+        remove_filter('pre_http_request', $block_http);
+
+        $this->assertSame(404, $response->get_status());
+        $this->assertSame(0, $http_requests);
+        $this->assertNull(Entry::find_by_id($entry->id)->state);
+    }
+
     public function shownotesCreateRoutes(): array
     {
         return [
             'v1' => ['/podlove/v1/shownotes'],
             'v2' => ['/podlove/v2/shownotes'],
+        ];
+    }
+
+    /**
+     * @dataProvider shownotesImportRoutes
+     */
+    public function testHtmlImportUsesPostOwnership(string $route): void
+    {
+        $owner_id = $this->factory->user->create(['role' => 'author']);
+        $other_author_id = $this->factory->user->create(['role' => 'author']);
+        $episode = $this->create_episode($owner_id);
+
+        wp_set_current_user($other_author_id);
+        $denied_response = $this->server->dispatch($this->import_request($route, $episode->post_id));
+
+        $this->assertSame(403, $denied_response->get_status());
+        $this->assertSame(0, Entry::count());
+
+        wp_set_current_user($owner_id);
+        $allowed_response = $this->server->dispatch($this->import_request($route, $episode->post_id));
+
+        $this->assertSame(200, $allowed_response->get_status());
+        $this->assertSame(1, Entry::count());
+    }
+
+    /**
+     * @dataProvider shownotesImportRoutes
+     */
+    public function testHtmlImportDoesNotCreateMissingEpisode(string $route): void
+    {
+        $author_id = $this->factory->user->create(['role' => 'author']);
+        $post_id = wp_insert_post([
+            'post_title' => 'Podcast Post Without Episode',
+            'post_type' => 'podcast',
+            'post_status' => 'draft',
+            'post_author' => $author_id,
+        ]);
+        Episode::find_one_by_post_id($post_id)->delete();
+        $episode_count = Episode::count();
+
+        wp_set_current_user($author_id);
+        $response = $this->server->dispatch($this->import_request($route, $post_id));
+
+        $this->assertSame(404, $response->get_status());
+        $this->assertSame($episode_count, Episode::count());
+        $this->assertNull(Episode::find_one_by_post_id($post_id));
+    }
+
+    public function shownotesImportRoutes(): array
+    {
+        return [
+            'v1' => ['/podlove/v1/shownotes/html'],
+            'v2' => ['/podlove/v2/shownotes/html'],
         ];
     }
 
@@ -148,15 +280,47 @@ class ShownotesApiTest extends WP_UnitTestCase
         $this->assertNull($data['unfurl_data']);
     }
 
-    private function create_episode(): Episode
+    private function create_episode(?int $author_id = null): Episode
     {
         $post_id = wp_insert_post([
             'post_title' => 'Shownotes API Test Episode',
             'post_type' => 'podcast',
             'post_status' => 'draft',
+            'post_author' => $author_id ?? get_current_user_id(),
         ]);
 
         return Episode::find_or_create_by_post_id($post_id);
+    }
+
+    private function create_request(string $route, Episode $episode): WP_REST_Request
+    {
+        $request = new WP_REST_Request('POST', $route);
+        $request->set_param('episode_id', $episode->id);
+        $request->set_param('type', 'topic');
+        $request->set_param('title', 'Authorized shownote');
+
+        return $request;
+    }
+
+    private function import_request(string $route, int $post_id): WP_REST_Request
+    {
+        $request = new WP_REST_Request('POST', $route);
+        $request->set_param('post_id', $post_id);
+        $request->set_param('html', '<h2>Imported topic</h2>');
+
+        return $request;
+    }
+
+    private function create_entry(Episode $episode, string $title): Entry
+    {
+        $entry = new Entry();
+        $entry->episode_id = $episode->id;
+        $entry->type = 'link';
+        $entry->original_url = 'https://example.test/shownote';
+        $entry->title = $title;
+        $entry->save();
+
+        return $entry;
     }
 
     private function serialized_string_payload(): string
