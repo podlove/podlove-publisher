@@ -51,7 +51,7 @@ class Entry extends Wrapper
      */
     public function url()
     {
-        return $this->entry->affiliate_url ?? $this->entry->url ?? $this->entry->original_url;
+        return $this->entry->affiliate_url ?: ($this->entry->url ?: $this->entry->original_url);
     }
 
     /**

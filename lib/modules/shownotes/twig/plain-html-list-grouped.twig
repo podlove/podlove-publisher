@@ -1,14 +1,19 @@
 {% for topic in episode.shownotes({groupby: "topic"}) %}
 	{% if topic.title %}
 		<br>
-		<h5>{{ topic.title }}</h5>
+		<h5>{{ topic.title|e('html') }}</h5>
 	{% endif %}
 
 	<ul>
 		{% for entry in topic.entries %}
 			<li>
 				{% if entry.type == "link" %}
-					<a href="{{ entry.url }}" target="_blank">{{ entry.title }}</a>
+					{% set entry_url = entry.url|esc_url %}
+					{% if entry_url %}
+						<a href="{{ entry_url }}" target="_blank" rel="noopener noreferrer">{{ entry.title|e('html') }}</a>
+					{% else %}
+						{{ entry.title|e('html') }}
+					{% endif %}
 				{% endif %}
 			</li>
 		{% endfor %}

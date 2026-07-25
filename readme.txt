@@ -131,6 +131,7 @@ Various security related improvements:
 
 * constrain image cache lock deletion to the lock directory.
 * harden shownotes REST input handling against PHP object injection (CVE-2026-16099).
+* prevent stored cross-site scripting through shownotes metadata and bundled templates.
 * replace internal model mass assignment with explicit field assignment; legacy model assignment helpers are deprecated.
 * prevent unpublished episode metadata and media URLs from being disclosed through REST, player, and download routes.
 * prevent users from modifying episodes and episode-owned data belonging to other authors.

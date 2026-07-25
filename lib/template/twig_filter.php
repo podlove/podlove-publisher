@@ -153,9 +153,18 @@ class TwigFilter
             return \wpautop($content);
         });
 
+        $escapeUrlFilter = new Twig\TwigFilter('esc_url', function ($url) {
+            if (!is_scalar($url) && null !== $url) {
+                return '';
+            }
+
+            return \esc_url((string) $url, ['http', 'https']);
+        }, ['is_safe' => ['html']]);
+
         $twig->addFilter($formatBytesFilter);
         $twig->addFilter($padLeftFilter);
         $twig->addFilter($wpautopFilter);
+        $twig->addFilter($escapeUrlFilter);
 
         // add functions
         foreach (self::$template_tags as $tag) {

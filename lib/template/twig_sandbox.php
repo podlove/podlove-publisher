@@ -26,6 +26,7 @@ class TwigSandbox
         'formatBytes',
         'padLeft',
         'wpautop',
+        'esc_url',
     ];
 
     public static $twig_tags = [
@@ -67,6 +68,7 @@ class TwigSandbox
         'date_modify',
         'default',
         'escape',
+        'e',
         'filter',
         'find',
         'first',

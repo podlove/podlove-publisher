@@ -29,6 +29,7 @@ class REST_API
                 'methods' => \WP_REST_Server::CREATABLE,
                 'callback' => [$this, 'create_item'],
                 'permission_callback' => [$this, 'create_item_permissions_check'],
+                'args' => EntryInput::create_args(),
             ],
         ]);
         register_rest_route(self::api_namespace, self::api_base.'/(?P<id>[\d]+)', [
@@ -52,6 +53,7 @@ class REST_API
                 'methods' => \WP_REST_Server::EDITABLE,
                 'callback' => [$this, 'update_item'],
                 'permission_callback' => [$this, 'mutate_item_permissions_check'],
+                'args' => EntryInput::update_args(),
             ],
         ]);
         register_rest_route(self::api_namespace, self::api_base.'/(?P<id>[\d]+)/unfurl', [
@@ -168,7 +170,10 @@ class REST_API
                     ],
                     'type' => 'link',
                 ]);
-                rest_do_request($request);
+                $response = rest_do_request($request);
+                if ($response->is_error()) {
+                    return $response->as_error();
+                }
             } else {
                 $request = new \WP_REST_Request('POST', '/podlove/v1/shownotes');
                 $request->set_query_params([
@@ -179,7 +184,10 @@ class REST_API
                     'title' => $element->textContent,
                     'type' => 'topic',
                 ]);
-                rest_do_request($request);
+                $response = rest_do_request($request);
+                if ($response->is_error()) {
+                    return $response->as_error();
+                }
             }
         }
 
@@ -280,7 +288,10 @@ class REST_API
                     'type' => 'topic',
                 ]);
             }
-            rest_do_request($request);
+            $response = rest_do_request($request);
+            if ($response->is_error()) {
+                return $response->as_error();
+            }
         }
 
         return rest_ensure_response(['message' => 'ok']);
@@ -337,6 +348,14 @@ class REST_API
         }
 
         if ($request['type'] == 'link') {
+            if (!$request['original_url']) {
+                return new \WP_Error(
+                    'podlove_rest_missing_original_url',
+                    'original_url is required for type "link"',
+                    ['status' => 400]
+                );
+            }
+
             return $this->create_link_item($request, $episode);
         }
         if ($request['type'] == 'topic') {
@@ -386,7 +405,10 @@ class REST_API
             return $entry;
         }
 
-        $url = $entry->original_url;
+        $url = EntryInput::sanitize_url_argument($entry->original_url);
+        if (is_wp_error($url)) {
+            return $url;
+        }
 
         $unfurl_endpoint = 'https://plus.podlove.org/api/unfurl';
         $curl = new Curl();
@@ -425,6 +447,10 @@ class REST_API
         }
 
         $data = json_decode(\Podlove\maybe_encode_emoji($response['body']), true);
+        $data = EntryInput::normalize_unfurl_data($data);
+        if (is_wp_error($data)) {
+            return $data;
+        }
 
         // remove "data:..." images because they are too huge to store in database
         $url_size_threshold = 1000;
@@ -708,9 +734,11 @@ class REST_API
 
     private function assign_create_properties(Entry $entry, $request, array $properties)
     {
+        $params = $request->get_params();
+
         foreach ($properties as $property) {
-            if (isset($request[$property]) && $request[$property]) {
-                $entry->{$property} = $request[$property];
+            if (array_key_exists($property, $params)) {
+                $entry->{$property} = $params[$property];
             }
         }
     }
@@ -782,6 +810,7 @@ class REST_API_V2
                 'methods' => \WP_REST_Server::CREATABLE,
                 'callback' => [$this, 'create_item'],
                 'permission_callback' => [$this, 'create_item_permissions_check'],
+                'args' => EntryInput::create_args(),
             ],
         ]);
         register_rest_route(self::api_namespace, self::api_base.'/(?P<id>[\d]+)', [
@@ -805,6 +834,7 @@ class REST_API_V2
                 'methods' => \WP_REST_Server::EDITABLE,
                 'callback' => [$this, 'update_item'],
                 'permission_callback' => [$this, 'mutate_item_permissions_check'],
+                'args' => EntryInput::update_args(),
             ],
         ]);
         register_rest_route(self::api_namespace, self::api_base.'/(?P<id>[\d]+)/unfurl', [
@@ -886,7 +916,10 @@ class REST_API_V2
                     ],
                     'type' => 'link',
                 ]);
-                rest_do_request($request);
+                $response = rest_do_request($request);
+                if ($response->is_error()) {
+                    return $response->as_error();
+                }
             } else {
                 $request = new \WP_REST_Request('POST', '/podlove/v1/shownotes');
                 $request->set_query_params([
@@ -897,7 +930,10 @@ class REST_API_V2
                     'title' => $element->textContent,
                     'type' => 'topic',
                 ]);
-                rest_do_request($request);
+                $response = rest_do_request($request);
+                if ($response->is_error()) {
+                    return $response->as_error();
+                }
             }
         }
 
@@ -998,7 +1034,10 @@ class REST_API_V2
                     'type' => 'topic',
                 ]);
             }
-            rest_do_request($request);
+            $response = rest_do_request($request);
+            if ($response->is_error()) {
+                return $response->as_error();
+            }
         }
 
         return rest_ensure_response(['message' => 'ok']);
@@ -1055,6 +1094,14 @@ class REST_API_V2
         }
 
         if ($request['type'] == 'link') {
+            if (!$request['original_url']) {
+                return new \WP_Error(
+                    'podlove_rest_missing_original_url',
+                    'original_url is required for type "link"',
+                    ['status' => 400]
+                );
+            }
+
             return $this->create_link_item($request, $episode);
         }
         if ($request['type'] == 'topic') {
@@ -1104,7 +1151,10 @@ class REST_API_V2
             return $entry;
         }
 
-        $url = $entry->original_url;
+        $url = EntryInput::sanitize_url_argument($entry->original_url);
+        if (is_wp_error($url)) {
+            return $url;
+        }
 
         $unfurl_endpoint = 'https://plus.podlove.org/api/unfurl';
         $curl = new Curl();
@@ -1130,6 +1180,10 @@ class REST_API_V2
         }
 
         $data = json_decode(\Podlove\maybe_encode_emoji($response['body']), true);
+        $data = EntryInput::normalize_unfurl_data($data);
+        if (is_wp_error($data)) {
+            return $data;
+        }
 
         // remove "data:..." images because they are too huge to store in database
         $url_size_threshold = 1000;
@@ -1147,7 +1201,7 @@ class REST_API_V2
         $entry->unfurl_data = $data;
         $entry->state = 'fetched';
         $entry->url = $data['url'];
-        $entry->icon = $data['icon']['url'];
+        $entry->icon = $data['icon']['url'] ?? '';
         $entry->image = $data['image'];
 
         // todo: should probably do this in an async job
@@ -1411,9 +1465,11 @@ class REST_API_V2
 
     private function assign_create_properties(Entry $entry, $request, array $properties)
     {
+        $params = $request->get_params();
+
         foreach ($properties as $property) {
-            if (isset($request[$property]) && $request[$property]) {
-                $entry->{$property} = $request[$property];
+            if (array_key_exists($property, $params)) {
+                $entry->{$property} = $params[$property];
             }
         }
     }

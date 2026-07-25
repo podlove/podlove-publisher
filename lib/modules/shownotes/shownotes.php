@@ -16,8 +16,8 @@ class Shownotes extends \Podlove\Modules\Base
         add_action('add_meta_boxes', [$this, 'add_meta_box']);
         add_action('podlove_module_was_activated_shownotes', [$this, 'was_activated']);
         add_action('rest_api_init', [$this, 'api_init']);
+        add_filter('podlove_shownotes_entry', [EntryInput::class, 'normalize_entry_for_read']);
         add_filter('podlove_shownotes_entry', [__CLASS__, 'apply_affiliate_to_shownotes_entry']);
-        add_filter('podlove_shownotes_entry', [__CLASS__, 'encode_html']);
 
         add_filter('podlove_twig_file_loader', function ($file_loader) {
             $file_loader->addPath(implode(DIRECTORY_SEPARATOR, [\Podlove\PLUGIN_DIR, 'lib', 'modules', 'shownotes', 'twig']), 'shownotes');
@@ -99,14 +99,6 @@ HTML;
         } elseif (stripos($url, 'thomann.de') !== false) {
             $entry->affiliate_url = Affiliate::apply_thomann_de_affiliate($url);
         }
-
-        return $entry;
-    }
-
-    public static function encode_html(Entry $entry)
-    {
-        $entry->title = html_entity_decode($entry->title ?? '');
-        $entry->description = html_entity_decode($entry->description ?? '');
 
         return $entry;
     }

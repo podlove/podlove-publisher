@@ -32,13 +32,23 @@
 			<li class="psn-entry">
 				{% if entry.type == "link" %}
 					{% if entry.icon %}
-						<img class="psn-icon" src="{{ entry.icon }}"/>
+						{% set icon_url = entry.icon|esc_url %}
+						{% if icon_url %}
+							<img class="psn-icon" src="{{ icon_url }}"/>
+						{% else %}
+							<div class="psn-icon psn-icon-default">&nbsp;</div>
+						{% endif %}
 					{% else %}
 						<div class="psn-icon psn-icon-default">&nbsp;</div>
 					{% endif %}
-					<a class="psn-link" href="{{ entry.url }}">{{ entry.title ? entry.title : entry.url }}</a>
+					{% set entry_url = entry.url|esc_url %}
+					{% if entry_url %}
+						<a class="psn-link" href="{{ entry_url }}">{{ (entry.title ? entry.title : entry.url)|e('html') }}</a>
+					{% else %}
+						<span class="psn-link">{{ (entry.title ? entry.title : entry.url)|e('html') }}</span>
+					{% endif %}
 				{% elseif entry.type == "topic" %}
-					<strong>{{ entry.title }}</strong>
+					<strong>{{ entry.title|e('html') }}</strong>
 				{% endif %}
 			</li>
 		{% endfor %}

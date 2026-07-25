@@ -17,11 +17,11 @@ class TemplateExtensions
      *   <li class="psn-entry">
      *     {% if entry.type == "link" %}
      *       {% if entry.icon %}
-     *         <img class="psn-icon" src="{{ entry.icon }}" />
+     *         <img class="psn-icon" src="{{ entry.icon|esc_url }}" />
      *       {% endif %}
-     *       <a class="psn-link" href="{{ entry.url }}">{{ entry.title }}</a>
+     *       <a class="psn-link" href="{{ entry.url|esc_url }}">{{ entry.title|e('html') }}</a>
      *     {% elseif entry.type == "topic" %}
-     *       {{ entry.title }}
+     *       {{ entry.title|e('html') }}
      *     {% endif %}
      *   </li>
      * {% endfor %}
@@ -32,16 +32,16 @@ class TemplateExtensions
      *
      * ```
      * {% for topic in episode.shownotes({groupby: "topic"}) %}
-     *   <h3>{{ topic.title }}</h3>
+     *   <h3>{{ topic.title|e('html') }}</h3>
      *
      *   <ul>
      *     {% for entry in topic.entries %}
      *       <li class="psn-entry">
      *         {% if entry.type == "link" %}
      *           {% if entry.icon %}
-     *             <img class="psn-icon" src="{{ entry.icon }}"/>
+     *             <img class="psn-icon" src="{{ entry.icon|esc_url }}"/>
      *           {% endif %}
-     *           <a class="psn-link" href="{{ entry.url }}">{{ entry.title }}</a>
+     *           <a class="psn-link" href="{{ entry.url|esc_url }}">{{ entry.title|e('html') }}</a>
      *         {% endif %}
      *       </li>
      *     {% endfor %}
