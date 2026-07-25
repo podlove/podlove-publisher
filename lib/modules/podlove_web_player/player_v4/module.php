@@ -25,11 +25,20 @@ class Module
 
         add_action('wp', function () {
             if (get_post_type() == 'podcast' && isset($_GET['podlove_action']) && $_GET['podlove_action'] == 'pwp4_config') {
-                $episode = Episode::find_or_create_by_post_id(get_the_ID());
+                $episode = Episode::find_one_by_post_id(get_the_ID());
 
-                if (!$episode) {
-                    \Podlove\AJAX\Ajax::respond_with_json(['error' => 'no episode']);
+                if (!$episode
+                    || !\Podlove\Api\EpisodeReadAccess::can_read($episode)
+                    || (!\Podlove\Api\EpisodeReadAccess::is_public($episode) && !\Podlove\Api\EpisodeReadAccess::is_same_origin_request())) {
+                    status_header(404);
                     exit;
+                }
+
+                if (!\Podlove\Api\EpisodeReadAccess::is_public($episode)) {
+                    if (!defined('DONOTCACHEPAGE')) {
+                        define('DONOTCACHEPAGE', true);
+                    }
+                    nocache_headers();
                 }
 
                 $context = isset($_GET['podlove_context']) ? $_GET['podlove_context'] : null;
@@ -129,7 +138,7 @@ class Module
         } else {
             $episode = Episode::find_one_by_post_id($post_id);
 
-            if (!$episode) {
+            if (!$episode || !\Podlove\Api\EpisodeReadAccess::can_read($episode)) {
                 return '';
             }
 
@@ -158,8 +167,18 @@ class Module
 
         $episode = Episode::find_by_id($episode_id);
 
-        if (!$episode) {
-            return;
+        if (!$episode
+            || !\Podlove\Api\EpisodeReadAccess::can_read($episode)
+            || (!\Podlove\Api\EpisodeReadAccess::is_public($episode) && !\Podlove\Api\EpisodeReadAccess::is_same_origin_request())) {
+            status_header(404);
+            exit;
+        }
+
+        if (!\Podlove\Api\EpisodeReadAccess::is_public($episode)) {
+            if (!defined('DONOTCACHEPAGE')) {
+                define('DONOTCACHEPAGE', true);
+            }
+            nocache_headers();
         }
 
         // allow CORS

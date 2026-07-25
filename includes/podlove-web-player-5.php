@@ -18,7 +18,7 @@ function podlove_pwp5_attributes($attributes)
     $post_id = (isset($attributes['post_id']) && $attributes['post_id']) ? $attributes['post_id'] : get_the_ID();
     $episode = Episode::find_one_by_post_id($post_id);
 
-    if (!$episode) {
+    if (!$episode || !\Podlove\Api\EpisodeReadAccess::can_read($episode)) {
         return [];
     }
 

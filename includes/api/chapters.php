@@ -119,13 +119,14 @@ class WP_REST_PodloveChapters_Controller extends \WP_REST_Controller
 
     public function get_item_permissions_check($request)
     {
-        return true;
+        return \Podlove\Api\EpisodeReadAccess::rest_check($request->get_param('id'));
     }
 
     public function get_item($request)
     {
         $id = $request->get_param('id');
         $episode = Episode::find_by_id($id);
+        $data = [];
 
         if ($episode) {
             $data = array_map(function ($c) {

@@ -91,7 +91,7 @@ class WP_REST_PodloveEpisodeContributions_Controller extends \WP_REST_Controller
             [
                 'methods' => \WP_REST_Server::READABLE,
                 'callback' => [$this, 'get_contribution'],
-                'permission_callback' => [$this, 'get_item_permissions_check'],
+                'permission_callback' => [$this, 'get_contribution_permissions_check'],
             ],
             [
                 'methods' => \WP_REST_Server::EDITABLE,
@@ -190,7 +190,17 @@ class WP_REST_PodloveEpisodeContributions_Controller extends \WP_REST_Controller
 
     public function get_item_permissions_check($request)
     {
-        return true;
+        return \Podlove\Api\EpisodeReadAccess::rest_check($request->get_param('id'));
+    }
+
+    public function get_contribution_permissions_check($request)
+    {
+        $contribution = EpisodeContribution::find_by_id($request->get_param('id'));
+        if (!$contribution) {
+            return new \Podlove\Api\Error\NotFound();
+        }
+
+        return \Podlove\Api\EpisodeReadAccess::rest_check($contribution->episode_id);
     }
 
     public function create_item($request)

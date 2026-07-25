@@ -40,6 +40,12 @@ class Module
         }
 
         $episode = Episode::find_or_create_by_post_id(get_the_ID());
+        if (!$episode
+            || !\Podlove\Api\EpisodeReadAccess::can_read($episode)
+            || (!\Podlove\Api\EpisodeReadAccess::is_public($episode) && !\Podlove\Api\EpisodeReadAccess::is_same_origin_request())) {
+            return '';
+        }
+
         $printer = new Html5Printer($episode);
 
         return $printer->render(null);
@@ -64,8 +70,18 @@ class Module
 
         $episode = Episode::find_by_id($episode_id);
 
-        if (!$episode) {
-            return;
+        if (!$episode
+            || !\Podlove\Api\EpisodeReadAccess::can_read($episode)
+            || (!\Podlove\Api\EpisodeReadAccess::is_public($episode) && !\Podlove\Api\EpisodeReadAccess::is_same_origin_request())) {
+            status_header(404);
+            exit;
+        }
+
+        if (!\Podlove\Api\EpisodeReadAccess::is_public($episode)) {
+            if (!defined('DONOTCACHEPAGE')) {
+                define('DONOTCACHEPAGE', true);
+            }
+            nocache_headers();
         }
 
         // allow CORS

@@ -38,9 +38,14 @@ class REST_API
             [
                 'methods' => 'GET',
                 'callback' => [$this, 'get_transcript'],
-                'permission_callback' => '__return_true'
+                'permission_callback' => [$this, 'get_transcript_permissions_check']
             ]
         ]);
+    }
+
+    public function get_transcript_permissions_check($request)
+    {
+        return \Podlove\Api\EpisodeReadAccess::rest_check($request->get_param('id'));
     }
 
     public function update_voices($request)
@@ -214,7 +219,7 @@ class WP_REST_PodloveTranscripts_Controller extends \WP_REST_Controller
                 ],
                 'methods' => \WP_REST_Server::READABLE,
                 'callback' => [$this, 'get_item_transcripts'],
-                'permission_callback' => [$this, 'get_item_permissions_check'],
+                'permission_callback' => [$this, 'get_paragraph_permissions_check'],
             ],
             [
                 'args' => [
@@ -249,7 +254,17 @@ class WP_REST_PodloveTranscripts_Controller extends \WP_REST_Controller
 
     public function get_item_permissions_check($request)
     {
-        return true;
+        return \Podlove\Api\EpisodeReadAccess::rest_check($request->get_param('id'));
+    }
+
+    public function get_paragraph_permissions_check($request)
+    {
+        $transcript = Transcript::find_by_id($request->get_param('id'));
+        if (!$transcript) {
+            return new \Podlove\Api\Error\NotFound();
+        }
+
+        return \Podlove\Api\EpisodeReadAccess::rest_check($transcript->episode_id);
     }
 
     public function get_items($request)

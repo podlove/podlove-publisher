@@ -267,6 +267,12 @@ function podlove_handle_media_file_download()
         exit;
     }
 
+    if (!\Podlove\Api\EpisodeReadAccess::can_read($episode)
+        || (!\Podlove\Api\EpisodeReadAccess::is_public($episode) && !\Podlove\Api\EpisodeReadAccess::is_same_origin_request())) {
+        status_header(404);
+        exit;
+    }
+
     do_action('podlove_download_file', $media_file);
 
     // build redirect url
