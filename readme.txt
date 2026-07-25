@@ -138,6 +138,7 @@ Various security related improvements:
 * restrict podcast-wide settings and external-service operations to the appropriate capabilities.
 * require the contributor-management capability for contributor directory changes.
 * require POST requests, nonces, and appropriate capabilities for affected state-changing AJAX actions.
+* update the form-data JavaScript dependency to fix CRLF injection.
 
 Note: Episode and episode-metadata editing now follows WordPress post ownership and capability rules. Users editing episodes owned by someone else need the Editor role or equivalent edit_others_posts and edit_published_posts capabilities.
 
