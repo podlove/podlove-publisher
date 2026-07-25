@@ -26,6 +26,11 @@
 - PHP formatting is enforced with PHP-CS-Fixer (`.php-cs-fixer.dist.php`).
 - Before completing a task, format any touched PHP files with the repo formatter. `make format` runs PHP-CS-Fixer for the whole repo; prefer the equivalent targeted command for only the files you changed, for example `mise exec -- vendor-bin/php-cs-fixer/vendor/friendsofphp/php-cs-fixer/php-cs-fixer fix path/to/file.php --config .php-cs-fixer.dist.php`.
 - Use descriptive, WordPress-appropriate names for hooks and filters; keep filenames lowercase with underscores where applicable.
+- Classes in the `Podlove` namespace are autoloaded from `lib/` by `bootstrap/autoload.php`. Keep one class per file and map
+  namespace segments and the class name to lowercase snake_case paths. For example,
+  `Podlove\Api\EpisodeMutationAccess` belongs in `lib/api/episode_mutation_access.php`.
+- Do not add `require_once` statements for `Podlove` classes that follow the autoloading convention. Reserve explicit includes
+  for procedural/bootstrap files or legacy grouped files that cannot be resolved from a class name.
 
 ## Testing Guidelines
 - PHPUnit is configured in `phpunit.xml.dist` and bootstraps via `tests/phpunit/bootstrap.php`.
