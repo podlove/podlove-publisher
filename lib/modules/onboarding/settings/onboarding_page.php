@@ -20,7 +20,7 @@ class OnboardingPage
             // $menu_title
             'Onboarding',
             // $capability
-            'administrator',
+            'manage_options',
             // $menu_slug
             'podlove_settings_onboarding_handle',
             // $function
@@ -122,12 +122,15 @@ class OnboardingPage
         }
 
         acknowledgeButton.addEventListener("click", function() {
-          fetch(ajaxurl + '?' + new URLSearchParams({
+          const data = new URLSearchParams({
               action: 'podlove-onboarding-acknowledge',
               _podlove_nonce: "{$nonce}"
-            }),
-            {
-              method: 'GET'
+            });
+
+          fetch(ajaxurl, {
+              method: 'POST',
+              body: data,
+              credentials: 'same-origin'
           }).then(response => {
             if (response.ok) {
               loadService();

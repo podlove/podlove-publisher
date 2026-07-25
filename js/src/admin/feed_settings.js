@@ -11,6 +11,9 @@ var PODLOVE = PODLOVE || {};
 		function make_feed_list_table_sortable() {
 			$("table.feeds tbody").sortable({
 				handle: '.reorder-handle',
+				start: function(event, ui) {
+					ui.item.data('podlove-original-position', ui.item.find(".position").val());
+				},
 				helper: function(event, el) {
 					
 					helper = $("<div></div>");
@@ -45,10 +48,26 @@ var PODLOVE = PODLOVE || {};
 					var data = {
 						action: 'podlove-update-feed-position',
 						feed_id: ui.item.find(".feed_id").val(),
-						position: new_position
+						position: new_position,
+						nonce: podlove_admin_global.nonce_ajax
 					};
 
-					$.ajax({ url: ajaxurl, data: data, dataType: 'json'	});
+					var sortable = $(this);
+					sortable.sortable('disable');
+
+					$.ajax({
+						url: ajaxurl,
+						type: 'POST',
+						data: data,
+						dataType: 'json'
+					}).fail(function() {
+						sortable.sortable('enable');
+						ui.item.find(".position").val(ui.item.data('podlove-original-position'));
+						sortable.sortable('cancel');
+						window.alert('The feed order could not be saved. Please reload the page and try again.');
+					}).done(function() {
+						sortable.sortable('enable');
+					});
 				}
 			});
 		}

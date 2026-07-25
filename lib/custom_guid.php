@@ -56,11 +56,13 @@ class Custom_Guid
 
 				var data = {
 					action: 'podlove-get-new-guid',
-					post_id: jQuery("#post_ID").val()
+					post_id: jQuery("#post_ID").val(),
+					nonce: podlove_admin_global.nonce_ajax
 				};
 
 				$.ajax({
 					url: ajaxurl,
+					type: 'POST',
 					data: data,
 					dataType: 'json',
 					success: function(result) {

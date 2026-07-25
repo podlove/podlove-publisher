@@ -20,7 +20,7 @@ class Tools
             // $menu_title
             __('Tools', 'podlove-podcasting-plugin-for-wordpress'),
             // $capability
-            'administrator',
+            'manage_options',
             // $menu_slug
             'podlove_tools_settings_handle',
             // $function

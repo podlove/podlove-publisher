@@ -604,7 +604,7 @@ jQuery(document).ready(function ($) {
 	 * Analytics Tiles can be hidden via Screen Options
 	 */
 	$('input[name=\'podlove_analytics_tiles\']').each(function () {
-		var checked = $(this).attr('checked'),
+		var checked = $(this).prop('checked'),
 			tile_id = $(this).val(),
 			chart = $('.chart-wrapper[data-tile-id=\'' + tile_id + '\']');
 
@@ -612,18 +612,25 @@ jQuery(document).ready(function ($) {
 			chart.hide();
 		}
 	}).on('click', function () {
-		var checked = $(this).attr('checked'),
+		var input = $(this),
+			checked = input.prop('checked'),
 			tile_id = $(this).val(),
 			chart = $('.chart-wrapper[data-tile-id=\'' + tile_id + '\']');
 
 		// save
 		$.ajax({
 			url: ajaxurl,
+			type: 'POST',
 			data: {
 				action: 'podlove-analytics-settings-tiles-update',
 				tile_id: tile_id,
-				checked: checked
+				checked: checked ? '1' : '0',
+				nonce: podlove_analytics_ajax.nonce
 			}
+		}).fail(function() {
+			input.prop('checked', !checked);
+			chart.toggle(!checked);
+			window.alert('The analytics display preference could not be saved. Please try again.');
 		});
 
 		// update UI
@@ -638,7 +645,7 @@ jQuery(document).ready(function ($) {
 		if (typeof disableAvgEpisodeChart == "undefined") {
 			window.setTimeout(setAverageEpisodeSetting, 500);
 		} else {
-			const checked = $('#average-episode').attr('checked')
+			const checked = $('#average-episode').prop('checked')
 
 			if (checked) {
 				enableAvgEpisodeChart()
@@ -649,19 +656,28 @@ jQuery(document).ready(function ($) {
 	}
 
 	const saveAverageEpisodeSetting = function () {
-		$.ajax({
+		const input = $(this)
+		const checked = input.prop('checked')
+
+		return $.ajax({
 			url: ajaxurl,
+			type: 'POST',
 			data: {
 				action: 'podlove-analytics-settings-avg-update',
-				checked: $(this).attr('checked')
+				checked: checked ? '1' : '0',
+				nonce: podlove_analytics_ajax.nonce
 			}
+		}).fail(function() {
+			input.prop('checked', !checked)
+			setAverageEpisodeSetting()
+			window.alert('The analytics display preference could not be saved. Please try again.')
 		});
 	}
 
 	$('#average-episode')
 		.each(setAverageEpisodeSetting)
 		.on('click', function () {
-			saveAverageEpisodeSetting();
+			saveAverageEpisodeSetting.call(this);
 			setAverageEpisodeSetting();
 		})
 

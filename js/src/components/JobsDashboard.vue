@@ -94,10 +94,18 @@ export default {
         },
         abortJob(job) {
             this.aborting.push(job.id)
-            $.getJSON(ajaxurl, {
-                action: 'podlove-job-delete',
-                job_id: job.id,
-                nonce: podlove_admin_global.nonce_ajax
+            $.ajax({
+                url: ajaxurl,
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    action: 'podlove-job-delete',
+                    job_id: job.id,
+                    nonce: podlove_admin_global.nonce_ajax
+                }
+            }).fail(() => {
+                this.aborting = this.aborting.filter((id) => id !== job.id)
+                window.alert('The job could not be aborted. Please reload the page and try again.')
             })
         },
         isAborting(job) {

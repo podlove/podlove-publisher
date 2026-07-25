@@ -42,7 +42,7 @@ namespace Podlove;
 
 use Podlove\Jobs\CronJobRunner;
 
-define('Podlove\DATABASE_VERSION', 167);
+define('Podlove\DATABASE_VERSION', 168);
 
 add_action('admin_init', '\Podlove\maybe_run_database_migrations');
 add_action('admin_init', '\Podlove\run_database_migrations', 5);
@@ -1068,7 +1068,7 @@ function run_migrations_for_version($version)
 
             break;
         case 85:
-            add_option('podlove_tracking_delete_head_requests', 1);
+            // Retired: the interactive tracking cleanup was removed in migration 168.
 
             break;
         case 86:
@@ -1225,7 +1225,7 @@ function run_migrations_for_version($version)
 
             break;
         case 96:
-            DeleteHeadRequests::init();
+            // Retired: the interactive tracking cleanup was removed in migration 168.
 
             break;
         case 97:
@@ -1741,6 +1741,12 @@ function run_migrations_for_version($version)
         case 167:
             // The signed image-cache route needs fresh rewrite rules. The
             // migration runner schedules that flush and purges template caches.
+            break;
+        case 168:
+            delete_option('podlove_migration_validation_cache');
+            delete_option('_podlove_hide_teaser');
+            delete_option('podlove_tracking_delete_head_requests');
+
             break;
     }
 }

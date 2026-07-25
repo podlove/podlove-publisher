@@ -22,7 +22,7 @@ class EpisodeAsset
             // $menu_title
             __('Episode Assets', 'podlove-podcasting-plugin-for-wordpress'),
             // $capability
-            'administrator',
+            'manage_options',
             // $menu_slug
             self::MENU_SLUG,
             // $function

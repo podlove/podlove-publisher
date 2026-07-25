@@ -25,6 +25,10 @@ class Onboarding extends \Podlove\Modules\Base
 
     public function onboarding_banner()
     {
+        if (!current_user_can('manage_options')) {
+            return;
+        }
+
         if (self::is_banner_hide()) {
             return;
         }
@@ -74,12 +78,15 @@ class Onboarding extends \Podlove\Modules\Base
       const dismissLink = document.getElementById('podlove-panel-banner-dismiss');
       if (dismissLink !== undefined && dismissLink !== null) {
         dismissLink.addEventListener('click', function(){
-          fetch(ajaxurl + '?' + new URLSearchParams({
+          const data = new URLSearchParams({
               action: 'podlove-banner-hide',
               _podlove_nonce: '<?php echo wp_create_nonce('podlove_onboarding'); ?>'
-            }),
-            {
-              method: 'GET'
+            });
+
+          fetch(ajaxurl, {
+              method: 'POST',
+              body: data,
+              credentials: 'same-origin'
           }).then(response => {
             if (response.ok) {
               hiddenPodloveBanner();

@@ -27,7 +27,7 @@ class Feed
             // $menu_title
             __('Podcast Feeds', 'podlove-podcasting-plugin-for-wordpress'),
             // $capability
-            'administrator',
+            'manage_options',
             // $menu_slug
             self::MENU_SLUG,
             // $function

@@ -17,11 +17,9 @@ class Ajax
     {
         $actions = [
             'get-new-guid',
-            'validate-url',
             'update-asset-position',
             'update-feed-position',
             'podcast',
-            'hide-teaser',
             'banner-hide',
             'onboarding-acknowledge',
             'get-license-url',
@@ -60,83 +58,70 @@ class Ajax
 
     public function job_create()
     {
-        if (!current_user_can('administrator')) {
-            http_response_code(401);
-            exit;
-        }
+        MutationAccess::authorize('podlove_ajax', 'nonce', 'manage_options');
 
-        if (!wp_verify_nonce($_REQUEST['nonce'], 'podlove_ajax')) {
-            http_response_code(401);
-            exit;
-        }
-
-        $job_name = filter_input(INPUT_POST, 'name');
-        $job_args = isset($_REQUEST['args']) && is_array($_REQUEST['args']) ? $_REQUEST['args'] : [];
+        $job_name = isset($_POST['name']) && is_string($_POST['name'])
+            ? sanitize_text_field(wp_unslash($_POST['name']))
+            : '';
+        $job_args = isset($_POST['args']) && is_array($_POST['args']) ? wp_unslash($_POST['args']) : [];
 
         // check class exists
         if (!class_exists($job_name)) {
-            self::respond_with_json(['error' => 'job "'.$job_name.'" does not exist']);
+            wp_send_json(['error' => 'job "'.$job_name.'" does not exist']);
         }
 
         // check that class is a job
         if (!isset(class_uses($job_name)['Podlove\Jobs\JobTrait'])) {
-            self::respond_with_json(['error' => '"'.$job_name.'" is not a job']);
+            wp_send_json(['error' => '"'.$job_name.'" is not a job']);
         }
 
         $job = \Podlove\Jobs\CronJobRunner::create_job($job_name, $job_args);
 
         if ($job) {
-            self::respond_with_json([
+            wp_send_json([
                 'job_id' => $job->get_job_id(),
             ]);
         } else {
-            self::respond_with_json(['error' => 'A job "'.$job_name.'" is already running']);
+            wp_send_json(['error' => 'A job "'.$job_name.'" is already running']);
         }
     }
 
     public function job_get()
     {
-        if (!current_user_can('administrator')) {
-            exit;
+        if (!current_user_can('manage_options')) {
+            MutationAccess::send_error('forbidden', __('You are not allowed to view jobs.'), 403);
         }
-        $job_id = filter_input(INPUT_GET, 'job_id');
+
+        $job_id = self::positive_integer_parameter($_GET, 'job_id');
         $job = \Podlove\Model\Job::find_by_id($job_id);
 
         if (!$job) {
-            self::respond_with_json(['error' => 'no job with id "'.$job_id.'"']);
+            MutationAccess::send_error('job_not_found', __('The requested job does not exist.'), 404);
         }
 
-        self::respond_with_json($job->to_array());
+        wp_send_json($job->to_array());
     }
 
     public function job_delete()
     {
-        if (!current_user_can('administrator')) {
-            http_response_code(401);
-            exit;
-        }
+        MutationAccess::authorize('podlove_ajax', 'nonce', 'manage_options');
 
-        if (!wp_verify_nonce($_REQUEST['nonce'], 'podlove_ajax')) {
-            http_response_code(401);
-            exit;
-        }
-
-        $job_id = filter_input(INPUT_GET, 'job_id');
+        $job_id = self::positive_integer_parameter($_POST, 'job_id');
         $job = \Podlove\Model\Job::find_by_id($job_id);
 
         if (!$job) {
-            self::respond_with_json(['error' => 'no job with id "'.$job_id.'"']);
+            MutationAccess::send_error('job_not_found', __('The requested job does not exist.'), 404);
         }
 
         $job->delete();
 
-        self::respond_with_json(['status' => 'ok']);
+        wp_send_json(['status' => 'ok']);
     }
 
     public function jobs_get()
     {
-        if (!current_user_can('administrator')) {
-            exit;
+        if (!current_user_can('manage_options')) {
+            MutationAccess::send_error('forbidden', __('You are not allowed to view jobs.'), 403);
         }
 
         $jobs = \Podlove\Model\Job::all();
@@ -181,7 +166,7 @@ class Ajax
             return $job;
         }, $jobs);
 
-        self::respond_with_json($jobs);
+        wp_send_json($jobs);
     }
 
     public function admin_news()
@@ -472,26 +457,49 @@ class Ajax
 
     public static function analytics_settings_tiles_update()
     {
-        if (!current_user_can('podlove_read_analytics')) {
-            exit;
+        MutationAccess::authorize(
+            'podlove_analytics_preferences',
+            'nonce',
+            'podlove_read_analytics'
+        );
+
+        $tile_id = isset($_POST['tile_id']) && is_string($_POST['tile_id'])
+            ? sanitize_key(wp_unslash($_POST['tile_id']))
+            : '';
+
+        if (!in_array($tile_id, \Podlove\Settings\Analytics::tile_ids(), true)) {
+            MutationAccess::send_error('invalid_tile', __('The analytics tile is invalid.'), 400);
         }
 
-        $tile_id = $_GET['tile_id'];
-        $checked = isset($_GET['checked']) && $_GET['checked'] === 'checked';
-
-        $option = get_option('podlove_analytics_tiles', []);
+        $checked = self::boolean_post_parameter('checked');
+        $user_id = get_current_user_id();
+        $option = \Podlove\Settings\Analytics::tiles_for_user($user_id);
         $option[$tile_id] = $checked;
-        update_option('podlove_analytics_tiles', $option);
+
+        update_user_meta($user_id, \Podlove\Settings\Analytics::TILES_USER_META, $option);
+
+        wp_send_json_success([
+            'tile_id' => $tile_id,
+            'checked' => $checked,
+        ]);
     }
 
     public static function analytics_settings_avg_update()
     {
-        if (!current_user_can('podlove_read_analytics')) {
-            exit;
-        }
+        MutationAccess::authorize(
+            'podlove_analytics_preferences',
+            'nonce',
+            'podlove_read_analytics'
+        );
 
-        $checked = isset($_GET['checked']) && $_GET['checked'] === 'checked';
-        update_option('podlove_analytics_compare_avg', $checked);
+        $checked = self::boolean_post_parameter('checked');
+        update_user_meta(
+            get_current_user_id(),
+            \Podlove\Settings\Analytics::COMPARE_AVG_USER_META,
+            $checked
+        );
+
+        wp_send_json_success(['checked' => $checked]);
     }
 
     public static function analytics_csv_episodes_table()
@@ -840,101 +848,90 @@ class Ajax
 
     public function get_new_guid()
     {
-        $post_id = $_REQUEST['post_id'];
+        MutationAccess::authorize('podlove_ajax', 'nonce');
 
+        $post_id = self::positive_integer_parameter($_POST, 'post_id');
         $post = get_post($post_id);
-        $guid = \Podlove\Custom_Guid::guid_for_post($post);
 
-        self::respond_with_json(['guid' => $guid]);
-    }
-
-    public function validate_url()
-    {
-        if (!current_user_can('administrator')) {
-            echo 'No permission';
-
-            exit;
+        if (!$post || $post->post_type !== 'podcast') {
+            MutationAccess::send_error('post_not_found', __('The requested podcast episode does not exist.'), 404);
         }
 
-        $file_url = $_REQUEST['file_url'];
+        if (!current_user_can('edit_post', $post_id)) {
+            MutationAccess::send_error('forbidden', __('You are not allowed to edit this episode.'), 403);
+        }
 
-        $r = wp_remote_head($file_url);
+        $guid = \Podlove\Custom_Guid::guid_for_post($post);
 
-        $response_code = $r['response']['code'];
-        $reachable = $response_code >= 200 && $response_code < 300;
-        $content_length = $r['http_response']->get_headers()['content-length'];
-
-        $validation_cache = get_option('podlove_migration_validation_cache', []);
-        $validation_cache[$file_url] = $reachable;
-        update_option('podlove_migration_validation_cache', $validation_cache);
-
-        self::respond_with_json([
-            'file_url' => $file_url,
-            'reachable' => $reachable,
-            'file_size' => $content_length,
-        ]);
+        wp_send_json(['guid' => $guid]);
     }
 
     public function update_asset_position()
     {
-        if (!current_user_can('administrator')) {
-            echo 'No permission';
+        MutationAccess::authorize('podlove_ajax', 'nonce', 'manage_options');
 
-            exit;
-        }
-
-        $asset_id = (int) $_REQUEST['asset_id'];
-        $position = (float) $_REQUEST['position'];
+        $asset_id = self::positive_integer_parameter($_POST, 'asset_id');
+        $position = self::finite_float_post_parameter('position');
 
         $asset = Model\EpisodeAsset::find_by_id($asset_id);
+
+        if (!$asset) {
+            MutationAccess::send_error('asset_not_found', __('The requested episode asset does not exist.'), 404);
+        }
+
         $asset->position = $position;
         $asset->save();
 
-        exit;
+        wp_send_json_success([
+            'id' => $asset->id,
+            'position' => (float) $asset->position,
+        ]);
     }
 
     public function update_feed_position()
     {
-        if (!current_user_can('administrator')) {
-            echo 'No permission';
+        MutationAccess::authorize('podlove_ajax', 'nonce', 'manage_options');
 
-            exit;
-        }
-
-        $feed_id = (int) $_REQUEST['feed_id'];
-        $position = (float) $_REQUEST['position'];
+        $feed_id = self::positive_integer_parameter($_POST, 'feed_id');
+        $position = self::finite_float_post_parameter('position');
 
         $feed = Model\Feed::find_by_id($feed_id);
+
+        if (!$feed) {
+            MutationAccess::send_error('feed_not_found', __('The requested feed does not exist.'), 404);
+        }
+
         $feed->position = $position;
         $feed->save();
 
-        exit;
-    }
-
-    public function hide_teaser()
-    {
-        update_option('_podlove_hide_teaser', true);
+        wp_send_json_success([
+            'id' => $feed->id,
+            'position' => (float) $feed->position,
+        ]);
     }
 
     public function banner_hide()
     {
-        if (!wp_verify_nonce($_REQUEST['_podlove_nonce'], 'podlove_onboarding')) {
-            http_response_code(401);
-            exit;
-        }
+        MutationAccess::authorize(
+            'podlove_onboarding',
+            '_podlove_nonce',
+            'manage_options'
+        );
 
         Onboarding::set_banner_hide('true');
+        wp_send_json_success();
     }
 
     public function onboarding_acknowledge()
     {
-        if (!wp_verify_nonce($_REQUEST['_podlove_nonce'], 'podlove_onboarding_acknowledge')) {
-            http_response_code(403);
-            exit;
-        }
+        MutationAccess::authorize(
+            'podlove_onboarding_acknowledge',
+            '_podlove_nonce'
+        );
 
         $user_id = get_current_user_id();
         Onboarding::set_acknowledge_option($user_id, true);
+        wp_send_json_success();
     }
 
     public function get_license_url()
@@ -950,6 +947,59 @@ class Ajax
     public function get_license_parameters_from_url()
     {
         self::respond_with_json(\Podlove\Model\License::get_license_from_url($_REQUEST['url']));
+    }
+
+    private static function positive_integer_parameter(array $source, string $key): int
+    {
+        if (!isset($source[$key]) || !is_scalar($source[$key])) {
+            MutationAccess::send_error('invalid_parameter', sprintf(__('The %s parameter is invalid.'), $key), 400);
+        }
+
+        $value = filter_var(wp_unslash($source[$key]), FILTER_VALIDATE_INT, [
+            'options' => ['min_range' => 1],
+        ]);
+
+        if ($value === false) {
+            MutationAccess::send_error('invalid_parameter', sprintf(__('The %s parameter is invalid.'), $key), 400);
+        }
+
+        return $value;
+    }
+
+    private static function finite_float_post_parameter(string $key): float
+    {
+        if (!isset($_POST[$key]) || !is_scalar($_POST[$key])) {
+            MutationAccess::send_error('invalid_parameter', sprintf(__('The %s parameter is invalid.'), $key), 400);
+        }
+
+        $raw_value = wp_unslash($_POST[$key]);
+
+        if (!is_numeric($raw_value)) {
+            MutationAccess::send_error('invalid_parameter', sprintf(__('The %s parameter is invalid.'), $key), 400);
+        }
+
+        $value = (float) $raw_value;
+
+        if (!is_finite($value)) {
+            MutationAccess::send_error('invalid_parameter', sprintf(__('The %s parameter is invalid.'), $key), 400);
+        }
+
+        return $value;
+    }
+
+    private static function boolean_post_parameter(string $key): bool
+    {
+        if (!isset($_POST[$key]) || !is_scalar($_POST[$key])) {
+            MutationAccess::send_error('invalid_parameter', sprintf(__('The %s parameter is invalid.'), $key), 400);
+        }
+
+        $value = filter_var(wp_unslash($_POST[$key]), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
+
+        if ($value === null) {
+            MutationAccess::send_error('invalid_parameter', sprintf(__('The %s parameter is invalid.'), $key), 400);
+        }
+
+        return $value;
     }
 
     private static function analytics_date_condition()

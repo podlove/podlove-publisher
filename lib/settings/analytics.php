@@ -9,6 +9,9 @@ class Analytics
 {
     use \Podlove\HasPageDocumentationTrait;
 
+    public const TILES_USER_META = 'podlove_analytics_tiles';
+    public const COMPARE_AVG_USER_META = 'podlove_analytics_compare_avg';
+
     public static $pagehook;
     public $table;
 
@@ -142,17 +145,10 @@ class Analytics
             return $status;
         }
 
-        $tiles = [
-            'download_source' => __('Download Source', 'podlove-podcasting-plugin-for-wordpress'),
-            'download_context' => __('Download Context', 'podlove-podcasting-plugin-for-wordpress'),
-            'asset' => __('Asset', 'podlove-podcasting-plugin-for-wordpress'),
-            'podcast_client' => __('Podcast Client', 'podlove-podcasting-plugin-for-wordpress'),
-            'operating_system' => __('Operating System', 'podlove-podcasting-plugin-for-wordpress'),
-            'geo_location' => __('Client Location', 'podlove-podcasting-plugin-for-wordpress'),
-        ];
+        $tiles = self::tiles();
 
-        $option = get_option('podlove_analytics_tiles', []);
-        $option_compare_avg = get_option('podlove_analytics_compare_avg', true);
+        $option = self::tiles_for_user(get_current_user_id());
+        $option_compare_avg = self::compare_avg_for_user(get_current_user_id());
 
         $status .= '
 		<h5>'.__('Show Analytics Tiles', 'podlove-podcasting-plugin-for-wordpress')."</h5>
@@ -182,6 +178,45 @@ class Analytics
         return $status;
     }
 
+    public static function tiles(): array
+    {
+        return [
+            'download_source' => __('Download Source', 'podlove-podcasting-plugin-for-wordpress'),
+            'download_context' => __('Download Context', 'podlove-podcasting-plugin-for-wordpress'),
+            'asset' => __('Asset', 'podlove-podcasting-plugin-for-wordpress'),
+            'podcast_client' => __('Podcast Client', 'podlove-podcasting-plugin-for-wordpress'),
+            'operating_system' => __('Operating System', 'podlove-podcasting-plugin-for-wordpress'),
+            'geo_location' => __('Client Location', 'podlove-podcasting-plugin-for-wordpress'),
+        ];
+    }
+
+    public static function tile_ids(): array
+    {
+        return array_keys(self::tiles());
+    }
+
+    public static function tiles_for_user(int $user_id): array
+    {
+        if (metadata_exists('user', $user_id, self::TILES_USER_META)) {
+            $tiles = get_user_meta($user_id, self::TILES_USER_META, true);
+
+            return self::normalize_tiles($tiles);
+        }
+
+        $tiles = get_option('podlove_analytics_tiles', []);
+
+        return self::normalize_tiles($tiles);
+    }
+
+    public static function compare_avg_for_user(int $user_id): bool
+    {
+        if (metadata_exists('user', $user_id, self::COMPARE_AVG_USER_META)) {
+            return (bool) get_user_meta($user_id, self::COMPARE_AVG_USER_META, true);
+        }
+
+        return (bool) get_option('podlove_analytics_compare_avg', true);
+    }
+
     public function scripts_and_styles()
     {
         if (!isset($_REQUEST['page']) && !isset($GLOBALS['pagenow'])) {
@@ -204,6 +239,9 @@ class Analytics
         wp_register_script('podlove-analytics-js', \Podlove\PLUGIN_URL.'/js/dist/podcast-stats.js', ['podlove-d3-js', 'podlove-crossfilter-js', 'underscore']);
 
         wp_localize_script('podlove-analytics-js', 'podlove_episode_names', self::episode_ids_to_names_map());
+        wp_localize_script('podlove-analytics-js', 'podlove_analytics_ajax', [
+            'nonce' => wp_create_nonce('podlove_analytics_preferences'),
+        ]);
 
         wp_enqueue_script('podlove-analytics-js');
 
@@ -737,5 +775,16 @@ $assets = Model\EpisodeAsset::all();
         ); ?>;
 		</script>
 		<?php
+    }
+
+    private static function normalize_tiles($tiles): array
+    {
+        if (!is_array($tiles)) {
+            return [];
+        }
+
+        $tiles = array_intersect_key($tiles, array_fill_keys(self::tile_ids(), true));
+
+        return array_map('boolval', $tiles);
     }
 }
