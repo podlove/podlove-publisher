@@ -122,10 +122,11 @@ class Contributor extends Base
     public function avatar()
     {
         if ($this->avatar) {
-            if (filter_var($this->avatar, FILTER_VALIDATE_EMAIL) === false) {
-                $url = $this->avatar;
+            $avatar = trim($this->avatar);
+            if (filter_var($avatar, FILTER_VALIDATE_EMAIL) === false) {
+                $url = $avatar;
             } else {
-                $url = $this->getGravatarUrl(512, $this->avatar);
+                $url = $this->getGravatarUrl(512, $avatar);
             }
         } else {
             $default_url = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGNsYXNzPSJoLTYgdy02IiBmaWxsPSJub25lIiB2aWV3Qm94PSIwIDAgMjQgMjQiIHN0cm9rZT0iY3VycmVudENvbG9yIj4KICA8cGF0aCBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHN0cm9rZS13aWR0aD0iMiIgZD0iTTUuMTIxIDE3LjgwNEExMy45MzcgMTMuOTM3IDAgMDExMiAxNmMyLjUgMCA0Ljg0Ny42NTUgNi44NzkgMS44MDRNMTUgMTBhMyAzIDAgMTEtNiAwIDMgMyAwIDAxNiAwem02IDJhOSA5IDAgMTEtMTggMCA5IDkgMCAwMTE4IDB6IiAvPgo8L3N2Zz4K';
@@ -333,18 +334,20 @@ class Contributor extends Base
      * @param string     $s     Size in pixels, defaults to 80px [ 1 - 2048 ]
      * @param null|mixed $email
      *
-     * @source http://gravatar.com/site/implement/images/php/
+     * @source https://docs.gravatar.com/rest/getting-started/
      */
     private function getGravatarUrl($s = 80, $email = null)
     {
         $email = $email ? $email : $this->publicemail;
 
-        $url = 'https://www.gravatar.com/avatar/';
-        $url .= md5(strtolower(trim($email)));
-        $url .= '.jpg';
-        $url .= "?s={$s}&d=mm&r=g";
+        $hash = hash('sha256', strtolower(trim($email)));
+        $size = min(2048, max(1, (int) $s));
 
-        return $url;
+        return add_query_arg([
+            's' => $size,
+            'd' => 'mp',
+            'r' => 'g',
+        ], 'https://0.gravatar.com/avatar/'.$hash);
     }
 }
 

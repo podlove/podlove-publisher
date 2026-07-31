@@ -2,6 +2,8 @@
 
 namespace Podlove\Template;
 
+use Podlove\ImageCache\SourcePolicy;
+
 /**
  * Episode Template Wrapper.
  *
@@ -66,6 +68,10 @@ class Image extends Wrapper
             'crop' => false,
         ];
         $args = wp_parse_args($args, $defaults);
+
+        if (!SourcePolicy::allows_download($this->image->source_url())) {
+            return $this->url($args);
+        }
 
         $file = $this->image
             ->setCrop((bool) $args['crop'])

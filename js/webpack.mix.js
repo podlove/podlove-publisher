@@ -15,9 +15,9 @@ mix.js('src/app.js', 'dist/').vue()
   .combine(
     [
       "node_modules/clipboard/dist/clipboard.min.js",
+      "node_modules/js-sha256/build/sha256.min.js",
       "admin/chosen/chosen.jquery.min.js",
       "admin/chosen/chosenImage.jquery.js",
-      "src/admin/md5.js",
       "src/admin/timeago.jquery.js",
       "src/admin/jquery.count_characters.js",
       "src/admin/podlove_data_table.js",

@@ -3,6 +3,7 @@
 use Podlove\Cache\HttpHeaderValidator;
 use Podlove\ImageCache\GenerationGuard;
 use Podlove\ImageCache\Request as ImageCacheRequest;
+use Podlove\ImageCache\SourcePolicy;
 use Podlove\Log;
 use Podlove\Model\Image;
 use Symfony\Component\Yaml\Yaml;
@@ -25,6 +26,10 @@ function podlove_validate_image_cache()
     $cache_files = glob(trailingslashit(Image::cache_dir()).'*'.DIRECTORY_SEPARATOR.'*'.DIRECTORY_SEPARATOR.'cache.yml');
     foreach ($cache_files as $cache_file) {
         $cache = Yaml::parse(file_get_contents($cache_file));
+
+        if (!SourcePolicy::allows_download($cache['source'] ?? '')) {
+            continue;
+        }
 
         if (!isset($cache['etag'])) {
             $cache['etag'] = null;
@@ -49,6 +54,10 @@ function podlove_validate_image_cache()
 
 function podlove_refetch_cached_image($url, $filename)
 {
+    if (!SourcePolicy::allows_download($url)) {
+        return;
+    }
+
     (new Image($url, $filename))->redownload_source();
 }
 
@@ -129,6 +138,10 @@ function podlove_handle_cache_files()
  */
 function podlove_resolve_image_cache_file(ImageCacheRequest $request, $allow_generation)
 {
+    if (!SourcePolicy::allows_download($request->source_url())) {
+        return new WP_Error('podlove_image_cache_download_forbidden', __('This image source cannot be cached.'));
+    }
+
     $image = new Image($request->source_url(), $request->file_name());
 
     if (!$image->source_exists()) {

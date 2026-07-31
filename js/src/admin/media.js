@@ -76,27 +76,17 @@ PODLOVE.media = PODLOVE.media || {};
 		options.input_target.val("");
 	};
 
-	function get_gravatar(email) {
-		if ( email.indexOf("@") == -1 ) {
-			return email;
-		} else {
-			return 'https://www.gravatar.com/avatar/' + CryptoJS.MD5( email ) + '&s=400';
-
-		}
+	function get_gravatar(email, callback) {
+		var normalized_email = email.trim().toLowerCase();
+		callback('https://0.gravatar.com/avatar/' + sha256(normalized_email) + '?s=400&d=mp&r=g');
 	}
 
-	PODLOVE.media.render_preview = function(wrapper) {
-		var preview  = $(".podlove_preview_pic", wrapper)[0],
-		    $input   = $("input", wrapper).first(),
-		    url      = $input.val();
-
-	    if (args.allowGravatar) {
-	    	url = get_gravatar(url);
-	    }
-
+	function render_preview_image(wrapper, url) {
 		if (!url) {
 			return;
 		}
+
+		var preview = $(".podlove_preview_pic", wrapper)[0];
 
 		$(".podlove_preview_pic", wrapper).empty().hide();
 
@@ -111,6 +101,28 @@ PODLOVE.media = PODLOVE.media || {};
 		preview.appendChild(image);
 		preview.appendChild(remove);
 		preview.style.display = "block";
+	}
+
+	PODLOVE.media.render_preview = function(wrapper) {
+		var $input   = $("input", wrapper).first(),
+		    url      = $input.val();
+
+		if (!url) {
+			return;
+		}
+
+		if (args.allowGravatar && url.indexOf("@") !== -1) {
+			var requested_email = url.trim().toLowerCase();
+
+			get_gravatar(url, function(gravatar_url) {
+				if ($input.val().trim().toLowerCase() === requested_email) {
+					render_preview_image(wrapper, gravatar_url);
+				}
+			});
+			return;
+		}
+
+		render_preview_image(wrapper, url);
 	};
 
 	PODLOVE.media.insert = function(file_frame , options) {

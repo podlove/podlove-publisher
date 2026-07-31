@@ -4,6 +4,7 @@ namespace Podlove\Model;
 
 use Podlove\Cache\TemplateCache;
 use Podlove\ImageCache\Request as ImageCacheRequest;
+use Podlove\ImageCache\SourcePolicy;
 use Podlove\Log;
 use Symfony\Component\Yaml\Yaml;
 
@@ -158,6 +159,10 @@ class Image
     {
         if (empty($this->source_url)) {
             return null;
+        }
+
+        if (!SourcePolicy::allows_download($this->source_url)) {
+            return SourcePolicy::direct_url($this->source_url, $this->width, $this->height);
         }
 
         if ($this->extract_file_extension() == 'svg') {
@@ -324,6 +329,10 @@ class Image
 
     public function generate_resized_copy()
     {
+        if (!SourcePolicy::allows_download($this->source_url)) {
+            return;
+        }
+
         if (!\Podlove\is_image($this->original_file(), basename($this->source_url))) {
             Log::get()->addWarning('Podlove Image Cache: Not an image ('.$this->original_file().')');
 
@@ -379,12 +388,20 @@ class Image
 
     public function redownload_source()
     {
+        if (!SourcePolicy::allows_download($this->source_url)) {
+            return;
+        }
+
         $this->download_source();
         $this->delete_resized_versions();
     }
 
     public function download_source()
     {
+        if (!SourcePolicy::allows_download($this->source_url)) {
+            return;
+        }
+
         $source_url = $this->source_url;
 
         $source_domain = wp_parse_url($source_url, PHP_URL_HOST);
@@ -524,6 +541,10 @@ class Image
             return new \WP_Error('http_no_url', __('Invalid URL Provided.'));
         }
 
+        if (!SourcePolicy::allows_download($url)) {
+            return new \WP_Error('http_download_forbidden', __('Downloading this image source is not allowed.'));
+        }
+
         $tmpfname = wp_tempnam($url);
         if (!$tmpfname) {
             return new \WP_Error('http_no_file', __('Could not create Temporary file.'));
@@ -540,7 +561,29 @@ class Image
         ];
         $args = array_merge($default_args, $extra_args);
 
-        $response = wp_safe_remote_get($url, $args);
+        // Let WordPress/Requests handle redirects, and only add the Gravatar
+        // source policy to its validation hook before each destination is fetched.
+        $blocked_redirect = false;
+        $validate_redirect = static function ($location) use (&$blocked_redirect) {
+            if (!SourcePolicy::allows_download($location)) {
+                $blocked_redirect = true;
+                \WP_Http::validate_redirects('');
+            }
+        };
+
+        add_action('requests-requests.before_redirect', $validate_redirect);
+
+        try {
+            $response = wp_safe_remote_get($url, $args);
+        } finally {
+            remove_action('requests-requests.before_redirect', $validate_redirect);
+        }
+
+        if ($blocked_redirect) {
+            wp_delete_file($tmpfname);
+
+            return new \WP_Error('http_download_forbidden', __('Downloading this image source is not allowed.'));
+        }
 
         if (is_wp_error($response)) {
             wp_delete_file($tmpfname);
@@ -572,6 +615,10 @@ class Image
      */
     private function srcset()
     {
+        if (!SourcePolicy::allows_download($this->source_url)) {
+            return $this->gravatar_srcset();
+        }
+
         $file = $this->original_file();
 
         if (!file_exists($file)) {
@@ -612,6 +659,34 @@ class Image
         }
 
         return implode(', ', $sources);
+    }
+
+    private function gravatar_srcset()
+    {
+        $size = max((int) $this->width, (int) $this->height);
+        if ($size <= 0) {
+            return null;
+        }
+
+        $sources = [];
+        foreach ([1, 2, 3] as $factor) {
+            if ($size * $factor > 2048) {
+                break;
+            }
+
+            $url = SourcePolicy::direct_url(
+                $this->source_url,
+                (int) $this->width * $factor,
+                (int) $this->height * $factor
+            );
+            if (null === $url) {
+                return null;
+            }
+
+            $sources[] = $url.' '.$factor.'x';
+        }
+
+        return count($sources) > 1 ? implode(', ', $sources) : null;
     }
 
     private function cache_file()

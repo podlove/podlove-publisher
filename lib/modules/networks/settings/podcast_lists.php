@@ -341,7 +341,12 @@ class PodcastLists
 							<?php
                                 foreach (Network::podcasts() as $blog_id => $podcast) {
                                     if ($podcast->title) {
-                                        printf("<option value='%s' data-img-src='%s'>%s</option>\n", $blog_id, $podcast->cover_art()->setWidth(45)->url(), $podcast->title);
+                                        printf(
+                                            "<option value='%s' data-img-src='%s'>%s</option>\n",
+                                            esc_attr($blog_id),
+                                            esc_url((string) $podcast->cover_art()->setWidth(45)->url()),
+                                            esc_html($podcast->title)
+                                        );
                                     }
                                 } ?>
 						</select>

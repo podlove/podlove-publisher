@@ -187,7 +187,7 @@ class SettingsTab extends Tab
 				<select name="podlove_notifications[send_as]" class="chosen-image podlove-contributor-dropdown" style="width: 220px;">
 					<option value=""><?php echo __('Choose Contributor', 'podlove-podcasting-plugin-for-wordpress'); ?></option>
 					<?php foreach ($contributors as $contributor) { ?>
-						<option value="<?php echo $contributor->id; ?>" data-img-src="<?php echo $contributor->avatar()->setWidth(10)->url(); ?>" <?php selected(\Podlove\get_setting('notifications', 'send_as'), $contributor->id); ?>><?php echo $contributor->getName(); ?></option>
+						<option value="<?php echo esc_attr($contributor->id); ?>" data-img-src="<?php echo esc_url((string) $contributor->avatar()->setWidth(10)->url()); ?>" <?php selected(\Podlove\get_setting('notifications', 'send_as'), $contributor->id); ?>><?php echo esc_html($contributor->getName()); ?></option>
 					<?php } ?>
 				</select>
 				<?php
@@ -242,7 +242,7 @@ class SettingsTab extends Tab
 					    $avatar = $contributor->avatar()->setWidth(10)->url();
 					    $name = $contributor->getName();
 					    ?>
-						<option value="<?php echo $contributor->id; ?>" data-img-src="<?php echo $avatar; ?>" <?php echo $selected; ?>><?php echo $name; ?></option>
+						<option value="<?php echo esc_attr($contributor->id); ?>" data-img-src="<?php echo esc_url((string) $avatar); ?>" <?php echo $selected; ?>><?php echo esc_html($name); ?></option>
 					<?php } ?>
 				</select>
                 <?php } ?>
@@ -260,7 +260,7 @@ class SettingsTab extends Tab
 					    $avatar = $contributor->avatar()->setWidth(10)->url();
 					    $name = $contributor->getName();
 					    ?>
-						<option value="<?php echo $contributor->id; ?>" data-img-src="<?php echo $avatar; ?>"><?php echo $name; ?></option>
+						<option value="<?php echo esc_attr($contributor->id); ?>" data-img-src="<?php echo esc_url((string) $avatar); ?>"><?php echo esc_html($name); ?></option>
 					<?php } ?>
 				</select>
                 </template>

@@ -205,20 +205,20 @@ class Builder
         $img_html_attributes = '';
 
         if (isset($arguments['image_width'])) {
-            $img_html_attributes .= ' width="'.$arguments['image_width'].'"';
+            $img_html_attributes .= ' width="'.esc_attr($arguments['image_width']).'"';
         }
 
         if (isset($arguments['image_height'])) {
-            $img_html_attributes .= ' height="'.$arguments['image_height'].'"';
+            $img_html_attributes .= ' height="'.esc_attr($arguments['image_height']).'"';
         } ?>
 		<div>
-			<input type="text" name="<?php echo $this->field_name; ?>" id="<?php echo $this->field_id; ?>" value="<?php echo esc_attr($this->field_value); ?>" <?php echo $this->html_attributes; ?>><span class="podlove-input-status" data-podlove-input-status-for="<?php echo $this->field_id; ?>"></span>
+			<input type="text" name="<?php echo esc_attr($this->field_name); ?>" id="<?php echo esc_attr($this->field_id); ?>" value="<?php echo esc_attr($this->field_value); ?>" <?php echo $this->html_attributes; ?>><span class="podlove-input-status" data-podlove-input-status-for="<?php echo esc_attr($this->field_id); ?>"></span>
 			<br>
-			<img src="<?php echo $this->field_value; ?>" <?php echo $img_html_attributes; ?> />
+			<img src="<?php echo esc_url((string) $this->field_value); ?>" <?php echo $img_html_attributes; ?> />
 		</div>
 		<script type="text/javascript">
 		(function($) {
-			$("#<?php echo $this->field_id; ?>").on( 'change', function() {
+			$(<?php echo wp_json_encode('#'.$this->field_id); ?>).on( 'change', function() {
 				url = $(this).val();
 				$(this).parent().find("img").attr("src", url);
 			} );

@@ -127,6 +127,8 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 = 4.5.4 =
 
+* update Gravatar integration to use SHA-256 identifiers and serve avatars directly without Publisher Image Cache.
+
 Various security related improvements:
 
 * constrain image cache lock deletion to the lock directory.
