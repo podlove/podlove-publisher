@@ -132,6 +132,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 Various security related improvements:
 
+* prevent stored cross-site scripting through transcript cue content.
 * prevent stored cross-site scripting through podcast and episode titles in the network dashboard.
 * prevent stored cross-site scripting through social-service links and bundled contributor templates.
 * constrain image cache lock deletion to the lock directory.

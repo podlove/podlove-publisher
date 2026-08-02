@@ -20,12 +20,12 @@
 
         <div class="ts-text">
             <div class="ts-speaker">
-                {{ group.contributor.name }}
+                {{ group.contributor.name|e('html') }}
             </div>
 
             <div class="ts-content">
                 {% for line in group.items %}
-                <span class="ts-line">{{ line.content }}</span>
+                <span class="ts-line">{{ line.content|e('html') }}</span>
                 {% endfor %}
             </div>
         </div>
