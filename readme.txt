@@ -132,6 +132,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 Various security related improvements:
 
+* require upgrade permission and nonce validation before running database migrations.
 * prevent stored cross-site scripting through custom episode GUIDs.
 * prevent stored cross-site scripting through episode titles in the analytics list.
 * prevent stored cross-site scripting through transcript cue content.

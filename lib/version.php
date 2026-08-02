@@ -43,6 +43,7 @@ namespace Podlove;
 use Podlove\Jobs\CronJobRunner;
 
 define('Podlove\DATABASE_VERSION', 168);
+define('Podlove\DATABASE_MIGRATION_NONCE_ACTION', 'podlove_database_migration');
 
 add_action('admin_init', '\Podlove\maybe_run_database_migrations');
 add_action('admin_init', '\Podlove\run_database_migrations', 5);
@@ -54,11 +55,33 @@ function maybe_run_database_migrations()
     if ($database_version === false) {
         // plugin has just been installed
         update_option('podlove_database_version', DATABASE_VERSION);
-    } elseif ($database_version < DATABASE_VERSION) {
-        wp_safe_redirect(admin_url('index.php?podlove_page=podlove_upgrade&_wp_http_referer='.urlencode(wp_unslash($_SERVER['REQUEST_URI']))));
+    } elseif ($database_version < DATABASE_VERSION && current_user_can('update_plugins')) {
+        $request_uri = isset($_SERVER['REQUEST_URI']) ? wp_unslash($_SERVER['REQUEST_URI']) : admin_url();
+        wp_safe_redirect(database_migration_url($request_uri));
 
         exit;
     }
+}
+
+function database_migration_url($request_uri)
+{
+    $url = add_query_arg([
+        'podlove_page' => 'podlove_upgrade',
+        '_wp_http_referer' => $request_uri,
+    ], admin_url('index.php'));
+
+    return add_query_arg('_wpnonce', wp_create_nonce(DATABASE_MIGRATION_NONCE_ACTION), $url);
+}
+
+function database_migration_request_is_authorized()
+{
+    if (!current_user_can('update_plugins') || !isset($_REQUEST['_wpnonce'])) {
+        return false;
+    }
+
+    $nonce = sanitize_text_field(wp_unslash($_REQUEST['_wpnonce']));
+
+    return (bool) wp_verify_nonce($nonce, DATABASE_MIGRATION_NONCE_ACTION);
 }
 
 function run_database_migrations()
@@ -68,6 +91,10 @@ function run_database_migrations()
     }
 
     if (get_option('podlove_database_version') >= DATABASE_VERSION) {
+        return;
+    }
+
+    if (!database_migration_request_is_authorized()) {
         return;
     }
 
