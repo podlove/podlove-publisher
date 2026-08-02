@@ -49,7 +49,7 @@ class Contributor_List_Table extends \Podlove\List_Table
 
     public function column_gender($contributor)
     {
-        if ($contributor->gender == 'none') {
+        if ($contributor->gender == 'none' || is_null($contributor->gender)) {
             return 'Not set';
         }
 
