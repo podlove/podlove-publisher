@@ -38,16 +38,17 @@ class Custom_Guid
 
     public static function meta_box_callback()
     {
+        $guid = (string) get_the_guid();
         ?>
 		<div>
-			<span id="guid_preview"><?php echo get_the_guid(); ?></span>
+			<span id="guid_preview"><?php echo esc_html($guid); ?></span>
 			<a href="#" id="regenerate_guid"><?php echo __('regenerate', 'podlove-podcasting-plugin-for-wordpress'); ?></a>
 		</div>
 		<span class="description">
 			<?php echo __('Identifier for this episode. Change it to force podcatchers to redownload media files for this episode.', 'podlove-podcasting-plugin-for-wordpress'); ?>
 		</span>
 
-		<input type="hidden" name="_podlove_meta[guid]" id="_podlove_meta_guid" value="<?php echo get_the_guid(); ?>">
+		<input type="hidden" name="_podlove_meta[guid]" id="_podlove_meta_guid" value="<?php echo esc_attr($guid); ?>">
 
 		<script type="text/javascript">
 		jQuery(function($){
@@ -65,10 +66,10 @@ class Custom_Guid
 					type: 'POST',
 					data: data,
 					dataType: 'json',
-					success: function(result) {
+						success: function(result) {
 						if (result && result.guid) {
 							$("#_podlove_meta_guid").val(result.guid);
-							$("#guid_preview").html(result.guid);
+							$("#guid_preview").text(result.guid);
 							if ( ! $(".guid_warning").length ) {
 								$(".row__podlove_meta_guid .description")
 									.append("<br><strong class=\"guid_warning\">GUID regenerated. You still need to save the post.<br>Only regenerate if you messed up and need all clients to redownload all files!</strong>");
@@ -88,8 +89,8 @@ class Custom_Guid
 
     public static function save_form($post_id, $form_data)
     {
-        if (isset($form_data['guid'])) {
-            update_post_meta($post_id, '_podlove_guid', $form_data['guid']);
+        if (isset($form_data['guid']) && is_scalar($form_data['guid'])) {
+            update_post_meta($post_id, '_podlove_guid', sanitize_text_field(wp_unslash((string) $form_data['guid'])));
         }
     }
 
@@ -124,7 +125,7 @@ class Custom_Guid
      */
     public static function guid_for_post($post)
     {
-        return apply_filters('podlove_guid', UUID::uuid4());
+        return sanitize_text_field((string) apply_filters('podlove_guid', UUID::uuid4()));
     }
 
     /**
