@@ -41,6 +41,21 @@ class LocalUploadFileTest extends WP_UnitTestCase
         $this->assertNull(LocalUploadFile::path_for_url($url));
     }
 
+    public function testExistingPathForUrlResolvesExistingUpload(): void
+    {
+        $upload_dir = wp_upload_dir();
+        $file_name = 'local-upload-file-test-'.wp_generate_uuid4().'.png';
+        $file = trailingslashit($upload_dir['basedir']).$file_name;
+        $url = trailingslashit($upload_dir['baseurl']).$file_name;
+        copy(\Podlove\PLUGIN_DIR.'images/contributor-default-avatar.png', $file);
+
+        try {
+            $this->assertSame(wp_normalize_path(realpath($file)), LocalUploadFile::existing_path_for_url($url));
+        } finally {
+            wp_delete_file($file);
+        }
+    }
+
     public function testGenericResolverMapsUrlWithinConfiguredRoot(): void
     {
         $url = 'https://example.test/static/space%20file.png?download=1#preview';

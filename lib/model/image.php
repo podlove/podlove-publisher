@@ -405,17 +405,9 @@ class Image
 
         $source_url = $this->source_url;
 
-        // If the image is part of the Publisher, copy it on the filesystem
-        // instead of downloading it over HTTP.
+        // Bundled Publisher images are always safe to copy from the filesystem.
         $file = LocalFile::existing_path_for_url($source_url, \Podlove\PLUGIN_URL, \Podlove\PLUGIN_DIR);
-
-        if (null !== $file
-            && $this->source_is_within_resource_limits($file)
-            && $this->set_file_extension_from_validated_image($file, basename($this->source_url))) {
-            $this->create_basedir();
-            $this->save_cache_data();
-            $this->copy_as_original_file($file);
-
+        if ($this->copy_local_source($file)) {
             return;
         }
 
@@ -434,6 +426,15 @@ class Image
         // - when that setting is set, display an info somewhere why that is, what it is and what to do about it
 
         if (is_wp_error($result)) {
+            // Same-origin uploads may be unavailable over HTTP in containerized
+            // development environments. Only bypass HTTP after a transport
+            // failure; HTTP authorization and not-found responses remain final.
+            if ('http_request_failed' === $result->get_error_code()
+                && self::urls_share_origin($this->source_url, home_url())
+                && $this->copy_local_source(LocalUploadFile::existing_path_for_url($this->source_url))) {
+                return;
+            }
+
             Log::get()->addWarning(
                 sprintf(__('Podlove Image Cache: Unable to download image. %s.'), $result->get_error_message()),
                 ['url' => $this->source_url]
@@ -597,6 +598,46 @@ class Image
         }
 
         return [$tmpfname, $response];
+    }
+
+    private function copy_local_source($file)
+    {
+        if (!is_string($file) || '' === $file
+            || !$this->source_is_within_resource_limits($file)
+            || !$this->set_file_extension_from_validated_image($file, basename($this->source_url))) {
+            return false;
+        }
+
+        $this->create_basedir();
+        $this->save_cache_data();
+        $this->copy_as_original_file($file);
+
+        return $this->source_exists();
+    }
+
+    private static function urls_share_origin($first_url, $second_url)
+    {
+        $first = wp_parse_url($first_url);
+        $second = wp_parse_url($second_url);
+        if (!is_array($first) || !is_array($second)) {
+            return false;
+        }
+
+        $first_scheme = strtolower((string) ($first['scheme'] ?? ''));
+        $second_scheme = strtolower((string) ($second['scheme'] ?? ''));
+        if (!in_array($first_scheme, ['http', 'https'], true) || !in_array($second_scheme, ['http', 'https'], true)) {
+            return false;
+        }
+
+        $first_host = rtrim(strtolower((string) ($first['host'] ?? '')), '.');
+        $second_host = rtrim(strtolower((string) ($second['host'] ?? '')), '.');
+        $first_port = (int) ($first['port'] ?? ('https' === $first_scheme ? 443 : 80));
+        $second_port = (int) ($second['port'] ?? ('https' === $second_scheme ? 443 : 80));
+
+        return '' !== $first_host
+            && $first_scheme === $second_scheme
+            && $first_host === $second_host
+            && $first_port === $second_port;
     }
 
     /**

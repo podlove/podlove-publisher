@@ -131,6 +131,109 @@ class ImageSourcePolicyTest extends WP_UnitTestCase
         }
     }
 
+    public function testLocalUploadSourceFallsBackAfterSameOriginTransportFailure(): void
+    {
+        $upload_dir = wp_upload_dir();
+        $file_name = 'image-cache-upload-test-'.wp_generate_uuid4().'.png';
+        $source_file = trailingslashit($upload_dir['basedir']).$file_name;
+        $source = trailingslashit($upload_dir['baseurl']).$file_name;
+        copy(\Podlove\PLUGIN_DIR.'images/contributor-default-avatar.png', $source_file);
+
+        $image = new Image($source, 'Upload');
+        $http_requests = 0;
+        $count_http_request = function () use (&$http_requests) {
+            ++$http_requests;
+
+            return new WP_Error('http_request_failed', 'Connection refused.');
+        };
+        add_filter('pre_http_request', $count_http_request);
+
+        try {
+            $image->download_source();
+
+            $this->assertSame(1, $http_requests);
+            $this->assertTrue($image->source_exists());
+            $this->assertFileEquals($source_file, $image->original_file());
+        } finally {
+            remove_filter('pre_http_request', $count_http_request);
+            wp_delete_file($source_file);
+        }
+    }
+
+    public function testLocalUploadSourceDoesNotBypassHttpForbiddenResponse(): void
+    {
+        $upload_dir = wp_upload_dir();
+        $file_name = 'image-cache-forbidden-upload-test-'.wp_generate_uuid4().'.png';
+        $source_file = trailingslashit($upload_dir['basedir']).$file_name;
+        $source = trailingslashit($upload_dir['baseurl']).$file_name;
+        copy(\Podlove\PLUGIN_DIR.'images/contributor-default-avatar.png', $source_file);
+
+        $image = new Image($source, 'Forbidden');
+        $http_requests = 0;
+        $forbid_http_request = function () use (&$http_requests) {
+            ++$http_requests;
+
+            return [
+                'headers' => [],
+                'body' => '',
+                'response' => ['code' => 403, 'message' => 'Forbidden'],
+                'cookies' => [],
+            ];
+        };
+        add_filter('pre_http_request', $forbid_http_request);
+
+        try {
+            $image->download_source();
+
+            $this->assertSame(1, $http_requests);
+            $this->assertFalse($image->source_exists());
+            $this->assertFileDoesNotExist($image->original_file());
+        } finally {
+            remove_filter('pre_http_request', $forbid_http_request);
+            wp_delete_file($source_file);
+        }
+    }
+
+    public function testRemoteUploadOriginDoesNotUseFilesystemFallback(): void
+    {
+        $upload_dir = wp_upload_dir();
+        $file_name = 'image-cache-remote-upload-test-'.wp_generate_uuid4().'.png';
+        $source_file = trailingslashit($upload_dir['basedir']).$file_name;
+        $remote_base_url = 'https://cdn.example.test/uploads';
+        $source = $remote_base_url.'/'.$file_name;
+        copy(\Podlove\PLUGIN_DIR.'images/contributor-default-avatar.png', $source_file);
+
+        $use_remote_upload_url = function ($uploads) use ($remote_base_url) {
+            $uploads['baseurl'] = $remote_base_url;
+            $uploads['url'] = $remote_base_url.$uploads['subdir'];
+
+            return $uploads;
+        };
+        $http_requests = 0;
+        $fail_http_request = function () use (&$http_requests) {
+            ++$http_requests;
+
+            return new WP_Error('http_request_failed', 'Connection refused.');
+        };
+        add_filter('upload_dir', $use_remote_upload_url);
+        add_filter('pre_http_request', $fail_http_request);
+        wp_upload_dir(null, false, true);
+
+        try {
+            $image = new Image($source, 'Remote');
+            $image->download_source();
+
+            $this->assertSame(1, $http_requests);
+            $this->assertFalse($image->source_exists());
+            $this->assertFileDoesNotExist($image->original_file());
+        } finally {
+            remove_filter('upload_dir', $use_remote_upload_url);
+            remove_filter('pre_http_request', $fail_http_request);
+            wp_upload_dir(null, false, true);
+            wp_delete_file($source_file);
+        }
+    }
+
     public function testLookalikePluginUrlCannotUseLocalFilesystemShortcut(): void
     {
         $source = home_url('/not-a-plugin/'.basename(\Podlove\PLUGIN_DIR).'/images/contributor-default-avatar.png');
