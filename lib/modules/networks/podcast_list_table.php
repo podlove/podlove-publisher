@@ -33,10 +33,18 @@ class Podcast_List_Table extends \Podlove\List_Table
     {
         return $podcast->with_blog_scope(function () use ($podcast) {
             if ($podcast->title) {
-                return "<a href='".admin_url()."admin.php?page=podlove_settings_handle'>".$podcast->title.'</a> <br />'.$podcast->subtitle;
+                return sprintf(
+                    '<a href="%s">%s</a> <br />%s',
+                    esc_url(admin_url('admin.php?page=podlove_settings_handle')),
+                    esc_html($podcast->title),
+                    esc_html($podcast->subtitle)
+                );
             }
 
-            return sprintf(__('No podcast title in blog %s.', 'podlove-podcasting-plugin-for-wordpress'), '<a href="'.admin_url().'">'.get_bloginfo('name').'</a>');
+            return sprintf(
+                __('No podcast title in blog %s.', 'podlove-podcasting-plugin-for-wordpress'),
+                '<a href="'.esc_url(admin_url()).'">'.esc_html(get_bloginfo('name')).'</a>'
+            );
         });
     }
 
@@ -73,8 +81,13 @@ class Podcast_List_Table extends \Podlove\List_Table
             if ($latest_episode = Episode::latest()) {
                 $latest_episode_blog_post = get_post($latest_episode->post_id);
 
-                return "<a title='Published on ".date('Y-m-d h:i:s', strtotime($latest_episode_blog_post->post_date))."' href='".admin_url().'post.php?post='.$latest_episode->post_id."&action=edit'>".$latest_episode_blog_post->post_title.'</a>'
-                     .'<br />'.\Podlove\relative_time_steps(strtotime($latest_episode_blog_post->post_date));
+                return sprintf(
+                    '<a title="%s" href="%s">%s</a><br />%s',
+                    esc_attr('Published on '.date('Y-m-d h:i:s', strtotime($latest_episode_blog_post->post_date))),
+                    esc_url(admin_url('post.php?post='.(int) $latest_episode->post_id.'&action=edit')),
+                    esc_html($latest_episode_blog_post->post_title),
+                    esc_html(\Podlove\relative_time_steps(strtotime($latest_episode_blog_post->post_date)))
+                );
             }
 
             return '—';
