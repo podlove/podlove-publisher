@@ -132,6 +132,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 Various security related improvements:
 
+* prevent stored cross-site scripting through social-service links and bundled contributor templates.
 * constrain image cache lock deletion to the lock directory.
 * harden shownotes REST input handling against PHP object injection (CVE-2026-16099).
 * prevent stored cross-site scripting through shownotes metadata and bundled templates.

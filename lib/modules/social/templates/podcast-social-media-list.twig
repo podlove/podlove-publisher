@@ -1,13 +1,13 @@
 <ul class="podcast_services">
 {% for service in podcast.services({category: "social"}) %}
 	<li>
-    	<a href="{{ service.profileUrl }}" title="{{ service.description }}">
+		<a href="{{ service.profileUrl }}" title="{{ service.description|e('html_attr') }}">
 			{{
 				service.image.html({
 					width: 16,
 					alt: service.title ~ " Icon"
 				}) 
-			}} {{ service.title }}
+			}} {{ service.title|e('html') }}
         </a>
     </li>
 {% endfor %}

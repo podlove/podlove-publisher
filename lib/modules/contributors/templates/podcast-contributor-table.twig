@@ -20,7 +20,7 @@
 						</div>
 						<div class="podlove-contributors-card-services">
 							{% for service in contributor.services({category: "social"}) %}
-								<a class="podlove-contributors-card-services-service" target="_blank" title="{{ service.title }}" href="{{ service.profileUrl }}">
+								<a class="podlove-contributors-card-services-service" target="_blank" title="{{ service.title|e('html_attr') }}" href="{{ service.profileUrl }}">
 									{{
 												service.image.html({
 													width: 20, 
@@ -32,7 +32,7 @@
 							{% endfor %}
 							{% if option.donations == "yes" %}
 								{% for service in contributor.services({category: "donation"}) %}
-									<a class="podlove-contributors-card-services-service" target="_blank" title="{{ service.title }}" href="{{ service.profileUrl }}">
+									<a class="podlove-contributors-card-services-service" target="_blank" title="{{ service.title|e('html_attr') }}" href="{{ service.profileUrl }}">
 										{{
 													service.image.html({
 														width: 20, 

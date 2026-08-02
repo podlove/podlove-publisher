@@ -87,7 +87,16 @@ class Service extends Wrapper
      */
     public function profileUrl()
     {
-        return $this->contributor_service->get_service_url();
+        return esc_url($this->contributor_service->get_service_url(), [
+            'http',
+            'https',
+            'mailto',
+            'skype',
+            'jabber',
+            'bitcoin',
+            'dogecoin',
+            'litecoin',
+        ]);
     }
 
     /**

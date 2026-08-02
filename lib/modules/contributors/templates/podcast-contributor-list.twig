@@ -17,7 +17,7 @@
 						<strong class="contributor-name">{{ contributor.name }}</strong>
 						<div class="social-icons">
 							{% for service in contributor.services %}
-								<a target="_blank" title="{{ service.title }}" href="{{ service.profileUrl }}">
+								<a target="_blank" title="{{ service.title|e('html_attr') }}" href="{{ service.profileUrl }}">
 									{{
 										service.image.html({
 											width: 32,
