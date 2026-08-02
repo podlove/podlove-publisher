@@ -24,6 +24,10 @@ class SourcePolicy
 
     public static function allows_download($url)
     {
+        if (self::is_blocked_source($url)) {
+            return false;
+        }
+
         // Block every URL on an image-serving Gravatar host. In particular, do
         // not let an invalid avatar path fall through to the local image cache.
         return null === self::gravatar_url_parts($url);
@@ -31,6 +35,10 @@ class SourcePolicy
 
     public static function direct_url($url, $width = null, $height = null)
     {
+        if (self::is_blocked_source($url)) {
+            return null;
+        }
+
         $parts = self::gravatar_url_parts($url);
         if (null === $parts) {
             return $url;
@@ -73,6 +81,32 @@ class SourcePolicy
         $canonical_url = 'https://'.self::GRAVATAR_CANONICAL_HOST.'/avatar/'.strtolower($matches[1]);
 
         return empty($parameters) ? $canonical_url : add_query_arg($parameters, $canonical_url);
+    }
+
+    public static function is_blocked_source($url)
+    {
+        return self::is_data_uri($url) || self::is_svg_url($url);
+    }
+
+    private static function is_data_uri($url)
+    {
+        return is_string($url) && 1 === preg_match('/\Adata:/i', trim($url));
+    }
+
+    private static function is_svg_url($url)
+    {
+        if (!is_string($url) || '' === $url) {
+            return false;
+        }
+
+        $parts = wp_parse_url(trim($url));
+        if (!is_array($parts)) {
+            return false;
+        }
+
+        $path = rawurldecode((string) ($parts['path'] ?? ''));
+
+        return 1 === preg_match('/\.svg\/?\z/i', $path);
     }
 
     private static function gravatar_url_parts($url)

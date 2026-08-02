@@ -165,10 +165,6 @@ class Image
             return SourcePolicy::direct_url($this->source_url, $this->width, $this->height);
         }
 
-        if ($this->extract_file_extension() == 'svg') {
-            return $this->source_url;
-        }
-
         // In case the image cache doesn't work, it can be deactivated by
         // defining the PHP constant PODLOVE_DISABLE_IMAGE_CACHE = true.
         // It's not recommended since that leads to all images being delivered full size
@@ -260,6 +256,11 @@ class Image
      */
     public function image($args = [])
     {
+        $url = $this->url();
+        if (!is_string($url) || '' === $url) {
+            return '';
+        }
+
         $defaults = [
             'id' => '',
             'class' => '',
@@ -286,7 +287,7 @@ class Image
             $img->setAttribute($key, $value);
         }
 
-        $img->setAttribute('src', $this->url());
+        $img->setAttribute('src', $url);
 
         if ($this->retina && $srcset = $this->srcset()) {
             $img->setAttribute('srcset', $srcset);
@@ -615,8 +616,12 @@ class Image
      */
     private function srcset()
     {
-        if (!SourcePolicy::allows_download($this->source_url)) {
+        if (SourcePolicy::is_gravatar_avatar($this->source_url)) {
             return $this->gravatar_srcset();
+        }
+
+        if (!SourcePolicy::allows_download($this->source_url)) {
+            return null;
         }
 
         $file = $this->original_file();
