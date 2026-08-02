@@ -28,7 +28,7 @@ class Notices
 				<?php echo __('Podlove Publisher provides a tool to help you update that metadata quickly.', 'podlove-podcasting-plugin-for-wordpress'); ?>
 			</p>
 			<p>
-				<a class="button" href="<?php echo admin_url('admin.php?page=podlove_tools_settings_handle#the_tools_section'); ?>"><?php echo __('Take me to the tool', 'podlove-podcasting-plugin-for-wordpress'); ?></a> <a href="<?php echo self::hide_message_url(State::INITIALIZED_HIDDEN); ?>"><?php echo __('hide this message', 'podlove-podcasting-plugin-for-wordpress'); ?></a>
+				<a class="button" href="<?php echo esc_url(admin_url('admin.php?page=podlove_tools_settings_handle#the_tools_section')); ?>"><?php echo __('Take me to the tool', 'podlove-podcasting-plugin-for-wordpress'); ?></a> <a href="<?php echo esc_url(self::hide_message_url(State::INITIALIZED_HIDDEN)); ?>"><?php echo __('hide this message', 'podlove-podcasting-plugin-for-wordpress'); ?></a>
 			</p>
 		</div>	
 		<?php
@@ -45,7 +45,7 @@ class Notices
 				<?php echo __('You are done migrating your episode titles. You can deactivate the title migration module.', 'podlove-podcasting-plugin-for-wordpress'); ?>
 			</p>
 			<p>
-				<a class="button" href="<?php echo admin_url('admin.php?page=podlove_settings_modules_handle&podlove_disable_title_migration_module=1'); ?>"><?php echo __('Deactivate Title Migration Module', 'podlove-podcasting-plugin-for-wordpress'); ?></a> <a href="<?php echo self::hide_message_url(State::FINISHED_HIDDEN); ?>"><?php echo __('hide this message', 'podlove-podcasting-plugin-for-wordpress'); ?></a>
+				<a class="button" href="<?php echo esc_url(self::disable_module_url()); ?>"><?php echo __('Deactivate Title Migration Module', 'podlove-podcasting-plugin-for-wordpress'); ?></a> <a href="<?php echo esc_url(self::hide_message_url(State::FINISHED_HIDDEN)); ?>"><?php echo __('hide this message', 'podlove-podcasting-plugin-for-wordpress'); ?></a>
 			</p>
 		</div>	
 		<?php
@@ -53,10 +53,24 @@ class Notices
 
     public static function hide_message_url($state)
     {
-        if (isset($_REQUEST['page']) && $_REQUEST['page']) {
-            return admin_url('admin.php?page='.$_REQUEST['page'].'&podlove_set_title_migration_state='.$state);
-        }
+        $page = isset($_REQUEST['page']) && is_scalar($_REQUEST['page'])
+            ? sanitize_key(wp_unslash((string) $_REQUEST['page']))
+            : 'podlove_tools_settings_handle';
+        $url = add_query_arg([
+            'page' => $page,
+            'podlove_set_title_migration_state' => $state,
+        ], admin_url('admin.php'));
 
-        return admin_url('admin.php?page=podlove_tools_settings_handle&podlove_set_title_migration_state='.$state);
+        return wp_nonce_url($url, Title_Migration::STATE_NONCE_ACTION);
+    }
+
+    public static function disable_module_url()
+    {
+        $url = add_query_arg([
+            'page' => 'podlove_settings_modules_handle',
+            'podlove_disable_title_migration_module' => 1,
+        ], admin_url('admin.php'));
+
+        return wp_nonce_url($url, Title_Migration::DEACTIVATE_NONCE_ACTION);
     }
 }

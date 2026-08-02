@@ -6,6 +6,9 @@ use Podlove\Model;
 
 class Title_Migration extends \Podlove\Modules\Base
 {
+    public const DEACTIVATE_NONCE_ACTION = 'podlove_disable_title_migration_module';
+    public const STATE_NONCE_ACTION = 'podlove_set_title_migration_state';
+
     protected $module_name = 'Title Migration';
     protected $module_description = 'Tool to help you fill episode number and title fields introduced in Publisher 2.7 for new Apple iOS 11 podcast feed extensions.';
     protected $module_group = 'system';
@@ -24,11 +27,20 @@ class Title_Migration extends \Podlove\Modules\Base
             $this->handle_migration();
         }
 
-        if (isset($_REQUEST['podlove_set_title_migration_state'])) {
-            $this->state->set_current_state($_REQUEST['podlove_set_title_migration_state']);
+        if (
+            isset($_REQUEST['podlove_set_title_migration_state'])
+            && is_scalar($_REQUEST['podlove_set_title_migration_state'])
+            && $this->request_is_authorized(self::STATE_NONCE_ACTION)
+        ) {
+            $state = sanitize_key(wp_unslash($_REQUEST['podlove_set_title_migration_state']));
+            $this->state->set_current_state($state);
         }
 
-        if (isset($_REQUEST['podlove_disable_title_migration_module']) && $_REQUEST['podlove_disable_title_migration_module']) {
+        if (
+            isset($_REQUEST['podlove_disable_title_migration_module'])
+            && $_REQUEST['podlove_disable_title_migration_module']
+            && $this->request_is_authorized(self::DEACTIVATE_NONCE_ACTION)
+        ) {
             $this->state->set_current_state(State::FINISHED_HIDDEN);
             self::deactivate('title_migration');
             add_action('admin_notices', function () {
@@ -99,8 +111,9 @@ class Title_Migration extends \Podlove\Modules\Base
 
     public function nonce_is_valid()
     {
-        return isset($_POST['podlove_migrate_titles_nonce'])
-            && wp_verify_nonce($_POST['podlove_migrate_titles_nonce'], 'podlove_migrate_titles');
+        return current_user_can('manage_options')
+            && isset($_POST['podlove_migrate_titles_nonce'])
+            && wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['podlove_migrate_titles_nonce'])), 'podlove_migrate_titles');
     }
 
     public function the_tools_section()
@@ -239,5 +252,12 @@ max_input_vars = <?php echo $input_count + $buffer; ?>
             'title' => $title,
             'number' => $number,
         ];
+    }
+
+    private function request_is_authorized($nonce_action)
+    {
+        return current_user_can('manage_options')
+            && isset($_REQUEST['_wpnonce'])
+            && wp_verify_nonce(sanitize_text_field(wp_unslash($_REQUEST['_wpnonce'])), $nonce_action);
     }
 }
