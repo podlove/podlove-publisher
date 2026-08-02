@@ -25,7 +25,7 @@ class Downloads_List_Table extends \Podlove\List_Table
             '<a href="?page=%s&action=show&episode=%d">%s</a> %s',
             'podlove_analytics',
             $episode['id'],
-            '<span class="dashicons dashicons-chart-bar"></span> '.$episode['title'],
+            '<span class="dashicons dashicons-chart-bar"></span> '.esc_html($episode['title']),
             '<span style="color:#999; font-size: smaller" title="'.esc_attr(mysql2date(get_option('date_format'), $episode['post_date'])).'">'
             .sprintf(__('%s ago'), human_time_diff(strtotime($episode['post_date_gmt'])))
             .'</span>'
@@ -39,11 +39,11 @@ class Downloads_List_Table extends \Podlove\List_Table
 
     public function column_cb($item)
     {
-        $post_id = $item['post_id'];
-        $title = $item['title']; ?>
-		<label class="screen-reader-text" for="cb-select-<?php echo $post_id; ?>"><?php
+        $post_id = (int) $item['post_id'];
+        $title = esc_html($item['title']); ?>
+		<label class="screen-reader-text" for="cb-select-<?php echo esc_attr($post_id); ?>"><?php
             printf(__('Select %s'), $title); ?></label>
-		<input id="cb-select-<?php echo $post_id; ?>" type="checkbox" name="post[]" value="<?php echo $post_id; ?>" />
+		<input id="cb-select-<?php echo esc_attr($post_id); ?>" type="checkbox" name="post[]" value="<?php echo esc_attr($post_id); ?>" />
 		<?php
     }
 
