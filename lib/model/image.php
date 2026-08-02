@@ -411,20 +411,30 @@ class Image
         // if domains match, see if the image is part of the Publisher
         // and can be copied on the filesystem, skipping http
         if ($current_domain == $source_domain) {
-            $plugin_dirname = basename(\Podlove\PLUGIN_DIR, true);
+            $plugin_dir = realpath(\Podlove\PLUGIN_DIR);
+            $plugin_url_path = wp_parse_url(\Podlove\PLUGIN_URL, PHP_URL_PATH);
+            $source_path = wp_parse_url($source_url, PHP_URL_PATH);
 
-            if (stristr($source_url, $plugin_dirname)) {
-                $path = explode($plugin_dirname, $source_url)[1];
-                $file = untrailingslashit(\Podlove\PLUGIN_DIR).$path;
+            if (false !== $plugin_dir && is_string($plugin_url_path) && is_string($source_path)) {
+                $plugin_url_path = trailingslashit(rawurldecode($plugin_url_path));
+                $source_path = rawurldecode($source_path);
 
-                if (file_exists($file)
-                    && $this->source_is_within_resource_limits($file)
-                    && $this->set_file_extension_from_validated_image($file, basename($this->source_url))) {
-                    $this->create_basedir();
-                    $this->save_cache_data();
-                    $this->copy_as_original_file($file);
+                if (0 === strpos($source_path, $plugin_url_path)) {
+                    $relative_path = substr($source_path, strlen($plugin_url_path));
+                    $file = realpath(trailingslashit($plugin_dir).$relative_path);
+                    $plugin_dir = trailingslashit(wp_normalize_path($plugin_dir));
+                    $normalized_file = false === $file ? '' : wp_normalize_path($file);
 
-                    return;
+                    if (0 === strpos($normalized_file, $plugin_dir)
+                        && is_file($file)
+                        && $this->source_is_within_resource_limits($file)
+                        && $this->set_file_extension_from_validated_image($file, basename($this->source_url))) {
+                        $this->create_basedir();
+                        $this->save_cache_data();
+                        $this->copy_as_original_file($file);
+
+                        return;
+                    }
                 }
             }
         }

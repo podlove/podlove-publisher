@@ -85,28 +85,68 @@ class SourcePolicy
 
     public static function is_blocked_source($url)
     {
-        return self::is_data_uri($url) || self::is_svg_url($url);
+        if (!is_string($url)) {
+            return false;
+        }
+
+        $url = trim($url);
+
+        return self::has_unsafe_url_characters($url) || self::is_data_uri($url) || self::has_blocked_path($url);
     }
 
     private static function is_data_uri($url)
     {
-        return is_string($url) && 1 === preg_match('/\Adata:/i', trim($url));
+        return 1 === preg_match('/\Adata:/i', $url);
     }
 
-    private static function is_svg_url($url)
+    private static function has_unsafe_url_characters($url)
     {
-        if (!is_string($url) || '' === $url) {
+        // Browsers remove tabs and newlines anywhere in a URL and interpret
+        // backslashes as path separators for HTTP(S). Reject these ambiguous
+        // forms instead of applying the source policy to a different URL than
+        // the browser eventually requests.
+        return false !== strpos($url, '\\') || 1 === preg_match('/[\x00-\x20\x7f]/', $url);
+    }
+
+    private static function has_blocked_path($url)
+    {
+        if ('' === $url) {
             return false;
         }
 
-        $parts = wp_parse_url(trim($url));
+        $parts = wp_parse_url($url);
         if (!is_array($parts)) {
             return false;
         }
 
         $path = rawurldecode((string) ($parts['path'] ?? ''));
+        if (false !== strpos($path, '\\') || 1 === preg_match('/[\x00-\x1f\x7f]/', $path)) {
+            return true;
+        }
 
-        return 1 === preg_match('/\.svg\/?\z/i', $path);
+        $segments = explode('/', $path);
+        if (in_array('..', $segments, true)) {
+            return true;
+        }
+
+        $path = self::normalize_path($segments);
+
+        return 1 === preg_match('/\.svg\z/i', $path);
+    }
+
+    private static function normalize_path(array $path_segments)
+    {
+        $segments = [];
+
+        foreach ($path_segments as $segment) {
+            if ('' === $segment || '.' === $segment) {
+                continue;
+            }
+
+            $segments[] = $segment;
+        }
+
+        return implode('/', $segments);
     }
 
     private static function gravatar_url_parts($url)

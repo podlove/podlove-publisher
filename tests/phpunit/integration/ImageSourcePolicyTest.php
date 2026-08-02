@@ -27,6 +27,10 @@ class ImageSourcePolicyTest extends WP_UnitTestCase
             'data:not-valid',
             'DATA:image/png;base64,iVBORw0KGgo=',
             '  data:image/png;base64,iVBORw0KGgo=  ',
+            "da\nta:image/svg+xml,<svg></svg>",
+            "d\tata:image/svg+xml,<svg></svg>",
+            "d\rata:image/svg+xml,<svg></svg>",
+            "\x01data:image/svg+xml,<svg></svg>",
         ];
 
         foreach ($sources as $source) {
@@ -43,6 +47,11 @@ class ImageSourcePolicyTest extends WP_UnitTestCase
             'http://example.test/avatar.SVG?size=45#fragment',
             'https://example.test/avatar%2Esvg',
             'https://example.test/avatar.svg/',
+            'https://example.test/avatar.svg/.',
+            'https://example.test/avatar.svg/placeholder/..',
+            'https://example.test/avatar.svg/%2e',
+            "https://example.test/avatar.s\nvg",
+            'https://example.test/avatar.svg\\',
             '/images/avatar.svg',
             'ftp://example.test/avatar.svg',
         ];
@@ -56,11 +65,32 @@ class ImageSourcePolicyTest extends WP_UnitTestCase
 
     public function testRasterSourceIsNotMisclassified(): void
     {
-        $source = 'https://example.test/avatar.svg.png?format=svg';
+        $sources = [
+            'https://example.test/avatar.svg.png?format=svg',
+            'https://example.test/avatar.svg/./avatar.png',
+        ];
 
-        $this->assertFalse(SourcePolicy::is_blocked_source($source));
-        $this->assertTrue(SourcePolicy::allows_download($source));
-        $this->assertSame($source, SourcePolicy::direct_url($source));
+        foreach ($sources as $source) {
+            $this->assertFalse(SourcePolicy::is_blocked_source($source));
+            $this->assertTrue(SourcePolicy::allows_download($source));
+            $this->assertSame($source, SourcePolicy::direct_url($source));
+        }
+    }
+
+    public function testParentPathSegmentsAreBlocked(): void
+    {
+        $sources = [
+            'https://example.test/avatar.svg/../avatar.png',
+            'https://example.test/avatar.svg/placeholder/../../avatar.png',
+            'https://example.test/images/%2e%2e/avatar.png',
+            'https://example.test/images%2f%2E%2E%2favatar.png',
+        ];
+
+        foreach ($sources as $source) {
+            $this->assertTrue(SourcePolicy::is_blocked_source($source));
+            $this->assertFalse(SourcePolicy::allows_download($source));
+            $this->assertNull(SourcePolicy::direct_url($source));
+        }
     }
 
     public function testBlockedSourceCannotBeRenderedOrDownloaded(): void
@@ -76,6 +106,51 @@ class ImageSourcePolicyTest extends WP_UnitTestCase
         $this->assertWPError($result);
         $this->assertSame('http_download_forbidden', $result->get_error_code());
         $this->assertFileDoesNotExist($image->original_file());
+    }
+
+    public function testBundledRasterSourceIsCopiedWithoutHttpRequest(): void
+    {
+        $source = \Podlove\PLUGIN_URL.'/images/contributor-default-avatar.png';
+        $image = new Image($source, 'Bundled');
+        $http_requests = 0;
+        $count_http_request = function () use (&$http_requests) {
+            ++$http_requests;
+
+            return new WP_Error('unexpected_http_request');
+        };
+        add_filter('pre_http_request', $count_http_request);
+
+        try {
+            $image->download_source();
+
+            $this->assertSame(0, $http_requests);
+            $this->assertTrue($image->source_exists());
+            $this->assertFileEquals(\Podlove\PLUGIN_DIR.'images/contributor-default-avatar.png', $image->original_file());
+        } finally {
+            remove_filter('pre_http_request', $count_http_request);
+        }
+    }
+
+    public function testLookalikePluginUrlCannotUseLocalFilesystemShortcut(): void
+    {
+        $source = home_url('/not-a-plugin/'.basename(\Podlove\PLUGIN_DIR).'/images/contributor-default-avatar.png');
+        $image = new Image($source, 'Lookalike');
+        $http_requests = 0;
+        $count_http_request = function () use (&$http_requests) {
+            ++$http_requests;
+
+            return new WP_Error('expected_http_request');
+        };
+        add_filter('pre_http_request', $count_http_request);
+
+        try {
+            $image->download_source();
+
+            $this->assertSame(1, $http_requests);
+            $this->assertFalse($image->source_exists());
+        } finally {
+            remove_filter('pre_http_request', $count_http_request);
+        }
     }
 
     public function testSignedSvgCacheRequestIsRejectedBeforeDownload(): void
