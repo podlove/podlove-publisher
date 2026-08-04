@@ -62,50 +62,49 @@ client: client_legacy client_next
 build:
 	make composer_with_prefixing
 	make client
+	make package
 
-	rm -rf dist/*
+package:
+	rm -rf dist
 	mkdir -p dist
-	# move everything into dist
-	rsync -r --exclude=.git --exclude=node_modules --exclude=./dist . dist
-	# cleanup
-	find dist -name "*.git*" | xargs rm -rf
-	rm -rf dist/lib/modules/podlove_web_player/player_v2/player/podlove-web-player/libs
-	rm -rf dist/lib/modules/podlove_web_player/player_v2/player/podlove-web-player/img/banner-772x250.png
-	rm -rf dist/lib/modules/podlove_web_player/player_v2/player/podlove-web-player/img/banner-1544x500.png
-	rm -rf dist/client/src
-	rm -rf dist/client/package-lock.json
-	rm -rf dist/tests
-	rm -rf dist/vendor-bin
-	rm -rf dist/vendor/bin
-	rm -rf dist/vendor/phpunit/php-code-coverage
-	rm -rf dist/vendor/phpunit/phpunit
-	rm -rf dist/vendor/phpunit/phpunit-mock-objects
-	rm -rf dist/vendor/twig/twig/test
-	rm -rf dist/vendor/guzzle/guzzle/tests
-	rm -f dist/.travis.yml
-	rm -rf dist/bin
-	rm -f dist/wprelease.yml
-	rm -f dist/CONTRIBUTING.md
-	rm -f dist/Makefile
-	rm -f dist/phpunit.xml
-	rm -f dist/Rakefile
-	rm -f dist/README.md
-	rm -f dist/*.code-workspace
-	rm -f dist/.prettierrc
-	rm -f dist/.editorconfig
-	rm -rf dist/devbox.d
-	rm -f dist/devbox.json
-	rm -f dist/devbox.lock
-	rm -f dist/Dockerfile
-	rm -f dist/docker-compose.yml
-	find dist -name "*composer.json" | xargs rm -rf
-	find dist -name "*composer.lock" | xargs rm -rf
-	find dist -name "*.swp" | xargs rm -rf
-	# find dist/vendor -type d -iname "test" | xargs rm -rf
-	# find dist/vendor -type d -iname "tests" | xargs rm -rf
-	# player v2 / mediaelement
-	find dist -iname "echo-hereweare.*" | xargs rm -rf
-	find dist -iname "*.jar" | xargs rm -rf
+	# Copy runtime files. .distignore is shared with the WordPress.org release process.
+	rsync -r --exclude-from=.distignore --exclude=node_modules --exclude=/client/ --exclude=/dist/ . dist
+
+	# Copy only the compiled client application.
+	mkdir -p dist/client/dist
+	rsync -r client/dist/ dist/client/dist/
+	rm -f dist/client/dist/index.html
+
+	# Remove development copies of generated assets while retaining files loaded directly at runtime.
+	rm -rf dist/lib/modules/subscribe_button/js/dist
+	rm -f dist/js/admin/dc.js
+	rm -f dist/js/admin/chosen/chosen.jquery.min.js
+	rm -f dist/js/admin/chosen/chosenImage.jquery.js
+	rm -f dist/js/admin/ace/theme-github.js
+	rm -f dist/fonts/Podlove.dev.svg
+
+	# Composer packages include tests and examples even in --no-dev installations.
+	rm -rf dist/vendor-prefixed/matomo/mustangostang/spyc/examples
+	rm -rf dist/vendor/dariuszp/cli-progress-bar/examples
+	rm -rf dist/vendor/dariuszp/cli-progress-bar/test
+	rm -rf dist/vendor/gajus/dindent/tests
+	rm -rf dist/vendor/geoip2/geoip2/examples
+	rm -rf dist/vendor/maxmind-db/reader/ext/tests
+	rm -rf dist/vendor/maxmind/web-service-common/dev-bin
+	rm -rf dist/vendor/mustangostang/spyc/examples
+	rm -rf dist/vendor/mustangostang/spyc/tests
+	rm -rf dist/vendor/podlove/normalplaytime/test
+	rm -rf dist/vendor/podlove/podlove-timeline/test
+	rm -rf dist/vendor/podlove/webvtt-parser/test
+
+	# Package documentation is not needed at runtime. License files are intentionally retained.
+	find dist/vendor dist/vendor-prefixed -type f \
+		\( -iname "README*" -o -iname "CHANGELOG*" -o -iname "UPGRADE*" \
+		-o -name "SECURITY.md" -o -iname "CONTRIBUTING*" -o -iname ".travis.yml" \
+		-o -iname "docker-compose.yml" \) -exec rm -f {} +
+	rm -f dist/lib/modules/readme.md
+	rm -f dist/lib/modules/podlove_web_player/player_v4/dist/README.md
+	php bin/verify-dist-autoload.php
 
 
 install: install_php_scoper install_php_cs_fixer composer_with_prefixing
