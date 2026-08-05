@@ -50,7 +50,7 @@ install_php_cs_fixer:
 	composer bin php-cs-fixer install
 
 client_legacy:
-	cd js && npm install
+	cd js && npm ci --ignore-scripts
 	cd js && NODE_ENV=production npm run build
 
 client_next:
