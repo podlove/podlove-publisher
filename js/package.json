@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "@popperjs/core": "2.11.8",
-    "axios": "^1.14.0",
+    "axios": "1.18.0",
     "clipboard": "2.0.11",
     "file-saver": "^2.0.5",
     "js-sha256": "1.0.0",
@@ -23,7 +23,13 @@
     "vuedraggable": "^2.24.3"
   },
   "overrides": {
-    "brace-expansion": "1.1.13",
-    "path-to-regexp": "0.1.13"
+    "brace-expansion": "1.1.18",
+    "fast-uri": "3.1.5",
+    "path-to-regexp": "0.1.13",
+    "postcss": "8.5.25",
+    "shell-quote": "1.10.0",
+    "svgo": "2.8.3",
+    "websocket-driver": "0.7.5",
+    "ws": "8.21.2"
   }
 }
