@@ -25,11 +25,12 @@
   "overrides": {
     "brace-expansion": "1.1.18",
     "fast-uri": "3.1.5",
+    "nanoid": "3.3.16",
     "path-to-regexp": "0.1.13",
     "postcss": "8.5.25",
     "shell-quote": "1.10.0",
     "svgo": "2.8.3",
     "websocket-driver": "0.7.5",
-    "ws": "8.21.2"
+    "ws": "8.21.1"
   }
 }
