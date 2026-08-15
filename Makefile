@@ -87,7 +87,6 @@ package:
 	rm -rf dist/vendor-prefixed/matomo/mustangostang/spyc/examples
 	rm -rf dist/vendor/dariuszp/cli-progress-bar/examples
 	rm -rf dist/vendor/dariuszp/cli-progress-bar/test
-	rm -rf dist/vendor/gajus/dindent/tests
 	rm -rf dist/vendor/geoip2/geoip2/examples
 	rm -rf dist/vendor/maxmind-db/reader/ext/tests
 	rm -rf dist/vendor/maxmind/web-service-common/dev-bin
