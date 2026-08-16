@@ -125,6 +125,12 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 4.5.5 =
+
+**Fixed**
+
+* Restore Twig macro and block-style `set` rendering that broke in 4.5.4 due to incomplete dependency prefixing.
+
 = 4.5.4 =
 
 **Security**

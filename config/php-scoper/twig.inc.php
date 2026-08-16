@@ -58,8 +58,8 @@ return [
 
             if (stristr($filePath, 'CaptureNode.php')) {
                 $content = str_replace(
-                    '\\\Twig',
-                    $prefix.'\\\Twig',
+                    "'\\Twig",
+                    "'".$prefix.'\\\Twig',
                     $content
                 );
             }

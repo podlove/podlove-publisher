@@ -26,3 +26,32 @@ if ($missing_files) {
 }
 
 printf("Verified %d Composer classmap entries.\n", count($classmap));
+
+$autoload_path = __DIR__.'/../dist/vendor/autoload.php';
+
+if (!is_file($autoload_path)) {
+    fwrite(STDERR, "Composer autoloader not found: {$autoload_path}\n");
+    exit(1);
+}
+
+require $autoload_path;
+
+$loader = new PodlovePublisher_Vendor\Twig\Loader\ArrayLoader([
+    'macro' => '{% macro hello() %}hello{% endmacro %}',
+    'page' => '{% import "macro" as macro %}{{ macro.hello() }}',
+]);
+$twig = new PodlovePublisher_Vendor\Twig\Environment($loader, ['autoescape' => false]);
+
+try {
+    $result = $twig->render('page');
+} catch (Throwable $error) {
+    fwrite(STDERR, "Twig distribution smoke test failed: {$error->getMessage()}\n");
+    exit(1);
+}
+
+if ('hello' !== $result) {
+    fwrite(STDERR, "Twig distribution smoke test returned unexpected output: {$result}\n");
+    exit(1);
+}
+
+fwrite(STDOUT, "Verified Twig macro rendering.\n");
