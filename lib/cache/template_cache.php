@@ -178,9 +178,12 @@ class TemplateCache
         if (($html = get_transient($cache_key)) !== false) {
             return $html;
         }
-        $html = call_user_func($callback);
 
-        if ($html !== false) {
+        $twig_render_errors_before = did_action('podlove_twig_render_error');
+        $html = call_user_func($callback);
+        $twig_render_failed = did_action('podlove_twig_render_error') > $twig_render_errors_before;
+
+        if ($html !== false && !$twig_render_failed) {
             set_transient($cache_key, $html, $expiration);
         }
 

@@ -85,6 +85,8 @@ class TwigFilter
                     'line' => $line,
                     'template' => $template,
                 ]);
+
+                \do_action('podlove_twig_render_error', $e);
             }
         }
 
