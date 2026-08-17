@@ -19,6 +19,8 @@ mix-manifest.json
 .vscode
 dist
 js/dist
+!lib/modules/subscribe_button/dist/
+!lib/modules/subscribe_button/dist/**
 lib/modules/podlove_web_player/player_v2/
 .php_cs.cache
 .php-cs-fixer.cache

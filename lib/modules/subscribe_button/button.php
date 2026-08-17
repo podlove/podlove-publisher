@@ -157,7 +157,7 @@ class Button
         $use_cdn = $this->module()->get_module_option('use_cdn', true);
 
         $cdn_src = 'https://cdn.podlove.org/subscribe-button/javascripts/app.js';
-        $loc_src = $this->module()->get_module_url().'/dist/javascripts/app.js';
+        $loc_src = $this->module()->get_module_url().'/dist/javascripts/app.js?v=4.5.5';
 
         $src = $use_cdn ? $cdn_src : $loc_src;
 
