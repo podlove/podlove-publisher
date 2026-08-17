@@ -3,7 +3,7 @@ Contributors: eteubert
 Donate link: https://opencollective.com/podlove
 Tags: podlove, podcast, publishing, rss, audio
 Tested up to: 7.0
-Stable tag: 4.5.4
+Stable tag: 4.5.5
 Requires at least: 5.7.0
 Requires PHP: 8.0
 License: MIT
@@ -126,6 +126,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 == Changelog ==
 
 = 4.5.5 =
+
+**Security**
+
+* Prevent reflected cross-site scripting in the locally delivered Subscribe Button.
 
 **Fixed**
 
