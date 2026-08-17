@@ -47,6 +47,11 @@ make docker-install
 5. For isolated development run `WORDPRESS_URL=http://podlove.local npm run dev` with your Wordpress environment
 6. For integrated development run `npm run serve` and go to your local Wordpress environment and see your changes
 
+### Installable Plugin ZIP
+
+Run `make zip` to create a production build packaged for installation through the WordPress plugin uploader. The ZIP is
+written to `.build/` and contains the WordPress plugin slug as its top-level directory.
+
 ## Testing
 
 Integration tests use the official WordPress PHPUnit setup via `wp-env` with a dedicated isolated config.

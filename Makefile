@@ -1,4 +1,10 @@
 PHP_CS_FIXER = vendor-bin/php-cs-fixer/vendor/friendsofphp/php-cs-fixer/php-cs-fixer
+PLUGIN_SLUG = podlove-podcasting-plugin-for-wordpress
+PLUGIN_VERSION = $(shell sed -n 's/^ \* Version: //p' podlove.php)
+PLUGIN_PACKAGE_DIR = $(CURDIR)/.build/wp-plugin-package
+PLUGIN_ZIP = $(CURDIR)/.build/wp-$(PLUGIN_SLUG)-$(PLUGIN_VERSION).zip
+
+.PHONY: build package zip
 
 release:
 	bin/release.sh
@@ -63,6 +69,16 @@ build:
 	make composer_with_prefixing
 	make client
 	make package
+
+zip: build
+	rm -rf $(PLUGIN_PACKAGE_DIR)
+	rm -f $(PLUGIN_ZIP)
+	mkdir -p $(PLUGIN_PACKAGE_DIR)/$(PLUGIN_SLUG)
+	rsync -r dist/ $(PLUGIN_PACKAGE_DIR)/$(PLUGIN_SLUG)/
+	cd $(PLUGIN_PACKAGE_DIR) && zip -X -q -r $(PLUGIN_ZIP) $(PLUGIN_SLUG)
+	rm -rf $(PLUGIN_PACKAGE_DIR)
+	unzip -tq $(PLUGIN_ZIP)
+	@echo "Created $(PLUGIN_ZIP)"
 
 package:
 	rm -rf dist
