@@ -1,0 +1,191 @@
+/* Podlove Locations - Admin Styles */
+
+#podlove-episode-location-wrapper {
+    padding: 10px 0;
+}
+
+.podlove-location-tabs {
+    display: flex;
+    gap: 0;
+    border-bottom: 2px solid #0073aa;
+    margin-bottom: 16px;
+}
+
+.podlove-location-tab {
+    padding: 8px 16px;
+    background: #f1f1f1;
+    border: 1px solid #ddd;
+    border-bottom: none;
+    border-radius: 4px 4px 0 0;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    color: #555;
+    margin-right: 2px;
+    position: relative;
+    top: 2px;
+    transition: background-color 0.15s, color 0.15s;
+}
+
+.podlove-location-tab:hover {
+    background: #e5e5e5;
+    color: #23282d;
+}
+
+.podlove-location-tab.active {
+    background: #fff;
+    color: #0073aa;
+    border-color: #0073aa;
+    border-bottom: 2px solid #fff;
+}
+
+.podlove-location-tab-panel {
+    display: none;
+}
+
+.podlove-location-tab-panel.active {
+    display: block;
+}
+
+.podlove-location-tab-hint {
+    font-size: 13px;
+    color: #666;
+    font-style: italic;
+    margin: 0 0 12px;
+}
+
+.podlove-location-search-wrapper {
+    margin-bottom: 12px;
+}
+
+.podlove-location-search-wrapper label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.podlove-location-search-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.podlove-location-search-row input[type="text"] {
+    flex: 1;
+}
+
+.podlove-location-search-results {
+    position: relative;
+    z-index: 1000;
+}
+
+.podlove-location-results-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border: 1px solid #ddd;
+    border-top: none;
+    background: #fff;
+    max-height: 200px;
+    overflow-y: auto;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.podlove-location-result-item {
+    padding: 8px 12px;
+    cursor: pointer;
+    border-bottom: 1px solid #f0f0f0;
+    font-size: 13px;
+    line-height: 1.4;
+}
+
+.podlove-location-result-item:last-child {
+    border-bottom: none;
+}
+
+.podlove-location-result-item:hover {
+    background-color: #f0f7ff;
+    color: #0073aa;
+}
+
+.podlove-location-searching,
+.podlove-location-no-results,
+.podlove-location-error {
+    padding: 8px 12px;
+    font-size: 13px;
+    color: #666;
+    border: 1px solid #ddd;
+    border-top: none;
+    background: #fff;
+}
+
+.podlove-location-error {
+    color: #a00;
+}
+
+.podlove-location-map {
+    width: 100%;
+    height: 350px;
+    border: 1px solid #ddd;
+    margin-bottom: 12px;
+    z-index: 0;
+}
+
+.podlove-location-fields {
+    margin-top: 4px;
+}
+
+.podlove-location-field-row {
+    margin-bottom: 10px;
+}
+
+.podlove-location-field-row label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.podlove-location-coords-row,
+.podlove-location-extra-row {
+    display: flex;
+    gap: 16px;
+}
+
+.podlove-location-coord {
+    flex: 1;
+}
+
+.podlove-location-coord input[type="text"] {
+    width: 100%;
+    background-color: #f7f7f7;
+}
+
+.podlove-location-extra-row .podlove-location-coord input[type="text"] {
+    background-color: #fff;
+}
+
+.podlove-location-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 8px;
+}
+
+.podlove-location-clear-btn {
+    color: #a00 !important;
+    border-color: #a00 !important;
+    white-space: nowrap;
+}
+
+.podlove-location-clear-btn:hover {
+    background: #a00 !important;
+    color: #fff !important;
+    border-color: #a00 !important;
+}
+
+.podlove-location-hint {
+    font-size: 12px;
+    color: #666;
+    font-style: italic;
+    margin-top: 0;
+}
