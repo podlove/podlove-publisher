@@ -1,20 +1,9 @@
 <?php
 
-require_once 'vendor/autoload.php';
+use Podlove\Model\UserAgent;
 
-use PodlovePublisher_Vendor\DeviceDetector\DeviceDetector;
+$agent = new UserAgent();
+$agent->user_agent = trim($args[1]);
+$agent->parse();
 
-$userAgent = $argv[1];
-$dd = new DeviceDetector($userAgent);
-$dd->parse();
-
-if ($dd->isBot()) {
-    var_dump($botInfo = $dd->getBot());
-} else {
-    $clientInfo = $dd->getClient(); // holds information about browser, feed reader, media player, ...
-    $osInfo = $dd->getOs();
-    $device = $dd->getDevice();
-    $brand = $dd->getBrand();
-    $model = $dd->getModel();
-    var_dump($clientInfo, $osInfo, $device, $brand, $model);
-}
+print_r($agent);

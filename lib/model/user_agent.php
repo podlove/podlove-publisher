@@ -20,47 +20,46 @@ class UserAgent extends Base
      */
     public function parse()
     {
-        // parse with opawg
-        $data_file = \Podlove\PLUGIN_DIR.'data/opawg.json';
-        $data_raw = file_get_contents($data_file);
-        $user_agent_data = json_decode($data_raw);
-        $user_agent_data = apply_filters('podlove_useragent_opawg_data', $user_agent_data);
+        [
+            'bot' => $bot,
+            'client_name' => $client_name,
+            'type' => $type
+        ] = self::find_opawg_client($this->user_agent);
 
-        if (!$user_agent_data) {
-            error_log('[Podlove Publisher] OPAWG data file is invalid JSON');
+        if ($client_name != null) {
+            $this->bot = $bot;
+            $this->client_name = $client_name;
 
-            // fallback to DeviceDetector parser
-            return $this->parse_by_device_detector();
-        }
+            // if it's not a bot, find device
+            if (!$this->bot) {
+                [
+                    'device_category' => $device_category,
+                    'name' => $name
+                ] = self::find_opawg_device($this->user_agent);
 
-        $user_agent_string = $this->user_agent;
-
-        $user_agent_match = array_reduce($user_agent_data, function ($agg, $item) use ($user_agent_string) {
-            if ($agg !== null) {
-                return $agg;
+                $this->client_type = $device_category;
+                $this->device_model = $name;
             }
 
-            foreach ($item->user_agents as $regex) {
-                $compiled_regex = str_replace('/', '\/', $regex);
-                if (preg_match("/{$compiled_regex}/", $user_agent_string) === 1) {
-                    return $item;
+            $referer = filter_var($_SERVER['HTTP_REFERER'] ?? '', FILTER_VALIDATE_URL);
+
+            if ($type == 'browsers' && $referer !== false) {
+                ['name' => $referrer_name] = self::find_opawg_referrer($referer);
+
+                // I should probably save this separately, but let's be
+                // pragmatic and not write a database migration for now. I a
+                // user listens via Apple Podcasts on Safari, the interesting
+                // bit for the podcaster os the app/platform, not the browser.
+                // So let's override it for the moment.
+                if ($referrer_name) {
+                    $this->client_name = $referrer_name.' (Web)';
                 }
-            }
-
-            return $agg;
-        }, null);
-
-        if ($user_agent_match) {
-            $this->client_name = isset($user_agent_match->app) ? $user_agent_match->app : '';
-            $this->os_name = isset($user_agent_match->os) ? self::normalizeOS($user_agent_match->os) : '';
-
-            if (isset($user_agent_match->bot) && $user_agent_match->bot) {
-                $this->bot = 1;
             }
 
             return $this;
         }
 
+        // TODO: simplify, get rid of DeviceDetector
         // fallback to DeviceDetector parser
         return $this->parse_by_device_detector();
     }
@@ -100,6 +99,61 @@ class UserAgent extends Base
         ];
 
         return $map[trim(strtolower($os_name))] ?? $os_name;
+    }
+
+    private static function find_opawg_client($user_agent)
+    {
+        $types = ['bots', 'apps', 'libraries', 'browsers'];
+
+        foreach ($types as $type) {
+            $user_agent_data = self::read_opawg_file($type);
+            foreach ($user_agent_data->entries as $entry) {
+                $compiled_regex = str_replace('/', '\/', $entry->pattern);
+                if (preg_match("/{$compiled_regex}/", $user_agent) === 1) {
+                    return [
+                        'bot' => $type == 'bots',
+                        'client_name' => $entry->name,
+                        'type' => $type
+                    ];
+                }
+            }
+        }
+
+        return ['bot' => false, 'client_name' => null, 'type' => null];
+    }
+
+    private static function find_opawg_device($user_agent)
+    {
+        $user_agent_data = self::read_opawg_file('devices');
+        foreach ($user_agent_data->entries as $entry) {
+            $compiled_regex = str_replace('/', '\/', $entry->pattern);
+            if (preg_match("/{$compiled_regex}/", $user_agent) === 1) {
+                return ['device_category' => $entry->category, 'name' => $entry->name];
+            }
+        }
+
+        return ['device_category' => null, 'name' => null];
+    }
+
+    private static function find_opawg_referrer($referer)
+    {
+        $user_agent_data = self::read_opawg_file('referrers');
+        foreach ($user_agent_data->entries as $entry) {
+            $compiled_regex = str_replace('/', '\/', $entry->pattern);
+            if (preg_match("/{$compiled_regex}/", $referer) === 1) {
+                return ['name' => $entry->name];
+            }
+        }
+
+        return ['name' => null];
+    }
+
+    private static function read_opawg_file($name)
+    {
+        $data_file = \Podlove\PLUGIN_DIR.'data/'.$name.'.runtime.json';
+        $data_raw = file_get_contents($data_file);
+
+        return json_decode($data_raw);
     }
 
     private function parse_by_device_detector()
