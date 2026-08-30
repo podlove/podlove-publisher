@@ -1,0 +1,11 @@
+<phpunit
+	bootstrap="vendor/autoload.php"
+	backupGlobals="false"
+	colors="true">
+  <testsuites>
+    <testsuite name="unit">
+      <file>tests/color_sanitizer_test.php</file>
+      <file>tests/vtt_converter_test.php</file>
+    </testsuite>
+  </testsuites>
+</phpunit>

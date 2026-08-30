@@ -16,6 +16,7 @@ function* transcriptsSaga(): any {
   yield takeEvery(transcriptsStore.UPDATE_VOICE, updateVoice, apiClient)
   yield takeEvery(transcriptsStore.DELETE_TRANSCRIPTS, deleteTranscripts, apiClient)
   yield takeEvery(transcriptsStore.IMPORT_ASSET_TRANSCRIPTS, importTranscriptFromAsset, apiClient)
+  yield takeEvery(transcriptsStore.REFRESH, initialize, apiClient)
 }
 
 function* initialize(api: PodloveApiClient) {
