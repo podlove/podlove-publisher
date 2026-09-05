@@ -125,6 +125,12 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 4.5.7 =
+
+**Fixed**
+
+* Preserve WordPress translation data when loading the Vue admin components
+
 = 4.5.6 =
 
 **Security**

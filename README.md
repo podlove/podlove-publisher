@@ -161,3 +161,17 @@ The GitHub action detects the release via the tag, builds it and submits it to t
 
 ## License
 [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fpodlove%2Fpodlove-publisher.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fpodlove%2Fpodlove-publisher?ref=badge_large)
+
+### Local translations
+
+Setting the site language does not install a language pack for a development checkout
+named `podlove-publisher`. To test the official German translations, install the pack
+using the WordPress.org plugin slug:
+
+```sh
+npm run wp-env -- run cli wp language plugin install podlove-podcasting-plugin-for-wordpress de_DE
+```
+
+The pack contains both PHP translations and the JSON catalogue for `client/dist/client.js`.
+WordPress loads these using the site's language (or the administrator's profile language).
+No client rebuild is needed when installing or updating a language pack.
