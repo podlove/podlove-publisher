@@ -130,6 +130,8 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 **Fixed**
 
 * Prevent network podcast lists from being deleted when a single site is removed from a multisite network. Network-wide data is now only removed when the plugin itself is uninstalled from the network.
+* Re-create the network podcast list table when it is missing and show the database error when a podcast list cannot be saved, instead of silently dropping the list.
+* Add a media library button to the logo field of network podcast lists.
 
 = 4.5.6 =
 
