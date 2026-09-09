@@ -125,6 +125,12 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 4.5.7 =
+
+**Fixed**
+
+* Prevent network podcast lists from being deleted when a single site is removed from a multisite network. Network-wide data is now only removed when the plugin itself is uninstalled from the network.
+
 = 4.5.6 =
 
 **Security**

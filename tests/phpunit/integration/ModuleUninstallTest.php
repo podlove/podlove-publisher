@@ -73,7 +73,7 @@ class ModuleUninstallTest extends WP_UnitTestCase
         $this->assertFalse(\Podlove\Modules\AnalyticsHeartbeat\Model\Heartbeat::table_exists());
     }
 
-    public function testNetworksUninstallRemovesNetworkPodcastListTable()
+    public function testNetworksSiteUninstallKeepsNetworkPodcastListTable()
     {
         \Podlove\Modules\Networks\Model\PodcastList::with_network_scope(function () {
             \Podlove\Modules\Networks\Model\PodcastList::build();
@@ -81,7 +81,21 @@ class ModuleUninstallTest extends WP_UnitTestCase
 
         $this->assertTrue($this->networkPodcastListTableExists());
 
+        // per-site uninstall (e.g. when a site is deleted) must keep network-wide data
         \Podlove\Modules\Networks\Networks::instance()->uninstall();
+
+        $this->assertTrue($this->networkPodcastListTableExists());
+    }
+
+    public function testNetworksNetworkUninstallRemovesNetworkPodcastListTable()
+    {
+        \Podlove\Modules\Networks\Model\PodcastList::with_network_scope(function () {
+            \Podlove\Modules\Networks\Model\PodcastList::build();
+        });
+
+        $this->assertTrue($this->networkPodcastListTableExists());
+
+        \Podlove\Modules\Networks\Networks::instance()->uninstall_network();
 
         $this->assertFalse($this->networkPodcastListTableExists());
     }
