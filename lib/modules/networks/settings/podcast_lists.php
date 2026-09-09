@@ -340,12 +340,11 @@ class PodcastLists
                 'html' => ['rows' => 3, 'cols' => 40],
             ]);
 
-            $wrapper->image('logo', [
+            $wrapper->upload('logo', [
                 'label' => __('Logo', 'podlove-podcasting-plugin-for-wordpress'),
-                'description' => __('JPEG or PNG.', 'podlove-podcasting-plugin-for-wordpress'),
+                'description' => __('JPEG or PNG. Enter URL or select image from media library.', 'podlove-podcasting-plugin-for-wordpress'),
                 'html' => ['class' => 'regular-text'],
-                'image_width' => 300,
-                'image_height' => 300,
+                'media_button_text' => __('Use as Logo', 'podlove-podcasting-plugin-for-wordpress'),
             ]);
 
             $wrapper->string('url', [
