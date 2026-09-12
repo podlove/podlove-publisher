@@ -8,6 +8,7 @@ use Podlove\Modules\Networks\Model\PodcastList;
 class PodcastLists
 {
     public const MENU_SLUG = 'podlove_settings_list_handle';
+    private const SAVE_ERROR_TRANSIENT = 'podlove_network_list_save_error';
 
     public static $pagehook;
     private static $nonce = 'update_podcast_list';
@@ -42,6 +43,8 @@ class PodcastLists
             return;
         }
 
+        self::ensure_table();
+
         $action = (isset($_REQUEST['action'])) ? $_REQUEST['action'] : null;
 
         set_transient('podlove_needs_to_flush_rewrite_rules', true);
@@ -67,8 +70,27 @@ class PodcastLists
         );
     }
 
+    /**
+     * Make sure the network-wide list table exists.
+     *
+     * The table is created when the Networks module is activated. If it went
+     * missing since then, re-create it before working with lists instead of
+     * failing silently on every save.
+     */
+    public static function ensure_table()
+    {
+        PodcastList::with_network_scope(function () {
+            if (!PodcastList::table_exists()) {
+                PodcastList::build();
+            }
+        });
+    }
+
     public function page()
     {
+        self::ensure_table();
+        $this->render_save_error_notice();
+
         if (isset($_GET['action']) and $_GET['action'] == 'confirm_delete' and isset($_REQUEST['list'])) {
             PodcastList::activate_network_scope();
             $list = PodcastList::find_by_id($_REQUEST['list']);
@@ -128,8 +150,13 @@ class PodcastLists
         PodcastList::activate_network_scope();
         $list = PodcastList::find_by_id($_REQUEST['list']);
         $this->assign_form_data($list, $_POST['podlove_list']);
-        $list->save();
+        $saved = $list->save();
         PodcastList::deactivate_network_scope();
+
+        if ($saved === false) {
+            $this->remember_save_error();
+            $this->redirect('index');
+        }
 
         $this->redirect('index', $list->id);
     }
@@ -151,8 +178,12 @@ class PodcastLists
         PodcastList::activate_network_scope();
         $list = new PodcastList();
         $this->assign_form_data($list, $_POST['podlove_list']);
-        $list->save();
+        $saved = $list->save();
         PodcastList::deactivate_network_scope();
+
+        if ($saved === false) {
+            $this->remember_save_error();
+        }
 
         $this->redirect('index');
     }
@@ -171,6 +202,35 @@ class PodcastLists
         PodcastList::deactivate_network_scope();
 
         $this->redirect('index');
+    }
+
+    /**
+     * Remember why saving failed so the list page can show it after the redirect.
+     */
+    private function remember_save_error()
+    {
+        global $wpdb;
+
+        $error = $wpdb->last_error ?: __('Unknown database error.', 'podlove-podcasting-plugin-for-wordpress');
+
+        \Podlove\Log::get()->addError('Could not save network podcast list: '.$error, ['type' => 'networks']);
+
+        set_site_transient(self::SAVE_ERROR_TRANSIENT, $error, MINUTE_IN_SECONDS);
+    }
+
+    private function render_save_error_notice()
+    {
+        $error = get_site_transient(self::SAVE_ERROR_TRANSIENT);
+
+        if (!$error) {
+            return;
+        }
+
+        delete_site_transient(self::SAVE_ERROR_TRANSIENT); ?>
+		<div class="notice notice-error">
+			<p><?php echo esc_html(sprintf(__('The podcast list could not be saved: %s', 'podlove-podcasting-plugin-for-wordpress'), $error)); ?></p>
+		</div>
+		<?php
     }
 
     private function assign_form_data($list, $data)
@@ -280,12 +340,11 @@ class PodcastLists
                 'html' => ['rows' => 3, 'cols' => 40],
             ]);
 
-            $wrapper->image('logo', [
+            $wrapper->upload('logo', [
                 'label' => __('Logo', 'podlove-podcasting-plugin-for-wordpress'),
-                'description' => __('JPEG or PNG.', 'podlove-podcasting-plugin-for-wordpress'),
+                'description' => __('JPEG or PNG. Enter URL or select image from media library.', 'podlove-podcasting-plugin-for-wordpress'),
                 'html' => ['class' => 'regular-text'],
-                'image_width' => 300,
-                'image_height' => 300,
+                'media_button_text' => __('Use as Logo', 'podlove-podcasting-plugin-for-wordpress'),
             ]);
 
             $wrapper->string('url', [

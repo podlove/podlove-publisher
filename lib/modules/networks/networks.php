@@ -87,7 +87,12 @@ class Networks extends \Podlove\Modules\Base
         });
     }
 
-    public function uninstall()
+    /**
+     * Network podcast lists are shared across all sites of the network.
+     * They are only removed when the plugin is uninstalled network-wide,
+     * never when a single site is deleted or the plugin is uninstalled for one site.
+     */
+    public function uninstall_network()
     {
         PodcastList::with_network_scope(function () {
             PodcastList::destroy();

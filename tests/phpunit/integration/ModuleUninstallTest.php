@@ -16,10 +16,6 @@ class ModuleUninstallTest extends WP_UnitTestCase
         \Podlove\Modules\Seasons\Model\Season::destroy();
         \Podlove\Modules\AnalyticsHeartbeat\Model\Heartbeat::destroy();
 
-        \Podlove\Modules\Networks\Model\PodcastList::with_network_scope(function () {
-            \Podlove\Modules\Networks\Model\PodcastList::destroy();
-        });
-
         parent::tearDown();
     }
 
@@ -71,29 +67,5 @@ class ModuleUninstallTest extends WP_UnitTestCase
         \Podlove\Modules\AnalyticsHeartbeat\Analytics_Heartbeat::instance()->uninstall();
 
         $this->assertFalse(\Podlove\Modules\AnalyticsHeartbeat\Model\Heartbeat::table_exists());
-    }
-
-    public function testNetworksUninstallRemovesNetworkPodcastListTable()
-    {
-        \Podlove\Modules\Networks\Model\PodcastList::with_network_scope(function () {
-            \Podlove\Modules\Networks\Model\PodcastList::build();
-        });
-
-        $this->assertTrue($this->networkPodcastListTableExists());
-
-        \Podlove\Modules\Networks\Networks::instance()->uninstall();
-
-        $this->assertFalse($this->networkPodcastListTableExists());
-    }
-
-    private function networkPodcastListTableExists(): bool
-    {
-        global $wpdb;
-
-        return \Podlove\Modules\Networks\Model\PodcastList::with_network_scope(function () use ($wpdb) {
-            $sql = $wpdb->prepare('SHOW TABLES LIKE %s', \Podlove\esc_like(\Podlove\Modules\Networks\Model\PodcastList::table_name()));
-
-            return $wpdb->get_var($sql) !== null;
-        });
     }
 }

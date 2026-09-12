@@ -465,7 +465,7 @@ abstract class Base
     public static function table_exists()
     {
         global $wpdb;
-        $sql = $wpdb->prepare('SHOW TABLES LIKE %s', \Podlove\esc_like(self::table_name()));
+        $sql = $wpdb->prepare('SHOW TABLES LIKE %s', \Podlove\esc_like(static::table_name()));
 
         return $wpdb->get_var($sql) !== null;
     }

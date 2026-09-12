@@ -6,7 +6,7 @@ register_activation_hook(PLUGIN_FILE, __NAMESPACE__.'\activate');
 register_deactivation_hook(PLUGIN_FILE, __NAMESPACE__.'\deactivate');
 register_uninstall_hook(PLUGIN_FILE, __NAMESPACE__.'\uninstall');
 add_action('wpmu_new_blog', '\Podlove\create_new_blog', 10, 6);
-add_action('delete_blog', '\Podlove\delete_blog', 10, 2);
+add_action('wp_uninitialize_site', '\Podlove\uninitialize_site', 5);
 
 function activate_for_current_blog()
 {
@@ -48,15 +48,30 @@ function create_new_blog($blog_id, $user_id, $domain, $path, $site_id, $meta)
 }
 
 /**
- * Fires before a blog is deleted.
+ * Hook: A site is being removed from a multisite network.
  *
- * @param int  $blog_id the blog ID
- * @param bool $drop    true if blog's table should be dropped
+ * Removes the Podlove data of that site only. Data shared across the
+ * network, like network podcast lists, must never be touched here.
+ *
+ * Runs at priority 5 so that the site's tables still exist when WordPress
+ * core drops them at priority 10.
+ *
+ * @param \WP_Site $site the site being deleted
  */
-function delete_blog($blog_id, $drop)
+function uninitialize_site($site)
 {
-    if ($drop) {
-        uninstall_for_current_blog();
+    $blog_id = (int) $site->id;
+    $switched = false;
+
+    if (get_current_blog_id() !== $blog_id) {
+        switch_to_blog($blog_id);
+        $switched = true;
+    }
+
+    uninstall_for_current_blog();
+
+    if ($switched) {
+        restore_current_blog();
     }
 }
 
@@ -106,19 +121,41 @@ function uninstall()
     global $wpdb;
 
     if (is_multisite()) {
-        if (isset($_GET['networkwide']) && ($_GET['networkwide'] == 1)) {
-            $current_blog = $wpdb->blogid;
-            $blogids = $wpdb->get_col('SELECT blog_id FROM '.$wpdb->blogs);
-            foreach ($blogids as $blog_id) {
-                switch_to_blog($blog_id);
+        // Plugin deletion applies to the whole installation, including WP-CLI
+        // and requests without the legacy networkwide query parameter.
+        $blogids = $wpdb->get_col('SELECT blog_id FROM '.$wpdb->blogs);
+        foreach ($blogids as $blog_id) {
+            switch_to_blog($blog_id);
+
+            try {
                 uninstall_for_current_blog();
+            } finally {
+                restore_current_blog();
             }
-            switch_to_blog($current_blog);
-        } else {
-            uninstall_for_current_blog();
         }
+
+        uninstall_network_data();
     } else {
         uninstall_for_current_blog();
+    }
+}
+
+/**
+ * Remove data that is shared across all sites of a multisite network.
+ *
+ * Only called from the plugin uninstall hook. Deleting a single site or
+ * uninstalling for a single site must keep network-wide data intact.
+ */
+function uninstall_network_data()
+{
+    $modules = \Podlove\Modules\Base::get_all_module_names();
+
+    foreach ($modules as $module_name) {
+        $class = \Podlove\Modules\Base::get_class_by_module_name($module_name);
+
+        if (class_exists($class)) {
+            $class::instance()->uninstall_network();
+        }
     }
 }
 
