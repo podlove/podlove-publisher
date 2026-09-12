@@ -10,13 +10,34 @@ use Podlove\Modules\Networks\Settings\PodcastLists;
  */
 class NetworkPodcastListTableTest extends WP_UnitTestCase
 {
+    private $original_base_prefix;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        global $wpdb;
+        $this->original_base_prefix = $wpdb->base_prefix;
+        $wpdb->base_prefix = 'plt_'.substr(md5(uniqid('', true)), 0, 8).'_';
+
+        // SHOW TABLES cannot see temporary tables. Use a separate real table
+        // for these schema tests without touching an existing network's lists.
+        remove_filter('query', [$this, '_create_temporary_tables']);
+        remove_filter('query', [$this, '_drop_temporary_tables']);
+    }
+
     protected function tearDown(): void
     {
-        PodcastList::with_network_scope(function () {
-            PodcastList::destroy();
-        });
+        global $wpdb;
 
-        parent::tearDown();
+        try {
+            PodcastList::with_network_scope(function () {
+                PodcastList::destroy();
+            });
+        } finally {
+            $wpdb->base_prefix = $this->original_base_prefix;
+            parent::tearDown();
+        }
     }
 
     public function testEnsureTableRecreatesMissingNetworkTable()
@@ -51,6 +72,25 @@ class NetworkPodcastListTableTest extends WP_UnitTestCase
 
         $this->assertNotNull($list);
         $this->assertEquals('Example', $list->title);
+    }
+
+    public function testSiteUninstallKeepsNetworkPodcastListTable()
+    {
+        PodcastLists::ensure_table();
+
+        \Podlove\Modules\Networks\Networks::instance()->uninstall();
+
+        $this->assertTrue($this->tableExists());
+    }
+
+    public function testNetworkUninstallRemovesNetworkPodcastListTable()
+    {
+        PodcastLists::ensure_table();
+        $this->assertTrue($this->tableExists());
+
+        \Podlove\Modules\Networks\Networks::instance()->uninstall_network();
+
+        $this->assertFalse($this->tableExists());
     }
 
     private function tableExists(): bool
