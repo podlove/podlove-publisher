@@ -177,31 +177,31 @@ class Auphonic extends \Podlove\Modules\Base
             return;
         }
 
-        if ($_POST['status_string'] !== 'Done') {
+        $post_id = filter_var($_REQUEST['podlove-auphonic-production'], FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
+        if ($post_id === false) {
+            return;
+        }
+
+        $webhook_config = \get_post_meta($post_id, 'auphonic_webhook_config', true);
+        if (!is_array($webhook_config)
+            || empty($webhook_config['authkey'])
+            || !is_string($webhook_config['authkey'])
+            || !isset($_REQUEST['authkey'])
+            || !is_string($_REQUEST['authkey'])
+            || !hash_equals($webhook_config['authkey'], $_REQUEST['authkey'])) {
+            return;
+        }
+
+        if (($_POST['status_string'] ?? null) !== 'Done') {
             \Podlove\Log::get()->addError(
                 'Auphonic webhook failed.',
-                ['data' => $_POST]
+                self::failure_log_context($post_id, $_POST)
             );
 
             exit;
         }
 
-        $post_id = (int) $_REQUEST['podlove-auphonic-production'];
-        $webhook_config = \get_post_meta($post_id, 'auphonic_webhook_config', true);
-
-        [
-            'authkey' => $authkey,
-            'enabled' => $enabled
-        ] = $webhook_config;
-
-        if ($_REQUEST['authkey'] !== $authkey) {
-            \Podlove\Log::get()->addWarning(
-                'Auphonic webhook failed. AuthKey mismatch.',
-                ['post_id' => $post_id]
-            );
-
-            return;
-        }
+        $enabled = $webhook_config['enabled'] ?? false;
 
         $this->update_production_data($post_id);
 
@@ -585,6 +585,19 @@ class Auphonic extends \Podlove\Modules\Base
             $this->clear_auphonic_cache();
             header('Location: '.get_site_url().'/wp-admin/admin.php?page=podlove_settings_modules_handle');
         }
+    }
+
+    private static function failure_log_context(int $post_id, array $post_data): array
+    {
+        $context = ['post_id' => $post_id];
+
+        foreach (['status_string', 'uuid'] as $field) {
+            if (isset($post_data[$field]) && is_string($post_data[$field])) {
+                $context[$field] = sanitize_text_field(wp_unslash($post_data[$field]));
+            }
+        }
+
+        return $context;
     }
 
     private function get_authorization_description()

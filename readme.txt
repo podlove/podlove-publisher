@@ -127,6 +127,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 = 4.5.7 =
 
+**Security**
+
+* Authenticate Auphonic webhooks before logging a limited failure summary and escape saved log entries on the Support page.
+
 **Fixed**
 
 * Preserve WordPress translation data when loading the Vue admin components
