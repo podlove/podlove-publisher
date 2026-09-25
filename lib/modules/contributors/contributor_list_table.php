@@ -50,7 +50,7 @@ class Contributor_List_Table extends \Podlove\List_Table
     public function column_gender($contributor)
     {
         if ($contributor->gender == 'none' || is_null($contributor->gender)) {
-            return 'Not set';
+            return __('Not set', 'podlove-podcasting-plugin-for-wordpress');
         }
 
         return ucfirst($contributor->gender);

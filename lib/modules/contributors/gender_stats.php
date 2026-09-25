@@ -98,7 +98,7 @@ class GenderStats
 			<td>
 				<?php
                 echo implode(', ', array_map(function ($percent, $gender) use ($podcasts_with_contributors_active) {
-                    return round($percent / $podcasts_with_contributors_active).'% '.($gender == 'none' ? 'not attributed' : $gender);
+                    return round($percent / $podcasts_with_contributors_active).'% '.($gender == 'none' ? __('not attributed', 'podlove-podcasting-plugin-for-wordpress') : $gender);
                 }, $relative_gender_numbers, array_keys($relative_gender_numbers))); ?>
 			</td>
 		</tr>

@@ -6,9 +6,17 @@ use Podlove\Modules\Onboarding\Settings\OnboardingPage;
 
 class Onboarding extends \Podlove\Modules\Base
 {
-    protected $module_name = 'Onboarding';
-    protected $module_description = 'Handling the onboarding to the Podlove Publisher';
     protected $module_group = 'system';
+
+    public function get_module_name()
+    {
+        return __('Onboarding', 'podlove-podcasting-plugin-for-wordpress');
+    }
+
+    public function get_module_description()
+    {
+        return __('Handling the onboarding to the Podlove Publisher', 'podlove-podcasting-plugin-for-wordpress');
+    }
 
     public function load()
     {

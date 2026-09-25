@@ -6,9 +6,17 @@ use Podlove\Model;
 
 class Subscribe_Button extends \Podlove\Modules\Base
 {
-    protected $module_name = 'Subscribe Button';
-    protected $module_description = 'Use <code title="Shortcode for the Subscribe Button">[podlove-podcast-subscribe-button]</code> to display a button which allows users to easily subscribe to your podcast. <a href="https://docs.podlove.org/podlove-publisher/reference/shortcodes/#subscribe-button">Documentation</a>';
     protected $module_group = 'web publishing';
+
+    public function get_module_name()
+    {
+        return __('Subscribe Button', 'podlove-podcasting-plugin-for-wordpress');
+    }
+
+    public function get_module_description()
+    {
+        return __('Use <code title="Shortcode for the Subscribe Button">[podlove-podcast-subscribe-button]</code> to display a button which allows users to easily subscribe to your podcast. <a href="https://docs.podlove.org/podlove-publisher/reference/shortcodes/#subscribe-button">Documentation</a>', 'podlove-podcasting-plugin-for-wordpress');
+    }
 
     public static function styles()
     {

@@ -12,9 +12,17 @@ use Podlove\Webvtt\ParserException;
 
 class Transcripts extends \Podlove\Modules\Base
 {
-    protected $module_name = 'Transcripts';
-    protected $module_description = 'Manage transcripts, show them on your site and in the web player.';
     protected $module_group = 'metadata';
+
+    public function get_module_name()
+    {
+        return __('Transcripts', 'podlove-podcasting-plugin-for-wordpress');
+    }
+
+    public function get_module_description()
+    {
+        return __('Manage transcripts, show them on your site and in the web player.', 'podlove-podcasting-plugin-for-wordpress');
+    }
 
     public function load()
     {

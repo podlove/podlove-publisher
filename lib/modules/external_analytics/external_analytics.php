@@ -4,9 +4,17 @@ namespace Podlove\Modules\ExternalAnalytics;
 
 class External_Analytics extends \Podlove\Modules\Base
 {
-    protected $module_name = 'External Analytics';
-    protected $module_description = 'Add an external analytics service, e.g. OP3, Podtrac, Blubrry, etc.';
     protected $module_group = 'external services';
+
+    public function get_module_name()
+    {
+        return __('External Analytics', 'podlove-podcasting-plugin-for-wordpress');
+    }
+
+    public function get_module_description()
+    {
+        return __('Add an external analytics service, e.g. OP3, Podtrac, Blubrry, etc.', 'podlove-podcasting-plugin-for-wordpress');
+    }
 
     public function load()
     {

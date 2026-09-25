@@ -249,7 +249,7 @@ class SettingsTab extends Tab
                 </div>
 
                 <p>
-                    <input type="button" name="add_always_send_to" id="add_always_send_to" class="button" value="Add another Contributor">
+                    <input type="button" name="add_always_send_to" id="add_always_send_to" class="button" value="<?php echo esc_attr__('Add another Contributor', 'podlove-podcasting-plugin-for-wordpress'); ?>">
                 </p>
 
                 <template id="contributor_selector">

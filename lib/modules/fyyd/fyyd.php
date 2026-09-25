@@ -4,9 +4,17 @@ namespace Podlove\Modules\fyyd;
 
 class fyyd extends \Podlove\Modules\Base
 {
-    protected $module_name = 'fyyd';
-    protected $module_description = 'Inserts a verification code into your feeds for the fyyd search engine.';
     protected $module_group = 'Podcast Directories';
+
+    public function get_module_name()
+    {
+        return __('fyyd', 'podlove-podcasting-plugin-for-wordpress');
+    }
+
+    public function get_module_description()
+    {
+        return __('Inserts a verification code into your feeds for the fyyd search engine.', 'podlove-podcasting-plugin-for-wordpress');
+    }
 
     public function load()
     {

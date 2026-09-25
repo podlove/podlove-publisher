@@ -1,3 +1,4 @@
+import { __, sprintf } from '../plugins/translations'
 import { createAction, handleActions } from 'redux-actions'
 
 export type Service = {
@@ -267,7 +268,7 @@ export const reducer = handleActions(
       }
     },
     [ADD_TRACK]: (state: State, action: any): State => {
-      const id = `Track ${state.tracks.length + 1}`
+      const id = sprintf(__('Track %d', 'podlove-podcasting-plugin-for-wordpress'), state.tracks.length + 1)
 
       return {
         ...state,

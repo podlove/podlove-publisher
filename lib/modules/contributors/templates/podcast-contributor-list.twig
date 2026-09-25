@@ -55,7 +55,7 @@ var items = $("li", this);
 
 if (items.length > 5) {
 $("li:gt(4)", this).hide();
-$('<span class="show-all-episodes"><a href="#">… show all episodes</a><span>').insertAfter($("ul", this));
+$('<span class="show-all-episodes"><a href="#">{{ __('… show all episodes', 'podlove-podcasting-plugin-for-wordpress')|e('html')|e('js') }}</a><span>').insertAfter($("ul", this));
 }
 });
 

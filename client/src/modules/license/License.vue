@@ -20,6 +20,7 @@
 </template>
 
 <script lang="ts">
+import { __ } from '../../plugins/translations'
 import { PropType, defineComponent } from 'vue'
 
 import Module from '@components/module/Module.vue'
@@ -50,7 +51,7 @@ export default defineComponent({
       return this.scope === PodloveLicenseScope.Episode ? true : false
     },
     getModuleTitle(): string {
-      return this.scope === PodloveLicenseScope.Episode ? "Episode License" : "Podcast License"
+      return this.scope === PodloveLicenseScope.Episode ? __('Episode License', 'podlove-podcasting-plugin-for-wordpress') : __('Podcast License', 'podlove-podcasting-plugin-for-wordpress')
     }
   }
 })

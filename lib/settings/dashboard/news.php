@@ -11,7 +11,7 @@ class News
             'podlove' => [
                 'link' => 'https://podlove.org/',
                 'url' => 'https://podlove.org/feed/',
-                'title' => 'Podlove News',
+                'title' => __('Podlove News', 'podlove-podcasting-plugin-for-wordpress'),
                 'items' => 5,
                 'show_summary' => 1,
                 'show_author' => 0,

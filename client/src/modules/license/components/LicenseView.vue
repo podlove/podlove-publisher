@@ -1,7 +1,7 @@
 <template>
   <div class="mt-3">
     <div class="mb-3 text-sm font-medium text-gray-700">
-      License preview:
+      {{ __('License preview:', 'podlove-podcasting-plugin-for-wordpress') }}
     </div>
     <div v-if="isImageAvailable">
       <div>
@@ -11,19 +11,22 @@
         </div>
       </div>
       <div class="mb-3 w-full text-center">
-        <p class="text-sm font-medium text-gray-700">This work is licensend under </p>
-        <a class="text-sm font-medium text-gray-700"
-          :href="`${licenseUrl}`">{{ licenseUrl }}</a>
+        <p class="text-sm font-medium text-gray-700">
+          <template v-for="(part, index) in licenseSentence" :key="index">
+            {{ part }}<a v-if="index === 0" :href="licenseUrl || undefined">{{ licenseUrl }}</a>
+          </template>
+        </p>
       </div>
     </div>
     <div v-if="!isImageAvailable">
-      <p class="text-sm font-medium text-gray-700">No license selected!</p>
+      <p class="text-sm font-medium text-gray-700">{{ __('No license selected!', 'podlove-podcasting-plugin-for-wordpress') }}</p>
     </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
+import { __ } from '../../../plugins/translations'
 import { defineComponent } from 'vue'
 import { selectors } from '@store'
 import { injectAppDispatch, mapAppState } from '@store/vue'
@@ -59,6 +62,9 @@ export default defineComponent({
   },
 
   computed: {
+    licenseSentence(): string[] {
+      return __('This work is licensed under %s.', 'podlove-podcasting-plugin-for-wordpress').split('%s')
+    },
     licenseUrl() : string | null {
       return getLicenseUrl(this.licenseData)
     },

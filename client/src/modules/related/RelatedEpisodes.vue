@@ -3,7 +3,7 @@
     <div class="p-3">
       <div>
         <PodloveListbox
-          placeholder="Select episode"
+          :placeholder="__('Select episode', 'podlove-podcasting-plugin-for-wordpress')"
           :options="fullEpisodeList"
           :selectValues="state.selectEpisodes"
           @update = "updateRelEpisodes($event)"
@@ -24,6 +24,7 @@
 </template>
 
 <script lang="ts">
+import { __ } from '../../plugins/translations'
 import { defineComponent } from 'vue';
 
 import { selectors } from '@store'
@@ -66,11 +67,11 @@ export default defineComponent({
       if (this.episodeOptions.length == 0)
         return this.episodeOptions
       if (this.state.selectEpisodes.length == 0) {
-        const selectAllEpisodes = { id: 0, title: "Select all episodes"}
+        const selectAllEpisodes = { id: 0, title: __('Select all episodes', 'podlove-podcasting-plugin-for-wordpress')}
         return [selectAllEpisodes, ...this.episodeOptions]
       }
       else {
-        const selectAllEpisodes = { id: -1, title: "Deselect all episodes"}
+        const selectAllEpisodes = { id: -1, title: __('Deselect all episodes', 'podlove-podcasting-plugin-for-wordpress')}
         return [selectAllEpisodes, ...this.episodeOptions]
       }
     },

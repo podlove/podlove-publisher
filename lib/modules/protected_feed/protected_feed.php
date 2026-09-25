@@ -4,9 +4,17 @@ namespace Podlove\Modules\ProtectedFeed;
 
 class Protected_Feed extends \Podlove\Modules\Base
 {
-    protected $module_name = 'Protected Feeds';
-    protected $module_description = 'Protect feeds using HTTP Basic Authentication or require login credentials from WordPress. Warning: few clients support feed authentication.';
     protected $module_group = 'web publishing';
+
+    public function get_module_name()
+    {
+        return __('Protected Feeds', 'podlove-podcasting-plugin-for-wordpress');
+    }
+
+    public function get_module_description()
+    {
+        return __('Protect feeds using HTTP Basic Authentication or require login credentials from WordPress. Warning: few clients support feed authentication.', 'podlove-podcasting-plugin-for-wordpress');
+    }
 
     public function load()
     {
@@ -90,8 +98,8 @@ class Protected_Feed extends \Podlove\Modules\Base
             'label' => __('Method', 'podlove-podcasting-plugin-for-wordpress'),
             'description' => __('', 'podlove-podcasting-plugin-for-wordpress'),
             'options' => [
-                '0' => 'Custom Login',
-                '1' => 'WordPress User database',
+                '0' => __('Custom Login', 'podlove-podcasting-plugin-for-wordpress'),
+                '1' => __('WordPress User database', 'podlove-podcasting-plugin-for-wordpress'),
             ],
             'default' => -1,
             'please_choose' => true,

@@ -44,7 +44,7 @@
     <div class="mt-4 overflow-hidden rounded-lg bg-white shadow" v-if="visibleEntries.length > 0">
       <div class="p-6">
         <div>
-          <h3 class="text-lg font-medium leading-6 text-gray-900">Import Metadata</h3>
+          <h3 class="text-lg font-medium leading-6 text-gray-900">{{ __('Import Metadata', 'podlove-podcasting-plugin-for-wordpress') }}</h3>
           <p class="mt-1 text-sm text-gray-500">
             {{ __('These values from your Auphonic Production differ from your local values:', 'podlove-podcasting-plugin-for-wordpress') }}
           </p>
@@ -57,7 +57,7 @@
                 <div class="min-w-0 flex-1">
                   <p class="truncate text-sm text-gray-500">
                     <!-- TODO: needs better translation support, see https://github.com/podlove/podlove-publisher/issues/1337 -->
-                    <em>{{ entry.title }}</em> {{ __('in the Auphonic Production is:', 'podlove-podcasting-plugin-for-wordpress') }}
+                    <em>{{ entry.label }}</em> {{ __('in the Auphonic Production is:', 'podlove-podcasting-plugin-for-wordpress') }}
                   </p>
                   <p class="truncate text-sm font-medium text-gray-900">
                     {{ renderEntryPreview(entry) }}
@@ -67,7 +67,7 @@
                   <button
                     @click.prevent="importMeta(entry.title, entry.there)"
                     class="inline-flex items-center rounded-full border border-gray-300 bg-white px-2.5 py-0.5 text-sm font-medium leading-5 text-gray-700 shadow-sm hover:bg-gray-50"
-                    aria-label="Import from Auphonic"
+                    :aria-label="__('Import from Auphonic', 'podlove-podcasting-plugin-for-wordpress')"
                   >
                     <!-- TODO: needs better translation support, see https://github.com/podlove/podlove-publisher/issues/1337 -->
                     {{ __('Import', 'podlove-podcasting-plugin-for-wordpress')
@@ -95,6 +95,7 @@
 </template>
 
 <script lang="ts">
+import { __ } from '../../../../plugins/translations'
 import { defineComponent } from 'vue'
 import { selectors } from '@store'
 import { AuphonicChapter, Production } from '@store/auphonic.store'
@@ -118,6 +119,7 @@ import PlusTransferStatus from './PlusTransferStatus.vue'
 type Entry = {
   key: number
   title: string
+  label: string
   here: any
   there: any
 }
@@ -259,26 +261,26 @@ export default defineComponent({
       }
 
       return [
-        { key: 1, title: 'title', here: state.title, there: production.metadata.title },
-        { key: 2, title: 'subtitle', here: state.subtitle, there: production.metadata.subtitle },
-        { key: 3, title: 'summary', here: state.summary, there: production.metadata.summary },
+        { key: 1, title: 'title', label: __('Title', 'podlove-podcasting-plugin-for-wordpress'), here: state.title, there: production.metadata.title },
+        { key: 2, title: 'subtitle', label: __('Subtitle', 'podlove-podcasting-plugin-for-wordpress'), here: state.subtitle, there: production.metadata.subtitle },
+        { key: 3, title: 'summary', label: __('Summary', 'podlove-podcasting-plugin-for-wordpress'), here: state.summary, there: production.metadata.summary },
         // { key: 4, title: 'tags', here: 'todo', there: production.metadata.tags.join(' , ') },
         {
           key: 5,
-          title: 'license_name',
+          title: 'license_name', label: __('License name', 'podlove-podcasting-plugin-for-wordpress'),
           here: state.license_name,
           there: production.metadata.license,
         },
         {
           key: 6,
-          title: 'license_url',
+          title: 'license_url', label: __('License URL', 'podlove-podcasting-plugin-for-wordpress'),
           here: state.license_url,
           there: production.metadata.license_url,
         },
         // { key: 7, title: 'image', here: 'todo', there: production.image },
         // { key: 8, title: 'duration', here: state.duration, there: production.length_timestring },
-        { key: 9, title: 'slug', here: state.slug, there: production.output_basename },
-        { key: 10, title: 'chapters', here: state.chapters, there: production.chapters },
+        { key: 9, title: 'slug', label: __('Slug', 'podlove-podcasting-plugin-for-wordpress'), here: state.slug, there: production.output_basename },
+        { key: 10, title: 'chapters', label: __('Chapters', 'podlove-podcasting-plugin-for-wordpress'), here: state.chapters, there: production.chapters },
       ]
     },
     visibleEntries(): Entry[] {

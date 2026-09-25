@@ -1,14 +1,14 @@
 <template>
     <div>
 
-        <h4>Running</h4>
+        <h4>{{ __('Running', 'podlove-podcasting-plugin-for-wordpress') }}</h4>
         <table class="widefat striped">
             <thead>
                 <tr>
-                    <th>Job Name</th>
-                    <th style="width: 175px">Progress</th>
-                    <th>Created</th>
-                    <th>Last Progress</th>
+                    <th>{{ __('Job Name', 'podlove-podcasting-plugin-for-wordpress') }}</th>
+                    <th style="width: 175px">{{ __('Progress', 'podlove-podcasting-plugin-for-wordpress') }}</th>
+                    <th>{{ __('Created', 'podlove-podcasting-plugin-for-wordpress') }}</th>
+                    <th>{{ __('Last Progress', 'podlove-podcasting-plugin-for-wordpress') }}</th>
                     <th style="width: 60px"></th>
                 </tr>
             </thead>
@@ -29,20 +29,20 @@
                             <i class="podlove-icon-spinner rotate"></i>
                         </div>
                         <div v-else>
-                            <button class="button" @click="abortJob(job)">abort</button>
+                            <button class="button" @click="abortJob(job)">{{ __('abort', 'podlove-podcasting-plugin-for-wordpress') }}</button>
                         </div>
                     </td>
                 </tr>
             </tbody>
         </table>
 
-        <h4>Recently Finished</h4>
+        <h4>{{ __('Recently Finished', 'podlove-podcasting-plugin-for-wordpress') }}</h4>
         <table class="widefat striped">
             <thead>
                 <tr>
-                    <th>Job Name</th>
-                    <th>Finished</th>
-                    <th>Duration</th>
+                    <th>{{ __('Job Name', 'podlove-podcasting-plugin-for-wordpress') }}</th>
+                    <th>{{ __('Finished', 'podlove-podcasting-plugin-for-wordpress') }}</th>
+                    <th>{{ __('Duration', 'podlove-podcasting-plugin-for-wordpress') }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -55,7 +55,7 @@
                         {{ job.last_progress }}
                     </td>
                     <td>
-                        {{ job.active_run_time }} seconds
+                        {{ sprintf(_n('%d second', '%d seconds', job.active_run_time, 'podlove-podcasting-plugin-for-wordpress'), job.active_run_time) }}
                     </td>
                 </tr>
             </tbody>
@@ -74,6 +74,9 @@ export default {
     },
 
     methods: {
+        __: wp.i18n.__,
+        _n: wp.i18n._n,
+        sprintf: wp.i18n.sprintf,
         fetchJobData() {
             $.getJSON(ajaxurl, {
                 action: 'podlove-jobs-get'
@@ -105,7 +108,7 @@ export default {
                 }
             }).fail(() => {
                 this.aborting = this.aborting.filter((id) => id !== job.id)
-                window.alert('The job could not be aborted. Please reload the page and try again.')
+                window.alert(wp.i18n.__('The job could not be aborted. Please reload the page and try again.', 'podlove-podcasting-plugin-for-wordpress'))
             })
         },
         isAborting(job) {

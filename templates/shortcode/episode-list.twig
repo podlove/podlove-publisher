@@ -1,9 +1,9 @@
 <table>
     <thead>
         <th></th>
-        <th>Date</th>
-        <th>Title</th>
-        <th>Duration</th>
+        <th>{{ __('Date', 'podlove-podcasting-plugin-for-wordpress')|e('html') }}</th>
+        <th>{{ __('Title', 'podlove-podcasting-plugin-for-wordpress')|e('html') }}</th>
+        <th>{{ __('Duration', 'podlove-podcasting-plugin-for-wordpress')|e('html') }}</th>
     </thead>
     <tbody>
     {% for episode in podcast.episodes %}

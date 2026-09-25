@@ -9,9 +9,17 @@ use Symfony\Component\Yaml\Yaml;
 
 class Social extends \Podlove\Modules\Base
 {
-    protected $module_name = 'Social & Donations';
-    protected $module_description = 'Manage social media accounts and donations.';
     protected $module_group = 'metadata';
+
+    public function get_module_name()
+    {
+        return __('Social & Donations', 'podlove-podcasting-plugin-for-wordpress');
+    }
+
+    public function get_module_description()
+    {
+        return __('Manage social media accounts and donations.', 'podlove-podcasting-plugin-for-wordpress');
+    }
 
     public function load()
     {

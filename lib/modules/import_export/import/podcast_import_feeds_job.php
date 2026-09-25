@@ -14,12 +14,12 @@ class PodcastImportFeedsJob
 
     public static function title()
     {
-        return 'Podcast Import: Feeds';
+        return __('Podcast Import: Feeds', 'podlove-podcasting-plugin-for-wordpress');
     }
 
     public static function description()
     {
-        return 'Imports Podcast Feeds';
+        return __('Imports Podcast Feeds', 'podlove-podcasting-plugin-for-wordpress');
     }
 
     protected static function get_import_table_class()

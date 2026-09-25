@@ -11,11 +11,11 @@ var PODLOVE = PODLOVE || {}
 
     $('#_podlove_meta_subtitle').count_characters({
       limit: 255,
-      title: 'recommended maximum length: 255',
+      title: wp.i18n.__('recommended maximum length: 255', 'podlove-podcasting-plugin-for-wordpress'),
     })
     $('#_podlove_meta_summary').count_characters({
       limit: 4000,
-      title: 'recommended maximum length: 4000',
+      title: wp.i18n.__('recommended maximum length: 4000', 'podlove-podcasting-plugin-for-wordpress'),
     })
 
     $(document).on('click', '.subtitle_warning .close', function () {
@@ -29,7 +29,7 @@ var PODLOVE = PODLOVE || {}
 
         if (!$('.subtitle_warning').length) {
           $(this).after(
-            '<span class="subtitle_warning">The subtitle has to be a single line. <span class="close">(hide)</span></span>'
+            jQuery('<span class="subtitle_warning">').text(wp.i18n.__('The subtitle has to be a single line.', 'podlove-podcasting-plugin-for-wordpress') + ' ').append(jQuery('<span class="close">').text(wp.i18n.__('(hide)', 'podlove-podcasting-plugin-for-wordpress')))
           )
         }
 

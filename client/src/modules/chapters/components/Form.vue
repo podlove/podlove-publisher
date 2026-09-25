@@ -55,7 +55,7 @@
         </div>
         <div class="mb-5">
           <label for="chapter-href" class="block text-sm font-medium text-gray-700"
-            >Url <span class="text-xs">{{ __('(optional)', 'podlove-podcasting-plugin-for-wordpress') }}</span></label
+            >{{ __('Url', 'podlove-podcasting-plugin-for-wordpress') }} <span class="text-xs">{{ __('(optional)', 'podlove-podcasting-plugin-for-wordpress') }}</span></label
           >
           <div class="mt-1">
             <input
@@ -129,6 +129,7 @@
 </template>
 
 <script lang="ts">
+import { __ } from '../../../plugins/translations'
 import { defineComponent, nextTick } from 'vue'
 import Timestamp from '@lib/timestamp'
 import { get } from 'lodash'
@@ -196,7 +197,7 @@ export default defineComponent({
           }
 
           const duration: string =
-            durationMs <= 0 ? 'Unknown' : new Timestamp(durationMs).prettyShort
+            durationMs <= 0 ? __('Unknown', 'podlove-podcasting-plugin-for-wordpress') : new Timestamp(durationMs).prettyShort
 
           return [
             ...result,

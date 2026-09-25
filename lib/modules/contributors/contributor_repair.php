@@ -14,7 +14,7 @@ class ContributorRepair
 
     public static function description($descriptions)
     {
-        return array_merge($descriptions, ['<strong>removes duplicate contributions</strong> if you have any']);
+        return array_merge($descriptions, [sprintf(__('%sremoves duplicate contributions%s if you have any', 'podlove-podcasting-plugin-for-wordpress'), '<strong>', '</strong>')]);
     }
 
     public static function fix_duplicate_contributions()

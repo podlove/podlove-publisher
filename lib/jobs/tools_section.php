@@ -22,14 +22,14 @@ class ToolsSection
 
         $activities = [
             'worker' => [
-                'title' => 'Worker Activity',
+                'title' => __('Worker Activity', 'podlove-podcasting-plugin-for-wordpress'),
                 'activity' => get_transient('podlove_jobs_last_spawn_worker'),
-                'description' => 'Should not be more than two or three minutes.',
+                'description' => __('Should not be more than two or three minutes.', 'podlove-podcasting-plugin-for-wordpress'),
             ],
             'runner' => [
-                'title' => 'Runner Activity',
+                'title' => __('Runner Activity', 'podlove-podcasting-plugin-for-wordpress'),
                 'activity' => get_transient('podlove_jobs_last_spawn_runner'),
-                'description' => 'May be inactive if no jobs are running. If at least one job is running, should not be more than two or three minutes.',
+                'description' => __('May be inactive if no jobs are running. If at least one job is running, should not be more than two or three minutes.', 'podlove-podcasting-plugin-for-wordpress'),
             ],
         ];
 
@@ -38,7 +38,7 @@ class ToolsSection
             echo $activity['title'].': ';
 
             if (!$activity['activity']) {
-                echo 'Not in the last hour.';
+                echo __('Not in the last hour.', 'podlove-podcasting-plugin-for-wordpress');
             } else {
                 $seconds = time() - $activity['activity'];
                 if ($seconds === 0) {

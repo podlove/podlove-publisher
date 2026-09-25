@@ -31,7 +31,7 @@
                 label.text( progressbar.progressbar("value") + "%" );
             },
             complete: function() {
-                label.text("Complete!");
+                label.text(wp.i18n.__('Complete!', 'podlove-podcasting-plugin-for-wordpress'));
             }
         });
 

@@ -18,12 +18,12 @@ class TrackingImporterJob
 
     public static function title()
     {
-        return 'Podcast Tracking Importer';
+        return __('Podcast Tracking Importer', 'podlove-podcasting-plugin-for-wordpress');
     }
 
     public static function description()
     {
-        return 'Imports Podcast Analytics';
+        return __('Imports Podcast Analytics', 'podlove-podcasting-plugin-for-wordpress');
     }
 
     public function recalculate_analytics()

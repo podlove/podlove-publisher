@@ -492,7 +492,7 @@ class Feed
 
             $podcast_settings = get_option('podlove_podcast');
             if ($podcast_settings['limit_items'] < 0) {
-                $limit_default = 'No limit';
+                $limit_default = __('No limit', 'podlove-podcasting-plugin-for-wordpress');
             } else {
                 $limit_default = $podcast_settings['limit_items'];
             }

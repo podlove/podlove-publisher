@@ -6,9 +6,17 @@ use Podlove\DomDocumentFragment;
 
 class oembed extends \Podlove\Modules\Base
 {
-    protected $module_name = 'oEmbed Support';
-    protected $module_description = 'Allows an embedded representation of a URL on third party sites.';
     protected $module_group = 'metadata';
+
+    public function get_module_name()
+    {
+        return __('oEmbed Support', 'podlove-podcasting-plugin-for-wordpress');
+    }
+
+    public function get_module_description()
+    {
+        return __('Allows an embedded representation of a URL on third party sites.', 'podlove-podcasting-plugin-for-wordpress');
+    }
 
     public function load()
     {

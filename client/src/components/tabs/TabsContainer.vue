@@ -2,7 +2,7 @@
   <div>
     <div class="block">
       <div class="border-b border-gray-200">
-        <nav class="-mb-px flex space-x-8 mx-2" aria-label="Tabs">
+        <nav class="-mb-px flex space-x-8 mx-2" :aria-label="__('Tabs', 'podlove-podcasting-plugin-for-wordpress')">
           <button
             v-for="tab in tabs"
             @click="toggleTab(tab.name)"

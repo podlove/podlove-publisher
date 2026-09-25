@@ -71,10 +71,10 @@
                 <!-- Progress Status -->
                 <div class="flex justify-between items-center mt-1">
                   <p class="text-xs text-gray-500">
-                    <span v-if="getUploadStatus(fileInfo.file.name) == 'init'">Ready to upload</span>
-                    <span v-else-if="getUploadStatus(fileInfo.file.name) == 'in_progress'">Uploading...</span>
-                    <span v-else-if="getUploadStatus(fileInfo.file.name) == 'finished'">Done!</span>
-                    <span v-else-if="getUploadStatus(fileInfo.file.name) == 'error'">Error: {{ getUploadMessage(fileInfo.file.name) }}</span>
+                    <span v-if="getUploadStatus(fileInfo.file.name) == 'init'">{{ __('Ready to upload', 'podlove-podcasting-plugin-for-wordpress') }}</span>
+                    <span v-else-if="getUploadStatus(fileInfo.file.name) == 'in_progress'">{{ __('Uploading...', 'podlove-podcasting-plugin-for-wordpress') }}</span>
+                    <span v-else-if="getUploadStatus(fileInfo.file.name) == 'finished'">{{ __('Done!', 'podlove-podcasting-plugin-for-wordpress') }}</span>
+                    <span v-else-if="getUploadStatus(fileInfo.file.name) == 'error'">{{ __('Error:', 'podlove-podcasting-plugin-for-wordpress') }} {{ getUploadMessage(fileInfo.file.name) }}</span>
                   </p>
                   <p
                     v-if="getUploadStatus(fileInfo.file.name) == 'in_progress'"

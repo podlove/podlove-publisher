@@ -6,9 +6,17 @@ use Podlove\Modules\AnalyticsHeartbeat\Model\Heartbeat;
 
 class Analytics_Heartbeat extends \Podlove\Modules\Base
 {
-    protected $module_name = 'Analytics Heartbeat';
-    protected $module_description = 'Keeps track of when Analytics are active or inactive.';
     protected $module_group = 'system';
+
+    public function get_module_name()
+    {
+        return __('Analytics Heartbeat', 'podlove-podcasting-plugin-for-wordpress');
+    }
+
+    public function get_module_description()
+    {
+        return __('Keeps track of when Analytics are active or inactive.', 'podlove-podcasting-plugin-for-wordpress');
+    }
 
     public static function is_core()
     {

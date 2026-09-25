@@ -1,15 +1,15 @@
 <template>
   <div class="mb-6 rounded-lg bg-white p-6 shadow-sm">
     <div class="mb-6">
-      <h2 class="mb-2 text-xl font-medium text-gray-700">Manage Features</h2>
+      <h2 class="mb-2 text-xl font-medium text-gray-700">{{ __('Manage Features', 'podlove-podcasting-plugin-for-wordpress') }}</h2>
       <p class="text-sm text-gray-600">
-        Enable or disable PLUS features. Changes will take effect immediately.
+        {{ __('Enable or disable PLUS features. Changes will take effect immediately.', 'podlove-podcasting-plugin-for-wordpress') }}
       </p>
     </div>
 
     <div class="space-y-3">
       <Feature
-        title="Podcast File Hosting"
+        :title="__('Podcast File Hosting', 'podlove-podcasting-plugin-for-wordpress')"
         :modelValue="features.fileStorage"
         @update:modelValue="handleFeatureToggle('fileStorage')"
       >
@@ -17,26 +17,22 @@
           <button
             @click="toggleMigrationTool"
             class="p-1 text-gray-400 hover:text-gray-600 transition-colors flex items-center gap-1"
-            title="Show Migration Tool"
+            :title="__('Show Migration Tool', 'podlove-podcasting-plugin-for-wordpress')"
           >
-            <Cog6ToothIcon class="size-5" /> <span>Show Migration Tool</span>
+            <Cog6ToothIcon class="size-5" /> <span>{{ __('Show Migration Tool', 'podlove-podcasting-plugin-for-wordpress') }}</span>
           </button>
         </template>
 
         <p class="text-sm text-gray-600 mb-2">
-          Keep your podcast files in fast, reliable cloud hosting built for podcast delivery. As
-          your show grows, you can avoid the storage and performance limits of serving files
-          directly from WordPress.
+          {{ __('Keep your podcast files in fast, reliable cloud hosting built for podcast delivery. As your show grows, you can avoid the storage and performance limits of serving files directly from WordPress.', 'podlove-podcasting-plugin-for-wordpress') }}
         </p>
 
         <p class="text-sm text-gray-600 mb-2">
-          Enable Podcast File Hosting here to automatically upload your media files and make them
-          available from Publisher PLUS.
+          {{ __('Enable Podcast File Hosting here to automatically upload your media files and make them available from Publisher PLUS.', 'podlove-podcasting-plugin-for-wordpress') }}
         </p>
 
         <p class="text-sm text-gray-600">
-          You can disable it again at any time. Your files will then be served from the WordPress
-          or FTP storage location configured in the plugin.
+          {{ __('You can disable it again at any time. Your files will then be served from the WordPress or FTP storage location configured in the plugin.', 'podlove-podcasting-plugin-for-wordpress') }}
         </p>
 
         <template #footer v-if="features.fileStorage && (needsMigration || showMigrationTool)">
@@ -45,14 +41,12 @@
       </Feature>
 
       <Feature
-        title="Reliable Feed Delivery"
+        :title="__('Reliable Feed Delivery', 'podlove-podcasting-plugin-for-wordpress')"
         :modelValue="features.feedProxy"
         @update:modelValue="handleFeatureToggle('feedProxy')"
       >
         <p class="text-sm text-gray-600">
-          Keep your podcast feed fast and available even during traffic spikes. When enabled,
-          Publisher PLUS automatically routes feed requests through our optimized delivery
-          infrastructure, and you can turn it off again at any time without losing subscribers.
+          {{ __('Keep your podcast feed fast and available even during traffic spikes. When enabled, Publisher PLUS automatically routes feed requests through our optimized delivery infrastructure, and you can turn it off again at any time without losing subscribers.', 'podlove-podcasting-plugin-for-wordpress') }}
         </p>
       </Feature>
     </div>

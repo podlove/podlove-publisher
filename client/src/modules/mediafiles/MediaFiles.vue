@@ -1,5 +1,5 @@
 <template>
-  <module name="mediafiles" title="Media Files">
+  <module name="mediafiles" :title="__('Media Files', 'podlove-podcasting-plugin-for-wordpress')">
     <div>
       <div class="w-full flex justify-center m-12 text-center" v-if="isInitializing">
         <div class="animate-pulse mt-4 flex space-x-4">

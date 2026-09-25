@@ -7,8 +7,6 @@ use Podlove\Http;
 class Auphonic extends \Podlove\Modules\Base
 {
     private const OAUTH_CLIENT_ID = '517dfd1a3074f9cf551ef1bf81d681';
-    protected $module_name = 'Auphonic';
-    protected $module_description = 'Auphonic is an audio post production web service. This module adds an interface to episodes, so you can create and manage productions right from Podlove Publisher.';
     protected $module_group = 'external services';
 
     /**
@@ -24,6 +22,16 @@ class Auphonic extends \Podlove\Modules\Base
      * @var Podlove\Modules\Auphonic\PlusFileTransfer
      */
     private $plus_file_transfer;
+
+    public function get_module_name()
+    {
+        return __('Auphonic', 'podlove-podcasting-plugin-for-wordpress');
+    }
+
+    public function get_module_description()
+    {
+        return __('Auphonic is an audio post production web service. This module adds an interface to episodes, so you can create and manage productions right from Podlove Publisher.', 'podlove-podcasting-plugin-for-wordpress');
+    }
 
     public function load()
     {

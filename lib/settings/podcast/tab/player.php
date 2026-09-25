@@ -113,7 +113,7 @@ class Player extends Tab
     {
         $printer = \Podlove\Modules\PodloveWebPlayer\Podlove_Web_Player::get_player_printer($episode);
         if ($printer && method_exists($printer, 'render')) {
-            echo '<h3>Preview</h3>';
+            echo '<h3>'.esc_html__('Preview', 'podlove-podcasting-plugin-for-wordpress').'</h3>';
             echo $printer->render('preview');
         }
     }

@@ -153,7 +153,8 @@ class Tools
 
     public function page()
     {
-        wp_enqueue_script('podlove-tools-useragent', \Podlove\PLUGIN_URL.'/js/admin/tools/useragent.js', ['jquery'], \Podlove\get_plugin_header('Version'));
+        wp_enqueue_script('podlove-tools-useragent', \Podlove\PLUGIN_URL.'/js/admin/tools/useragent.js', ['wp-i18n', 'jquery'], \Podlove\get_plugin_header('Version'));
+        wp_set_script_translations('podlove-tools-useragent', 'podlove-podcasting-plugin-for-wordpress');
 
         wp_enqueue_script('jquery-ui-progressbar'); ?>
 

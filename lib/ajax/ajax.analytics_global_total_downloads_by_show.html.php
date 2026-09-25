@@ -1,5 +1,5 @@
 <?php if (count($downloads) === 0) {
-    echo 'no data';
+    echo __('no data', 'podlove-podcasting-plugin-for-wordpress');
 } else { ?>
 <table style="margin-left: 7px;" border="0" cellpadding="0" cellspacing="0">
     <thead>

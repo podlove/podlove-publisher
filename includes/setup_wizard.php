@@ -57,7 +57,7 @@ function wizard_page()
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <?php wp_head(); ?>
-    <title>Podlove Publisher | Setup Wizard</title>
+    <title><?php echo esc_html__('Podlove Publisher | Setup Wizard', 'podlove-podcasting-plugin-for-wordpress'); ?></title>
 </head>
 <body>
     <div id="podlove-setup-wizard"></div>

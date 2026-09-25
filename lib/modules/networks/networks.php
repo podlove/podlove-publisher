@@ -7,9 +7,17 @@ use Podlove\Modules\Networks\Model\PodcastList;
 
 class Networks extends \Podlove\Modules\Base
 {
-    protected $module_name = 'Podcast Network';
-    protected $module_description = 'Support for Podcast Networks using <a href="http://codex.wordpress.org/Create_A_Network">WordPress Multisite</a> environments.';
     protected $module_group = 'system';
+
+    public function get_module_name()
+    {
+        return __('Podcast Network', 'podlove-podcasting-plugin-for-wordpress');
+    }
+
+    public function get_module_description()
+    {
+        return __('Support for Podcast Networks using <a href="http://codex.wordpress.org/Create_A_Network">WordPress Multisite</a> environments.', 'podlove-podcasting-plugin-for-wordpress');
+    }
 
     public static function is_core()
     {
@@ -100,7 +108,7 @@ class Networks extends \Podlove\Modules\Base
         // create new top-level menu
         $hook = add_menu_page(
             // $page_title
-            'Podlove Plugin Settings',
+            __('Podlove Plugin Settings', 'podlove-podcasting-plugin-for-wordpress'),
             // $menu_title
             'Podlove',
             // $capability

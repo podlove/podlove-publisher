@@ -16,12 +16,12 @@ class PodcastImportContributorRolesJob
 
     public static function title()
     {
-        return 'Podcast Import: Contributor Roles';
+        return __('Podcast Import: Contributor Roles', 'podlove-podcasting-plugin-for-wordpress');
     }
 
     public static function description()
     {
-        return 'Imports Podcast Contributor Roles';
+        return __('Imports Podcast Contributor Roles', 'podlove-podcasting-plugin-for-wordpress');
     }
 
     protected static function get_import_table_class()

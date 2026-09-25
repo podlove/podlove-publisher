@@ -19,6 +19,7 @@
 </template>
 
 <script lang="ts">
+import { __ } from '../../../../plugins/translations'
 import { defineComponent, type PropType } from 'vue'
 import { PlusTransferFile } from '@store/auphonic.store'
 import {
@@ -46,13 +47,13 @@ export default defineComponent({
     getFileStatusMessage(file: PlusTransferFile): string {
       switch (file.status) {
         case 'pending':
-          return 'Waiting...'
+          return __('Waiting...', 'podlove-podcasting-plugin-for-wordpress')
         case 'processing':
-          return 'Transferring...'
+          return __('Transferring...', 'podlove-podcasting-plugin-for-wordpress')
         case 'completed':
-          return 'Completed'
+          return __('Completed', 'podlove-podcasting-plugin-for-wordpress')
         case 'failed':
-          return file.message || 'Failed'
+          return file.message || __('Failed', 'podlove-podcasting-plugin-for-wordpress')
         default:
           return file.message || ''
       }

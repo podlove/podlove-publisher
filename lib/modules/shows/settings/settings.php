@@ -288,7 +288,7 @@ $this->form_template($show, 'create', __('Add New Show', 'podlove-podcasting-plu
             $wrapper->string('slug', [
                 'label' => __('Slug', 'podlove-podcasting-plugin-for-wordpress').\Podlove\get_help_link('podlove_help_shows_slug'),
                 'html' => ['class' => 'regular-text required podlove-check-input'],
-                'description' => 'Feed identifier. <span id="feed_subscribe_url_preview" data-show-feed-base-url="'.get_site_url().'" data-show-feed-slug="'.(isset($generic_feed) ? $generic_feed->slug : '').'" data-show-preview-string="'.__('URL preview:', 'podlove-podcasting-plugin-for-wordpress').'"></span>',
+                'description' => __('Feed identifier.', 'podlove-podcasting-plugin-for-wordpress').' <span id="feed_subscribe_url_preview" data-show-feed-base-url="'.get_site_url().'" data-show-feed-slug="'.(isset($generic_feed) ? $generic_feed->slug : '').'" data-show-preview-string="'.__('URL preview:', 'podlove-podcasting-plugin-for-wordpress').'"></span>',
             ]);
 
             $wrapper->string('subtitle', [

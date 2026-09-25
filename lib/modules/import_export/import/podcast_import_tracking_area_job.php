@@ -14,12 +14,12 @@ class PodcastImportTrackingAreaJob
 
     public static function title()
     {
-        return 'Podcast Import: Tracking Areas';
+        return __('Podcast Import: Tracking Areas', 'podlove-podcasting-plugin-for-wordpress');
     }
 
     public static function description()
     {
-        return 'Imports Podcast Tracking Areas';
+        return __('Imports Podcast Tracking Areas', 'podlove-podcasting-plugin-for-wordpress');
     }
 
     protected static function get_import_table_class()

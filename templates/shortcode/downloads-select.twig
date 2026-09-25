@@ -13,8 +13,8 @@
         {% endif %}
     {% endfor %}
     </select>
-    <button class="podlove-download-primary">Download</button>
-    <button class="podlove-download-secondary">Show URL</button>
+    <button class="podlove-download-primary">{{ __('Download', 'podlove-podcasting-plugin-for-wordpress')|e('html') }}</button>
+    <button class="podlove-download-secondary">{{ __('Show URL', 'podlove-podcasting-plugin-for-wordpress')|e('html') }}</button>
  </div>
 </form>
 
@@ -35,7 +35,7 @@ podlove_document_ready(function() {
 			e.preventDefault();
             var optionEl = selectEl.querySelector("option[value='"+ selectEl.value +"']")
             let url = optionEl.dataset.rawUrl;
-			prompt("Feel free to copy and paste this URL", url);
+			prompt("{{ __('Feel free to copy and paste this URL', 'podlove-podcasting-plugin-for-wordpress')|e('js') }}", url);
 			return false;
 		})
 	});

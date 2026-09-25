@@ -4,9 +4,17 @@ namespace Podlove\Modules\Affiliate;
 
 class Affiliate extends \Podlove\Modules\Base
 {
-    protected $module_name = 'Affiliate';
-    protected $module_description = 'Amazon etc. affiliate link features.';
     protected $module_group = 'system';
+
+    public function get_module_name()
+    {
+        return __('Affiliate', 'podlove-podcasting-plugin-for-wordpress');
+    }
+
+    public function get_module_description()
+    {
+        return __('Amazon etc. affiliate link features.', 'podlove-podcasting-plugin-for-wordpress');
+    }
 
     public static function is_core()
     {

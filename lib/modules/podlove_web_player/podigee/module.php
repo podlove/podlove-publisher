@@ -24,7 +24,7 @@ class Module
             'type' => 'select',
             'key' => 'podigeetheme',
             'options' => [
-                'label' => 'Web Player Theme',
+                'label' => __('Web Player Theme', 'podlove-podcasting-plugin-for-wordpress'),
                 'options' => $theme_options,
             ],
             'position' => 500,

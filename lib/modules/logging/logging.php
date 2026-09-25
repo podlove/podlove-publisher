@@ -7,8 +7,12 @@ use Podlove\Model;
 
 class Logging extends \Podlove\Modules\Base
 {
-    protected $module_name = 'Logging';
     protected $module_group = 'system';
+
+    public function get_module_name()
+    {
+        return __('Logging', 'podlove-podcasting-plugin-for-wordpress');
+    }
 
     public function get_module_description()
     {

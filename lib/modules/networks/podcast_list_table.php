@@ -83,7 +83,7 @@ class Podcast_List_Table extends \Podlove\List_Table
 
                 return sprintf(
                     '<a title="%s" href="%s">%s</a><br />%s',
-                    esc_attr('Published on '.date('Y-m-d h:i:s', strtotime($latest_episode_blog_post->post_date))),
+                    esc_attr(sprintf(__('Published on %s', 'podlove-podcasting-plugin-for-wordpress'), date('Y-m-d h:i:s', strtotime($latest_episode_blog_post->post_date)))),
                     esc_url(admin_url('post.php?post='.(int) $latest_episode->post_id.'&action=edit')),
                     esc_html($latest_episode_blog_post->post_title),
                     esc_html(\Podlove\relative_time_steps(strtotime($latest_episode_blog_post->post_date)))

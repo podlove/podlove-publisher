@@ -126,9 +126,9 @@ class Renderer
         $note = "NOTE\n";
         $note .= 'Podcast: '.Podcast::get()->title."\n";
         $note .= 'Episode: '.$this->episode->title()."\n";
-        $note .= 'Publishing Date: '.get_the_date('c', $this->episode->post_id)."\n";
-        $note .= 'Podcast URL: '.Podcast::get()->landing_page_url()."\n";
-        $note .= 'Episode URL: '.get_permalink($this->episode->post_id)."\n";
+        $note .= sprintf(__('Publishing Date: %s', 'podlove-podcasting-plugin-for-wordpress'), get_the_date('c', $this->episode->post_id))."\n";
+        $note .= sprintf(__('Podcast URL: %s', 'podlove-podcasting-plugin-for-wordpress'), Podcast::get()->landing_page_url())."\n";
+        $note .= sprintf(__('Episode URL: %s', 'podlove-podcasting-plugin-for-wordpress'), get_permalink($this->episode->post_id))."\n";
         $note .= "\n";
 
         return "WEBVTT\n\n".$note.implode("\n\n", $transcript)."\n";

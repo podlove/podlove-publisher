@@ -16,9 +16,9 @@ class OnboardingPage
             // $parent_slug
             $handle,
             // $page_title
-            'Onboarding',
+            __('Onboarding', 'podlove-podcasting-plugin-for-wordpress'),
             // $menu_title
-            'Onboarding',
+            __('Onboarding', 'podlove-podcasting-plugin-for-wordpress'),
             // $capability
             'manage_options',
             // $menu_slug

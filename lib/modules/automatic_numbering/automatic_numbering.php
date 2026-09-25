@@ -6,9 +6,17 @@ use Podlove\Model;
 
 class Automatic_Numbering extends \Podlove\Modules\Base
 {
-    protected $module_name = 'Automatic Numbering';
-    protected $module_description = 'Automatically increase the Episode number when creating episodes.';
     protected $module_group = 'metadata';
+
+    public function get_module_name()
+    {
+        return __('Automatic Numbering', 'podlove-podcasting-plugin-for-wordpress');
+    }
+
+    public function get_module_description()
+    {
+        return __('Automatically increase the Episode number when creating episodes.', 'podlove-podcasting-plugin-for-wordpress');
+    }
 
     public function load()
     {

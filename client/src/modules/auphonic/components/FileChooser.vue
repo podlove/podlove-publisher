@@ -3,7 +3,7 @@
     <div class="flex flex-col gap-2">
       <!-- step one -->
       <div>
-        <label class="block md:hidden text-sm font-medium text-gray-700">Upload Method</label>
+        <label class="block md:hidden text-sm font-medium text-gray-700">{{ __('Upload Method', 'podlove-podcasting-plugin-for-wordpress') }}</label>
         <select
           @change="handleServiceSelection"
           class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
@@ -50,7 +50,7 @@
           <label
             :for="file_key + 'audio_source_url'"
             class="block text-sm font-medium text-gray-700"
-            >File URL</label
+            >{{ __('File URL', 'podlove-podcasting-plugin-for-wordpress') }}</label
           >
           <div class="mt-1">
             <input
@@ -67,7 +67,7 @@
         <div v-else>
           <div v-if="serviceFiles !== null">
             <label :for="file_key + 'external_file'" class="block text-sm font-medium text-gray-700"
-              >File</label
+              >{{ __('File', 'podlove-podcasting-plugin-for-wordpress') }}</label
             >
             <select
               name="audio_external_file"

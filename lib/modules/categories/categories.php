@@ -4,9 +4,17 @@ namespace Podlove\Modules\Categories;
 
 class Categories extends \Podlove\Modules\Base
 {
-    protected $module_name = 'Categories';
-    protected $module_description = 'Enable categories for episodes.';
     protected $module_group = 'metadata';
+
+    public function get_module_name()
+    {
+        return __('Categories', 'podlove-podcasting-plugin-for-wordpress');
+    }
+
+    public function get_module_description()
+    {
+        return __('Enable categories for episodes.', 'podlove-podcasting-plugin-for-wordpress');
+    }
 
     public function load()
     {

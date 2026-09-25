@@ -14,12 +14,12 @@ class PodcastImportAssetsJob
 
     public static function title()
     {
-        return 'Podcast Import: Assets';
+        return __('Podcast Import: Assets', 'podlove-podcasting-plugin-for-wordpress');
     }
 
     public static function description()
     {
-        return 'Imports Podcast Assets';
+        return __('Imports Podcast Assets', 'podlove-podcasting-plugin-for-wordpress');
     }
 
     protected static function get_import_table_class()

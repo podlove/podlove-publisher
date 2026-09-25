@@ -16,12 +16,12 @@ class PodcastImportContributorEpisodeContributionsJob
 
     public static function title()
     {
-        return 'Podcast Import: Contributor Episode Contributions';
+        return __('Podcast Import: Contributor Episode Contributions', 'podlove-podcasting-plugin-for-wordpress');
     }
 
     public static function description()
     {
-        return 'Imports Podcast Contributor Episode Contributions';
+        return __('Imports Podcast Contributor Episode Contributions', 'podlove-podcasting-plugin-for-wordpress');
     }
 
     protected static function get_import_table_class()

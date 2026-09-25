@@ -10,9 +10,17 @@ use Podlove\Modules\Contributors\Model\EpisodeContribution;
 
 class Notifications extends \Podlove\Modules\Base
 {
-    protected $module_name = 'E-Mail Notifications';
-    protected $module_description = 'Notify contributors via E-Mail when episodes get published.';
     protected $module_group = 'system';
+
+    public function get_module_name()
+    {
+        return __('E-Mail Notifications', 'podlove-podcasting-plugin-for-wordpress');
+    }
+
+    public function get_module_description()
+    {
+        return __('Notify contributors via E-Mail when episodes get published.', 'podlove-podcasting-plugin-for-wordpress');
+    }
 
     public function load()
     {

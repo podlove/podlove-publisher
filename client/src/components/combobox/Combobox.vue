@@ -103,7 +103,7 @@
               text-gray-700
             "
           >
-            Nothing found.
+            {{ __('Nothing found.', 'podlove-podcasting-plugin-for-wordpress') }}
           </div>
           <ComboboxOption 
             v-for="option in filterOptions" 
@@ -133,6 +133,7 @@
 </template>
 
 <script lang="ts">
+import { __, _n, sprintf } from '../../plugins/translations'
 import { defineComponent, PropType, toRaw } from '@vue/runtime-core'
 import {
   Combobox,
@@ -165,7 +166,7 @@ export default defineComponent({
     selectValues: Array as PropType<Number[]>,
     placeholder: {
       type: String,
-      default: 'Select an option',
+      default: __('Select an option', 'podlove-podcasting-plugin-for-wordpress'),
     },
     multiple: {
       type: Boolean,
@@ -176,13 +177,9 @@ export default defineComponent({
 
   computed: {
     label() : string | undefined {
-      const numOfSelect = this.selectValues?.length
-      if (numOfSelect === 0)
-        return "No option is selected"
-      else if (numOfSelect === 1)
-        return "One option is selected"
-      else 
-        return numOfSelect?.toString() + " options are selected"
+      const numOfSelect = this.selectValues?.length ?? 0
+      if (numOfSelect === 0) return __('No option is selected', 'podlove-podcasting-plugin-for-wordpress')
+      return sprintf(_n('%d option is selected', '%d options are selected', numOfSelect, 'podlove-podcasting-plugin-for-wordpress'), numOfSelect)
     },
 
     filterOptions() : Array<OptionObject> | undefined {

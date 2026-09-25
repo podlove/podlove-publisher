@@ -14,12 +14,12 @@ class PodcastImportUserAgentsJob
 
     public static function title()
     {
-        return 'Podcast Import: User Agents';
+        return __('Podcast Import: User Agents', 'podlove-podcasting-plugin-for-wordpress');
     }
 
     public static function description()
     {
-        return 'Imports Podcast User Agents';
+        return __('Imports Podcast User Agents', 'podlove-podcasting-plugin-for-wordpress');
     }
 
     protected static function get_import_table_class()

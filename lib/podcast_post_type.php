@@ -172,7 +172,7 @@ class Podcast_Post_Type
         // create new top-level menu
         $hook = add_menu_page(
             // $page_title
-            'Podlove Plugin Settings',
+            __('Podlove Plugin Settings', 'podlove-podcasting-plugin-for-wordpress'),
             // $menu_title
             'Podlove',
             // $capability

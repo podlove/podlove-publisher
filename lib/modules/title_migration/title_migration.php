@@ -8,13 +8,20 @@ class Title_Migration extends \Podlove\Modules\Base
 {
     public const DEACTIVATE_NONCE_ACTION = 'podlove_disable_title_migration_module';
     public const STATE_NONCE_ACTION = 'podlove_set_title_migration_state';
-
-    protected $module_name = 'Title Migration';
-    protected $module_description = 'Tool to help you fill episode number and title fields introduced in Publisher 2.7 for new Apple iOS 11 podcast feed extensions.';
     protected $module_group = 'system';
 
     protected $state;
     protected $notices;
+
+    public function get_module_name()
+    {
+        return __('Title Migration', 'podlove-podcasting-plugin-for-wordpress');
+    }
+
+    public function get_module_description()
+    {
+        return __('Tool to help you fill episode number and title fields introduced in Publisher 2.7 for new Apple iOS 11 podcast feed extensions.', 'podlove-podcasting-plugin-for-wordpress');
+    }
 
     public function load()
     {
@@ -140,7 +147,7 @@ class Title_Migration extends \Podlove\Modules\Base
 		<?php echo __('There are new fields in podcast feeds for episode numbers and clean titles. You can edit them one by one using the episode screen, or use this tool to update them all at once.', 'podlove-podcasting-plugin-for-wordpress'); ?>
 	</p>
 
-	<h4>Mnemonic</h4>
+	<h4><?php echo esc_html__('Mnemonic', 'podlove-podcasting-plugin-for-wordpress'); ?></h4>
 
 	<input type="text" name="migrate_mnemonic" id="migrate_mnemonic" value="<?php echo podlove_get_mnemonic(); ?>" class="regular-text required podlove-check-input">
 
@@ -205,18 +212,15 @@ class Title_Migration extends \Podlove\Modules\Base
         if (ini_get('max_input_vars') < $input_count) {
             ?>
 		<div class="podlove-warning" style="border-left: 5px solid rgba(212, 61, 4, 1.000); padding-left: 5px;">
-			<strong>Lots of episodes! This might not work.</strong>
+			<strong><?php echo esc_html__('Lots of episodes! This might not work.', 'podlove-podcasting-plugin-for-wordpress'); ?></strong>
 
-			PHP has a limit fow how many form fields can be sent at once.
-			It looks like this needs more than is allowed here.
-			You should increase it in your php.ini.
-			Ask your hoster if you are not sure about this.
+			<?php echo esc_html__('PHP has a limit for how many form fields can be sent at once. It looks like this needs more than is allowed here. You should increase it in your php.ini. Ask your hoster if you are not sure about this.', 'podlove-podcasting-plugin-for-wordpress'); ?>
 
 <pre>
 # currently
 ini_get('max_input_vars') = <?php echo ini_get('max_input_vars'); ?>
 
-# required
+<?php echo esc_html__('# required', 'podlove-podcasting-plugin-for-wordpress'); ?>
 <?php echo $input_count + $buffer; ?>
 
 # php.ini recommendation

@@ -61,18 +61,18 @@ class ToolsSectionCronDiagnostics
             'DISABLE_WP_CRON',
         ];
         $cron_constants = array_map(function ($constant) {
-            return $constant.': '.(defined($constant) ? (constant($constant) ? 'on' : 'off') : 'not defined');
+            return $constant.': '.(defined($constant) ? (constant($constant) ? 'on' : 'off') : __('not defined', 'podlove-podcasting-plugin-for-wordpress'));
         }, $cron_constants); ?>
 
 		<div id="podlove-cron-diagnosis-teaser">
-			Jobs not working properly? <button class="button" id="podlove-cron-diagnosis">Run WP Cron Diagnosis</button>
+			<?php echo esc_html__('Jobs not working properly?', 'podlove-podcasting-plugin-for-wordpress'); ?> <button class="button" id="podlove-cron-diagnosis"><?php echo esc_html__('Run WP Cron Diagnosis', 'podlove-podcasting-plugin-for-wordpress'); ?></button>
 		</div>
 
 		<div id="podlove-cron-diagnosis-wrapper">
-			<h4>WP Cron Diagnostics</h4>
+			<h4><?php echo esc_html__('WP Cron Diagnostics', 'podlove-podcasting-plugin-for-wordpress'); ?></h4>
 
 			<p>
-				<strong>PHP Constants</strong>
+				<strong><?php echo esc_html__('PHP Constants', 'podlove-podcasting-plugin-for-wordpress'); ?></strong>
 				<code style="display: block">
 					<?php echo implode('<br>', $cron_constants); ?>
 				</code>
@@ -81,10 +81,10 @@ class ToolsSectionCronDiagnostics
 
 			<ul>
 				<li id="diagnosis-item-reach-wp-cron">
-					Is <code><?php echo esc_html(site_url('wp-cron.php')); ?></code> accessible? <i class="podlove-icon-spinner rotate" style="display: none"></i> <span class="result"></span>
+					<?php echo sprintf(esc_html__('Is %s accessible?', 'podlove-podcasting-plugin-for-wordpress'), '<code>'.esc_html(site_url('wp-cron.php')).'</code>'); ?> <i class="podlove-icon-spinner rotate" style="display: none"></i> <span class="result"></span>
 				</li>
 				<li id="diagnosis-item-check-cron-exec">
-					Are scheduled crons run? <i class="podlove-icon-spinner rotate" style="display: none"></i> <span class="result"></span>
+					<?php echo esc_html__('Are scheduled crons run?', 'podlove-podcasting-plugin-for-wordpress'); ?> <i class="podlove-icon-spinner rotate" style="display: none"></i> <span class="result"></span>
 				</li>
 			</ul>
 		</div>
@@ -104,9 +104,9 @@ class ToolsSectionCronDiagnostics
 		$.ajax({
 			url: cronUrl,
 		}).done(function (data, textStatus, jqXHR) {
-			taskWrapper.find(".result").html("Yes, good! <i class=\"podlove-icon-ok\"></i>");
+			taskWrapper.find(".result").html(<?php echo wp_json_encode(__('Yes, good!', 'podlove-podcasting-plugin-for-wordpress'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?> + " <i class=\"podlove-icon-ok\"></i>");
 		}).fail(function (data, textStatus, jqXHR) {
-			taskWrapper.find(".result").html("ERROR! " + data.status + " " + data.textStatus + " <i class=\"podlove-icon-remove\"></i>");
+			taskWrapper.find(".result").html(<?php echo wp_json_encode(__('ERROR!', 'podlove-podcasting-plugin-for-wordpress'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?> + " " + data.status + " " + data.textStatus + " <i class=\"podlove-icon-remove\"></i>");
 		}).always(function() {
 			spinner.hide();
 		})
@@ -116,7 +116,7 @@ class ToolsSectionCronDiagnostics
 	var initLookForCronSuccess = function() {
 		var taskWrapper = $("#diagnosis-item-check-cron-exec");
 		var result = taskWrapper.find(".result");
-		var helpHtml = 'There are many reasons why WP Cron may not work. <a href="https://encrypted.google.com/search?hl=en&q=wordpress%20cron%20not%20working" target="_blank">Try this Google search to find out why.</a>';
+		var helpHtml = <?php echo wp_json_encode(__('There are many reasons why WP Cron may not work. <a href="https://encrypted.google.com/search?hl=en&q=wordpress%20cron%20not%20working" target="_blank">Try this Google search to find out why.</a>', 'podlove-podcasting-plugin-for-wordpress'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>;
 		var maxAttempts = 30;
 		var spinner = taskWrapper.find('i.podlove-icon-spinner');
 
@@ -128,19 +128,19 @@ class ToolsSectionCronDiagnostics
 			}
 		}).always(function(data) {
 			if (data && data.success) {
-				result.html("Yes, good! <i class=\"podlove-icon-ok\"></i>");
+				result.html(<?php echo wp_json_encode(__('Yes, good!', 'podlove-podcasting-plugin-for-wordpress'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?> + " <i class=\"podlove-icon-ok\"></i>");
 				spinner.hide();
 			} else {
 				if (data && data.tries > maxAttempts) {
-					result.html("Sorry, it looks like WP Cron is not working. " + helpHtml + " <i class=\"podlove-icon-remove\"></i>");
+					result.html(<?php echo wp_json_encode(__('Sorry, it looks like WP Cron is not working.', 'podlove-podcasting-plugin-for-wordpress'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?> + " " + helpHtml + " <i class=\"podlove-icon-remove\"></i>");
 					spinner.hide();
 				} else if (data && data.tries > 4) {
-					result.html("Hmm, this is taking longer than expected. " + data.tries + "/" + maxAttempts + " failed attempts so far.");
+					result.html(<?php echo wp_json_encode(__('Hmm, this is taking longer than expected. %1$s/%2$s failed attempts so far.', 'podlove-podcasting-plugin-for-wordpress'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>.replace('%1$s', data.tries).replace('%2$s', maxAttempts));
 					window.setTimeout(initLookForCronSuccess, 2500);
 				} else if (data && data.tries) {
 					window.setTimeout(initLookForCronSuccess, 2500);
 				} else {
-					result.html("Something unexpected went wrong. " + helpHtml + " <i class=\"podlove-icon-remove\"></i>");
+					result.html(<?php echo wp_json_encode(__('Something unexpected went wrong.', 'podlove-podcasting-plugin-for-wordpress'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?> + " " + helpHtml + " <i class=\"podlove-icon-remove\"></i>");
 					spinner.hide();
 				}
 			}

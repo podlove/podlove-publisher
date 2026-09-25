@@ -27,13 +27,13 @@ class Banner
      * @param string $logo_text   Logo text
      * @param bool   $external    Whether the link should open in a new tab
      */
-    public function __construct($title, $content, $button_text, $button_url, $logo_text = 'A Publisher PLUS Feature', $external = false)
+    public function __construct($title, $content, $button_text, $button_url, $logo_text = null, $external = false)
     {
         $this->title = $title;
         $this->content = $content;
         $this->button_text = $button_text;
         $this->button_url = $button_url;
-        $this->logo_text = $logo_text;
+        $this->logo_text = $logo_text ?? __('A Publisher PLUS Feature', 'podlove-podcasting-plugin-for-wordpress');
         $this->external = $external;
     }
 
@@ -94,23 +94,19 @@ class Banner
 
     public static function plus_main()
     {
-        $content = '<p><strong>Tired of fiddling with FTP or overloading your WordPress host when you release an episode?</strong><br>
- With <strong>Publisher PLUS</strong>, your podcast files are stored in fast, secure cloud storage—no setup required.</p>
-
-<ul class="banner-feature-list">
-  <li>Simple uploads</li>
-  <li>Reliable delivery</li>
-  <li>Optimized for podcasting</li>
-</ul>
-
- <p><strong>Start your PLUS upgrade today.</strong></p>';
+        $content = '<p><strong>'.esc_html__('Tired of fiddling with FTP or overloading your WordPress host when you release an episode?', 'podlove-podcasting-plugin-for-wordpress').'</strong><br>'
+            .sprintf(esc_html__('With %s, your podcast files are stored in fast, secure cloud storage—no setup required.', 'podlove-podcasting-plugin-for-wordpress'), '<strong>Publisher PLUS</strong>').'</p><ul><li>'
+            .esc_html__('Simple uploads', 'podlove-podcasting-plugin-for-wordpress').'</li><li>'
+            .esc_html__('Reliable delivery', 'podlove-podcasting-plugin-for-wordpress').'</li><li>'
+            .esc_html__('Optimized for podcasting', 'podlove-podcasting-plugin-for-wordpress').'</li></ul><p><strong>'
+            .esc_html__('Start your PLUS upgrade today.', 'podlove-podcasting-plugin-for-wordpress').'</strong></p>';
 
         $banner = new self(
             __('Introducing Publisher PLUS: File Hosting Built for Podcasters', 'podlove-podcasting-plugin-for-wordpress'),
             $content,
             __('Get Publisher PLUS &#10140;', 'podlove-podcasting-plugin-for-wordpress'),
             'https://plus.podlove.org/pricing',
-            'A Publisher PLUS Feature',
+            __('A Publisher PLUS Feature', 'podlove-podcasting-plugin-for-wordpress'),
             true
         );
 
@@ -122,7 +118,7 @@ class Banner
      */
     public static function plus_authenticated()
     {
-        $content = 'Manage your account  and access advanced features from your dashboard.</p>';
+        $content = esc_html__('Manage your account and access advanced features from your dashboard.', 'podlove-podcasting-plugin-for-wordpress');
 
         $banner = new self(
             __('Manage Your Publisher PLUS Account', 'podlove-podcasting-plugin-for-wordpress'),

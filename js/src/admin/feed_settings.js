@@ -64,7 +64,7 @@ var PODLOVE = PODLOVE || {};
 						sortable.sortable('enable');
 						ui.item.find(".position").val(ui.item.data('podlove-original-position'));
 						sortable.sortable('cancel');
-						window.alert('The feed order could not be saved. Please reload the page and try again.');
+						window.alert(wp.i18n.__('The feed order could not be saved. Please reload the page and try again.', 'podlove-podcasting-plugin-for-wordpress'));
 					}).done(function() {
 						sortable.sortable('enable');
 					});
@@ -122,7 +122,7 @@ var PODLOVE = PODLOVE || {};
 			var preview = ""
 
 			if (slug == "n-a") {
-				preview = "enter slug for preview"
+				preview = wp.i18n.__('enter slug for preview', 'podlove-podcasting-plugin-for-wordpress')
 			} else {
 				preview = url + "/" + slug + "/"
 			}

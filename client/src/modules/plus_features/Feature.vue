@@ -11,10 +11,10 @@
             <span
               v-if="modelValue"
               class="rounded-full bg-green-100 px-3 py-1 text-xs font-medium text-green-600"
-              >Active</span
+              >{{ __('Active', 'podlove-podcasting-plugin-for-wordpress') }}</span
             >
             <span v-else class="rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-500"
-              >Disabled</span
+              >{{ __('Disabled', 'podlove-podcasting-plugin-for-wordpress') }}</span
             >
           </div>
           <Switch

@@ -63,10 +63,12 @@ add_action('admin_enqueue_scripts', function () {
             wp_register_script(
                 'podlove-episode-vue-apps',
                 \Podlove\PLUGIN_URL.'/js/dist/app.js',
-                ['underscore', 'jquery'],
+                ['underscore', 'jquery', 'wp-i18n'],
                 $version,
                 true
             );
+
+            wp_set_script_translations('podlove-episode-vue-apps', 'podlove-podcasting-plugin-for-wordpress');
 
             $episode = Podlove\Model\Episode::find_or_create_by_post_id(get_the_ID());
 
@@ -137,8 +139,10 @@ add_action('admin_enqueue_scripts', function () {
         );
 
         wp_enqueue_script('podlove_admin', \Podlove\PLUGIN_URL.'/js/dist/podlove-admin.js', [
-            'jquery', 'jquery-ui-sortable', 'jquery-ui-datepicker',
+            'jquery', 'jquery-ui-sortable', 'jquery-ui-datepicker', 'wp-i18n',
         ], $version);
+
+        wp_set_script_translations('podlove_admin', 'podlove-podcasting-plugin-for-wordpress');
 
         wp_enqueue_style('jquery-ui-style', \Podlove\PLUGIN_URL.'/js/admin/jquery-ui/css/smoothness/jquery-ui.css');
 

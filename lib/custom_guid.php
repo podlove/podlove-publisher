@@ -72,10 +72,10 @@ class Custom_Guid
 							$("#guid_preview").text(result.guid);
 							if ( ! $(".guid_warning").length ) {
 								$(".row__podlove_meta_guid .description")
-									.append("<br><strong class=\"guid_warning\">GUID regenerated. You still need to save the post.<br>Only regenerate if you messed up and need all clients to redownload all files!</strong>");
+									.append(<?php echo wp_json_encode(__('<br><strong class="guid_warning">GUID regenerated. You still need to save the post.<br>Only regenerate if you messed up and need all clients to redownload all files!</strong>', 'podlove-podcasting-plugin-for-wordpress'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>);
 							}
 						} else {
-							alert("Sorry, couldn't generate new GUID.");
+							alert(<?php echo wp_json_encode(__('Sorry, couldn\'t generate new GUID.', 'podlove-podcasting-plugin-for-wordpress'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>);
 						}
 					}
 				});

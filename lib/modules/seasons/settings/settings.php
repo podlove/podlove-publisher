@@ -40,7 +40,7 @@ class Settings
     public function add_screen_options()
     {
         add_screen_option('per_page', [
-            'label' => 'Seasons',
+            'label' => __('Seasons', 'podlove-podcasting-plugin-for-wordpress'),
             'default' => 10,
             'option' => 'podlove_seasons_per_page',
         ]);

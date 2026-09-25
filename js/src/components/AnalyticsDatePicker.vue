@@ -34,7 +34,7 @@ export default {
         },
         shortcuts: [
           {
-            text: "Today",
+            text: wp.i18n.__('Today', 'podlove-podcasting-plugin-for-wordpress'),
             onClick(picker) {
               const end = startOfDay(new Date());
               const start = endOfDay(new Date());
@@ -43,7 +43,7 @@ export default {
             }
           },
           {
-            text: "Yesterday",
+            text: wp.i18n.__('Yesterday', 'podlove-podcasting-plugin-for-wordpress'),
             onClick(picker) {
               const end = new Date();
               const start = new Date();
@@ -55,7 +55,7 @@ export default {
             }
           },
           {
-            text: "Last week",
+            text: wp.i18n.__('Last week', 'podlove-podcasting-plugin-for-wordpress'),
             onClick(picker) {
               const end = new Date();
               const start = new Date();
@@ -65,7 +65,7 @@ export default {
             }
           },
           {
-            text: "Last month",
+            text: wp.i18n.__('Last month', 'podlove-podcasting-plugin-for-wordpress'),
             onClick(picker) {
               const end = new Date();
               const start = new Date();
@@ -75,7 +75,7 @@ export default {
             }
           },
           {
-            text: "Last 3 months",
+            text: wp.i18n.__('Last 3 months', 'podlove-podcasting-plugin-for-wordpress'),
             onClick(picker) {
               const end = new Date();
               const start = new Date();
@@ -85,7 +85,7 @@ export default {
             }
           },
           {
-            text: "Last Year",
+            text: wp.i18n.__('Last Year', 'podlove-podcasting-plugin-for-wordpress'),
             onClick(picker) {
               const end = new Date();
               const start = new Date();
@@ -95,7 +95,7 @@ export default {
             }
           },
           {
-            text: "Last 10 Years",
+            text: wp.i18n.__('Last 10 Years', 'podlove-podcasting-plugin-for-wordpress'),
             onClick(picker) {
               const end = new Date();
               const start = new Date();

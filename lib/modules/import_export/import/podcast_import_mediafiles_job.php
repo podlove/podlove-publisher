@@ -14,12 +14,12 @@ class PodcastImportMediafilesJob
 
     public static function title()
     {
-        return 'Podcast Import: Media Files';
+        return __('Podcast Import: Media Files', 'podlove-podcasting-plugin-for-wordpress');
     }
 
     public static function description()
     {
-        return 'Imports Podcast Media Files';
+        return __('Imports Podcast Media Files', 'podlove-podcasting-plugin-for-wordpress');
     }
 
     protected static function get_import_table_class()

@@ -1,3 +1,4 @@
+import { __ } from '../plugins/translations'
 import { fork } from '@redux-saga/core/effects'
 import { takeEvery, select, put } from 'redux-saga/effects'
 import { get } from 'lodash'
@@ -80,7 +81,7 @@ function* importTranscriptFromAsset(
 const importErrorMessage = (error: any): string => {
   const message = get(error, ['message']) || get(error, ['error', 'message']) || error?.toString()
 
-  return message || 'Sorry, we can not import the transcript from an asset.'
+  return message || __('Sorry, we can not import the transcript from an asset.', 'podlove-podcasting-plugin-for-wordpress')
 }
 
 function* updateVoice(api: PodloveApiClient, action: { type: string, payload: { voice: string; contributor: string } }) {

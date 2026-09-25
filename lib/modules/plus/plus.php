@@ -13,11 +13,19 @@ class Plus extends \Podlove\Modules\Base
     public $file_storage;
     public $growth_banner;
     public $early_file_hosting_banner;
-    protected $module_name = 'Publisher PLUS';
-    protected $module_description = 'Publisher PLUS provides additional features and services for your podcast.';
     protected $module_group = 'external services';
 
     private $api;
+
+    public function get_module_name()
+    {
+        return __('Publisher PLUS', 'podlove-podcasting-plugin-for-wordpress');
+    }
+
+    public function get_module_description()
+    {
+        return __('Publisher PLUS provides additional features and services for your podcast.', 'podlove-podcasting-plugin-for-wordpress');
+    }
 
     public function load()
     {

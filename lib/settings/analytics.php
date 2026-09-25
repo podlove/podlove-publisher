@@ -236,7 +236,8 @@ class Analytics
 
         // application
 
-        wp_register_script('podlove-analytics-js', \Podlove\PLUGIN_URL.'/js/dist/podcast-stats.js', ['podlove-d3-js', 'podlove-crossfilter-js', 'underscore']);
+        wp_register_script('podlove-analytics-js', \Podlove\PLUGIN_URL.'/js/dist/podcast-stats.js', ['wp-i18n', 'podlove-d3-js', 'podlove-crossfilter-js', 'underscore']);
+        wp_set_script_translations('podlove-analytics-js', 'podlove-podcasting-plugin-for-wordpress');
 
         wp_localize_script('podlove-analytics-js', 'podlove_episode_names', self::episode_ids_to_names_map());
         wp_localize_script('podlove-analytics-js', 'podlove_analytics_ajax', [
@@ -399,8 +400,8 @@ $cache = \Podlove\Cache\TemplateCache::get_instance();
 			<div class="chart-loading" style="display: block;">
 				<img src="'.admin_url('images/wpspin_light-2x.gif').'" alt="Loading" width="16" height="16" />
 			</div>
-			<div class="chart-failed" style="display: none;">Loading Chart failed :(</div>
-			<div class="chart-nodata" style="display: none;">No Chart Data</div>
+			<div class="chart-failed" style="display: none;">'.esc_html__('Loading Chart failed :(', 'podlove-podcasting-plugin-for-wordpress').'</div>
+			<div class="chart-nodata" style="display: none;">'.esc_html__('No Chart Data', 'podlove-podcasting-plugin-for-wordpress').'</div>
 		'; ?>
 
 		<div class="metabox-holder">

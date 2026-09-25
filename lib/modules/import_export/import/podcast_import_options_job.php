@@ -19,12 +19,12 @@ class PodcastImportOptionsJob
 
     public static function title()
     {
-        return 'Podcast Import: Options';
+        return __('Podcast Import: Options', 'podlove-podcasting-plugin-for-wordpress');
     }
 
     public static function description()
     {
-        return 'Imports Podcast Options';
+        return __('Imports Podcast Options', 'podlove-podcasting-plugin-for-wordpress');
     }
 
     public function init_job()

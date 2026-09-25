@@ -1,6 +1,6 @@
 <template>
   <div v-if="state.transcripts.length > 0">
-    <podlove-button variant="secondary" size="small" @click="openModal()">Clear</podlove-button>
+    <podlove-button variant="secondary" size="small" @click="openModal()">{{ __('Clear', 'podlove-podcasting-plugin-for-wordpress') }}</podlove-button>
     <modal :open="modalVisible" @close="closeModal()">
       <div class="sm:flex sm:items-start">
         <div
@@ -20,7 +20,7 @@
         </div>
         <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
           <DialogTitle as="h3" class="text-lg leading-6 font-medium text-gray-900">
-            Clear Transcript
+            {{ __('Clear Transcript', 'podlove-podcasting-plugin-for-wordpress') }}
           </DialogTitle>
           <div class="mt-2">
             <p class="text-sm text-gray-500">

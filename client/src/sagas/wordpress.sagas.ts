@@ -1,3 +1,4 @@
+import { __ } from '../plugins/translations'
 import { call, put, select, takeEvery } from 'redux-saga/effects'
 
 import * as lifecycleStore from '@store/lifecycle.store'
@@ -134,9 +135,9 @@ function* selectMediaFromLibrary(action: { payload: { onSuccess: Action } }) {
   }
 
   const mediaLibrary = wordpress.media({
-    title: 'Select or Upload Media Of Your Chosen Persuasion',
+    title: __('Select or Upload Media Of Your Chosen Persuasion', 'podlove-podcasting-plugin-for-wordpress'),
     button: {
-      text: 'Use this media',
+      text: __('Use this media', 'podlove-podcasting-plugin-for-wordpress'),
     },
     multiple: false, // Set to true to allow multiple files to be selected
   })

@@ -203,10 +203,10 @@ class Downloads_List_Table extends \Podlove\List_Table
         if ($which == 'top') { ?>
 		  <div class="alignleft actions bulkactions">
 				<select name="action" id="analytics-export-selector-top">
-					<option value="export-csv">Export as CSV</option>
-					<option value="export-json">Export as JSON</option>
+					<option value="export-csv"><?php echo esc_html__('Export as CSV', 'podlove-podcasting-plugin-for-wordpress'); ?></option>
+					<option value="export-json"><?php echo esc_html__('Export as JSON', 'podlove-podcasting-plugin-for-wordpress'); ?></option>
 				</select>
-				<input type="submit" class="button action" value="Export">
+				<input type="submit" class="button action" value="<?php echo esc_attr__('Export', 'podlove-podcasting-plugin-for-wordpress'); ?>">
 			</div>
 		<?php
         }
