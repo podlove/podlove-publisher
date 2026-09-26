@@ -16,12 +16,12 @@ class ImportTranscriptsJob
 
     public static function title()
     {
-        return 'Podcast Import: Transcripts';
+        return __('Podcast Import: Transcripts', 'podlove-podcasting-plugin-for-wordpress');
     }
 
     public static function description()
     {
-        return 'Imports Episode Transcripts';
+        return __('Imports Episode Transcripts', 'podlove-podcasting-plugin-for-wordpress');
     }
 
     protected static function get_import_table_class()

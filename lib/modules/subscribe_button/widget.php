@@ -112,7 +112,7 @@ class Widget extends \WP_Widget
 		<p>
 			<label for="<?php echo $this->get_field_id('infotext'); ?>"><?php _e('Content', 'podlove-podcasting-plugin-for-wordpress'); ?></label>
 			<textarea class="widefat" rows="10" id="<?php echo $this->get_field_id('infotext'); ?>" name="<?php echo $this->get_field_name('infotext'); ?>"><?php echo $infotext; ?></textarea>
-			<em>This text will be shown below the subscribe button.</em>
+			<em><?php echo esc_html__('This text will be shown below the subscribe button.', 'podlove-podcasting-plugin-for-wordpress'); ?></em>
 		</p>
 		<?php
 

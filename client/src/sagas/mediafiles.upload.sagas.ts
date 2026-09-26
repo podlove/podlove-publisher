@@ -1,3 +1,4 @@
+import { __ } from '../plugins/translations'
 import { PodloveApiClient } from '@lib/api'
 import { selectors } from '@store'
 import { call, put, select } from 'redux-saga/effects'
@@ -51,7 +52,7 @@ export function* triggerPlusUpload(api: PodloveApiClient, action: Action): Gener
       progress.setProgressStatus({
         key: progressKey,
         status: 'error',
-        message: error instanceof Error ? error.message : 'File upload failed',
+        message: error instanceof Error ? error.message : __('File upload failed', 'podlove-podcasting-plugin-for-wordpress'),
       })
     )
   }

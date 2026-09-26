@@ -75,7 +75,7 @@
                   "
                   @click="close()"
                 >
-                  <span class="sr-only">Close</span>
+                  <span class="sr-only">{{ __('Close', 'podlove-podcasting-plugin-for-wordpress') }}</span>
                   <XIcon class="h-6 w-6" aria-hidden="true" />
                 </button>
               </div>

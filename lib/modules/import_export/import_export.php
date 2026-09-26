@@ -4,9 +4,17 @@ namespace Podlove\Modules\ImportExport;
 
 class Import_Export extends \Podlove\Modules\Base
 {
-    protected $module_name = 'Import &amp; Export';
-    protected $module_description = 'Import &amp; export podlove data for backup or migration to another WordPress instance.';
     protected $module_group = 'system';
+
+    public function get_module_name()
+    {
+        return __('Import &amp; Export', 'podlove-podcasting-plugin-for-wordpress');
+    }
+
+    public function get_module_description()
+    {
+        return __('Import &amp; export podlove data for backup or migration to another WordPress instance.', 'podlove-podcasting-plugin-for-wordpress');
+    }
 
     public function load()
     {
@@ -136,7 +144,7 @@ class Import_Export extends \Podlove\Modules\Base
 		<p>
 			<button id="podlove_tracking_export" class="button"><?php echo __('Export Tracking Data', 'podlove-podcasting-plugin-for-wordpress'); ?></button>
 			<span id="podlove_tracking_export_status_wrapper">
-				<?php echo __('Export', 'podlove-podcasting-plugin-for-wordpress'); ?>: <span id="podlove_tracking_export_status">starting ...</span>
+				<?php echo __('Export', 'podlove-podcasting-plugin-for-wordpress'); ?>: <span id="podlove_tracking_export_status"><?php echo esc_html__('starting ...', 'podlove-podcasting-plugin-for-wordpress'); ?></span>
 			</span>
 		</p>
 

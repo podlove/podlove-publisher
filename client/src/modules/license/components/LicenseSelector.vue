@@ -5,7 +5,7 @@
   <div>
     <div class="mb-3">
       <label class="block text-sm font-medium text-gray-700">
-        Version:
+        {{ __('Version:', 'podlove-podcasting-plugin-for-wordpress') }}
       </label>
       <select :value="getLicenseData().version" @input="updateVersion($event)" class="
             mt-1
@@ -27,7 +27,7 @@
     </div>
     <div v-if="isCommercialNModificationNeeded" class="mb-3">
       <label class="block text-sm font-medium text-gray-700">
-        Allow modifications of your work?
+        {{ __('Allow modifications of your work?', 'podlove-podcasting-plugin-for-wordpress') }}
       </label>
       <select :value="getLicenseData().optionModification" @input="updateModification($event)" class="
             mt-1
@@ -50,7 +50,7 @@
     </div>
     <div v-if="isCommercialNModificationNeeded" class="mb-3">
       <label class="block text-sm font-medium text-gray-700">
-        Allow commercial uses of your work?
+        {{ __('Allow commercial uses of your work?', 'podlove-podcasting-plugin-for-wordpress') }}
       </label>
       <select :value="getLicenseData().optionCommercial" @input="updateCommercial($event)" class="
             mt-1
@@ -73,7 +73,7 @@
     </div>
     <div v-if="isJurisdicationNeeded" class="mb-3">
       <label class="block text-sm font-medium text-gray-700">
-        License Jurisdiction
+        {{ __('License Jurisdiction', 'podlove-podcasting-plugin-for-wordpress') }}
       </label>
       <select :value="getLicenseData().optionJurisdication?.name" @input="updateJurisdication($event)" class="
             mt-1

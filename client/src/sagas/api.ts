@@ -1,3 +1,4 @@
+import { __ } from '../plugins/translations'
 import { call, select } from 'redux-saga/effects'
 import { podlove } from '../lib/api'
 import { selectors, store } from '@store'
@@ -12,7 +13,7 @@ export function* createApi() {
   const bearer: string = yield select(selectors.runtime.bearer)
 
   const errorHandler = function (errorData: any) {
-    let message = 'An error occurred'
+    let message = __('An error occurred', 'podlove-podcasting-plugin-for-wordpress')
 
     if (typeof errorData === 'string') {
       message = errorData
@@ -20,7 +21,7 @@ export function* createApi() {
       if (errorData.code && errorData.message) {
         message = `${errorData.code}: ${errorData.message}`
       } else {
-        message = errorData.message || errorData.code || 'An error occurred'
+        message = errorData.message || errorData.code || __('An error occurred', 'podlove-podcasting-plugin-for-wordpress')
       }
     }
 

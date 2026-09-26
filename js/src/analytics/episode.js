@@ -212,7 +212,7 @@ jQuery(document).ready(function ($) {
 
 		var downloadsChart = dc.barChart(compChart)
 			.dimension(hoursDimension)
-			.group(downloadsGroup, 'Current Episode')
+			.group(downloadsGroup, wp.i18n.__('Current Episode', 'podlove-podcasting-plugin-for-wordpress'))
 			.renderTitle(true)
 			.valueAccessor(function (v) {
 				return v.value.downloads;
@@ -222,7 +222,7 @@ jQuery(document).ready(function ($) {
 
 		var avgEpisodeDownloadsChart = dc.barChart(compChart)
 			.dimension(hoursDimension)
-			.group(avgDownloadsGroup, 'Average Episode')
+			.group(avgDownloadsGroup, wp.i18n.__('Average Episode', 'podlove-podcasting-plugin-for-wordpress'))
 			.renderTitle(true)
 			.colors('#224BA6')
 			.valueAccessor(function (v) {
@@ -269,27 +269,27 @@ jQuery(document).ready(function ($) {
 			.brushOn(false)
 			.transitionDuration(0) // turn off transitions
 			.yAxisLabel('Downloads')
-			.xAxisLabel('Hours since release')
+			.xAxisLabel(wp.i18n.__('Hours since release', 'podlove-podcasting-plugin-for-wordpress'))
 			.rangeChart(rangeChart)
 			.title(function (d) {
 
-				var title = d.value.date ? titleDateFormat(d.value.date) : 'Average Episode',
+				var title = d.value.date ? titleDateFormat(d.value.date) : wp.i18n.__('Average Episode', 'podlove-podcasting-plugin-for-wordpress'),
 					time = '';
 
 				if (d.value.cum) {
-					time = (d.key * hours_per_unit) + 'h after release';
+					time = wp.i18n.sprintf(wp.i18n.__('%sh after release', 'podlove-podcasting-plugin-for-wordpress'), d.key * hours_per_unit);
 				} else {
-					time = (d.key * hours_per_unit) + 'h – ' + ((d.key + 1) * hours_per_unit) + 'h after release';
+					time = wp.i18n.sprintf(wp.i18n.__('%1$sh – %2$sh after release', 'podlove-podcasting-plugin-for-wordpress'), d.key * hours_per_unit, (d.key + 1) * hours_per_unit);
 				}
 
 				return [
 					title,
 					time,
-					'Downloads: ' + d.value.downloads
+					wp.i18n.sprintf(wp.i18n.__('Downloads: %d', 'podlove-podcasting-plugin-for-wordpress'), d.value.downloads)
 				].join('\n');
 			})
 			.compose([cumulativeEpisodeChart, downloadsChart, avgEpisodeDownloadsChart])
-			.rightYAxisLabel('Cumulative Downloads');
+			.rightYAxisLabel(wp.i18n.__('Cumulative Downloads', 'podlove-podcasting-plugin-for-wordpress'));
 
 		var assetChart = dc.rowChart('#episode-asset-chart')
 			.margins({
@@ -541,11 +541,11 @@ jQuery(document).ready(function ($) {
 						downloads: +d.downloads,
 						hoursSinceRelease: +d.hours_since_release,
 						asset_id: +d.asset_id,
-						client: d.client ? d.client : 'Unknown',
-						system: d.system ? d.system : 'Unknown',
-						source: d.source ? d.source : 'Unknown',
-						context: d.context ? d.context : 'Unknown',
-						geo: d.geo ? d.geo : 'Unknown'
+						client: d.client ? d.client : wp.i18n.__('Unknown', 'podlove-podcasting-plugin-for-wordpress'),
+						system: d.system ? d.system : wp.i18n.__('Unknown', 'podlove-podcasting-plugin-for-wordpress'),
+						source: d.source ? d.source : wp.i18n.__('Unknown', 'podlove-podcasting-plugin-for-wordpress'),
+						context: d.context ? d.context : wp.i18n.__('Unknown', 'podlove-podcasting-plugin-for-wordpress'),
+						geo: d.geo ? d.geo : wp.i18n.__('Unknown', 'podlove-podcasting-plugin-for-wordpress')
 					};
 				};
 
@@ -630,7 +630,7 @@ jQuery(document).ready(function ($) {
 		}).fail(function() {
 			input.prop('checked', !checked);
 			chart.toggle(!checked);
-			window.alert('The analytics display preference could not be saved. Please try again.');
+			window.alert(wp.i18n.__('The analytics display preference could not be saved. Please try again.', 'podlove-podcasting-plugin-for-wordpress'));
 		});
 
 		// update UI
@@ -670,7 +670,7 @@ jQuery(document).ready(function ($) {
 		}).fail(function() {
 			input.prop('checked', !checked)
 			setAverageEpisodeSetting()
-			window.alert('The analytics display preference could not be saved. Please try again.')
+			window.alert(wp.i18n.__('The analytics display preference could not be saved. Please try again.', 'podlove-podcasting-plugin-for-wordpress'))
 		});
 	}
 

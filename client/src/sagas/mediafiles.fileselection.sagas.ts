@@ -1,3 +1,4 @@
+import { __ } from '../plugins/translations'
 import { PodloveApiClient } from '@lib/api'
 import { call, put, select, delay, fork } from 'redux-saga/effects'
 import * as mediafiles from '@store/mediafiles.store'
@@ -91,7 +92,7 @@ export function* generateFilenameForFile(api: PodloveApiClient, file: File, epis
 
   try {
     // Start loading state
-    yield put(progress.setProgressStatus({ key: progressKey, status: 'in_progress', message: 'Generating filename...' }))
+    yield put(progress.setProgressStatus({ key: progressKey, status: 'in_progress', message: __('Generating filename...', 'podlove-podcasting-plugin-for-wordpress') }))
 
     const { result } = yield api.post('plus/generate_filename', {
       original_filename: file.name,
@@ -117,13 +118,13 @@ export function* generateFilenameForFile(api: PodloveApiClient, file: File, epis
     yield call(updateFileInSelection, file.name, fileInfoWithExistenceCheck)
 
     // Complete loading state
-    yield put(progress.setProgressStatus({ key: progressKey, status: 'finished', message: 'Filename generated' }))
+    yield put(progress.setProgressStatus({ key: progressKey, status: 'finished', message: __('Filename generated', 'podlove-podcasting-plugin-for-wordpress') }))
 
     // Clean up progress state after a short delay
     yield fork(cleanupProgressState, progressKey, 2000)
   } catch (error) {
     // Error state
-    yield put(progress.setProgressStatus({ key: progressKey, status: 'error', message: 'Failed to generate filename' }))
+    yield put(progress.setProgressStatus({ key: progressKey, status: 'error', message: __('Failed to generate filename', 'podlove-podcasting-plugin-for-wordpress') }))
 
     // Clean up error state after a delay
     yield fork(cleanupProgressState, progressKey, 5000)

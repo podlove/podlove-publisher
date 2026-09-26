@@ -4,9 +4,17 @@ namespace Podlove\Modules\Widgets;
 
 class Widgets extends \Podlove\Modules\Base
 {
-    protected $module_name = 'Widgets';
-    protected $module_description = 'Brings a bunch of useful Podlove Publisher widgets to WordPress.';
     protected $module_group = 'web publishing';
+
+    public function get_module_name()
+    {
+        return __('Widgets', 'podlove-podcasting-plugin-for-wordpress');
+    }
+
+    public function get_module_description()
+    {
+        return __('Brings a bunch of useful Podlove Publisher widgets to WordPress.', 'podlove-podcasting-plugin-for-wordpress');
+    }
 
     public static function is_core()
     {

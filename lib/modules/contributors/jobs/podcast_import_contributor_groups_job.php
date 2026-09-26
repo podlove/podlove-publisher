@@ -16,12 +16,12 @@ class PodcastImportContributorGroupsJob
 
     public static function title()
     {
-        return 'Podcast Import: Contributor Groups';
+        return __('Podcast Import: Contributor Groups', 'podlove-podcasting-plugin-for-wordpress');
     }
 
     public static function description()
     {
-        return 'Imports Podcast Contributor Groups';
+        return __('Imports Podcast Contributor Groups', 'podlove-podcasting-plugin-for-wordpress');
     }
 
     protected static function get_import_table_class()

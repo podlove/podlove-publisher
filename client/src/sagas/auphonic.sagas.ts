@@ -1,3 +1,4 @@
+import { __, _n, sprintf } from '../plugins/translations'
 import * as auphonic from '@store/auphonic.store'
 import * as episode from '@store/episode.store'
 import * as progress from '@store/progress.store'
@@ -79,7 +80,7 @@ function* initializeAuphonicApi() {
     auphonic.setServices([
       {
         uuid: 'url',
-        display_name: 'From URL',
+        display_name: __('From URL', 'podlove-podcasting-plugin-for-wordpress'),
         email: '',
         incoming: true,
         outgoing: false,
@@ -87,7 +88,7 @@ function* initializeAuphonicApi() {
       },
       {
         uuid: 'file',
-        display_name: 'Upload from computer',
+        display_name: __('Upload from computer', 'podlove-podcasting-plugin-for-wordpress'),
         email: '',
         incoming: true,
         outgoing: false,
@@ -714,7 +715,7 @@ function* titleWithFallback() {
   const episodeTitle: string = yield select(selectors.episode.title)
   const postTitle: string = yield select(selectors.post.title)
 
-  return episodeTitle || postTitle || `New Production`
+  return episodeTitle || postTitle || __('New Production', 'podlove-podcasting-plugin-for-wordpress')
 }
 
 function* handleCreateProduction(auphonicApi: AuphonicApiClient) {
@@ -915,7 +916,7 @@ function* handleTriggerPlusTransfer(
          auphonic.setPlusTransferStatus({
            production_uuid,
            status: 'failed',
-           errors: getApiErrorMessage(response, 'Failed to initialize transfer'),
+           errors: getApiErrorMessage(response, __('Failed to initialize transfer', 'podlove-podcasting-plugin-for-wordpress')),
          })
        )
     }
@@ -924,7 +925,7 @@ function* handleTriggerPlusTransfer(
       auphonic.setPlusTransferStatus({
         production_uuid,
         status: 'failed',
-        errors: error.message || 'Failed to trigger transfer',
+        errors: error.message || __('Failed to trigger transfer', 'podlove-podcasting-plugin-for-wordpress'),
       })
     )
   }
@@ -937,7 +938,7 @@ function getPendingFiles(transferQueue: any[], completedCount: number): any[] {
     status: 'pending' as const,
     filename: file.filename,
     download_url: file.download_url,
-    message: 'Waiting to transfer...'
+    message: __('Waiting to transfer...', 'podlove-podcasting-plugin-for-wordpress')
   }))
 }
 
@@ -948,7 +949,7 @@ function createProcessingFile(file: any): any {
     status: 'processing' as const,
     filename: file.filename,
     download_url: file.download_url,
-    message: 'Transferring...'
+    message: __('Transferring...', 'podlove-podcasting-plugin-for-wordpress')
   }
 }
 
@@ -978,7 +979,7 @@ function* processTransferQueue(
     status: 'pending' as const,
     filename: file.filename,
     download_url: file.download_url,
-    message: 'Waiting to transfer...'
+    message: __('Waiting to transfer...', 'podlove-podcasting-plugin-for-wordpress')
   }))
 
   yield put(
@@ -1064,10 +1065,10 @@ function* processTransferQueue(
     // Only include errors parameter if there are errors
     if (hasErrors) {
       if (transferredFiles === 0) {
-        payload.errors = 'All file transfers failed'
+        payload.errors = __('All file transfers failed', 'podlove-podcasting-plugin-for-wordpress')
       } else {
         const failedCount = transferResults.length - transferredFiles
-        payload.errors = `${failedCount} of ${transferResults.length} file transfers failed`
+        payload.errors = sprintf(_n('%1$d of %2$d file transfers failed', '%1$d of %2$d file transfers failed', failedCount, 'podlove-podcasting-plugin-for-wordpress'), failedCount, transferResults.length)
       }
     }
 
@@ -1108,7 +1109,7 @@ function* transferFile(
   if (response.result) {
     return response.result
   } else {
-    return createErrorResponse(fileData, { message: getApiErrorMessage(response, 'Transfer failed') })
+    return createErrorResponse(fileData, { message: getApiErrorMessage(response, __('Transfer failed', 'podlove-podcasting-plugin-for-wordpress')) })
   }
 }
 

@@ -17,7 +17,7 @@ class RepairSocial
 
     public static function description($descriptions)
     {
-        return array_merge($descriptions, ['<strong>removes duplicate services</strong> if you have any']);
+        return array_merge($descriptions, [sprintf(__('%sremoves duplicate services%s if you have any', 'podlove-podcasting-plugin-for-wordpress'), '<strong>', '</strong>')]);
     }
 
     public static function fix_missing_services()

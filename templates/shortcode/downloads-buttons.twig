@@ -1,5 +1,5 @@
 <ul class="episode_download_list">
-	<li>Download:</li>
+	<li>{{ __('Download:', 'podlove-podcasting-plugin-for-wordpress')|e('html') }}</li>
 	{% for file in episode.files %}
 	    {% set asset = file.asset %}
 	    {% if asset.downloadable and file.active %}

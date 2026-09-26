@@ -126,7 +126,7 @@ class Contributors extends Tab
                 'field_type' => 'select',
                 'field_options' => [
                     'label' => __('Gender', 'podlove-podcasting-plugin-for-wordpress'),
-                    'options' => ['female' => 'Female', 'male' => 'Male', 'none' => 'Not attributed'],
+                    'options' => ['female' => __('Female', 'podlove-podcasting-plugin-for-wordpress'), 'male' => __('Male', 'podlove-podcasting-plugin-for-wordpress'), 'none' => __('Not attributed', 'podlove-podcasting-plugin-for-wordpress')],
                 ],
             ],
             'privateemail' => [

@@ -14,9 +14,17 @@ use Podlove\Modules\Contributors\Model\ShowContribution;
 
 class Contributors extends \Podlove\Modules\Base
 {
-    protected $module_name = 'Contributors';
-    protected $module_description = 'Manage contributors for each episode.';
     protected $module_group = 'metadata';
+
+    public function get_module_name()
+    {
+        return __('Contributors', 'podlove-podcasting-plugin-for-wordpress');
+    }
+
+    public function get_module_description()
+    {
+        return __('Manage contributors for each episode.', 'podlove-podcasting-plugin-for-wordpress');
+    }
 
     public function load()
     {

@@ -7,9 +7,17 @@ use Podlove\Model;
 
 class Asset_Validation extends \Podlove\Modules\Base
 {
-    protected $module_name = 'Asset Validation';
-    protected $module_description = 'Automatically validate assets once in a while. Fresh posts will be validated more often than old posts.';
     protected $module_group = 'system';
+
+    public function get_module_name()
+    {
+        return __('Asset Validation', 'podlove-podcasting-plugin-for-wordpress');
+    }
+
+    public function get_module_description()
+    {
+        return __('Automatically validate assets once in a while. Fresh posts will be validated more often than old posts.', 'podlove-podcasting-plugin-for-wordpress');
+    }
 
     public function load()
     {

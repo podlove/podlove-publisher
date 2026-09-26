@@ -96,7 +96,7 @@ class TemplateController
         }
 
         $template = new Template();
-        $template->title = 'new template';
+        $template->title = __('new template', 'podlove-podcasting-plugin-for-wordpress');
         $template->save();
 
         Ajax::respond_with_json(['id' => $template->id]);

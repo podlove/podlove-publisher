@@ -7,9 +7,17 @@ use Podlove\Model;
 
 class Open_Graph extends \Podlove\Modules\Base
 {
-    protected $module_name = 'Open Graph Integration';
-    protected $module_description = 'Adds Open Graph metadata to episodes. Useful for third party services.';
     protected $module_group = 'web publishing';
+
+    public function get_module_name()
+    {
+        return __('Open Graph Integration', 'podlove-podcasting-plugin-for-wordpress');
+    }
+
+    public function get_module_description()
+    {
+        return __('Adds Open Graph metadata to episodes. Useful for third party services.', 'podlove-podcasting-plugin-for-wordpress');
+    }
 
     public function load()
     {

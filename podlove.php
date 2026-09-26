@@ -33,10 +33,10 @@ function podlove_admin_error_no_autoload()
     ?>
 	<div id="message" class="error">
 		<p>
-			<strong>Podlove Podcast Publisher could not be activated</strong>
+			<strong><?php echo esc_html__('Podlove Podcast Publisher could not be activated', 'podlove-podcasting-plugin-for-wordpress'); ?></strong>
 		</p>
 		<p>
-			Plugin files are incomplete. Please download a fresh copy of the plugin: <a href="https://downloads.wordpress.org/plugin/podlove-podcasting-plugin-for-wordpress.zip">downloads.wordpress.org/plugin/podlove-podcasting-plugin-for-wordpress.zip</a> and <a href="https://codex.wordpress.org/Managing_Plugins#Installing_Plugins">repeat the installation</a>.
+			<?php echo sprintf(esc_html__('Plugin files are incomplete. Please download a fresh copy of the plugin: %1$s and %2$s.', 'podlove-podcasting-plugin-for-wordpress'), '<a href="https://downloads.wordpress.org/plugin/podlove-podcasting-plugin-for-wordpress.zip">downloads.wordpress.org/plugin/podlove-podcasting-plugin-for-wordpress.zip</a>', '<a href="https://codex.wordpress.org/Managing_Plugins#Installing_Plugins">'.esc_html__('repeat the installation', 'podlove-podcasting-plugin-for-wordpress').'</a>'); ?>
 		</p>
 	</div>
 	<?php
@@ -47,16 +47,15 @@ function podlove_admin_error_ancient_php()
     ?>
 	<div id="message" class="error">
 		<p>
-			<strong>Podlove Podcast Publisher could not be activated</strong>
+			<strong><?php echo esc_html__('Podlove Podcast Publisher could not be activated', 'podlove-podcasting-plugin-for-wordpress'); ?></strong>
 		</p>
 		<p>
-			Podlove Podcasting Plugin requires <code>PHP 8.0</code> or higher.<br>
-			You are running <code>PHP <?php echo phpversion(); ?></code>.<br>
-			Please ask your hoster how to upgrade to an up-to-date PHP version.
+			<?php echo sprintf(esc_html__('Podlove Podcasting Plugin requires %s or higher.', 'podlove-podcasting-plugin-for-wordpress'), '<code>PHP 8.0</code>'); ?><br>
+			<?php echo sprintf(esc_html__('You are running %s.', 'podlove-podcasting-plugin-for-wordpress'), '<code>PHP '.esc_html(phpversion()).'</code>'); ?><br>
+			<?php echo esc_html__('Please ask your hoster how to upgrade to an up-to-date PHP version.', 'podlove-podcasting-plugin-for-wordpress'); ?>
 		</p>
 		<p>
-			If you need to go back to an older Publisher version,
-			you can find a list of all available downloads at
+			<?php echo esc_html__('If you need to go back to an older Publisher version, you can find a list of all available downloads at', 'podlove-podcasting-plugin-for-wordpress'); ?>
 			<a href="https://wordpress.org/plugins/podlove-podcasting-plugin-for-wordpress/developers/">wordpress.org/plugins/podlove-podcasting-plugin-for-wordpress/developers/</a>.
 		</p>
 	</div>

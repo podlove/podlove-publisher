@@ -42,6 +42,7 @@
 </template>
 
 <script lang="ts">
+import { __ } from '../../../plugins/translations'
 import selectors from '@store/selectors'
 import { defineComponent } from '@vue/runtime-core'
 import { mapAppState } from '@store/vue'
@@ -51,25 +52,25 @@ import PodloveButton from '@components/button/Button.vue'
 
 const exportTypes = [
   {
-    title: 'Export webvtt',
+    title: __('Export webvtt', 'podlove-podcasting-plugin-for-wordpress'),
     type: 'webvtt',
     file: 'transcript.webvtt',
     ending: '.webvtt',
   },
   {
-    title: 'Export json (flat)',
+    title: __('Export json (flat)', 'podlove-podcasting-plugin-for-wordpress'),
     type: 'json',
     file: 'transcript.json',
     ending: '.json',
   },
   {
-    title: 'Export json (grouped)',
+    title: __('Export json (grouped)', 'podlove-podcasting-plugin-for-wordpress'),
     type: 'json_grouped',
     file: 'transcript.json',
     ending: '.json',
   },
   {
-    title: 'Export xml',
+    title: __('Export xml', 'podlove-podcasting-plugin-for-wordpress'),
     type: 'xml',
     file: 'transcript.xml',
     ending: '.xml',

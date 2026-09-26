@@ -64,7 +64,7 @@ var PODLOVE = PODLOVE || {};
 						sortable.sortable('enable');
 						ui.item.find(".position").val(ui.item.data('podlove-original-position'));
 						sortable.sortable('cancel');
-						window.alert('The episode asset order could not be saved. Please reload the page and try again.');
+						window.alert(wp.i18n.__('The episode asset order could not be saved. Please reload the page and try again.', 'podlove-podcasting-plugin-for-wordpress'));
 					}).done(function() {
 						sortable.sortable('enable');
 					});
@@ -144,14 +144,14 @@ var PODLOVE = PODLOVE || {};
 				var $container = $(this).closest('table');
 
 				var media_file_base_uri = $('#podlove_show_media_file_base_uri').val();
-				var episode_slug        = '<span style="font-style:italic; font-weight:100">episode-slug</span>';
+				var episode_slug        = '<span style="font-style:italic; font-weight:100">' + wp.i18n.__('episode-slug', 'podlove-podcasting-plugin-for-wordpress') + '</span>';
 				var suffix              = $('input[name*="suffix"]').val();
 
 				var selected_file_type  = $container.find('[name*="file_type_id"] option:selected').text();
 				var format_extension    = $container.find('[name*="file_type_id"] option:selected').data('extension');
 
 				if (!format_extension) {
-					$preview.html('Please select file format');
+					$preview.html(wp.i18n.__('Please select file format', 'podlove-podcasting-plugin-for-wordpress'));
 					return;
 				}
 

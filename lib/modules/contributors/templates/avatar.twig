@@ -6,4 +6,4 @@ Usage examples:
 	{% include '@contributors/avatar.twig' with {'avatar': contributor.avatar, 'size': 150} only %} 
 #}
 {% set size = size|default(50) %}
-<img alt="avatar" src="{{ avatar.url(size)|esc_url }}" class="avatar avatar-{{ size|e('html_attr') }} photo" height="{{ size|e('html_attr') }}" width="{{ size|e('html_attr') }}" />
+<img alt="{{ __('avatar', 'podlove-podcasting-plugin-for-wordpress')|e('html_attr') }}" src="{{ avatar.url(size)|esc_url }}" class="avatar avatar-{{ size|e('html_attr') }} photo" height="{{ size|e('html_attr') }}" width="{{ size|e('html_attr') }}" />

@@ -7,8 +7,12 @@ use Podlove\Model;
 
 class Logging extends \Podlove\Modules\Base
 {
-    protected $module_name = 'Logging';
     protected $module_group = 'system';
+
+    public function get_module_name()
+    {
+        return __('Logging', 'podlove-podcasting-plugin-for-wordpress');
+    }
 
     public function get_module_description()
     {
@@ -206,13 +210,13 @@ $(document).ready(function() {
 		<table id="podlove-log" cellspacing="0" border="0">
 			<tbody>
 			<?php foreach (LogTable::find_all_by_where('time > '.strtotime('-2 weeks')) as $log_entry) { ?>
-				<tr class="log-entry log-level-<?php echo $log_entry->level; ?>">
+				<tr class="log-entry log-level-<?php echo esc_attr($log_entry->level); ?>">
 					<td class="log-date">
-						<?php echo date('Y-m-d H:i:s', $log_entry->time); ?>
+						<?php echo esc_html(date('Y-m-d H:i:s', $log_entry->time)); ?>
 					</td>
 					<td class="log-content">
 						<span class="log-message">
-							<?php echo $log_entry->message; ?>
+							<?php echo esc_html($log_entry->message); ?>
 						</span>
 						<span class="log-extra">
 							<?php
@@ -221,27 +225,27 @@ $(document).ready(function() {
 			        if ($media_file = Model\MediaFile::find_by_id($data->media_file_id)) {
 			            if ($episode = $media_file->episode()) {
 			                if ($asset = $media_file->episode_asset()) {
-			                    echo sprintf('<a href="%s">%s/%s</a>', get_edit_post_link($episode->post_id), $episode->slug(), esc_html($asset->title));
+			                    echo sprintf('<a href="%s">%s/%s</a>', esc_url(get_edit_post_link($episode->post_id)), esc_html($episode->slug()), esc_html($asset->title));
 			                }
 			            }
 			        }
 			    }
 			    if (isset($data->error)) {
-			        echo sprintf(' "%s"', $data->error);
+			        echo sprintf(' "%s"', esc_html(print_r($data->error, true)));
 			    }
 			    if (isset($data->episode_id)) {
 			        if ($episode = Model\Episode::find_by_id($data->episode_id)) {
-			            echo sprintf(' <a href="%s">%s</a>', get_edit_post_link($episode->post_id), get_the_title($episode->post_id));
+			            echo sprintf(' <a href="%s">%s</a>', esc_url(get_edit_post_link($episode->post_id)), esc_html(get_the_title($episode->post_id)));
 			        }
 			    }
 			    if (isset($data->http_code)) {
-			        echo ' HTTP Status: '.$data->http_code;
+			        echo ' HTTP Status: '.esc_html(print_r($data->http_code, true));
 			    }
 			    if (isset($data->mime_type, $data->expected_mime_type)) {
-			        echo " Expected: {$data->expected_mime_type}, but found: {$data->mime_type}";
+			        echo ' Expected: '.esc_html(print_r($data->expected_mime_type, true)).', but found: '.esc_html(print_r($data->mime_type, true));
 			    }
 			    if (isset($data->type) && $data->type == 'twig') {
-			        echo sprintf('in template "%s" line %d', print_r($data->template, true), $data->line);
+			        echo sprintf('in template "%s" line %d', esc_html(print_r($data->template ?? '', true)), (int) ($data->line ?? 0));
 			    }
 
 			    $data = (array) $data;
@@ -258,14 +262,14 @@ $(document).ready(function() {
 			        ?>
 								<span class="log-details">
 									<span class="toggle"><a href="#"><?php echo __('toggle details', 'podlove-podcasting-plugin-for-wordpress'); ?></a></span>
-									<code class="details" style="display: none"><pre><?php print_r($extra); ?></pre></code>
+									<code class="details" style="display: none"><pre><?php echo esc_html(print_r($extra, true)); ?></pre></code>
 								</span>
 								<?php
 			    } elseif (!$data && !empty($log_entry->context)) {
 			        ?>
 								<span class="log-details">
 									<span class="toggle"><a href="#"><?php echo __('toggle details', 'podlove-podcasting-plugin-for-wordpress'); ?></a></span>
-									<code class="details" style="display: none"><pre><?php echo str_replace(',"', ','."\n".'"', $log_entry->context); ?></pre></code>
+									<code class="details" style="display: none"><pre><?php echo esc_html(str_replace(',"', ','."\n".'"', $log_entry->context)); ?></pre></code>
 								</span>
 								<?php
 			    } ?>

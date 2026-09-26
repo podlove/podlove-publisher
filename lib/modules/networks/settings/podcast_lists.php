@@ -19,9 +19,9 @@ class PodcastLists
             // $parent_slug
             $handle,
             // $page_title
-            'Lists',
+            __('Lists', 'podlove-podcasting-plugin-for-wordpress'),
             // $menu_title
-            'Lists',
+            __('Lists', 'podlove-podcasting-plugin-for-wordpress'),
             // $capability
             'administrator',
             // $menu_slug

@@ -38,7 +38,7 @@ class Feed_List_Table extends \Podlove\List_Table
         $podlove_feed_limit = \Podlove\Model\Podcast::get()->limit_items;
         switch ($feed->limit_items) {
             case '0':
-                return get_option('posts_per_rss').' (WordPress default)';
+                return get_option('posts_per_rss').' '.__('(WordPress default)', 'podlove-podcasting-plugin-for-wordpress');
 
                 break;
             case '-1':
@@ -46,8 +46,8 @@ class Feed_List_Table extends \Podlove\List_Table
 
                 break;
             case '-2':
-                return ($podlove_feed_limit == '-1' ? 'unlimited' : ($podlove_feed_limit == '0' ? get_option('posts_per_rss').' (WordPress default)' : $podlove_feed_limit))
-                       .' (global default)';
+                return ($podlove_feed_limit == '-1' ? 'unlimited' : ($podlove_feed_limit == '0' ? get_option('posts_per_rss').' '.__('(WordPress default)', 'podlove-podcasting-plugin-for-wordpress') : $podlove_feed_limit))
+                       .' '.__('(global default)', 'podlove-podcasting-plugin-for-wordpress');
 
                 break;
 

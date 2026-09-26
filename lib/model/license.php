@@ -89,6 +89,12 @@ class License
 
     public function getName()
     {
+        $license = self::get_license_from_url($this->url);
+        // Localize only generated display names; preserve custom and stored license names.
+        if ($this->type == 'cc' && self::get_name_from_license($license) === $this->name) {
+            return self::get_name_from_license($license, true);
+        }
+
         return $this->name;
     }
 
@@ -109,7 +115,7 @@ class License
 			<div class="podlove_cc_license">
 				<img src="'.$this->getPictureUrl().'" alt="License" />
 				<p>
-					This work is licensed under a <a rel="license" href="'.$this->getUrl().'">'.$this->getName().'</a>.
+					'.sprintf(esc_html__('This work is licensed under a %s.', 'podlove-podcasting-plugin-for-wordpress'), '<a rel="license" href="'.esc_url($this->getUrl()).'">'.esc_html($this->getName()).'</a>').'
 				</p>
 			</div>';
         }
@@ -213,7 +219,7 @@ class License
         ];
     }
 
-    public static function get_name_from_license($license)
+    public static function get_name_from_license($license, $translate = false)
     {
         $locales = \Podlove\License\locales_cc();
         $versions = \Podlove\License\version_per_country_cc();
@@ -225,11 +231,11 @@ class License
         }
 
         if ($license['version'] == 'pdmark') {
-            return 'Public Domain Mark License';
+            return $translate ? __('Public Domain Mark License', 'podlove-podcasting-plugin-for-wordpress') : 'Public Domain Mark License';
         }
 
         if ($license['version'] == 'cc0') {
-            return 'Public Domain License';
+            return $translate ? __('Public Domain License', 'podlove-podcasting-plugin-for-wordpress') : 'Public Domain License';
         }
 
         if ($license['commercial_use'] == 'no') {
@@ -245,7 +251,15 @@ class License
         }
 
         if ($license['version'] == 'cc4') {
+            if ($translate) {
+                return sprintf(__('Creative Commons Attribution%s 4.0 International License', 'podlove-podcasting-plugin-for-wordpress'), $license_attributions);
+            }
+
             return 'Creative Commons Attribution'.$license_attributions.' 4.0 International License';
+        }
+
+        if ($translate) {
+            return sprintf(__('Creative Commons Attribution%1$s %2$s %3$s License', 'podlove-podcasting-plugin-for-wordpress'), $license_attributions, $versions[$license['jurisdiction']]['version'], $license['jurisdiction'] == 'international' ? 'Unported' : $locales[$license['jurisdiction']]);
         }
 
         return 'Creative Commons Attribution'.$license_attributions.' '.$versions[$license['jurisdiction']]['version'].' '.($license['jurisdiction'] == 'international' ? 'Unported' : $locales[$license['jurisdiction']]).' License';

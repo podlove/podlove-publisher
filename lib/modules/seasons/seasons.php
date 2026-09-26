@@ -7,9 +7,17 @@ use Podlove\Modules\Seasons\Model\Season;
 
 class Seasons extends \Podlove\Modules\Base
 {
-    protected $module_name = 'Seasons';
-    protected $module_description = 'Group your episodes into seasons.';
     protected $module_group = 'metadata';
+
+    public function get_module_name()
+    {
+        return __('Seasons', 'podlove-podcasting-plugin-for-wordpress');
+    }
+
+    public function get_module_description()
+    {
+        return __('Group your episodes into seasons.', 'podlove-podcasting-plugin-for-wordpress');
+    }
 
     public function load()
     {

@@ -4,9 +4,17 @@ namespace Podlove\Modules\Soundbite;
 
 class Soundbite extends \Podlove\Modules\Base
 {
-    protected $module_name = 'Soundbite';
-    protected $module_description = 'Points to a soundbite within a podcast episode. The intended use includes episodes previews, discoverability, audiogram generation, episode highlights, etc. (adds podcast::soundbite tag to RSS feed)';
     protected $module_group = 'metadata';
+
+    public function get_module_name()
+    {
+        return __('Soundbite', 'podlove-podcasting-plugin-for-wordpress');
+    }
+
+    public function get_module_description()
+    {
+        return __('Points to a soundbite within a podcast episode. The intended use includes episodes previews, discoverability, audiogram generation, episode highlights, etc. (adds podcast::soundbite tag to RSS feed)', 'podlove-podcasting-plugin-for-wordpress');
+    }
 
     public function load()
     {

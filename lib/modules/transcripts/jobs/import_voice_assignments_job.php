@@ -16,12 +16,12 @@ class ImportVoiceAssignmentsJob
 
     public static function title()
     {
-        return 'Podcast Import: Transcript Voices';
+        return __('Podcast Import: Transcript Voices', 'podlove-podcasting-plugin-for-wordpress');
     }
 
     public static function description()
     {
-        return 'Imports Episode Transcript Voice Assignments';
+        return __('Imports Episode Transcript Voice Assignments', 'podlove-podcasting-plugin-for-wordpress');
     }
 
     protected static function get_import_table_class()

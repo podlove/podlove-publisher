@@ -8,9 +8,17 @@ use Podlove\Modules\RelatedEpisodes\Model\EpisodeRelation;
 
 class Related_Episodes extends \Podlove\Modules\Base
 {
-    protected $module_name = 'Related Episodes';
-    protected $module_description = 'Create related pairs of episodes. Display with shortcode <code>[podlove-related-episodes]</code>';
     protected $module_group = 'metadata';
+
+    public function get_module_name()
+    {
+        return __('Related Episodes', 'podlove-podcasting-plugin-for-wordpress');
+    }
+
+    public function get_module_description()
+    {
+        return __('Create related pairs of episodes. Display with shortcode <code>[podlove-related-episodes]</code>', 'podlove-podcasting-plugin-for-wordpress');
+    }
 
     public function load()
     {

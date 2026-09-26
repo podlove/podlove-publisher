@@ -16,12 +16,12 @@ class PodcastImportShowServicesJob
 
     public static function title()
     {
-        return 'Podcast Import: Show Services';
+        return __('Podcast Import: Show Services', 'podlove-podcasting-plugin-for-wordpress');
     }
 
     public static function description()
     {
-        return 'Imports Podcast Show Services';
+        return __('Imports Podcast Show Services', 'podlove-podcasting-plugin-for-wordpress');
     }
 
     protected static function get_import_table_class()

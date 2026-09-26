@@ -16,18 +16,18 @@
 {% if license.valid %}
 	{% if license.creativeCommons %}
 		<div class="podlove_cc_license">
-			<img src="{{ license.imageUrl|esc_url }}" alt="License" />
+			<img src="{{ license.imageUrl|esc_url }}" alt="{{ __('License', 'podlove-podcasting-plugin-for-wordpress')|e('html_attr') }}" />
 			<p>
-				This work is licensed under a <a rel="license" href="{{ license.url|esc_url }}">{{ license.name|e('html') }}</a>
+				{{ __('This work is licensed under a %s', 'podlove-podcasting-plugin-for-wordpress')|e('html')|format('<a rel="license" href="' ~ license.url|esc_url ~ '">' ~ license.name|e('html') ~ '</a>')|raw }}
 			</p>
 		</div>
 	{% else %}
-	    This work is licensed under the <a href="{{ license.url|esc_url }}">{{ license.name|e('html') }}</a> license.
+	    {{ __('This work is licensed under the %s license.', 'podlove-podcasting-plugin-for-wordpress')|e('html')|format('<a href="' ~ license.url|esc_url ~ '">' ~ license.name|e('html') ~ '</a>')|raw }}
 	{% endif %}
 {% else %}
     <div class="podlove_license">
 		<p style="color: red;">
-			This work is (not yet) licensed, as no license was chosen.
+			{{ __('This work is (not yet) licensed, as no license was chosen.', 'podlove-podcasting-plugin-for-wordpress')|e('html') }}
 		</p>
     </div>
 {% endif %}

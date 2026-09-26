@@ -130,13 +130,13 @@ function podlove_render_deprecations($deprecations)
     } ?>
 	<div id="message" class="error">
 		<p>
-			<strong>You are using outdated shortcodes. Please fix as soon as possible.</strong>
+			<strong><?php echo esc_html__('You are using outdated shortcodes. Please fix as soon as possible.', 'podlove-podcasting-plugin-for-wordpress'); ?></strong>
 			<ul>
 			<?php foreach ($deprecations as $deprecation) { ?>
 				<li>
 					<?php
                     echo sprintf(
-                        'Outdated %s %s in %s. Instead, use: %s',
+                        __('Outdated %s %s in %s. Instead, use: %s', 'podlove-podcasting-plugin-for-wordpress'),
                         $deprecation['deprecated']['type'],
                         '<code>'.$deprecation['deprecated']['content'].'</code>',
                         podlove_get_deprecation_context($deprecation['context']),
@@ -158,22 +158,22 @@ function podlove_get_deprecated_shortcodes()
         '\[podlove-episode-slug[^\]]*]' => '<code>{{ episode.slug }}</code>',
         '\[podlove-episode-duration[^\]]*]' => '<code>{{ episode.duration }}</code>',
         '\[podlove-episode-chapters[^\]]*]' => '<code>{{ episode.chapters }}</code>',
-        '\[podlove-episode\s+field[^\]]*]' => '<a href="http://docs.podlove.org/reference/template-tags/#episode">episode template tag</a>',
-        '\[podlove-podcast\s+[^\]]*]' => '<a href="http://docs.podlove.org/reference/template-tags/#podcast">podcast template tag</a>',
+        '\[podlove-episode\s+field[^\]]*]' => '<a href="http://docs.podlove.org/reference/template-tags/#episode">'.esc_html__('episode template tag', 'podlove-podcasting-plugin-for-wordpress').'</a>',
+        '\[podlove-podcast\s+[^\]]*]' => '<a href="http://docs.podlove.org/reference/template-tags/#podcast">'.esc_html__('podcast template tag', 'podlove-podcasting-plugin-for-wordpress').'</a>',
         '\[podlove-show[^\]]*]' => '—',
         '\[podlove-podcast-license[^\]]*]' => '<code>{% include \'@core/license.twig\' with {\'license\': podcast.license} %}</code>',
         '\[podlove-episode-license[^\]]*]' => '<code>{% include \'@core/license.twig\' with {\'license\': episode.license} %}</code>',
         '\[podlove-contributors[^\]]*]' => '<code>[podlove-episode-contributor-list]</code>',
         '\[podlove-contributor-list[^\]]*]' => '<code>[podlove-episode-contributor-list]</code>',
-        '\[podlove-web-player[^\]]*]' => '<code>[podlove-episode-web-player]</code> (or <code>{{ episode.player }}</code> in templates)',
-        '\[podlove-subscribe-button[^\]]*]' => '<code>[podlove-podcast-subscribe-button]</code> (or <code>{{ podcast.subscribeButton }}</code> in templates)',
+        '\[podlove-web-player[^\]]*]' => sprintf(__('%1$s (or %2$s in templates)', 'podlove-podcasting-plugin-for-wordpress'), '<code>[podlove-episode-web-player]</code>', '<code>{{ episode.player }}</code>'),
+        '\[podlove-subscribe-button[^\]]*]' => sprintf(__('%1$s (or %2$s in templates)', 'podlove-podcasting-plugin-for-wordpress'), '<code>[podlove-podcast-subscribe-button]</code>', '<code>{{ podcast.subscribeButton }}</code>'),
     ];
 }
 
 function podlove_get_deprecated_template_tags()
 {
     return [
-        '\{\{\s*contributor\.publicemail\s*\}\}' => 'the social module to manage and display the email',
+        '\{\{\s*contributor\.publicemail\s*\}\}' => __('the social module to manage and display the email', 'podlove-podcasting-plugin-for-wordpress'),
         '\{\{\s*[^\}]*license.html\s*\}\}' => '<code>{% include \'@core/license.twig\' %}</code>',
     ];
 }

@@ -121,7 +121,7 @@ jQuery(document).ready(function ($) {
 			.width(chart_width)
 			.height(200)
 			.dimension(dateDimension)
-			.group(downloadsWithoutTopGroup, "Other Episodes")
+			.group(downloadsWithoutTopGroup, wp.i18n.__('Other Episodes', 'podlove-podcasting-plugin-for-wordpress'))
 			.x(d3.scaleTime().domain([daysAgo(28), new Date()]))
 			.xUnits(d3.timeDays)
 			.brushOn(false)
@@ -134,7 +134,7 @@ jQuery(document).ready(function ($) {
 			.title(function (d) {
 				return [
 					titleDateFormat(d.key),
-					"Downloads: " + d.value.downloads
+					wp.i18n.sprintf(wp.i18n.__('Downloads: %d', 'podlove-podcasting-plugin-for-wordpress'), d.value.downloads)
 				].join("\n");
 			})
 			.renderHorizontalGridLines(true);
@@ -287,7 +287,7 @@ jQuery(document).ready(function ($) {
 			.title(function (d) {
 				return [
 					aboTotalsRawData[d.key].title,
-					"Downloads: " + d.value
+					wp.i18n.sprintf(wp.i18n.__('Downloads: %d', 'podlove-podcasting-plugin-for-wordpress'), d.value)
 				].join("\n");
 			})
 			.renderHorizontalGridLines(true)
@@ -563,7 +563,7 @@ jQuery(document).ready(function ($) {
 			})
 			.brushOn(false)
 			.title((v) => {
-				return v.key.getFullYear() + ' / ' + (v.key.getMonth() + 1) + '\nDownloads: ' + v.value
+				return v.key.getFullYear() + ' / ' + (v.key.getMonth() + 1) + '\n' + wp.i18n.sprintf(wp.i18n.__('Downloads: %d', 'podlove-podcasting-plugin-for-wordpress'), v.value)
 			})
 
 		var domain = dimension.group().all().map((x) => x.key);
@@ -585,7 +585,7 @@ jQuery(document).ready(function ($) {
 		mapper: function (d) {
 			return {
 				downloads: +d.downloads,
-				asset: d.asset ? d.asset : 'Unknown'
+				asset: d.asset ? d.asset : wp.i18n.__('Unknown', 'podlove-podcasting-plugin-for-wordpress')
 			}
 		},
 		renderer: renderAssetsChart
@@ -595,7 +595,7 @@ jQuery(document).ready(function ($) {
 		mapper: function (d) {
 			return {
 				downloads: +d.downloads,
-				client_name: d.client_name ? d.client_name : 'Unknown'
+				client_name: d.client_name ? d.client_name : wp.i18n.__('Unknown', 'podlove-podcasting-plugin-for-wordpress')
 			}
 		},
 		renderer: renderClientsChart
@@ -605,7 +605,7 @@ jQuery(document).ready(function ($) {
 		mapper: function (d) {
 			return {
 				downloads: +d.downloads,
-				os_name: d.os_name ? d.os_name : 'Unknown'
+				os_name: d.os_name ? d.os_name : wp.i18n.__('Unknown', 'podlove-podcasting-plugin-for-wordpress')
 			}
 		},
 		renderer: renderSystemsChart
@@ -615,7 +615,7 @@ jQuery(document).ready(function ($) {
 		mapper: function (d) {
 			return {
 				downloads: +d.downloads,
-				source: d.source ? d.source : 'Unknown'
+				source: d.source ? d.source : wp.i18n.__('Unknown', 'podlove-podcasting-plugin-for-wordpress')
 			}
 		},
 		renderer: renderSourcesChart
@@ -637,7 +637,7 @@ jQuery(document).ready(function ($) {
 		mapper: function (d) {
 			return {
 				downloads: +d.downloads,
-				title: d.title ? d.title : 'Unknown'
+				title: d.title ? d.title : wp.i18n.__('Unknown', 'podlove-podcasting-plugin-for-wordpress')
 			}
 		},
 		renderer: renderTopEpisodesChart

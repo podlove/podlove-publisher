@@ -152,7 +152,7 @@ class Dashboard
         $episode_total_average_length = $episodes_total_length / $episodes_total;
         $media_file_total_average_size = $media_file_total_size / $episodes_total; ?>
 		<div class="podlove-dashboard-statistics-wrapper">
-			<h4>Episodes</h4>
+			<h4><?php echo esc_html__('Episodes', 'podlove-podcasting-plugin-for-wordpress'); ?></h4>
 			<table cellspacing="0" cellpadding="0" class="podlove-dashboard-statistics">
 				<tr>
 					<td class="podlove-dashboard-number-column">

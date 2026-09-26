@@ -1,7 +1,7 @@
 <template>
   <div class="m-3 rounded-lg bg-white">
     <section class="bg-white w-full" v-if="uiState === 'init'">
-      <div class="text-center">loading...</div>
+      <div class="text-center">{{ __('loading...', 'podlove-podcasting-plugin-for-wordpress') }}</div>
     </section>
 
     <section class="bg-white w-full" v-if="uiState === 'finished'">
@@ -11,29 +11,29 @@
         >
           <CheckBadgeIcon class="w-10 h-10 stroke-green-500" />
         </div>
-        <h3 class="text-lg font-medium text-gray-800 mb-2.5">Upload Complete!</h3>
+        <h3 class="text-lg font-medium text-gray-800 mb-2.5">{{ __('Upload Complete!', 'podlove-podcasting-plugin-for-wordpress') }}</h3>
         <p class="text-gray-600 text-sm mb-6 max-w-md mx-auto">
-          <span v-if="failedFiles === 0">All your files have been successfully uploaded.</span>
-          <span v-else>Upload process completed with {{ failedFiles }} failed upload{{ failedFiles > 1 ? 's' : '' }}.</span>
+          <span v-if="failedFiles === 0">{{ __('All your files have been successfully uploaded.', 'podlove-podcasting-plugin-for-wordpress') }}</span>
+          <span v-else>{{ sprintf(_n('Upload process completed with %d failed upload.', 'Upload process completed with %d failed uploads.', failedFiles, 'podlove-podcasting-plugin-for-wordpress'), failedFiles) }}</span>
         </p>
 
         <div class="bg-gray-50 rounded-lg p-5 mx-auto m-5 text-left">
-          <div class="text-base font-medium text-gray-800 mb-4">Upload Summary</div>
+          <div class="text-base font-medium text-gray-800 mb-4">{{ __('Upload Summary', 'podlove-podcasting-plugin-for-wordpress') }}</div>
           <div class="flex justify-between mb-2.5 text-sm text-gray-600">
-            <span>Total Episodes:</span>
+            <span>{{ __('Total Episodes:', 'podlove-podcasting-plugin-for-wordpress') }}</span>
             <span>{{ totalEpisodes }}</span>
           </div>
           <div class="flex justify-between mb-2.5 text-sm text-gray-600">
-            <span>Total Files:</span>
+            <span>{{ __('Total Files:', 'podlove-podcasting-plugin-for-wordpress') }}</span>
             <span>{{ totalFiles }}</span>
           </div>
           <div v-if="failedFiles > 0" class="flex justify-between mb-4 text-sm text-red-600">
-            <span>Failed Uploads:</span>
+            <span>{{ __('Failed Uploads:', 'podlove-podcasting-plugin-for-wordpress') }}</span>
             <span>{{ failedFiles }}</span>
           </div>
 
           <div v-if="failedFiles > 0" class="border-t border-gray-200 pt-4">
-            <div class="text-sm font-medium text-gray-800 mb-3">Failed Uploads:</div>
+            <div class="text-sm font-medium text-gray-800 mb-3">{{ __('Failed Uploads:', 'podlove-podcasting-plugin-for-wordpress') }}</div>
             <div class="space-y-2">
               <div v-for="failedFile in failedFilesList" :key="`${failedFile.episodeName}-${failedFile.fileName}`"
                    class="bg-red-50 border border-red-200 rounded p-3">
@@ -48,15 +48,10 @@
 
         <p class="text-gray-600 text-left text-sm px-2 mx-auto">
           <span v-if="failedFiles === 0">
-            Starting immediately, your files will be served from PLUS Cloud Storage to all listeners.
-            When you create and manage new episodes, files will be directly uploaded to PLUS Cloud
-            Storage.<br /><br />Happy podcasting!
+            {{ __('Starting immediately, your files will be served from PLUS Cloud Storage to all listeners. When you create and manage new episodes, files will be directly uploaded to PLUS Cloud Storage.', 'podlove-podcasting-plugin-for-wordpress') }}<br /><br />{{ __('Happy podcasting!', 'podlove-podcasting-plugin-for-wordpress') }}
           </span>
           <span v-else>
-            Successfully uploaded files will be served from PLUS Cloud Storage to all listeners.
-            You may want to retry uploading the failed files or check the file URLs and try again.
-            When you create and manage new episodes, files will be directly uploaded to PLUS Cloud
-            Storage.
+            {{ __('Successfully uploaded files will be served from PLUS Cloud Storage to all listeners. You may want to retry uploading the failed files or check the file URLs and try again. When you create and manage new episodes, files will be directly uploaded to PLUS Cloud Storage.', 'podlove-podcasting-plugin-for-wordpress') }}
           </span>
         </p>
       </div>
@@ -70,15 +65,13 @@
           <UploadIcon class="w-10 h-10 stroke-gray-600" />
         </div>
         <h3 class="text-lg font-medium text-gray-800 mb-2.5">
-          Upload Your Existing Media Files to PLUS Cloud Storage
+          {{ __('Upload Your Existing Media Files to PLUS Cloud Storage', 'podlove-podcasting-plugin-for-wordpress') }}
         </h3>
         <p class="text-left text-gray-600 text-sm mb-2.5 max-w-md mx-auto">
-          This is a one-time operation to move your existing files to PLUS Cloud Storage. It will
-          only need to be done once.
+          {{ __('This is a one-time operation to move your existing files to PLUS Cloud Storage. It will only need to be done once.', 'podlove-podcasting-plugin-for-wordpress') }}
         </p>
         <p class="text-left text-gray-600 text-sm mb-6 max-w-md mx-auto">
-          You have {{ totalFiles }} files to upload. Once they are uploaded, you can delete the
-          files from your local storage or keep them as a backup.
+          You have {{ totalFiles }} {{ __('files to upload. Once they are uploaded, you can delete the files from your local storage or keep them as a backup.', 'podlove-podcasting-plugin-for-wordpress') }}
         </p>
         <podlove-button variant="primary" @click="startMigration">{{
           __('Start Uploads', 'podlove-podcasting-plugin-for-wordpress')
@@ -89,7 +82,7 @@
     <section class="bg-white w-full" v-if="uiState === 'in_progress'">
       <div class="py-10 px-5">
         <div class="flex justify-between mb-2 text-sm text-gray-600">
-          <span>Progress Uploading Media Files to PLUS Cloud Storage</span>
+          <span>{{ __('Progress Uploading Media Files to PLUS Cloud Storage', 'podlove-podcasting-plugin-for-wordpress') }}</span>
           <span>{{ progress }}%</span>
         </div>
         <div class="h-2.5 bg-gray-100 rounded-lg overflow-hidden">
@@ -101,15 +94,15 @@
 
         <section class="bg-gray-50 my-5 p-5 rounded-lg">
           <div class="flex items-center mb-2">
-            <h3 class="text-base font-medium text-gray-800">Currently Uploading</h3>
+            <h3 class="text-base font-medium text-gray-800">{{ __('Currently Uploading', 'podlove-podcasting-plugin-for-wordpress') }}</h3>
             <div class="ml-2 animate-spin">
               <div class="w-4 h-4 border-2 border-gray-300 border-t-gray-700 rounded-full"></div>
             </div>
           </div>
           <p class="text-gray-600 text-sm mb-1">
-            <strong>Episode:</strong> {{ currentEpisodeName }}
+            <strong>{{ __('Episode:', 'podlove-podcasting-plugin-for-wordpress') }}</strong> {{ currentEpisodeName }}
           </p>
-          <p class="text-gray-600 text-sm"><strong>File:</strong> {{ currentFileName }}</p>
+          <p class="text-gray-600 text-sm"><strong>{{ __('File:', 'podlove-podcasting-plugin-for-wordpress') }}</strong> {{ currentFileName }}</p>
         </section>
 
         <div class="border-l-4 border-yellow-400 bg-yellow-50 p-4">
@@ -119,7 +112,7 @@
             </div>
             <div class="ml-3">
               <p class="text-sm text-yellow-700">
-                Keep this window open while the upload is in progress.
+                {{ __('Keep this window open while the upload is in progress.', 'podlove-podcasting-plugin-for-wordpress') }}
               </p>
             </div>
           </div>

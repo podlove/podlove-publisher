@@ -5,10 +5,17 @@ namespace Podlove\Modules\WordpressFileUpload;
 class Wordpress_File_Upload extends \Podlove\Modules\Base
 {
     public const DEFAULT_DIR = '/podlove-media';
-
-    protected $module_name = 'WordPress File Upload';
-    protected $module_description = 'If you want to upload your media files to WordPress, this module adds a button to the episode form to do that.';
     protected $module_group = 'system';
+
+    public function get_module_name()
+    {
+        return __('WordPress File Upload', 'podlove-podcasting-plugin-for-wordpress');
+    }
+
+    public function get_module_description()
+    {
+        return __('If you want to upload your media files to WordPress, this module adds a button to the episode form to do that.', 'podlove-podcasting-plugin-for-wordpress');
+    }
 
     public function load()
     {
@@ -34,7 +41,7 @@ class Wordpress_File_Upload extends \Podlove\Modules\Base
                     <p>
                         <strong><?php echo sprintf(
                             __('Module "%s" is active.', 'podlove-podcasting-plugin-for-wordpress'),
-                            $this->module_name
+                            $this->get_module_name()
                         ); ?></strong>
                     </p>
                     <p>

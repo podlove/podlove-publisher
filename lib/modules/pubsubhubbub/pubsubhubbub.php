@@ -6,9 +6,17 @@ use Podlove\Model;
 
 class Pubsubhubbub extends \Podlove\Modules\Base
 {
-    protected $module_name = 'PubSubHubbub Support';
-    protected $module_description = 'Adds PubSubHubbub discovery to your feeds. Ping services on feed updates.';
     protected $module_group = 'web publishing';
+
+    public function get_module_name()
+    {
+        return __('PubSubHubbub Support', 'podlove-podcasting-plugin-for-wordpress');
+    }
+
+    public function get_module_description()
+    {
+        return __('Adds PubSubHubbub discovery to your feeds. Ping services on feed updates.', 'podlove-podcasting-plugin-for-wordpress');
+    }
 
     public function load()
     {

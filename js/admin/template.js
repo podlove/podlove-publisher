@@ -31,7 +31,7 @@
 			var markAsUnsaved = function () {
 				if (!isMarked) {
 					isMarked = true;
-					$navigationItem.html($navigationItem.html() + '<span class="unsaved" title="unsaved changes"> ● </span>');
+					$navigationItem.append($('<span class="unsaved"> ● </span>').attr('title', wp.i18n.__('unsaved changes', 'podlove-podcasting-plugin-for-wordpress')));
 				}
 			};
 
@@ -181,7 +181,7 @@
 		var delete_template = function(e) {
 			var template_id = $("li.active a", $navigation).data('id');
 
-			if (window.confirm("Delete template?")) {
+			if (window.confirm(wp.i18n.__('Delete template?', 'podlove-podcasting-plugin-for-wordpress'))) {
 
 				$.ajax(ajaxurl, {
 					dataType: 'json',

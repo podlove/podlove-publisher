@@ -14,22 +14,22 @@ class SystemReport
         $notices = &$this->notices;
 
         $this->fields = [
-            'site' => ['title' => 'Website', 'callback' => function () {
+            'site' => ['title' => __('Website', 'podlove-podcasting-plugin-for-wordpress'), 'callback' => function () {
                 return get_site_url();
             }],
-            'php_version' => ['title' => 'PHP Version', 'callback' => function () {
+            'php_version' => ['title' => __('PHP Version', 'podlove-podcasting-plugin-for-wordpress'), 'callback' => function () {
                 return phpversion();
             }],
-            'wp_version' => ['title' => 'WordPress Version', 'callback' => function () {
+            'wp_version' => ['title' => __('WordPress Version', 'podlove-podcasting-plugin-for-wordpress'), 'callback' => function () {
                 return get_bloginfo('version');
             }],
-            'theme' => ['title' => 'WordPress Theme', 'callback' => function () {
+            'theme' => ['title' => __('WordPress Theme', 'podlove-podcasting-plugin-for-wordpress'), 'callback' => function () {
                 $theme = wp_get_theme();
 
                 return $theme->get('Name').' v'.$theme->get('Version');
             },
             ],
-            'active plugins' => ['title' => 'Active Plugins', 'callback' => function () {
+            'active plugins' => ['title' => __('Active Plugins', 'podlove-podcasting-plugin-for-wordpress'), 'callback' => function () {
                 $separator = "\n           - ";
 
                 return $separator.implode(
@@ -44,13 +44,13 @@ class SystemReport
                     )
                 );
             }],
-            'db_charset' => ['title' => 'WordPress Database Charset', 'callback' => function () use (&$notices) {
+            'db_charset' => ['title' => __('WordPress Database Charset', 'podlove-podcasting-plugin-for-wordpress'), 'callback' => function () use (&$notices) {
                 // Fetch Episode Database Info from "information_scheme" Table
                 $db_connection = new \wpdb(DB_USER, DB_PASSWORD, 'information_schema', DB_HOST);
                 $episode_database_info = $db_connection->get_row('SELECT * FROM `TABLES` WHERE `TABLE_SCHEMA` = \''.DB_NAME.'\' AND `TABLE_NAME` = \''.\Podlove\Model\Episode::table_name().'\'', OBJECT);
 
                 if (is_object($episode_database_info) && !is_int(strpos($episode_database_info->TABLE_COLLATION, 'utf8'))) {
-                    $notices[] = 'Episode Database Charset is not UTF-8! (is '.$episode_database_info->TABLE_COLLATION.')';
+                    $notices[] = sprintf(__('Episode Database Charset is not UTF-8! (is %s)', 'podlove-podcasting-plugin-for-wordpress'), $episode_database_info->TABLE_COLLATION);
                 }
 
                 $db_connection->close();
@@ -61,20 +61,20 @@ class SystemReport
 
                 return 'undefined constant DB_CHARSET';
             }],
-            'db_collate' => ['title' => 'WordPress Database Collate', 'callback' => function () {
+            'db_collate' => ['title' => __('WordPress Database Collate', 'podlove-podcasting-plugin-for-wordpress'), 'callback' => function () {
                 if (defined('DB_COLLATE')) {
                     return DB_COLLATE;
                 }
 
                 return 'undefined constant DB_COLLATE';
             }],
-            'podlove_version' => ['title' => 'Publisher Version', 'callback' => function () {
+            'podlove_version' => ['title' => __('Publisher Version', 'podlove-podcasting-plugin-for-wordpress'), 'callback' => function () {
                 return \Podlove\get_plugin_header('Version');
             }],
-            'podlove_database_version' => ['title' => 'Publisher Database Version', 'callback' => function () {
+            'podlove_database_version' => ['title' => __('Publisher Database Version', 'podlove-podcasting-plugin-for-wordpress'), 'callback' => function () {
                 return get_option('podlove_database_version');
             }],
-            'player_version' => ['title' => 'Web Player Version', 'callback' => function () {
+            'player_version' => ['title' => __('Web Player Version', 'podlove-podcasting-plugin-for-wordpress'), 'callback' => function () {
                 return \Podlove\get_webplayer_setting('version');
             }],
             'open_basedir' => ['callback' => function () use (&$notices) {
@@ -90,7 +90,7 @@ class SystemReport
 
                 return 'ok';
             }],
-            'curl' => ['title' => 'curl Version', 'callback' => function () use (&$errors) {
+            'curl' => ['title' => __('curl Version', 'podlove-podcasting-plugin-for-wordpress'), 'callback' => function () use (&$errors) {
                 $module_loaded = in_array('curl', get_loaded_extensions());
                 $function_disabled = stripos(ini_get('disable_functions'), 'curl_exec') !== false;
                 $out = '';
@@ -99,8 +99,8 @@ class SystemReport
                     $curl = curl_version();
                     $out .= $curl['version'];
                 } else {
-                    $out .= 'EXTENSION MISSING';
-                    $errors[] = 'curl extension is not loaded';
+                    $out .= __('EXTENSION MISSING', 'podlove-podcasting-plugin-for-wordpress');
+                    $errors[] = __('curl extension is not loaded', 'podlove-podcasting-plugin-for-wordpress');
                 }
 
                 if ($function_disabled) {
@@ -219,7 +219,7 @@ class SystemReport
                 }
 
                 return "\n&nbsp; - ".implode("\n&nbsp; - ", array_map(function ($asset) {
-                    return str_pad($asset['extension'], 7).str_pad($asset['mime_type'], 17).($asset['feed'] ? $asset['feed']->get_subscribe_url() : 'no feed');
+                    return str_pad($asset['extension'], 7).str_pad($asset['mime_type'], 17).($asset['feed'] ? $asset['feed']->get_subscribe_url() : __('no feed', 'podlove-podcasting-plugin-for-wordpress'));
                 }, $assets));
             }],
             'cron' => [
@@ -237,7 +237,7 @@ class SystemReport
                 'callback' => function () use (&$errors) {
                     $duplicates = \Podlove\Custom_Guid::find_duplicate_guids();
                     if (count($duplicates)) {
-                        $message_base = 'Duplicate episode guids found. Fix as soon as possible as this will lead to trouble in podcast directories and podcast clients. Go to named episodes and use the "regenerate" function.';
+                        $message_base = __('Duplicate episode guids found. Fix as soon as possible as this will lead to trouble in podcast directories and podcast clients. Go to named episodes and use the "regenerate" function.', 'podlove-podcasting-plugin-for-wordpress');
                         $message_dups = [];
 
                         foreach ($duplicates as $guid => $post_ids) {
@@ -247,7 +247,7 @@ class SystemReport
 
                         $errors[] = $message_base.' '.implode('; ', $message_dups);
 
-                        return 'duplicate guids: '.count($duplicates);
+                        return sprintf(__('duplicate guids: %d', 'podlove-podcasting-plugin-for-wordpress'), count($duplicates));
                     }
 
                     return 'ok';
@@ -325,7 +325,7 @@ class SystemReport
 
         if ($number_of_notices = count($this->notices)) {
             $out .= sprintf(_n('%s NOTICE', '%s NOTICES', $number_of_notices, 'podlove-podcasting-plugin-for-wordpress'), $number_of_notices);
-            $out .= " (no dealbreaker, but should be fixed if possible): \n";
+            $out .= ' '.__('(no dealbreaker, but should be fixed if possible):', 'podlove-podcasting-plugin-for-wordpress')." \n";
             foreach ($this->notices as $error) {
                 $out .= "- {$error}\n";
             }
@@ -334,7 +334,7 @@ class SystemReport
         }
 
         if (count($this->errors) + count($this->notices) === 0) {
-            $out .= 'Nice, Everything looks fine!';
+            $out .= __('Nice, Everything looks fine!', 'podlove-podcasting-plugin-for-wordpress');
         }
 
         return $out;

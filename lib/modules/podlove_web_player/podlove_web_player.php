@@ -6,9 +6,17 @@ use Podlove\Model\Episode;
 
 class Podlove_Web_Player extends \Podlove\Modules\Base
 {
-    protected $module_name = 'Podlove Web Player';
-    protected $module_description = 'An audio player for the web. Let users listen to your podcast right on your website';
     protected $module_group = 'web publishing';
+
+    public function get_module_name()
+    {
+        return __('Podlove Web Player', 'podlove-podcasting-plugin-for-wordpress');
+    }
+
+    public function get_module_description()
+    {
+        return __('An audio player for the web. Let users listen to your podcast right on your website', 'podlove-podcasting-plugin-for-wordpress');
+    }
 
     public function load()
     {

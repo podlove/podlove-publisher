@@ -1,15 +1,17 @@
 <?php
 
-function add_type_attribute($tag, $handle, $src)
+function podlove_client_script_attributes($attributes)
 {
-    // if not your script, do nothing and return original $tag
-    if ('podlove-vue-app-client' !== $handle) {
-        return $tag;
+    if (($attributes['id'] ?? '') === 'podlove-vue-app-client-js') {
+        $attributes['type'] = 'module';
+        $attributes['crossorigin'] = 'anonymous';
     }
 
-    // change the script tag by adding type="module" and return it.
-    return '<script crossorigin type="module" src="'.esc_url($src).'"></script>';
+    return $attributes;
 }
+
+// Preserve WordPress's inline translations and data when making the client a module.
+add_filter('wp_script_attributes', 'podlove_client_script_attributes');
 
 // admin styles & scripts
 add_action('admin_enqueue_scripts', function () {
@@ -44,7 +46,6 @@ add_action('admin_enqueue_scripts', function () {
             $version,
             false
         );
-        add_filter('script_loader_tag', 'add_type_attribute', 10, 3);
         wp_enqueue_style('podlove-vue-app-client-css', \Podlove\PLUGIN_URL.'/client/dist/style.css', [], $version);
 
         add_filter('podlove_data_js', function ($data) {
@@ -62,10 +63,12 @@ add_action('admin_enqueue_scripts', function () {
             wp_register_script(
                 'podlove-episode-vue-apps',
                 \Podlove\PLUGIN_URL.'/js/dist/app.js',
-                ['underscore', 'jquery'],
+                ['underscore', 'jquery', 'wp-i18n'],
                 $version,
                 true
             );
+
+            wp_set_script_translations('podlove-episode-vue-apps', 'podlove-podcasting-plugin-for-wordpress');
 
             $episode = Podlove\Model\Episode::find_or_create_by_post_id(get_the_ID());
 
@@ -136,8 +139,10 @@ add_action('admin_enqueue_scripts', function () {
         );
 
         wp_enqueue_script('podlove_admin', \Podlove\PLUGIN_URL.'/js/dist/podlove-admin.js', [
-            'jquery', 'jquery-ui-sortable', 'jquery-ui-datepicker',
+            'jquery', 'jquery-ui-sortable', 'jquery-ui-datepicker', 'wp-i18n',
         ], $version);
+
+        wp_set_script_translations('podlove_admin', 'podlove-podcasting-plugin-for-wordpress');
 
         wp_enqueue_style('jquery-ui-style', \Podlove\PLUGIN_URL.'/js/admin/jquery-ui/css/smoothness/jquery-ui.css');
 

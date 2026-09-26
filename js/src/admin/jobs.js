@@ -66,7 +66,7 @@ var PODLOVE = PODLOVE || {};
 
             if (!percent && status.steps_total > 0) {
                 wrapper
-                    .html(" starting…")
+                    .html(wp.i18n.__('starting…', 'podlove-podcasting-plugin-for-wordpress'))
                     .prepend(spinner.clone());
             } else if (percent < 100 && status.steps_total > 0) {
                 wrapper
@@ -85,7 +85,7 @@ var PODLOVE = PODLOVE || {};
 
                 wrapper
                     .empty()
-                    .append("<small class=\"podlove-recent-job-info\">Finished in " + Math.round(status.active_run_time) + " seconds <time class=\"timeago\" datetime=\"" + datetime + "\"></time></small>.")
+                    .append("<small class=\"podlove-recent-job-info\">" + wp.i18n.sprintf(wp.i18n._n('Finished in %d second', 'Finished in %d seconds', Math.round(status.active_run_time), 'podlove-podcasting-plugin-for-wordpress'), Math.round(status.active_run_time)) + " <time class=\"timeago\" datetime=\"" + datetime + "\"></time></small>.")
 
                 $("time.timeago").timeago();
                 renderButton();

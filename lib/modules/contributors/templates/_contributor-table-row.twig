@@ -55,7 +55,7 @@
 				<a target="_blank"
 					class="FlattrButton"
 					style="display:none;"
-					title="Flattr {{ cTitle|e('html_attr') }}"
+					title="{{ __('Flattr %s', 'podlove-podcasting-plugin-for-wordpress')|format(cTitle)|e('html_attr') }}"
 					rel="flattr;uid:{{ contributor.flattr|e('html_attr') }};button:compact;popout:0"
 					href="{{ contributor.flattr_url|esc_url }}">
 						{{ cTitle|e('html') }}

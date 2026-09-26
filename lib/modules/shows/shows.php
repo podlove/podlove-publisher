@@ -7,9 +7,17 @@ use Podlove\Modules\SubscribeButton\Button;
 
 class Shows extends \Podlove\Modules\Base
 {
-    protected $module_name = 'Shows';
-    protected $module_description = 'Release specific episodes of a podcast as Shows.';
     protected $module_group = 'metadata';
+
+    public function get_module_name()
+    {
+        return __('Shows', 'podlove-podcasting-plugin-for-wordpress');
+    }
+
+    public function get_module_description()
+    {
+        return __('Release specific episodes of a podcast as Shows.', 'podlove-podcasting-plugin-for-wordpress');
+    }
 
     public function load()
     {

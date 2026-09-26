@@ -52,7 +52,8 @@ class Templates
 
         wp_register_script('podlove-ace-js', \Podlove\PLUGIN_URL.'/js/admin/ace/ace.js');
 
-        wp_register_script('podlove-template-js', \Podlove\PLUGIN_URL.'/js/admin/template.js', ['jquery', 'podlove-ace-js']);
+        wp_register_script('podlove-template-js', \Podlove\PLUGIN_URL.'/js/admin/template.js', ['wp-i18n', 'jquery', 'podlove-ace-js']);
+        wp_set_script_translations('podlove-template-js', 'podlove-podcasting-plugin-for-wordpress');
 
         wp_localize_script(
             'podlove-template-js',
@@ -135,7 +136,7 @@ $this->view_template(); ?>
 				<input id="podlove_template_shortcode_preview" class="regular-text code" value="" style="margin-right: 8px">
 
 				<button class="button clipboard-btn" data-clipboard-target="#podlove_template_shortcode_preview">
-					Copy to Clipboard
+					<?php echo esc_html__('Copy to Clipboard', 'podlove-podcasting-plugin-for-wordpress'); ?>
 				</button>
 			</div>
 		</div>
