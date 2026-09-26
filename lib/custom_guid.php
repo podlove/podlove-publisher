@@ -141,7 +141,7 @@ class Custom_Guid
     public static function override_wordpress_guid($guid, $post_id = null)
     {
         if ($podlove_guid = get_post_meta($post_id, '_podlove_guid', true)) {
-            return $podlove_guid;
+            return (string) $podlove_guid;
         }
 
         return $guid;
@@ -156,7 +156,7 @@ class Custom_Guid
         $guids = [];
 
         foreach ($published_post_ids as $post_id) {
-            $guid = get_the_guid($post_id);
+            $guid = (string) get_the_guid($post_id);
             if (!array_key_exists($guid, $guids)) {
                 $guids[$guid] = [$post_id];
             } else {
