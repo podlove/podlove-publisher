@@ -47,6 +47,14 @@ abstract class Base
     public function uninstall() {}
 
     /**
+     * This will be called once when the plugin is uninstalled from a multisite network.
+     *
+     * Modules can override this to remove data that is shared across all sites
+     * of the network. It is never called when a single site is deleted.
+     */
+    public function uninstall_network() {}
+
+    /**
      * Fetch module names by iterating over module directories.
      *
      * @return array
