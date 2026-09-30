@@ -10,7 +10,7 @@ add_action('pre_get_posts', function ($wp_query) {
         return;
     }
 
-    if (is_home() && $wp_query->is_main_query() && !isset($wp_query->query_vars['post_type'])) {
+    if ($wp_query->is_home() && $wp_query->is_main_query() && !isset($wp_query->query_vars['post_type'])) {
         $wp_query->set(
             'post_type',
             array_merge(['post', 'podcast'], (array) $wp_query->get('post_type'))
