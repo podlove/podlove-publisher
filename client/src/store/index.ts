@@ -27,6 +27,7 @@ import { State as relatedEpisodesState } from './relatedEpisodes.store'
 import { State as showsState } from './shows.store'
 import { State as adminState } from './admin.store'
 import { State as plusState } from './plus.store'
+import { State as assemblyaiState } from './assemblyai.store'
 
 import lifecycleSaga from '../sagas/lifecycle.sagas'
 import podcastSaga from '../sagas/podcast.sagas'
@@ -43,6 +44,7 @@ import showsSaga from '../sagas/shows.sagas'
 import adminSaga from '../sagas/admin.sagas'
 import plusFileMigrationSaga from '../sagas/plusFileMigration.sagas'
 import plusSaga from '../sagas/plus.sagas'
+import assemblyaiSaga from '../sagas/assemblyai.sagas'
 
 export interface State {
   lifecycle: LifecycleState
@@ -62,6 +64,7 @@ export interface State {
   admin: adminState
   plusFileMigration: plusFileMigrationState
   plus: plusState
+  assemblyai: assemblyaiState
 }
 
 const sagas = createSagaMiddleware()
@@ -84,5 +87,6 @@ sagas.run(showsSaga())
 sagas.run(adminSaga())
 sagas.run(plusFileMigrationSaga())
 sagas.run(plusSaga())
+sagas.run(assemblyaiSaga())
 
 export { selectors, sagas }

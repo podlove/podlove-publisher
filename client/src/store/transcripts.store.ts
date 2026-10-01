@@ -11,6 +11,7 @@ export const IMPORT_ASSET_TRANSCRIPTS = 'podlove/publisher/transcript/IMPORT_ASS
 export const SET_ASSET_IMPORT_LOADING = 'podlove/publisher/transcript/SET_ASSET_IMPORT_LOADING'
 export const SET_ASSET_IMPORT_ERROR = 'podlove/publisher/transcript/SET_ASSET_IMPORT_ERROR'
 export const DELETE_TRANSCRIPTS = 'podlove/publisher/transcript/DELETE_TRANSCRIPTS'
+export const REFRESH = 'podlove/publisher/transcript/REFRESH'
 
 export const init = createAction<void>(INIT)
 export const setTranscripts = createAction<PodloveTranscript[]>(SET_TRANSCRIPTS)
@@ -21,6 +22,7 @@ export const importTranscriptFromAsset = createAction<void>(IMPORT_ASSET_TRANSCR
 export const setAssetImportLoading = createAction<boolean>(SET_ASSET_IMPORT_LOADING)
 export const setAssetImportError = createAction<string | null>(SET_ASSET_IMPORT_ERROR)
 export const deleteTranscripts = createAction<void>(DELETE_TRANSCRIPTS)
+export const refresh = createAction<void>(REFRESH)
 
 export type State = {
   transcripts: PodloveTranscript[]
