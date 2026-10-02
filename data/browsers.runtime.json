@@ -1,0 +1,44 @@
+{
+  "entries": [
+    {
+      "name": "Brave",
+      "pattern": ".+[Bb]rave"
+    },
+    {
+      "name": "Opera",
+      "pattern": "Opera/|Macintosh.*OPR/|Windows.*OPR/|Mobile/.* OPT/"
+    },
+    {
+      "name": "Edge",
+      "pattern": "(Xbox.+Edg?/|Android.+EdgA/|iPhone.+EdgiOS/|Macintosh.+MacEdgeClient/|Windows Phone.+Edge?/|Windows.+Edge?/)"
+    },
+    {
+      "name": "Chrome",
+      "pattern": "^.*Android.*Chrome/|CrOS.*Chrome/|Linux.*Chrome/|Mac OS X.*Chrome/|Windows.*Chrome/|iPad.*CriOS/|iPhone.*CriOS/|^Chrome/\\d.*CFNetwork"
+    },
+    {
+      "name": "Firefox",
+      "pattern": "Firefox/|(Android|iPhone|iPad).*Focus/| FxiOS/"
+    },
+    {
+      "name": "Internet Explorer",
+      "pattern": "MSIE | Trident/"
+    },
+    {
+      "name": "NCSA Mosaic",
+      "pattern": "^NCSA Mosaic/"
+    },
+    {
+      "name": "DuckDuckGo",
+      "pattern": "^DuckDuckGo"
+    },
+    {
+      "name": "Safari",
+      "pattern": "Macintosh.*AppleWebKit.*Safari/|Windows.*AppleWebKit.*Safari/|iPhone.*AppleWebKit.*Safari/|iPad.*AppleWebKit.*Safari/|^MobileSafari/|^Safari/"
+    },
+    {
+      "name": "iOS WebView",
+      "pattern": "Mozilla/5\\.0 \\([A-Za-z ]+; CPU( iPhone)? OS [\\d_]+ like Mac OS X\\) AppleWebKit/[\\d.]+ \\(KHTML, like Gecko\\) Mobile/[0-9A-Z]{6,}"
+    }
+  ]
+}

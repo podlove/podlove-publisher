@@ -1,0 +1,672 @@
+{
+  "entries": [
+    {
+      "name": "AAABot - unknown bot",
+      "pattern": "AAABot"
+    },
+    {
+      "name": "Adswizz",
+      "pattern": "^AIS VirtualListener"
+    },
+    {
+      "name": "ma Podcast (agma) Bot",
+      "pattern": "^agma/"
+    },
+    {
+      "name": "AhrefsBot",
+      "pattern": "AhrefsBot/"
+    },
+    {
+      "name": "AirableBot",
+      "pattern": "AirableBot-Podcast/"
+    },
+    {
+      "name": "Alexa Flash Briefing cache",
+      "pattern": "^AmazonNewsContentService"
+    },
+    {
+      "name": "AlignaBot",
+      "pattern": "^Alignabot"
+    },
+    {
+      "name": "All Ears",
+      "pattern": "^AllEars/"
+    },
+    {
+      "name": "Amazon Music Podcasts Bot",
+      "pattern": "^Amazon Music Podcast"
+    },
+    {
+      "name": "Anchor Importer",
+      "pattern": "AnchorImport"
+    },
+    {
+      "name": "Apple Notes share extension",
+      "pattern": "^com.apple.(mobilenotes.SharingExtension|Notes.SharingExtension)/"
+    },
+    {
+      "name": "Apple Podcasts (Watch)",
+      "pattern": "^atc/|\\(null\\) watchOS/"
+    },
+    {
+      "name": "Apple Podcasts automated checks",
+      "pattern": "(iTMS|itunesstored|itms)"
+    },
+    {
+      "name": "Applebot",
+      "pattern": "^Applebot/"
+    },
+    {
+      "name": "Archive.org",
+      "pattern": "archive\\.org_bot"
+    },
+    {
+      "name": "atheerfm",
+      "pattern": "^atheerfm/"
+    },
+    {
+      "name": "Audiomack",
+      "pattern": "^Audiomack Podcast Processor/"
+    },
+    {
+      "name": "AudioWave feed parser",
+      "pattern": "^AudioWaveBot/1\\.0"
+    },
+    {
+      "name": "AwarioSmartBot",
+      "pattern": "^AwarioSmartBot/"
+    },
+    {
+      "name": "Babbar",
+      "pattern": "Barkrowler/"
+    },
+    {
+      "name": "Baidu",
+      "pattern": "\\(ce\\.baidu\\.com"
+    },
+    {
+      "name": "bbot",
+      "pattern": "^bbot/"
+    },
+    {
+      "name": "Beacon Podcast Sync",
+      "pattern": "^Beacon/\\d"
+    },
+    {
+      "name": "British Library",
+      "pattern": "^bl\\.uk_ldfc_bot"
+    },
+    {
+      "name": "Blubrry Migration Service",
+      "pattern": "^Blubrry Migration Service"
+    },
+    {
+      "name": "Bullhorn Crawler",
+      "pattern": "^BullhornCrawler/"
+    },
+    {
+      "name": "Buzzsprout Importer",
+      "pattern": "^Buzzsprout Importer"
+    },
+    {
+      "name": "Bytespider.*bytedance",
+      "pattern": "Bytespider"
+    },
+    {
+      "name": "CastFeedValidator",
+      "pattern": "^CastFeedValidator/"
+    },
+    {
+      "name": "Castopod",
+      "pattern": "Castopod/\\d"
+    },
+    {
+      "name": "Chartable",
+      "pattern": "^Trackable/"
+    },
+    {
+      "name": "Clark-Crawler, unknown",
+      "pattern": "^clark-crawler2"
+    },
+    {
+      "name": "Claudebot",
+      "pattern": "ClaudeBot/"
+    },
+    {
+      "name": "Critical Mention",
+      "pattern": "^Podcast-CriticalMention/"
+    },
+    {
+      "name": "curl",
+      "pattern": "^curl|^libcurl/|^PycURL/| curl/"
+    },
+    {
+      "name": "DataforSEO",
+      "pattern": "DataForSeoBot/"
+    },
+    {
+      "name": "Datagnion Bot",
+      "pattern": "^datagnionbot"
+    },
+    {
+      "name": "dataprovider.com",
+      "pattern": "Dataprovider\\.com"
+    },
+    {
+      "name": "Daum",
+      "pattern": "http://cs\\.daum\\.net"
+    },
+    {
+      "name": "Deepcast Podcast Sync",
+      "pattern": "^DeepCast/\\d.*Sync"
+    },
+    {
+      "name": "Deezer Podcasters",
+      "pattern": "^Deezer Podcasters/1\\.0"
+    },
+    {
+      "name": "Digg",
+      "pattern": "^Digg "
+    },
+    {
+      "name": "dorada",
+      "pattern": "support@dorada\\.co\\.uk"
+    },
+    {
+      "name": "DotBot",
+      "pattern": "DotBot"
+    },
+    {
+      "name": "Downcast Bot",
+      "pattern": "downcast feed consumer/"
+    },
+    {
+      "name": "DuckDuckBot",
+      "pattern": "DuckDuckBot"
+    },
+    {
+      "name": "F-Secure Riddler",
+      "pattern": "^Riddler "
+    },
+    {
+      "name": "Facebook Bot",
+      "pattern": "FacebookBot|f?acebookexternalhit/?|^podcastbot$|Facebot|facebookexternalua|^facebookplatform/"
+    },
+    {
+      "name": "Feedly",
+      "pattern": "^Feedly/"
+    },
+    {
+      "name": "Feedspot Fetcher",
+      "pattern": "https://www\\.feedspot\\.com/fs/fetcher"
+    },
+    {
+      "name": "FlexGet",
+      "pattern": "^FlexGet/"
+    },
+    {
+      "name": "Flipboard Proxy",
+      "pattern": "FlipboardProxy/"
+    },
+    {
+      "name": "Fyyd",
+      "pattern": "^fyyd-poll"
+    },
+    {
+      "name": "Go Storage Gateway V1",
+      "pattern": "^storagegw-v1-go$"
+    },
+    {
+      "name": "Goodpods Bot",
+      "pattern": "Goodpods/\\d+\\.\\d+"
+    },
+    {
+      "name": "Google Adsense Bot",
+      "pattern": "Mediapartners-Google"
+    },
+    {
+      "name": "Google AdsBot",
+      "pattern": "AdsBot-Google"
+    },
+    {
+      "name": "Google Podcasts Manager",
+      "pattern": "Google-Podcast"
+    },
+    {
+      "name": "Googlebot",
+      "pattern": "Googlebot/|Googlebot-Video/|Googlebot-Image/|^Feedfetcher-Google|google-xrawler|^Googlebot-News|^Google-Safety$"
+    },
+    {
+      "name": "Gumball",
+      "pattern": "^Gumball"
+    },
+    {
+      "name": "Headliner",
+      "pattern": "^Headliner/.*\\+https://headliner\\.app$"
+    },
+    {
+      "name": "HubSpot Crawler",
+      "pattern": "HubSpot Crawler"
+    },
+    {
+      "name": "Internet Archive",
+      "pattern": "Archive-It;|web\\.archive\\.org"
+    },
+    {
+      "name": "iOS share menu",
+      "pattern": "^SharingUIService/"
+    },
+    {
+      "name": "IPFS Podcasting Node",
+      "pattern": "^IPFS Podcasting Node/"
+    },
+    {
+      "name": "Jaunt",
+      "pattern": "^Jaunt/"
+    },
+    {
+      "name": "l'Institut national de l'audiovisuel",
+      "pattern": "INA dlweb"
+    },
+    {
+      "name": "Library and Archives Canada",
+      "pattern": "LAC_IAHarvester/"
+    },
+    {
+      "name": "Libsyn",
+      "pattern": "^Libsyn4"
+    },
+    {
+      "name": "libwww-perl",
+      "pattern": "^libwww-perl| libwww-perl"
+    },
+    {
+      "name": "Livelap Crawler",
+      "pattern": "LivelapBot"
+    },
+    {
+      "name": "ListenNotes",
+      "pattern": "^ListenNotes/3\\.0 \\("
+    },
+    {
+      "name": "LTX71",
+      "pattern": "^ltx71 "
+    },
+    {
+      "name": "MacOS share menu",
+      "pattern": "^ShareSheetUI/"
+    },
+    {
+      "name": "MauiBot",
+      "pattern": "^MauiBot"
+    },
+    {
+      "name": "Mastodon Bot",
+      "pattern": "rb/.*Mastodon/"
+    },
+    {
+      "name": "Metacast Crawler",
+      "pattern": "^Metacast/.* Crawler"
+    },
+    {
+      "name": "Microsoft Bingbot",
+      "pattern": "(BingPreview/|adidxbot/|[bB]ingbot/)"
+    },
+    {
+      "name": "Microsoft Office",
+      "pattern": "ms-office; MSOffice"
+    },
+    {
+      "name": "Mixcloud Podcast Importer",
+      "pattern": "^MixcloudPodcastImporter/"
+    },
+    {
+      "name": "MJ12bot",
+      "pattern": ".*MJ12bot"
+    },
+    {
+      "name": "Mozilla Bot",
+      "pattern": "^'?Mozilla(/5\\.0(\\.\\.\\.)?)?$|^\\(Mozilla/5\\.0\\)$"
+    },
+    {
+      "name": "MSN Bot",
+      "pattern": "^msnbot/"
+    },
+    {
+      "name": "Neevabot",
+      "pattern": ".*Neevabot"
+    },
+    {
+      "name": "Netcraft Survey Agent",
+      "pattern": " NetcraftSurveyAgent/"
+    },
+    {
+      "name": "Newspaper",
+      "pattern": "^newspaper/\\d"
+    },
+    {
+      "name": "OgScrper",
+      "pattern": "OgScrper"
+    },
+    {
+      "name": "OkDownload",
+      "pattern": "^OkDownload/"
+    },
+    {
+      "name": "OP3 Fetcher",
+      "pattern": "^op3-fetcher/"
+    },
+    {
+      "name": "OpenAI GPTBot",
+      "pattern": "GPTBot/"
+    },
+    {
+      "name": "Overcast feed parser",
+      "pattern": "^Overcast/1\\.0 Podcast Sync"
+    },
+    {
+      "name": "Pandora RSS crawler",
+      "pattern": "^PandoraRSSCrawler"
+    },
+    {
+      "name": "PaperLi",
+      "pattern": "PaperLiBot/"
+    },
+    {
+      "name": "PetalBot",
+      "pattern": "PetalBot"
+    },
+    {
+      "name": "Pingdom",
+      "pattern": "^Pingdom"
+    },
+    {
+      "name": "PlayerFM Podcast Sync",
+      "pattern": "PlayerFM/.* Podcast Sync"
+    },
+    {
+      "name": "Podbean Importer",
+      "pattern": "^Podbean Importer"
+    },
+    {
+      "name": "Podcastindex.org",
+      "pattern": "^Podcastindex\\.org/"
+    },
+    {
+      "name": "Podcast de facto Standard",
+      "pattern": "^PodcastStandard/"
+    },
+    {
+      "name": "Podcast Archiver",
+      "pattern": "^Podcast%20Archiver/"
+    },
+    {
+      "name": "PodCloud",
+      "pattern": "podCloud"
+    },
+    {
+      "name": "Podcorn",
+      "pattern": "Podcorn/"
+    },
+    {
+      "name": "PodderBot",
+      "pattern": "PodderBot/"
+    },
+    {
+      "name": "Podfollow",
+      "pattern": "podfollowbot/"
+    },
+    {
+      "name": "Podgrab",
+      "pattern": "^Podgrab$"
+    },
+    {
+      "name": "Podhound",
+      "pattern": "PodhoundBeta"
+    },
+    {
+      "name": "Podio Bot",
+      "pattern": "^Podio/"
+    },
+    {
+      "name": "Podmon Bot",
+      "pattern": "^Podmonbot/"
+    },
+    {
+      "name": "Podnews",
+      "pattern": "PodnewsBot"
+    },
+    {
+      "name": "Podnods Bot",
+      "pattern": "(podnods-crawler|podnods)"
+    },
+    {
+      "name": "Podplay Podcast Sync",
+      "pattern": "^Podplay-Podcast-Sync/"
+    },
+    {
+      "name": "Podroll Analyzer",
+      "pattern": "^pdrl\\.fm "
+    },
+    {
+      "name": "Podscan Bot",
+      "pattern": "^PodscanBot/"
+    },
+    {
+      "name": "Podscribe",
+      "pattern": "(^Adswizz-podscribe/|^Podscribe/)"
+    },
+    {
+      "name": "PodUptime",
+      "pattern": "(PodUptime|PodUptimeBot)/\\d"
+    },
+    {
+      "name": "Podverse Feed Parser",
+      "pattern": "^Podverse/Feed Parser"
+    },
+    {
+      "name": "PodvineBot",
+      "pattern": "^PodvineBot/"
+    },
+    {
+      "name": "PostRank Bot",
+      "pattern": "^PostRank/"
+    },
+    {
+      "name": "PodwatchPro",
+      "pattern": "Podwatch-Pro Crawler"
+    },
+    {
+      "name": "Puppeteer",
+      "pattern": " HeadlessChrome/\\d"
+    },
+    {
+      "name": "python-requests",
+      "pattern": "python-requests"
+    },
+    {
+      "name": "Qiniu spider",
+      "pattern": "qiniu.*spider"
+    },
+    {
+      "name": "Radioline Stream Monitoring",
+      "pattern": "^Radioline Stream Monitoring"
+    },
+    {
+      "name": "RedCircle",
+      "pattern": "RedCircle"
+    },
+    {
+      "name": "Rephonic",
+      "pattern": "^Rephonic/\\d"
+    },
+    {
+      "name": "Ridder Bot",
+      "pattern": " RidderBot/"
+    },
+    {
+      "name": "RSS to Telegram",
+      "pattern": "^RSStT"
+    },
+    {
+      "name": "RSSRadio",
+      "pattern": "^RSSRadio \\("
+    },
+    {
+      "name": "Ruby Mechanize",
+      "pattern": "^Mechanize|[ -]Mechanize/"
+    },
+    {
+      "name": "Screaming Frog SEO Spider",
+      "pattern": "^Screaming Frog "
+    },
+    {
+      "name": "SearchAtlas.com SEO Crawler",
+      "pattern": "^SearchAtlas.*Crawler"
+    },
+    {
+      "name": "SEMrushBot",
+      "pattern": "SemrushBot/|^SEMrushBot$"
+    },
+    {
+      "name": "Serendeputy",
+      "pattern": "SerendeputyBot/"
+    },
+    {
+      "name": "Simplecast",
+      "pattern": "^Simplecast$"
+    },
+    {
+      "name": "Slack Bot",
+      "pattern": "^Slackbot 1\\.0"
+    },
+    {
+      "name": "Snapchat Bot",
+      "pattern": "://developers\\.snap\\.com/robots"
+    },
+    {
+      "name": "SoundOn Bot",
+      "pattern": "^SoundOn/[\\d.]+\\s+\\(bot"
+    },
+    {
+      "name": "Speechmatics ASR",
+      "pattern": "^Speechmatics-API/"
+    },
+    {
+      "name": "Spotify cache service",
+      "pattern": "^Spotify/1\\.0$"
+    },
+    {
+      "name": "Stitcher Bot",
+      "pattern": "^StitcherBot"
+    },
+    {
+      "name": "Substack Content Fetcher",
+      "pattern": "^SubstackContentFetch/"
+    },
+    {
+      "name": "SupportingCast",
+      "pattern": "^SupportingCast(/.*)?$"
+    },
+    {
+      "name": "Timpi search crawler",
+      "pattern": "Timpibot/"
+    },
+    {
+      "name": "Tiny Tiny RSS",
+      "pattern": "^Tiny Tiny RSS/"
+    },
+    {
+      "name": "Transistor",
+      "pattern": "^Transistor\\.fm/"
+    },
+    {
+      "name": "Trendsmap Resolver",
+      "pattern": "TrendsmapResolver/"
+    },
+    {
+      "name": "Triton Digital Podcast Sync",
+      "pattern": "^Triton Digital Podcast Sync$"
+    },
+    {
+      "name": "Twingly Bot",
+      "pattern": "Twingly Recon;"
+    },
+    {
+      "name": "Twitterbot",
+      "pattern": "^Twitterbot"
+    },
+    {
+      "name": "Typhoeus",
+      "pattern": "^Typhoeus"
+    },
+    {
+      "name": "UCast",
+      "pattern": "^UCast/"
+    },
+    {
+      "name": "UptimeRobot",
+      "pattern": "UptimeRobot/\\d"
+    },
+    {
+      "name": "TelegramBot",
+      "pattern": "^TelegramBot "
+    },
+    {
+      "name": "theTradeDesk Content Web Scraper",
+      "pattern": "TTD-Content"
+    },
+    {
+      "name": "Veritone Engine Toolkit",
+      "pattern": "^veritone/engine-toolkit"
+    },
+    {
+      "name": "Vurbl",
+      "pattern": "VurblBot"
+    },
+    {
+      "name": "Wget",
+      "pattern": "Wget"
+    },
+    {
+      "name": "weborama",
+      "pattern": "^weborama-fetcher"
+    },
+    {
+      "name": "Windows Crawler",
+      "pattern": "^ZDM/.*Windows"
+    },
+    {
+      "name": "Windows PowerShell",
+      "pattern": "WindowsPowerShell/"
+    },
+    {
+      "name": "WordPress",
+      "pattern": "^WordPress"
+    },
+    {
+      "name": "wsrv.nl",
+      "pattern": "https?://wsrv.nl/"
+    },
+    {
+      "name": "YaCy",
+      "pattern": "^yacybot"
+    },
+    {
+      "name": "Yahoo Crawler",
+      "pattern": "Yahoo! Slurp"
+    },
+    {
+      "name": "YandexBot",
+      "pattern": "YandexBot/"
+    },
+    {
+      "name": "Zapier",
+      "pattern": "^Zapier$"
+    },
+    {
+      "name": "Zencast",
+      "pattern": "^Zencastr/"
+    }
+  ]
+}
