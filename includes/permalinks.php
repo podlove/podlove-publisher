@@ -1,9 +1,15 @@
 <?php
 
-if (get_option('permalink_structure') != '') {
+podlove_register_permalink_hooks();
+
+function podlove_register_permalink_hooks()
+{
+    if (get_option('permalink_structure') == '') {
+        return;
+    }
+
     add_action('after_setup_theme', 'podlove_add_podcast_rewrite_rules', 99);
     add_action('permalink_structure_changed', 'podlove_add_podcast_rewrite_rules');
-    add_action('wp', 'podlove_no_verbose_page_rules');
     add_filter('post_type_link', 'podlove_generate_custom_post_link', 10, 4);
     add_filter('post_rewrite_rules', 'podlove_add_podcast_episode_rules_to_post_rules');
 
@@ -41,7 +47,7 @@ function podlove_add_podcast_rewrite_rules()
         $permastruct = str_replace('%postname%', '%podcast%', get_option('permalink_structure'));
     }
 
-    // Enable generic rules for pages if permalink structure doesn't begin with a wildcard
+    // Root-level episodes share the URL space with pages.
     if ('/%podcast%' == untrailingslashit($permastruct)) {
         // Generate custom rewrite rules
         $wp_rewrite->matches = 'matches';
@@ -51,7 +57,8 @@ function podlove_add_podcast_rewrite_rules()
         );
         $wp_rewrite->matches = '';
 
-        // Add for WP_Query
+        // Skip page matches that are not actual pages so root-level episodes can resolve.
+        // Keep this enabled for later URL lookups and rewrite flushes (e.g. Yoast on shutdown).
         $wp_rewrite->use_verbose_page_rules = true;
     }
 
@@ -134,17 +141,6 @@ function podlove_podcast_permalink_proxy($query_vars)
     }
 
     return $query_vars;
-}
-
-/**
- * Disable verbose page rules mode after startup.
- *
- * @uses $wp_rewrite
- */
-function podlove_no_verbose_page_rules()
-{
-    global $wp_rewrite;
-    $wp_rewrite->use_verbose_page_rules = false;
 }
 
 /**
