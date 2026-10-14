@@ -260,7 +260,7 @@ class REST_API
 
     public function token_permissions_check()
     {
-        if (!current_user_can('manage_options')) {
+        if (!current_user_can('podlove_use_auphonic')) {
             return new \Podlove\Api\Error\ForbiddenAccess();
         }
 

@@ -42,7 +42,7 @@ namespace Podlove;
 
 use Podlove\Jobs\CronJobRunner;
 
-define('Podlove\DATABASE_VERSION', 169);
+define('Podlove\DATABASE_VERSION', 170);
 define('Podlove\DATABASE_MIGRATION_NONCE_ACTION', 'podlove_database_migration');
 
 add_action('admin_init', '\Podlove\maybe_run_database_migrations');
@@ -1777,6 +1777,10 @@ function run_migrations_for_version($version)
             break;
         case 169:
             Cache\TemplateCache::get_instance()->purge();
+
+            break;
+        case 170:
+            \podlove_add_capability_to_roles('podlove_use_auphonic', ['administrator', 'editor']);
 
             break;
     }

@@ -58,6 +58,7 @@ const auphonic = {
   currentFileSelection: createSelector(root.auphonic, auphonicStore.selectors.currentFileSelection),
   isSaving: createSelector(root.auphonic, auphonicStore.selectors.isSaving),
   isInitializing: createSelector(root.auphonic, auphonicStore.selectors.isInitializing),
+  initializationError: createSelector(root.auphonic, auphonicStore.selectors.initializationError),
   publishWhenDone: createSelector(root.auphonic, auphonicStore.selectors.publishWhenDone),
   plusTransferStatus: createSelector(root.auphonic, auphonicStore.selectors.plusTransferStatus),
   plusTransferFiles: createSelector(root.auphonic, auphonicStore.selectors.plusTransferFiles),
@@ -174,6 +175,7 @@ const mediafiles = {
 const runtime = {
   baseUrl: createSelector(root.runtime, runtimeStore.selectors.baseUrl),
   canManageContributors: createSelector(root.runtime, runtimeStore.selectors.canManageContributors),
+  canUseAuphonic: createSelector(root.runtime, runtimeStore.selectors.canUseAuphonic),
   nonce: createSelector(root.runtime, runtimeStore.selectors.nonce),
   base: createSelector(root.runtime, runtimeStore.selectors.base),
   auth: createSelector(root.runtime, runtimeStore.selectors.auth),

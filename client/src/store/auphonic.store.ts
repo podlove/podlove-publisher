@@ -147,6 +147,7 @@ export type State = {
   current_file_selection: string | null
   is_saving: boolean
   is_initializing: boolean
+  initialization_error: string | null
   publish_when_done: boolean
   plus_transfer_status: PlusTransferStatus | null
 }
@@ -164,12 +165,14 @@ export const initialState: State = {
   current_file_selection: null,
   is_saving: false,
   is_initializing: true,
+  initialization_error: null,
   publish_when_done: false,
   plus_transfer_status: null,
 }
 
 export const INIT = 'podlove/publisher/auphonic/INIT'
 export const INIT_DONE = 'podlove/publisher/auphonic/INIT_DONE'
+export const INIT_FAILED = 'podlove/publisher/auphonic/INIT_FAILED'
 export const SET_TOKEN = 'podlove/publisher/auphonic/SET_TOKEN'
 export const SET_PRODUCTION = 'podlove/publisher/auphonic/SET_PRODUCTION'
 export const SET_PRODUCTIONS = 'podlove/publisher/auphonic/SET_PRODUCTIONS'
@@ -200,6 +203,7 @@ export const LOAD_PLUS_TRANSFER_STATUS = 'podlove/publisher/auphonic/LOAD_PLUS_T
 
 export const init = createAction<void>(INIT)
 export const initDone = createAction<void>(INIT_DONE)
+export const initFailed = createAction<string>(INIT_FAILED)
 export const setToken = createAction<string>(SET_TOKEN)
 
 // Productions
@@ -248,6 +252,12 @@ export const reducer = handleActions(
     [INIT_DONE]: (state: State): State => ({
       ...state,
       is_initializing: false,
+      initialization_error: null,
+    }),
+    [INIT_FAILED]: (state: State, action: ReturnType<typeof initFailed>): State => ({
+      ...state,
+      is_initializing: false,
+      initialization_error: action.payload,
     }),
     [UPDATE_FILE_SELECTION]: (
       state: State,
@@ -542,6 +552,7 @@ export const selectors = {
   currentFileSelection: (state: State) => state.current_file_selection,
   isSaving: (state: State) => state.is_saving,
   isInitializing: (state: State) => state.is_initializing,
+  initializationError: (state: State) => state.initialization_error,
   publishWhenDone: (state: State) => state.publish_when_done,
   plusTransferStatus: (state: State) => state.plus_transfer_status?.status,
   plusTransferFiles: (state: State) => state.plus_transfer_status?.files,

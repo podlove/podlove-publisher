@@ -31,11 +31,36 @@ function* auphonicSaga(): any {
   yield fork(initialize, apiClient)
   yield takeEvery(auphonic.UPDATE_FILE_SELECTION, handleFileSelection)
   yield takeEvery(auphonic.SET_SERVICE_FILES, handleServiceFilesAvailable)
-  yield put(plus.init())
+  yield put(plus.loadFeatures())
 }
 
-function* initialize(api: PodloveApiClient) {
-  const { result }: { result: string } = yield api.get(`auphonic/token`)
+export function* initialize(api: PodloveApiClient) {
+  const canUseAuphonic: boolean = yield select(selectors.runtime.canUseAuphonic)
+  if (!canUseAuphonic) {
+    yield put(auphonic.initFailed(
+      __('Ask an administrator to grant you access to Auphonic, then reload this page.', 'podlove-podcasting-plugin-for-wordpress')
+    ))
+    return
+  }
+
+  let result: string
+  try {
+    const response: { result?: string; error?: { data?: { status?: number } } } = yield api.get(`auphonic/token`)
+    if (!response.result) {
+      yield put(auphonic.initFailed(
+        response.error?.data?.status === 403
+          ? __('Ask an administrator to grant you access to Auphonic, then reload this page.', 'podlove-podcasting-plugin-for-wordpress')
+          : __('Ask an administrator to check the Auphonic connection, then reload this page.', 'podlove-podcasting-plugin-for-wordpress')
+      ))
+      return
+    }
+    result = response.result
+  } catch (error) {
+    yield put(auphonic.initFailed(
+      __('Could not connect to Auphonic. Reload this page to try again.', 'podlove-podcasting-plugin-for-wordpress')
+    ))
+    return
+  }
 
   if (result) {
     yield put(auphonic.setToken(result))
@@ -62,45 +87,52 @@ function* initialize(api: PodloveApiClient) {
 function* initializeAuphonicApi() {
   const auphonicApi: AuphonicApiClient = yield createAuphonicApi()
 
-  const {
-    result: { data: presets },
-  } = yield auphonicApi.get(`presets.json`)
+  try {
+    const {
+      result: { data: presets },
+    } = yield auphonicApi.get(`presets.json`)
 
-  const {
-    result: { data: productions },
-  } = yield auphonicApi.get(`productions.json`, { limit: 50, minimal_data: true })
+    const {
+      result: { data: productions },
+    } = yield auphonicApi.get(`productions.json`, { limit: 50, minimal_data: true })
 
-  let {
-    result: { data: services },
-  } = yield auphonicApi.get(`services.json`)
+    let {
+      result: { data: services },
+    } = yield auphonicApi.get(`services.json`)
 
-  yield put(auphonic.setProductions(productions))
-  yield put(auphonic.setPresets(presets))
-  yield put(
-    auphonic.setServices([
-      {
-        uuid: 'url',
-        display_name: __('From URL', 'podlove-podcasting-plugin-for-wordpress'),
-        email: '',
-        incoming: true,
-        outgoing: false,
-        type: 'url',
-      },
-      {
-        uuid: 'file',
-        display_name: __('Upload from computer', 'podlove-podcasting-plugin-for-wordpress'),
-        email: '',
-        incoming: true,
-        outgoing: false,
-        type: 'file',
-      },
-      ...services,
-    ])
-  )
+    yield put(auphonic.setProductions(productions))
+    yield put(auphonic.setPresets(presets))
+    yield put(
+      auphonic.setServices([
+        {
+          uuid: 'url',
+          display_name: __('From URL', 'podlove-podcasting-plugin-for-wordpress'),
+          email: '',
+          incoming: true,
+          outgoing: false,
+          type: 'url',
+        },
+        {
+          uuid: 'file',
+          display_name: __('Upload from computer', 'podlove-podcasting-plugin-for-wordpress'),
+          email: '',
+          incoming: true,
+          outgoing: false,
+          type: 'file',
+        },
+        ...services,
+      ])
+    )
 
-  yield call(maybeRestoreProductionSelection)
-  yield call(maybeRestorePresetSelection)
-  yield put(auphonic.initDone())
+    yield call(maybeRestoreProductionSelection)
+    yield call(maybeRestorePresetSelection)
+    yield put(auphonic.initDone())
+  } catch (error) {
+    yield put(auphonic.initFailed(
+      __('Could not load Auphonic productions. Reload this page or ask an administrator to check the Auphonic connection.', 'podlove-podcasting-plugin-for-wordpress')
+    ))
+    return
+  }
 
   yield takeEvery(auphonic.CREATE_PRODUCTION, handleCreateProduction, auphonicApi)
   yield takeEvery(

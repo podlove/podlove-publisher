@@ -113,8 +113,8 @@ class WP_REST_PodlovePlus_Controller extends \WP_REST_Controller
         $podcast = Podcast::get();
 
         return new \Podlove\Api\Response\OkResponse([
-            'file_storage' => $podcast->plus_enable_storage,
-            'feed_proxy' => $podcast->plus_enable_proxy,
+            'file_storage' => (bool) $podcast->plus_enable_storage,
+            'feed_proxy' => (bool) $podcast->plus_enable_proxy,
         ]);
     }
 
@@ -212,7 +212,7 @@ class WP_REST_PodlovePlus_Controller extends \WP_REST_Controller
 
     public function get_features_permissions_check($request)
     {
-        if (!current_user_can('manage_options')) {
+        if (!current_user_can('edit_posts')) {
             return new \Podlove\Api\Error\ForbiddenAccess();
         }
 

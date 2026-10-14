@@ -1,25 +1,25 @@
 import * as plus from '@store/plus.store'
-import { takeFirst } from './helper'
-import { fork, put, select, call, takeEvery } from 'redux-saga/effects'
+import { put, call, take, takeEvery } from 'redux-saga/effects'
 import { PodloveApiClient } from '@lib/api'
 import { createApi } from './api'
 
-function* plusSaga() {
+function* loadFeaturesSaga() {
   const apiClient: PodloveApiClient = yield createApi()
-  yield fork(initialize, apiClient)
+  yield call(loadFeatures, apiClient)
 }
 
-function* initialize(api: PodloveApiClient) {
-  const { result } = yield api.get(`admin/plus/features`)
+export function* loadFeatures(api: PodloveApiClient) {
+  try {
+    const { result } = yield api.get(`admin/plus/features`)
+    if (!result) return
 
-  yield put(plus.setFeature({ feature: 'fileStorage', value: result.file_storage }))
-  yield put(plus.setFeature({ feature: 'feedProxy', value: result.feed_proxy }))
-
-  yield takeEvery(plus.SET_FEATURE, setFeature, api)
-  yield takeEvery(plus.GET_TOKEN, getToken, api)
-  yield takeEvery(plus.SAVE_TOKEN, saveToken, api)
-
-  yield put(plus.getToken())
+    yield put(plus.setFeatures({
+      fileStorage: !!result.file_storage,
+      feedProxy: !!result.feed_proxy,
+    }))
+  } catch (error) {
+    console.error('Failed to load PLUS features:', error)
+  }
 }
 
 function* setFeature(api: PodloveApiClient, action: ReturnType<typeof plus.setFeature>) {
@@ -31,9 +31,9 @@ function* getToken(api: PodloveApiClient) {
   try {
     yield put(plus.setLoading(true))
     const { result } = yield api.get(`admin/plus/token`)
-    yield put(plus.setToken(result.token || ''))
+    yield put(plus.setToken(result?.token || ''))
 
-    if (result.token) {
+    if (result?.token) {
       yield call(validateToken, api, result.token)
     }
   } catch (error) {
@@ -79,6 +79,15 @@ function* saveToken(api: PodloveApiClient, action: ReturnType<typeof plus.saveTo
 
 export default function () {
   return function* () {
-    yield takeFirst(plus.INIT, plusSaga)
+    yield takeEvery(plus.LOAD_FEATURES, loadFeaturesSaga)
+
+    // Only the PLUS settings components request account administration.
+    yield take(plus.INIT)
+    const api: PodloveApiClient = yield createApi()
+    yield call(loadFeatures, api)
+    yield takeEvery(plus.SET_FEATURE, setFeature, api)
+    yield takeEvery(plus.GET_TOKEN, getToken, api)
+    yield takeEvery(plus.SAVE_TOKEN, saveToken, api)
+    yield put(plus.getToken())
   }
 }

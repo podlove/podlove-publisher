@@ -125,6 +125,12 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 4.5.8 =
+
+**Fixed**
+
+* Restore Auphonic integration for Editors with a dedicated capability, keep PLUS account administration restricted to administrators, and show initialization errors instead of an endless loading spinner.
+
 = 4.5.7 =
 
 **Security**

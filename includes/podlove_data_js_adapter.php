@@ -85,6 +85,7 @@ function podlove_js_adapter_inject_permissions($data)
 {
     $data['permissions'] = [
         'canManageContributors' => current_user_can('podlove_manage_contributors'),
+        'canUseAuphonic' => current_user_can('podlove_use_auphonic'),
     ];
 
     return $data;

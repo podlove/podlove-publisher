@@ -25,6 +25,7 @@ export const init = createAction<{
   },
   permissions?: {
     canManageContributors: boolean;
+    canUseAuphonic: boolean;
   }
 }>(INIT);
 

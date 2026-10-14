@@ -153,7 +153,7 @@ export default defineComponent({
   },
 
   created() {
-    this.dispatch(plus.init())
+    this.dispatch(plus.loadFeatures())
   },
 
   methods: {

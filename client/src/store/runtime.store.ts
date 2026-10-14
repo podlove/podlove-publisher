@@ -6,6 +6,7 @@ export type State = {
   baseUrl: string | null;
   permissions: {
     canManageContributors: boolean;
+    canUseAuphonic: boolean;
   }
   api: {
     nonce: string | null;
@@ -19,6 +20,7 @@ export const initialState: State = {
   baseUrl: null,
   permissions: {
     canManageContributors: false,
+    canUseAuphonic: false,
   },
   api: {
     nonce: null,
@@ -33,6 +35,7 @@ export const reducer = handleActions({
     ...state,
     baseUrl: get(action, ['payload', 'baseUrl'], null),
     permissions: {
+      canUseAuphonic: get(action, ['payload', 'permissions', 'canUseAuphonic'], false),
       canManageContributors: get(
         action,
         ['payload', 'permissions', 'canManageContributors'],
@@ -51,6 +54,7 @@ export const reducer = handleActions({
 export const selectors = {
   baseUrl: (state: State) => state.baseUrl,
   canManageContributors: (state: State) => state.permissions.canManageContributors,
+  canUseAuphonic: (state: State) => state.permissions.canUseAuphonic,
   nonce: (state: State) => state.api.nonce,
   base: (state: State) => state.api.base,
   auth: (state: State) => state.api.auth,

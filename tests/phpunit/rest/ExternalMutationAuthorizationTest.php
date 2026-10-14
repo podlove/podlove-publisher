@@ -25,6 +25,7 @@ class ExternalMutationAuthorizationTest extends WP_UnitTestCase
 
         podlove_setup_database_tables();
         podlove_test_reset_podcast_episodes();
+        podlove_init_capabilities();
 
         $auphonic_module = new class {
             public function get_module_option($name)
@@ -58,22 +59,47 @@ class ExternalMutationAuthorizationTest extends WP_UnitTestCase
         parent::tearDown();
     }
 
-    public function testAuphonicTokenRequiresManageOptions(): void
+    public function testAuphonicTokenRequiresDedicatedCapability(): void
     {
-        wp_set_current_user($this->editor_id);
+        wp_set_current_user($this->author_one_id);
         $denied_response = $this->server->dispatch(
             new WP_REST_Request('GET', '/podlove/v2/auphonic/token')
         );
 
         $this->assertSame(403, $denied_response->get_status());
 
-        wp_set_current_user($this->administrator_id);
-        $allowed_response = $this->server->dispatch(
-            new WP_REST_Request('GET', '/podlove/v2/auphonic/token')
-        );
+        foreach ([$this->editor_id, $this->administrator_id] as $user_id) {
+            wp_set_current_user($user_id);
+            $allowed_response = $this->server->dispatch(
+                new WP_REST_Request('GET', '/podlove/v2/auphonic/token')
+            );
 
-        $this->assertSame(200, $allowed_response->get_status());
-        $this->assertSame('secret-token', $allowed_response->get_data());
+            $this->assertSame(200, $allowed_response->get_status());
+            $this->assertSame('secret-token', $allowed_response->get_data());
+        }
+    }
+
+    public function testAuphonicCapabilityCanBeDelegatedAndRevoked(): void
+    {
+        $author = get_user_by('id', $this->author_one_id);
+        $author->add_cap('podlove_use_auphonic');
+        wp_set_current_user($author->ID);
+        $response = $this->server->dispatch(new WP_REST_Request('GET', '/podlove/v2/auphonic/token'));
+        $this->assertSame(200, $response->get_status());
+
+        get_user_by('id', $this->editor_id)->add_cap('podlove_use_auphonic', false);
+        wp_set_current_user($this->editor_id);
+        $response = $this->server->dispatch(new WP_REST_Request('GET', '/podlove/v2/auphonic/token'));
+        $this->assertSame(403, $response->get_status());
+    }
+
+    public function testAuphonicTokenRejectsAnonymousUsersAndSubscribers(): void
+    {
+        foreach ([0, $this->factory->user->create(['role' => 'subscriber'])] as $user_id) {
+            wp_set_current_user($user_id);
+            $response = $this->server->dispatch(new WP_REST_Request('GET', '/podlove/v2/auphonic/token'));
+            $this->assertSame($user_id === 0 ? 401 : 403, $response->get_status());
+        }
     }
 
     public function testAuphonicEpisodeOperationDenialOccursBeforeHttpRequest(): void

@@ -1,12 +1,17 @@
 <template>
   <module name="auphonic" title="Auphonic">
-    <div v-if="!isProductionSelected">
-      <StartScreen />
-    </div>
+    <p v-if="state.initializationError" class="p-7 text-red-700" role="alert">
+      {{ state.initializationError }}
+    </p>
+    <template v-else>
+      <div v-if="!isProductionSelected">
+        <StartScreen />
+      </div>
 
-    <div class="m-7" v-if="productionId">
-      <ManageProductionForm />
-    </div>
+      <div class="m-7" v-if="productionId">
+        <ManageProductionForm />
+      </div>
+    </template>
   </module>
 </template>
 
@@ -33,6 +38,7 @@ export default defineComponent({
       state: mapAppState({
         productionId: selectors.auphonic.productionId,
         isInitializing: selectors.auphonic.isInitializing,
+        initializationError: selectors.auphonic.initializationError,
       }),
       dispatch: injectAppDispatch(),
     }

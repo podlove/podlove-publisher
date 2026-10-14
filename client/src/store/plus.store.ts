@@ -28,6 +28,8 @@ export const initialState: State = {
 }
 
 export const INIT = 'podlove/publisher/plus/INIT'
+export const LOAD_FEATURES = 'podlove/publisher/plus/LOAD_FEATURES'
+export const SET_FEATURES = 'podlove/publisher/plus/SET_FEATURES'
 export const SET_FEATURE = 'podlove/publisher/plus/SET_FEATURE'
 export const GET_TOKEN = 'podlove/publisher/plus/GET_TOKEN'
 export const SET_TOKEN = 'podlove/publisher/plus/SET_TOKEN'
@@ -37,6 +39,8 @@ export const SET_LOADING = 'podlove/publisher/plus/SET_LOADING'
 export const SET_SAVING = 'podlove/publisher/plus/SET_SAVING'
 
 export const init = createAction<void>(INIT)
+export const loadFeatures = createAction<void>(LOAD_FEATURES)
+export const setFeatures = createAction<PlusFeatures>(SET_FEATURES)
 export const setFeature = createAction<{ feature: string; value: boolean }>(SET_FEATURE)
 export const getToken = createAction<void>(GET_TOKEN)
 export const setToken = createAction<string>(SET_TOKEN)
@@ -49,6 +53,10 @@ export const reducer = handleActions(
   {
     [lifecycle.INIT]: (state: State, action: typeof lifecycle.init): State => ({
       ...state,
+    }),
+    [SET_FEATURES]: (state: State, action: ReturnType<typeof setFeatures>): State => ({
+      ...state,
+      features: action.payload,
     }),
     [SET_FEATURE]: (state: State, action: ReturnType<typeof setFeature>): State => ({
       ...state,

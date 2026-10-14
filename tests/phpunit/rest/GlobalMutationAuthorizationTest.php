@@ -91,7 +91,10 @@ class GlobalMutationAuthorizationTest extends WP_UnitTestCase
             'clear caches' => ['DELETE', '/podlove/v2/tools/clear-caches'],
             'onboarding setup' => ['POST', '/podlove/v2/onboarding/setup'],
             'onboarding options' => ['GET', '/podlove/v2/admin/onboarding'],
-            'PLUS features' => ['GET', '/podlove/v2/admin/plus/features'],
+            'PLUS token' => ['GET', '/podlove/v2/admin/plus/token'],
+            'PLUS token validation' => ['GET', '/podlove/v2/admin/plus/validate_token'],
+            'PLUS token update' => ['POST', '/podlove/v2/admin/plus/save_token'],
+            'PLUS feature update' => ['POST', '/podlove/v2/admin/plus/set_feature'],
         ];
     }
 
@@ -110,6 +113,32 @@ class GlobalMutationAuthorizationTest extends WP_UnitTestCase
 
         $this->assertSame(200, $onboarding_response->get_status());
         $this->assertSame(200, $plus_response->get_status());
+    }
+
+    public function testEpisodeEditorsCanReadPlusFeatureFlags(): void
+    {
+        $podcast = Podcast::get();
+        $podcast->plus_enable_storage = '1';
+        $podcast->plus_enable_proxy = '0';
+        $podcast->save();
+
+        foreach (['editor', 'author', 'contributor'] as $role) {
+            wp_set_current_user($this->factory->user->create(['role' => $role]));
+            $response = $this->server->dispatch(new WP_REST_Request('GET', '/podlove/v2/admin/plus/features'));
+
+            $this->assertSame(200, $response->get_status());
+            $this->assertTrue($response->get_data()['file_storage']);
+            $this->assertFalse($response->get_data()['feed_proxy']);
+        }
+    }
+
+    public function testPlusFeatureFlagsRejectAnonymousUsersAndSubscribers(): void
+    {
+        foreach ([0, $this->factory->user->create(['role' => 'subscriber'])] as $user_id) {
+            wp_set_current_user($user_id);
+            $response = $this->server->dispatch(new WP_REST_Request('GET', '/podlove/v2/admin/plus/features'));
+            $this->assertSame($user_id === 0 ? 401 : 403, $response->get_status());
+        }
     }
 
     public function testDedicatedContributorCapabilityCanManageDirectoryOnly(): void
