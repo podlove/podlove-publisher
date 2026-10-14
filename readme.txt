@@ -129,6 +129,8 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 **Fixed**
 
+* Prevent image cache 404 responses when the requested size equals or exceeds the source image dimensions ([#1607](https://github.com/podlove/podlove-publisher/issues/1607)).
+
 * Restore Auphonic integration for Editors with a dedicated capability, keep PLUS account administration restricted to administrators, and show initialization errors instead of an endless loading spinner.
 
 = 4.5.7 =

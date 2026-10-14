@@ -361,6 +361,21 @@ class Image
             $this->width = $orig_sizes['width'];
         }
 
+        // WordPress rejects unchanged dimensions when only one dimension is given.
+        // Cache the original bytes when neither shrinking nor cropping is needed.
+        if ((!$this->width || $this->width >= $orig_sizes['width'])
+            && (!$this->height || $this->height >= $orig_sizes['height'])) {
+            if (!copy($this->original_file(), $this->resized_file())) {
+                Log::get()->addWarning('Podlove Image Cache: Unable to copy unchanged image.');
+
+                return;
+            }
+
+            TemplateCache::get_instance()->setup_global_purge();
+
+            return;
+        }
+
         $result = $image->resize($this->width, $this->height, $this->crop);
 
         if (is_wp_error($result)) {
