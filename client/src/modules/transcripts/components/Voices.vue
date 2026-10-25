@@ -23,7 +23,7 @@
           class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
           @change="updateContributor(voice.voice, $event)"
         >
-          <option value="0"></option>
+          <option value="0">{{ __('no contributor', 'podlove-podcasting-plugin-for-wordpress') }}</option>
           <option
             v-for="(contributor, kindex) in sortedContributors"
             :key="`voice-${vindex}-contributor-${kindex}`"
@@ -68,11 +68,15 @@ export default defineComponent({
 
   computed: {
     sortedContributors(): PodloveContributor[] {
-      return this.state.contributors.sort((a: PodloveContributor, b: PodloveContributor) => {
-        const aName = a.publicname || a.realname || a.nickname
-        const bName = b.publicname || b.realname || b.nickname
-        return aName.localeCompare(bName)
-      })
+      return this.state.contributors
+        .filter((contributor: PodloveContributor) =>
+          contributor.publicname || contributor.realname || contributor.nickname
+        )
+        .sort((a: PodloveContributor, b: PodloveContributor) => {
+          const aName = a.publicname || a.realname || a.nickname
+          const bName = b.publicname || b.realname || b.nickname
+          return aName.localeCompare(bName)
+        })
     },
   },
 
