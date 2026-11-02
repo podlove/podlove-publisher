@@ -125,6 +125,12 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 == Changelog ==
 
+= 4.5.9 =
+
+**Security**
+
+* Prevent unauthorized downloads of transcripts for unpublished, private, and password-protected episodes.
+
 = 4.5.8 =
 
 **Fixed**

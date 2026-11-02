@@ -335,25 +335,33 @@ class Transcripts extends \Podlove\Modules\Base
 
         $post_id = get_the_ID();
         if (!$post_id) {
-            $post_id = intval($_GET['p'], 10);
+            $post_id = filter_input(INPUT_GET, 'p', FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
         }
 
-        if (!$post_id) {
-            return;
-        }
-
-        if (!$episode = Model\Episode::find_or_create_by_post_id($post_id)) {
-            return;
+        $episode = $post_id ? Model\Episode::find_one_by_post_id($post_id) : null;
+        if (!$episode
+            || !\Podlove\Api\EpisodeReadAccess::can_read($episode)
+            || (!\Podlove\Api\EpisodeReadAccess::is_public($episode) && !\Podlove\Api\EpisodeReadAccess::is_same_origin_request())) {
+            status_header(404);
+            exit;
         }
 
         $renderer = new Renderer($episode);
 
-        http_response_code(200);
+        status_header(200);
+
+        if (\Podlove\Api\EpisodeReadAccess::is_public($episode)) {
+            header('Cache-Control: no-cache, must-revalidate');
+            header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
+        } else {
+            if (!defined('DONOTCACHEPAGE')) {
+                define('DONOTCACHEPAGE', true);
+            }
+            nocache_headers();
+        }
 
         switch ($format) {
             case 'xml':
-                header('Cache-Control: no-cache, must-revalidate');
-                header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
                 header('Content-Type: application/xml; charset=utf-8');
                 echo $renderer->as_xml();
 
@@ -361,8 +369,6 @@ class Transcripts extends \Podlove\Modules\Base
 
                 break;
             case 'webvtt':
-                header('Cache-Control: no-cache, must-revalidate');
-                header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
                 header('Content-Type: text/vtt');
                 echo $renderer->as_webvtt();
 
@@ -370,8 +376,6 @@ class Transcripts extends \Podlove\Modules\Base
 
                 break;
             case 'json_podcastindex':
-                header('Cache-Control: no-cache, must-revalidate');
-                header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
                 header('Content-type: application/json');
                 echo $renderer->as_podcastindex_json();
 
@@ -379,8 +383,6 @@ class Transcripts extends \Podlove\Modules\Base
 
             case 'json':
             case 'json_grouped':
-                header('Cache-Control: no-cache, must-revalidate');
-                header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
                 header('Content-type: application/json');
                 $mode = ($format == 'json' ? 'flat' : 'grouped');
                 echo $renderer->as_json($mode);
