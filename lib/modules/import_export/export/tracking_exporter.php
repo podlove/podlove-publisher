@@ -23,11 +23,18 @@ class TrackingExporter
                 exit;
             }
 
-            if (!wp_verify_nonce($_REQUEST['_podlove_nonce'], 'podlove_export_tracking_download')) {
+            if (!wp_verify_nonce($_REQUEST['_podlove_nonce'] ?? '', 'podlove_export_tracking_download')) {
                 exit;
             }
 
-            delete_transient('podlove_tracking_export_finished');
+            $lock = fopen(self::get_tracking_export_file_path().'.lock', 'c');
+            if (!$lock || !flock($lock, LOCK_SH | LOCK_NB)) {
+                wp_die(__('Tracking export is busy. Please try again shortly.', 'podlove-podcasting-plugin-for-wordpress'));
+            }
+
+            if (!get_transient('podlove_tracking_export_finished') || !is_readable(self::get_tracking_export_file_path())) {
+                wp_die(__('No completed tracking export is available. Please export again.', 'podlove-podcasting-plugin-for-wordpress'));
+            }
 
             header('Content-Type: application/octet-stream');
             header('Content-Description: File Transfer');
@@ -55,23 +62,46 @@ class TrackingExporter
             exit;
         }
 
-        if (!wp_verify_nonce($_REQUEST['_podlove_nonce'], 'podlove_export_tracking')) {
+        if (!wp_verify_nonce($_REQUEST['_podlove_nonce'] ?? '', 'podlove_export_tracking')) {
             exit;
         }
 
-        // only one export at a time
-        if (get_option('podlove_tracking_export_all') !== false) {
-            exit;
+        // A file lock is released even if the worker is terminated. Stale progress must not block retries.
+        $lock = fopen(self::get_tracking_export_file_path().'.lock', 'c');
+        if (!$lock) {
+            wp_send_json_error(null, 500);
         }
+        if (!flock($lock, LOCK_EX | LOCK_NB)) {
+            fclose($lock);
+            wp_send_json_success();
+        }
+
+        ignore_user_abort(true);
+        delete_transient('podlove_tracking_export_finished');
+        delete_transient('podlove_tracking_export_error');
+        $completed = false;
+        register_shutdown_function(function () use (&$completed, $lock) {
+            if (!$completed) {
+                set_transient('podlove_tracking_export_error', true, DAY_IN_SECONDS);
+            }
+            delete_option('podlove_tracking_export_all');
+            delete_option('podlove_tracking_export_progress');
+            flock($lock, LOCK_UN);
+            fclose($lock);
+        });
 
         update_option('podlove_tracking_export_all', $wpdb->get_var('SELECT COUNT(*) FROM '.\Podlove\Model\DownloadIntent::table_name()));
         update_option('podlove_tracking_export_progress', 0);
 
         $rowsPerQuery = 1000;
         $lastId = 0;
-        $page = 0;
+        $progress = 0;
 
         $fp = gzopen(self::get_tracking_export_file_path(), 'w');
+
+        if (!$fp || $wpdb->last_error) {
+            wp_send_json_error(null, 500);
+        }
 
         do {
             // Keeping track of the $lastId is (roughly) a bajillion times faster than paging via LIMIT.
@@ -91,31 +121,61 @@ class TrackingExporter
 				FROM
 					'.\Podlove\Model\DownloadIntent::table_name().'
 					WHERE id > '.(int) $lastId."
+				ORDER BY id ASC
 				LIMIT 0, {$rowsPerQuery}";
             $rows = $wpdb->get_results($sql, ARRAY_A);
+            if ($wpdb->last_error) {
+                gzclose($fp);
+                wp_send_json_error(null, 500);
+            }
             foreach ($rows as $row) {
-                gzwrite($fp, implode(',', $row)."\n");
+                $line = implode(',', $row)."\n";
+                if (gzwrite($fp, $line) !== strlen($line)) {
+                    gzclose($fp);
+                    wp_send_json_error(null, 500);
+                }
+                $lastId = $row['id'];
+                ++$progress;
             }
 
-            $lastId = $row['id'];
-            ++$page;
-
-            update_option('podlove_tracking_export_progress', $page * $rowsPerQuery);
+            update_option('podlove_tracking_export_progress', $progress);
         } while (count($rows) > 0);
 
-        gzclose($fp);
+        if (!gzclose($fp)) {
+            wp_send_json_error(null, 500);
+        }
 
-        set_transient('podlove_tracking_export_finished', true, MINUTE_IN_SECONDS * 3);
+        $completed = true;
+        set_transient('podlove_tracking_export_finished', true, DAY_IN_SECONDS);
         delete_option('podlove_tracking_export_all');
         delete_option('podlove_tracking_export_progress');
-        exit;
+        wp_send_json_success();
     }
 
     public static function export_tracking_status()
     {
-        echo wp_json_encode([
+        if (!current_user_can('administrator')) {
+            wp_send_json_error(null, 403);
+        }
+
+        // Detect workers killed without executing PHP shutdown handlers.
+        $lock = fopen(self::get_tracking_export_file_path().'.lock', 'c');
+        if ($lock) {
+            if (flock($lock, LOCK_EX | LOCK_NB)) {
+                if (get_option('podlove_tracking_export_all') !== false) {
+                    delete_option('podlove_tracking_export_all');
+                    delete_option('podlove_tracking_export_progress');
+                    set_transient('podlove_tracking_export_error', true, DAY_IN_SECONDS);
+                }
+                flock($lock, LOCK_UN);
+            }
+            fclose($lock);
+        }
+
+        wp_send_json([
             'all' => get_option('podlove_tracking_export_all'),
             'progress' => get_option('podlove_tracking_export_progress'),
+            'error' => (bool) get_transient('podlove_tracking_export_error'),
             'finished' => (bool) get_transient('podlove_tracking_export_finished'),
         ]);
         exit;

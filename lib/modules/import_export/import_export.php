@@ -138,76 +138,74 @@ class Import_Export extends \Podlove\Modules\Base
     public function tools_tracking_export()
     {
         ?>
-		<p>
-			<?php echo __('Im- and export of tracking data is a separate task. After you have completed the steps above, you can ex- and import tracking data.', 'podlove-podcasting-plugin-for-wordpress'); ?>
-		</p>
-		<p>
-			<button id="podlove_tracking_export" class="button"><?php echo __('Export Tracking Data', 'podlove-podcasting-plugin-for-wordpress'); ?></button>
-			<span id="podlove_tracking_export_status_wrapper">
-				<?php echo __('Export', 'podlove-podcasting-plugin-for-wordpress'); ?>: <span id="podlove_tracking_export_status"><?php echo esc_html__('starting ...', 'podlove-podcasting-plugin-for-wordpress'); ?></span>
-			</span>
-		</p>
+        <p><?php echo esc_html__('Export tracking data for import into another WordPress installation. You can leave this page open while the file is prepared.', 'podlove-podcasting-plugin-for-wordpress'); ?></p>
+        <p>
+            <button type="button" id="podlove_tracking_export" class="button" disabled><?php echo esc_html__('Export Tracking Data', 'podlove-podcasting-plugin-for-wordpress'); ?></button>
+            <a id="podlove_tracking_download" class="button button-primary" style="display:none" href="<?php echo esc_url(add_query_arg(['podlove_export_tracking' => 1, '_podlove_nonce' => wp_create_nonce('podlove_export_tracking_download')], admin_url('admin.php'))); ?>"><?php echo esc_html__('Download tracking data', 'podlove-podcasting-plugin-for-wordpress'); ?></a>
+        </p>
+        <p id="podlove_tracking_export_status" role="status" aria-live="polite"></p>
+        <script>
+        (function($) {
+            var timer, starting = false, failures = 0, requestFailed = false;
+            var button = $('#podlove_tracking_export');
+            var download = $('#podlove_tracking_download');
+            var status = $('#podlove_tracking_export_status');
+            var messages = <?php echo wp_json_encode([
+                'starting' => __('Preparing export…', 'podlove-podcasting-plugin-for-wordpress'),
+                'ready' => __('Your export is ready. Use Download tracking data to save it. It remains available for 24 hours or until the next export.', 'podlove-podcasting-plugin-for-wordpress'),
+                'failed' => __('The export could not be completed. Please try again.', 'podlove-podcasting-plugin-for-wordpress'),
+                'retry' => __('Unable to check export status. Retrying…', 'podlove-podcasting-plugin-for-wordpress'),
+                'disconnected' => __('Unable to check export status. Reload this page to reconnect.', 'podlove-podcasting-plugin-for-wordpress'),
+            ]); ?>;
 
-		<style type="text/css">
-		#podlove_tracking_export_status_wrapper {
-			display: none;
-		}
-		</style>
-
-		<script type="text/javascript">
-		(function($) {
-
-			var timeoutID = null;
-
-			var podlove_check_export_status = function() {
-
-				if (timeoutID) {
-					window.clearTimeout(timeoutID);
-				}
-
-				$.ajax({
-					url: ajaxurl,
-					data: {action: 'podlove-export-tracking-status'},
-					dataType: 'json',
-					success: function(result) {
-						if (result.all && result.progress) {
-							$("#podlove_tracking_export").attr('disabled', 'disabled');
-							$("#podlove_tracking_export_status").html((Math.round(1000.0 * (result.progress / result.all))/10.0) + "%");
-							$("#podlove_tracking_export_status_wrapper").show();
-
-							timeoutID = window.setTimeout(podlove_check_export_status, 1000);
-						}
-
-						if (result.finished) {
-							$("#podlove_tracking_export").attr('disabled', false);
-							$("#podlove_tracking_export_status_wrapper").hide();
-							window.location = window.location + "&podlove_export_tracking=1&_podlove_nonce=<?php echo wp_create_nonce('podlove_export_tracking_download'); ?>";
-						}
-					}
-				});
-
-			};
-
-			$("#podlove_tracking_export").on("click", function() {
-
-				$("#podlove_tracking_export").attr('disabled', 'disabled');
-				$("#podlove_tracking_export_status_wrapper").show();
-
-				$.ajax({
-					url: ajaxurl,
-					data: {action: 'podlove-export-tracking', _podlove_nonce: '<?php echo wp_create_nonce('podlove_export_tracking'); ?>'},
-					dataType: 'json'
-				}).done(function(result) {
-						console.log("tracking export finished");
-				    window.setTimeout(podlove_check_export_status, 2000);
-				});
-
-			});
-
-			// start immediately, in case the user refreshes the page
-			podlove_check_export_status();
-		}(jQuery));
-		</script>
+            function schedule() {
+                window.clearTimeout(timer);
+                timer = window.setTimeout(check, 1500);
+            }
+            function check() {
+                $.ajax({url: ajaxurl, data: {action: 'podlove-export-tracking-status'}, dataType: 'json', cache: false, timeout: 15000})
+                    .done(function(result) {
+                        failures = 0;
+                        if (result.finished && !starting) {
+                            button.prop('disabled', false);
+                            download.show();
+                            status.text(messages.ready);
+                        } else if (result.all !== false || starting) {
+                            button.prop('disabled', true);
+                            download.hide();
+                            var total = Number(result.all);
+                            status.text(total > 0 ? Math.min(100, Math.round(100 * Number(result.progress) / total)) + '%' : messages.starting);
+                            schedule();
+                        } else {
+                            button.prop('disabled', false);
+                            download.hide();
+                            status.text(result.error || requestFailed ? messages.failed : '');
+                        }
+                    }).fail(function() {
+                        status.text(++failures < 5 ? messages.retry : messages.disconnected);
+                        if (failures < 5) schedule();
+                    });
+            }
+            button.on('click', function() {
+                starting = true;
+                requestFailed = false;
+                button.prop('disabled', true);
+                download.hide();
+                status.text(messages.starting);
+                $.ajax({
+                    url: ajaxurl, type: 'POST', dataType: 'json', timeout: 30000,
+                    data: {action: 'podlove-export-tracking', _podlove_nonce: <?php echo wp_json_encode(wp_create_nonce('podlove_export_tracking')); ?>}
+                }).fail(function() {
+                    requestFailed = true;
+                }).always(function() {
+                    starting = false;
+                    schedule();
+                });
+                schedule();
+            });
+            check();
+        }(jQuery));
+        </script>
 		<?php
     }
 
