@@ -29,6 +29,7 @@ class Import_Export extends \Podlove\Modules\Base
         add_action('admin_enqueue_scripts', function () {
             if (isset($_REQUEST['page']) && $_REQUEST['page'] === 'podlove_tools_settings_handle') {
                 wp_enqueue_script('podlove_admin_import_script', $this->get_module_url().'/js/import.js', ['jquery'], \Podlove\get_plugin_header('Version'));
+                wp_enqueue_script('podlove_admin_export_script', $this->get_module_url().'/js/export.js', [], \Podlove\get_plugin_header('Version'), true);
             }
         });
 
@@ -131,7 +132,17 @@ class Import_Export extends \Podlove\Modules\Base
 			<li><?php echo __('In your new WordPress instance, import that file.', 'podlove-podcasting-plugin-for-wordpress'); ?></li>
 		</ol>
 
-		<a href="?podlove_export=1&_podlove_nonce=<?php echo wp_create_nonce('podlove_export'); ?>" class="button"><?php echo __('Export Podcast Data', 'podlove-podcasting-plugin-for-wordpress'); ?></a>
+        <p>
+            <a id="podlove_podcast_export" href="<?php echo esc_url(add_query_arg(['podlove_export' => 1, '_podlove_nonce' => wp_create_nonce('podlove_export')], admin_url('admin.php'))); ?>" class="button"><?php echo esc_html__('Export Podcast Data', 'podlove-podcasting-plugin-for-wordpress'); ?></a>
+            <a id="podlove_podcast_download" class="button button-primary" style="display:none"><?php echo esc_html__('Download podcast data', 'podlove-podcasting-plugin-for-wordpress'); ?></a>
+        </p>
+        <p id="podlove_podcast_export_status" role="status" aria-live="polite"
+            data-preparing="<?php echo esc_attr__('Preparing podcast export… Keep this page open.', 'podlove-podcasting-plugin-for-wordpress'); ?>"
+            data-slow="<?php echo esc_attr__('Still preparing the export. Large podcasts can take a few minutes.', 'podlove-podcasting-plugin-for-wordpress'); ?>"
+            data-ready="<?php echo esc_attr__('Your export is ready. Use Download podcast data to save it. You can download it again while this page stays open.', 'podlove-podcasting-plugin-for-wordpress'); ?>"
+            data-failed="<?php echo esc_attr__('The export could not be prepared. Please try again. If it keeps failing, check the server logs for database, memory or temporary storage errors.', 'podlove-podcasting-plugin-for-wordpress'); ?>"
+            data-expired="<?php echo esc_attr__('This export link has expired or you no longer have access. Reload the Tools page and try again.', 'podlove-podcasting-plugin-for-wordpress'); ?>"
+            data-timeout="<?php echo esc_attr__('The export took too long. Please try again. If this repeats, ask your administrator to check the server resource limits.', 'podlove-podcasting-plugin-for-wordpress'); ?>"></p>
 		<?php
     }
 

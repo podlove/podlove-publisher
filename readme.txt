@@ -127,6 +127,8 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 = 4.5.9 =
 
+* fix: Prepare podcast downloads before serving them, batch export queries and show preparation, retry and download feedback.
+
 * fix: Make tracking exports recover from interrupted requests, report failures and provide a persistent download button.
 
 **Fixed**

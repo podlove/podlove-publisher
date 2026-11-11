@@ -31,11 +31,11 @@ class PodcastExporter
 
         if (isset($_GET['podlove_export']) && $_GET['podlove_export']) {
             if (!current_user_can('administrator')) {
-                return;
+                wp_die(__('You are not allowed to export podcast data.', 'podlove-podcasting-plugin-for-wordpress'), '', ['response' => 403]);
             }
 
-            if (!wp_verify_nonce($_REQUEST['_podlove_nonce'], 'podlove_export')) {
-                return;
+            if (!wp_verify_nonce($_REQUEST['_podlove_nonce'] ?? '', 'podlove_export')) {
+                wp_die(__('This export link has expired. Reload the Tools page and try again.', 'podlove-podcasting-plugin-for-wordpress'), '', ['response' => 403]);
             }
 
             $exporter = new \Podlove\Modules\ImportExport\Export\PodcastExporter();
@@ -56,15 +56,54 @@ class PodcastExporter
 
     public function download()
     {
-        $this->setDownloadHeaders();
-        $xml = $this->getXml();
+        try {
+            $file = $this->prepareDownload();
+        } catch (\Throwable $error) {
+            error_log('Podlove podcast export failed: '.$error->getMessage());
+            wp_die(__('The podcast export could not be prepared. Please try again. If the problem persists, check the server logs for database, memory or temporary storage errors.', 'podlove-podcasting-plugin-for-wordpress'), '', ['response' => 500]);
 
-        if ($this->isCompressionEnabled()) {
-            echo gzencode($xml);
-        } else {
-            echo $xml;
+            return;
         }
+
+        $this->setDownloadHeaders();
+        header('Content-Length: '.fstat($file)['size']);
+        fpassthru($file);
+        fclose($file);
         exit;
+    }
+
+    /**
+     * Build the entire download before sending attachment headers.
+     *
+     * The temporary file is deleted when its handle is closed, including on shutdown.
+     * Keeping serialization and compression on disk avoids two additional XML-sized strings.
+     *
+     * @return resource
+     */
+    public function prepareDownload()
+    {
+        $file = tmpfile();
+        if ($file === false) {
+            throw new \RuntimeException('Unable to create a temporary podcast export file.');
+        }
+
+        try {
+            $document = $this->getXmlDocument();
+            $path = stream_get_meta_data($file)['uri'];
+            $destination = $this->isCompressionEnabled() ? 'compress.zlib://'.$path : $path;
+            if ($document->save($destination) === false) {
+                throw new \RuntimeException('Unable to write the podcast export file.');
+            }
+            if (fstat($file)['size'] === 0 || !rewind($file)) {
+                throw new \RuntimeException('The podcast export file is empty or unreadable.');
+            }
+
+            return $file;
+        } catch (\Throwable $error) {
+            fclose($file);
+
+            throw $error;
+        }
     }
 
     public function exportEpisodes(\SimpleXMLElement $xml)
@@ -109,6 +148,9 @@ class PodcastExporter
         global $wpdb;
         $sql = 'SELECT option_name FROM '.$wpdb->options.' WHERE option_name LIKE "%podlove%" AND option_name NOT LIKE "_transient%"';
         $options = $wpdb->get_col($sql);
+        if ($wpdb->last_error) {
+            throw new \RuntimeException('Unable to read podcast options for export.');
+        }
 
         $xml_group = $xml->addChild('xmlns:wpe:options');
         foreach ($options as $option_name) {
@@ -138,21 +180,42 @@ class PodcastExporter
 
     public static function exportTable(\SimpleXMLElement $xml, $group_name, $item_name, $table_class)
     {
-        $xml_group = $xml->addChild("xmlns:wpe:{$group_name}");
-        foreach ($table_class::all() as $mediafile) {
-            $xml_item = $xml_group->addChild("xmlns:wpe:{$item_name}");
-            foreach ($table_class::property_names() as $property_name) {
-                if (is_null($mediafile->{$property_name}) || strlen($mediafile->{$property_name}) === 0) {
-                    continue;
-                }
+        global $wpdb;
 
-                $value = htmlspecialchars($mediafile->{$property_name});
-                $xml_item->addChild("xmlns:wpe:{$property_name}", $value);
+        $xml_group = $xml->addChild("xmlns:wpe:{$group_name}");
+        $lastId = 0;
+        $batchSize = 500;
+        do {
+            $rows = $table_class::all('WHERE id > '.(int) $lastId.' ORDER BY id ASC LIMIT '.$batchSize);
+            if ($wpdb->last_error) {
+                throw new \RuntimeException('Unable to read podcast data for export.');
             }
-        }
+            foreach ($rows as $mediafile) {
+                $xml_item = $xml_group->addChild("xmlns:wpe:{$item_name}");
+                foreach ($table_class::property_names() as $property_name) {
+                    if (is_null($mediafile->{$property_name}) || strlen((string) $mediafile->{$property_name}) === 0) {
+                        continue;
+                    }
+
+                    $value = htmlspecialchars((string) $mediafile->{$property_name}, ENT_QUOTES | ENT_XML1 | ENT_SUBSTITUTE, 'UTF-8');
+                    $xml_item->addChild("xmlns:wpe:{$property_name}", $value);
+                }
+                $lastId = $mediafile->id;
+            }
+        } while (count($rows) === $batchSize);
     }
 
     public function getXml()
+    {
+        $xml = $this->getXmlDocument()->saveXML();
+        if ($xml === false) {
+            throw new \RuntimeException('Unable to serialize the podcast export.');
+        }
+
+        return $xml;
+    }
+
+    private function getXmlDocument()
     {
         $xml = new \SimpleXMLElement('<wpe:export/>', LIBXML_NOERROR | LIBXML_NOWARNING, false, 'wpe', true);
         // Double xmlns looks strange but is intentionally/required.
@@ -175,7 +238,7 @@ class PodcastExporter
         $dom = dom_import_simplexml($xml)->ownerDocument;
         $dom->formatOutput = true;
 
-        return $dom->saveXML();
+        return $dom;
     }
 
     private function getDownloadFileName()
@@ -197,20 +260,10 @@ class PodcastExporter
 
     private function setDownloadHeaders()
     {
+        nocache_headers();
         header('Content-Description: File Transfer');
-        header('Content-Disposition: attachment; filename='.$this->getDownloadFileName());
-        header('Cache-control: private');
-        header('Expires: -1');
-
-        if ($this->isCompressionEnabled()) {
-            // Do *not* send gzip headers. Why? If you set gzip headers, the data is
-            // transferred compressed but unzipped before it's saved to disk. But we
-            // want it to be compressed as a file, not just for transfer.
-
-            // header( 'Content-Encoding: gzip' );
-            // header( 'Content-Type: application/x-gzip; charset=' . get_option( 'blog_charset' ), true );
-        } else {
-            header('Content-Type: text/xml; charset='.get_option('blog_charset'), true);
-        }
+        header('Content-Disposition: attachment; filename="'.$this->getDownloadFileName().'"');
+        // The file is gzip, not the HTTP transfer: browsers must save it compressed.
+        header('Content-Type: '.($this->isCompressionEnabled() ? 'application/gzip' : 'application/xml; charset=UTF-8'));
     }
 }
