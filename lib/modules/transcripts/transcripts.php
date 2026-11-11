@@ -145,8 +145,10 @@ class Transcripts extends \Podlove\Modules\Base
 
     /**
      * Import transcript from remote file.
+     *
+     * @param mixed $skip_unchanged
      */
-    public static function transcript_import_from_asset(Episode $episode)
+    public static function transcript_import_from_asset(Episode $episode, $skip_unchanged = false)
     {
         $asset_assignment = Model\AssetAssignment::get_instance();
 
@@ -278,7 +280,15 @@ class Transcripts extends \Podlove\Modules\Base
             );
         }
 
-        self::import_parsed_webvtt($episode, $result);
+        $import_result = self::import_parsed_webvtt($episode, $result, false, hash('sha256', $body), $skip_unchanged);
+
+        if (is_wp_error($import_result)) {
+            return self::transcript_import_error(
+                $import_result->get_error_code(),
+                $import_result->get_error_message(),
+                $import_result->get_error_data()['status'] ?? 500
+            );
+        }
 
         return true;
     }
@@ -318,9 +328,7 @@ class Transcripts extends \Podlove\Modules\Base
             return;
         }
 
-        self::import_parsed_webvtt($episode, $result);
-
-        return true;
+        return self::import_parsed_webvtt($episode, $result);
     }
 
     public function serve_transcript_file()
@@ -483,7 +491,12 @@ class Transcripts extends \Podlove\Modules\Base
             return;
         }
 
-        $this->transcript_import_from_asset($media_file->episode());
+        $assignment = Model\AssetAssignment::get_instance();
+        if ((int) $assignment->transcript !== (int) $asset->id) {
+            return;
+        }
+
+        $this->transcript_import_from_asset($media_file->episode(), true);
     }
 
     /**
@@ -508,34 +521,92 @@ class Transcripts extends \Podlove\Modules\Base
         return $jobs;
     }
 
-    private static function import_parsed_webvtt(Episode $episode, $result)
-    {
-        Transcript::delete_for_episode($episode->id);
+    /**
+     * Replace cues atomically. Automatic asset checks may skip an unchanged file;
+     * explicit imports always replace cues so users can intentionally reimport.
+     *
+     * @param mixed      $result
+     * @param mixed      $reset_voice_assignments
+     * @param null|mixed $asset_hash
+     * @param mixed      $skip_unchanged
+     */
+    public static function import_parsed_webvtt(
+        Episode $episode,
+        $result,
+        $reset_voice_assignments = false,
+        $asset_hash = null,
+        $skip_unchanged = false
+    ) {
+        $hash_key = '_podlove_transcript_asset_hash';
 
-        foreach ($result['cues'] as $cue) {
-            $line = new Transcript();
-            $line->episode_id = $episode->id;
-            $line->start = $cue['start'] * 1000;
-            $line->end = $cue['end'] * 1000;
-            $line->voice = $cue['voice'];
-            $line->content = $cue['text'];
-            $line->save();
-        }
+        try {
+            return TranscriptMutation::run($episode->id, function () use (
+                $episode,
+                $result,
+                $reset_voice_assignments,
+                $asset_hash,
+                $skip_unchanged,
+                $hash_key
+            ) {
+                // Another request may have changed metadata while we waited for the lock.
+                wp_cache_delete($episode->post_id, 'post_meta');
+                if ($skip_unchanged && $asset_hash !== null
+                    && get_post_meta($episode->post_id, $hash_key, true) === $asset_hash
+                    && Transcript::exists_for_episode($episode->id)) {
+                    return true;
+                }
 
-        $voices = array_unique(array_map(function ($cue) {
-            return $cue['voice'];
-        }, $result['cues']));
+                if (Transcript::delete_for_episode($episode->id) === false) {
+                    throw new \RuntimeException('Could not delete transcript cues.');
+                }
 
-        foreach ($voices as $voice) {
-            $contributor = Contributor::find_one_by_property('identifier', $voice);
+                if ($reset_voice_assignments && VoiceAssignment::delete_for_episode($episode->id) === false) {
+                    throw new \RuntimeException('Could not delete transcript voices.');
+                }
 
-            if (!VoiceAssignment::is_voice_set($episode->id, $voice) && $contributor) {
-                $voice_assignment = new VoiceAssignment();
-                $voice_assignment->episode_id = $episode->id;
-                $voice_assignment->voice = $voice;
-                $voice_assignment->contributor_id = $contributor->id;
-                $voice_assignment->save();
-            }
+                foreach ($result['cues'] as $cue) {
+                    $line = new Transcript();
+                    $line->episode_id = $episode->id;
+                    $line->start = $cue['start'] * 1000;
+                    $line->end = $cue['end'] * 1000;
+                    $line->voice = $cue['voice'];
+                    $line->content = $cue['text'];
+                    if ($line->save() === false) {
+                        throw new \RuntimeException('Could not save transcript cue.');
+                    }
+                }
+
+                $voices = array_unique(array_column($result['cues'], 'voice'));
+
+                foreach ($voices as $voice) {
+                    $contributor = Contributor::find_one_by_property('identifier', $voice);
+
+                    if (!VoiceAssignment::is_voice_set($episode->id, $voice) && $contributor) {
+                        $voice_assignment = new VoiceAssignment();
+                        $voice_assignment->episode_id = $episode->id;
+                        $voice_assignment->voice = $voice;
+                        $voice_assignment->contributor_id = $contributor->id;
+                        if ($voice_assignment->save() === false) {
+                            throw new \RuntimeException('Could not save transcript voice.');
+                        }
+                    }
+                }
+
+                if ($asset_hash === null) {
+                    if (metadata_exists('post', $episode->post_id, $hash_key)
+                        && !delete_post_meta($episode->post_id, $hash_key)) {
+                        throw new \RuntimeException('Could not clear transcript asset hash.');
+                    }
+                } elseif (get_post_meta($episode->post_id, $hash_key, true) !== $asset_hash
+                    && !update_post_meta($episode->post_id, $hash_key, $asset_hash)) {
+                    throw new \RuntimeException('Could not save transcript asset hash.');
+                }
+
+                return true;
+            });
+        } finally {
+            // Metadata cached during a failed transaction must not outlive its rollback.
+            wp_cache_delete($episode->post_id, 'post_meta');
         }
     }
 

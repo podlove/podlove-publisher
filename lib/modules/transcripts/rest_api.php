@@ -57,16 +57,28 @@ class REST_API
             return new \WP_Error('podlove_rest_episode_not_found', 'episode does not exist', ['status' => 400]);
         }
 
-        VoiceAssignment::delete_for_episode($episode->id);
-
-        if (is_array($request['transcript_voice'])) {
-            foreach ($request['transcript_voice'] as $voice => $id) {
-                $voice_assignment = new VoiceAssignment();
-                $voice_assignment->episode_id = $episode->id;
-                $voice_assignment->voice = $voice;
-                $voice_assignment->contributor_id = (int) $id;
-                $voice_assignment->save();
+        $result = TranscriptMutation::run($episode->id, function () use ($episode, $request) {
+            if (VoiceAssignment::delete_for_episode($episode->id) === false) {
+                throw new \RuntimeException('Could not delete transcript voices.');
             }
+
+            if (is_array($request['transcript_voice'])) {
+                foreach ($request['transcript_voice'] as $voice => $id) {
+                    $voice_assignment = new VoiceAssignment();
+                    $voice_assignment->episode_id = $episode->id;
+                    $voice_assignment->voice = $voice;
+                    $voice_assignment->contributor_id = (int) $id;
+                    if ($voice_assignment->save() === false) {
+                        throw new \RuntimeException('Could not save transcript voice.');
+                    }
+                }
+            }
+
+            return true;
+        });
+
+        if (is_wp_error($result)) {
+            return $result;
         }
 
         return rest_ensure_response(['status' => 'ok']);
@@ -456,33 +468,9 @@ class WP_REST_PodloveTranscripts_Controller extends \WP_REST_Controller
                 );
             }
 
-            Transcript::delete_for_episode($episode->id);
-            VoiceAssignment::delete_for_episode($episode->id);
-
-            foreach ($result['cues'] as $cue) {
-                $line = new Transcript();
-                $line->episode_id = $episode->id;
-                $line->start = $cue['start'] * 1000;
-                $line->end = $cue['end'] * 1000;
-                $line->voice = $cue['voice'];
-                $line->content = $cue['text'];
-                $line->save();
-            }
-
-            $voices = array_unique(array_map(function ($cue) {
-                return $cue['voice'];
-            }, $result['cues']));
-
-            foreach ($voices as $voice) {
-                $contributor = Contributor::find_one_by_property('identifier', $voice);
-
-                if (!VoiceAssignment::is_voice_set($episode->id, $voice) && $contributor) {
-                    $voice_assignment = new VoiceAssignment();
-                    $voice_assignment->episode_id = $episode->id;
-                    $voice_assignment->voice = $voice;
-                    $voice_assignment->contributor_id = $contributor->id;
-                    $voice_assignment->save();
-                }
+            $import_result = Transcripts::import_parsed_webvtt($episode, $result, true);
+            if (is_wp_error($import_result)) {
+                return $import_result;
             }
         } else {
             if (isset($request['asset'])) {
@@ -529,35 +517,37 @@ class WP_REST_PodloveTranscripts_Controller extends \WP_REST_Controller
             return new \Podlove\Api\Error\NotFound('not_found', 'Episode not found');
         }
 
-        $voice_assignment = null;
+        if (!isset($request['voice'])) {
+            return new \WP_Error('podlove_transcript_voice_missing', 'Voice is required.', ['status' => 400]);
+        }
 
-        if (isset($request['voice'])) {
+        $cid = (int) ($request['contributor_id'] ?? 0);
+        if ($cid > 0 && !Contributor::find_by_id($cid)) {
+            return new \Podlove\Api\Error\NotFound('not_found', 'Contributor is not found');
+        }
+
+        $result = TranscriptMutation::run($episode->id, function () use ($episode, $request, $cid) {
             $voice = $request['voice'];
             $voice_assignment = VoiceAssignment::find_one_by_where(
-                sprintf('`episode_id` = "%d" AND `voice` = "%s"', (int) $id, esc_sql($voice))
+                sprintf('`episode_id` = "%d" AND `voice` = "%s" ORDER BY id ASC', (int) $episode->id, esc_sql($voice))
             );
             if (!$voice_assignment) {
                 $voice_assignment = new VoiceAssignment();
                 $voice_assignment->episode_id = $episode->id;
                 $voice_assignment->voice = $voice;
-                $voice_assignment->contributer_id = 0;
             }
-        }
 
-        $cid = 0;
-
-        if (isset($request['contributor_id'])) {
-            $cid = (int) $request['contributor_id'];
-            if ($cid > 0) {
-                $contributor = Contributor::find_by_id($cid);
-                if (!$contributor) {
-                    return new \Podlove\Api\Error\NotFound('not_found', 'Contributor is not found');
-                }
+            $voice_assignment->contributor_id = $cid;
+            if ($voice_assignment->save() === false) {
+                throw new \RuntimeException('Could not save transcript voice.');
             }
-        }
 
-        $voice_assignment->contributor_id = $cid;
-        $voice_assignment->save();
+            return true;
+        });
+
+        if (is_wp_error($result)) {
+            return $result;
+        }
 
         return new \Podlove\Api\Response\OkResponse([
             'status' => 'ok'

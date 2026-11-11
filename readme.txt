@@ -127,6 +127,10 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 = 4.5.9 =
 
+**Fixed**
+
+* Prevent duplicate transcript cues and voice assignments during concurrent imports, skip unchanged automatic imports, and prevent duplicate voice assignments from multiplying transcript output.
+
 **Security**
 
 * Prevent unauthorized downloads of transcripts for unpublished, private, and password-protected episodes.

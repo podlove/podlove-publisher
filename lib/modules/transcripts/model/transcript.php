@@ -39,10 +39,8 @@ class Transcript extends \Podlove\Model\Base
         global $wpdb;
 
         $sql = '
-			SELECT DISTINCT t.voice, va.`contributor_id`
+			SELECT DISTINCT t.voice, '.self::contributor_id_sql().' AS contributor_id
 			FROM '.static::table_name().' t
-			LEFT JOIN '.VoiceAssignment::table_name().' va
-			  ON va.`episode_id` = t.`episode_id` AND va.voice = t.voice
 			WHERE t.voice IS NOT NULL
 			  AND t.episode_id = '.(int) $episode_id;
 
@@ -54,12 +52,10 @@ class Transcript extends \Podlove\Model\Base
         global $wpdb;
 
         $sql = '
-			SELECT t.start, t.end, t.content, t.voice, va.contributor_id
+			SELECT t.start, t.end, t.content, t.voice, '.self::contributor_id_sql().' AS contributor_id
 			FROM '.static::table_name().' t
-			LEFT JOIN '.VoiceAssignment::table_name().' va ON va.`episode_id` = t.`episode_id` AND va.voice = t.voice
-			LEFT JOIN '.\Podlove\Modules\Contributors\Model\Contributor::table_name().' c ON c.id = va.contributor_id
 			WHERE t.episode_id = '.(int) $episode_id.'
-			ORDER BY t.start ASC';
+			ORDER BY t.start ASC, t.id ASC';
 
         return $wpdb->get_results($sql);
     }
@@ -69,12 +65,10 @@ class Transcript extends \Podlove\Model\Base
         global $wpdb;
 
         $sql = '
-			SELECT t.id, t.start, t.end, t.content, t.voice, va.contributor_id
+			SELECT t.id, t.start, t.end, t.content, t.voice, '.self::contributor_id_sql().' AS contributor_id
 			FROM '.static::table_name().' t
-			LEFT JOIN '.VoiceAssignment::table_name().' va ON va.`episode_id` = t.`episode_id` AND va.voice = t.voice
-			LEFT JOIN '.\Podlove\Modules\Contributors\Model\Contributor::table_name().' c ON c.id = va.contributor_id
 			WHERE t.episode_id = '.(int) $episode_id.'
-            ORDER BY t.start ASC LIMIT '.(int) $limit.' OFFSET '.(int) $offset;
+            ORDER BY t.start ASC, t.id ASC LIMIT '.(int) $limit.' OFFSET '.(int) $offset;
 
         return $wpdb->get_results($sql);
     }
@@ -86,8 +80,6 @@ class Transcript extends \Podlove\Model\Base
         $sql = '
 			SELECT COUNT(t.start)
 			FROM '.static::table_name().' t
-			LEFT JOIN '.VoiceAssignment::table_name().' va ON va.`episode_id` = t.`episode_id` AND va.voice = t.voice
-			LEFT JOIN '.\Podlove\Modules\Contributors\Model\Contributor::table_name().' c ON c.id = va.contributor_id
 			WHERE t.episode_id = '.(int) $episode_id;
 
         return $wpdb->get_var($sql);
@@ -166,6 +158,14 @@ class Transcript extends \Podlove\Model\Base
         }
 
         return $transcript;
+    }
+
+    private static function contributor_id_sql()
+    {
+        // Choose the oldest assignment consistently, even if legacy duplicates exist.
+        return '(SELECT va.contributor_id FROM '.VoiceAssignment::table_name().' va
+            WHERE va.episode_id = t.episode_id AND va.voice = t.voice
+            ORDER BY va.id ASC LIMIT 1)';
     }
 }
 
