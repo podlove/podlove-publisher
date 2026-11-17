@@ -133,6 +133,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 **Fixed**
 
+* Fix transcript voice dropdowns failing when a contributor has no name, label unnamed contributors, and clarify the option to leave a voice unassigned ([#1608](https://github.com/podlove/podlove-publisher/issues/1608)).
 * Prevent duplicate transcript cues and voice assignments during concurrent imports, skip unchanged automatic imports, and prevent duplicate voice assignments from multiplying transcript output.
 
 **Security**
