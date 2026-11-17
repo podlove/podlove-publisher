@@ -3,7 +3,7 @@ Contributors: eteubert
 Donate link: https://opencollective.com/podlove
 Tags: podlove, podcast, publishing, rss, audio
 Tested up to: 7.1
-Stable tag: 4.5.8
+Stable tag: 4.5.9
 Requires at least: 5.7.0
 Requires PHP: 8.0
 License: MIT
@@ -127,9 +127,7 @@ This product includes GeoLite2 data created by MaxMind, available from http://ww
 
 = 4.5.9 =
 
-* fix: Prepare podcast downloads before serving them, batch export queries and show preparation, retry and download feedback.
-
-* fix: Make tracking exports recover from interrupted requests, report failures and provide a persistent download button.
+* Improve podcast & tracking exports: recover from interrupted requests, report failures and provide a persistent download button.
 
 **Fixed**
 
