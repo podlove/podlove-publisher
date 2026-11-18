@@ -1,0 +1,1900 @@
+{
+  "entries": [
+    {
+      "name": "Abandon",
+      "pattern": "Abandon/"
+    },
+    {
+      "name": "Acast",
+      "pattern": "^Acast.+([Aa]ndroid|iOS|Darwin)"
+    },
+    {
+      "name": "Accompany",
+      "pattern": "Accompany/"
+    },
+    {
+      "name": "ActiasLuna",
+      "pattern": "ActiasLuna/"
+    },
+    {
+      "name": "ActionExtension",
+      "pattern": "ActionExtension/"
+    },
+    {
+      "name": "Adori",
+      "pattern": "^Adori(-Dev)?/"
+    },
+    {
+      "name": "Adori-Listen",
+      "pattern": "^Adori-Listen/"
+    },
+    {
+      "name": "AdventureChurch",
+      "pattern": "^AdventureChurch/"
+    },
+    {
+      "name": "Aftenposten Android app",
+      "pattern": "Android AP Hermes/"
+    },
+    {
+      "name": "Aftenposten iOS app",
+      "pattern": "iOS AP Hermes/"
+    },
+    {
+      "name": "Aftonbladet Android app",
+      "pattern": "Android Aftonbladet Hermes/"
+    },
+    {
+      "name": "Aftonbladet iOS app",
+      "pattern": "iOS Aftonbladet Hermes/"
+    },
+    {
+      "name": "Agora",
+      "pattern": "^Agora/"
+    },
+    {
+      "name": "AhaRadio",
+      "pattern": "^AhaRadio2/"
+    },
+    {
+      "name": "Airr",
+      "pattern": "^Airr(%20Beta)?/|^Airr \\("
+    },
+    {
+      "name": "Airsonic",
+      "pattern": "^Airsonic/"
+    },
+    {
+      "name": "Alexa-enabled device",
+      "pattern": "^AlexaMediaPlayer/[\\dv]|^Echo/|^AlexaService/|^Alexa Mobile Voice/|^Amazon;Echo"
+    },
+    {
+      "name": "AlienBlue",
+      "pattern": "^AlienBlue/"
+    },
+    {
+      "name": "All You Can Books",
+      "pattern": "AllYouCanBooks"
+    },
+    {
+      "name": "AllHitMusicRadio",
+      "pattern": "^AllHitMusicRadio/"
+    },
+    {
+      "name": "Aloha",
+      "pattern": "^Aloha/"
+    },
+    {
+      "name": "Amazon Fire",
+      "pattern": "^Amazon;AF"
+    },
+    {
+      "name": "Amazon Music",
+      "pattern": "^AmazonMusic|^Harley/\\d"
+    },
+    {
+      "name": "Ampache",
+      "pattern": "^Ampache/\\d"
+    },
+    {
+      "name": "AMPApp",
+      "pattern": "^AMPApp/"
+    },
+    {
+      "name": "Anchor",
+      "pattern": "^Anchor/"
+    },
+    {
+      "name": "AnchorFM",
+      "pattern": "^AnchorFM/"
+    },
+    {
+      "name": "Android Browser",
+      "pattern": "\\(Linux; Android \\d*; MHA-AL00 Build/HUAWEIMHA-AL00\\)"
+    },
+    {
+      "name": "Anghami",
+      "pattern": "Anghami/|^Anghami Android|^%D8%A3%D9%86%D8%BA%D8%A7%D9%85%D9%8A/"
+    },
+    {
+      "name": "AntennaPod",
+      "pattern": "(^AntennaPod/|^de\\.danoeh\\.antennapod/|antenna/.*CFNetwork)"
+    },
+    {
+      "name": "Anybox",
+      "pattern": "^Anybox/"
+    },
+    {
+      "name": "Anytime Podcast Player",
+      "pattern": "^Anytime/.*amugofjava"
+    },
+    {
+      "name": "APK Downloader",
+      "pattern": "^APKXDL"
+    },
+    {
+      "name": "Apollo",
+      "pattern": "^Apollo/|Apollo Podcasts \\(android\\)"
+    },
+    {
+      "name": "Apple HomePod",
+      "pattern": "^AirPodcasts/\\d"
+    },
+    {
+      "name": "Apple iMessage",
+      "pattern": "^MessagesViewService/|^Messages/|^Messages Share Extension/|^MessagesNotificationExtension/"
+    },
+    {
+      "name": "Apple Mail",
+      "pattern": "^Mail/"
+    },
+    {
+      "name": "Apple News",
+      "pattern": "AppleNews/"
+    },
+    {
+      "name": "Apple Podcasts",
+      "pattern": "^Podcasts/.*|^Balados/|^Podcasti/|^Podcastit/|^Podcasturi/|^Podcasty/|^Podcast’ler/|^Podcast%E2%80%99ler/|^Podkaster/|^Podcaster/.*\\(.*\\)|^Podcastok/|^Подкасти/|^Подкасты/|^פודקאסטים/|^البودكاست/|^पॉडकास्ट/|^พ็อดคาสท์/|^播客/|^팟캐스트/|ポッドキャスト/|^%D8%A7%D9%84%D8%A8%D9%88%D8%AF%D9%83%D8%A7%D8%B3%D8%AA/|^%D0%9F%D0%BE%D0%B4%D0%BA%D0%B0%D1%81%D1%82%D1%8B/|^%D0%9F%D0%BE%D0%B4%D0%BA%D0%B0%D1%81%D1%82%D0%B8/|^Podcastok/|^%D7%A4%D7%95%D7%93%D7%A7%D7%90%D7%A1%D7%98%D7%99%D7%9D/|^%ED%8C%9F%EC%BA%90%EC%8A%A4%ED%8A%B8/|^%D8%A7%D9%95%D8%B3%D9%85%D8%B9%D9%84%D9%8A/|^Podcaster/\\d|^%E6%92%AD%E5%AE%A2/|^%E3%83%9D%E3%83%83%E3%83%89%E3%82%AD%E3%83%A3%E3%82%B9%E3%83%88/|^Podcast/|^%E0%B8%9E%E0%B9%87%E0%B8%AD%E0%B8%94%E0%B8%84%E0%B8%B2%E0%B8%AA%E0%B8%97%E0%B9%8C/\\d|%D0%9F%D0%BE%D0%B4%D0%BA%D0%B0%D1%81%D1%82%D1%82%D0%B0%D1%80/\\d|^%E0%A4%AA%E0%A5%89%E0%A4%A1%E0%A4%95%E0%A4%BE%E0%A4%B8%E0%A5%8D%E0%A4%9F/\\d"
+    },
+    {
+      "name": "Apple Reminders",
+      "pattern": "^Recordatorios/"
+    },
+    {
+      "name": "ARD Audiothek",
+      "pattern": "^ARD Audiothek|^ARD%20Audiothek/|^ARD-Audiothek"
+    },
+    {
+      "name": "Arte Radio",
+      "pattern": "^arteradio/"
+    },
+    {
+      "name": "Arvocast",
+      "pattern": "^Arvocast/"
+    },
+    {
+      "name": "Askoyvaringen iOS app",
+      "pattern": "iOS Askoyvaringen Hermes/"
+    },
+    {
+      "name": "Audacious",
+      "pattern": "^Audacious"
+    },
+    {
+      "name": "Audacy",
+      "pattern": "^Radio\\.com/"
+    },
+    {
+      "name": "Audials",
+      "pattern": "^com\\.audials(\\.paid)?/"
+    },
+    {
+      "name": "Audible",
+      "pattern": "(^com\\.audible\\.playersdk\\.player|^Audible,|^Audible.*Darwin)"
+    },
+    {
+      "name": "Audio",
+      "pattern": "^Audio/"
+    },
+    {
+      "name": "Audio Now",
+      "pattern": "^Android_AudioNow"
+    },
+    {
+      "name": "audiobookshelf",
+      "pattern": "^audiobookshelf"
+    },
+    {
+      "name": "AudioWave",
+      "pattern": "(^AudioWave/1|^AudioWave iOS)"
+    },
+    {
+      "name": "Aural",
+      "pattern": "^Aural/"
+    },
+    {
+      "name": "Aurora",
+      "pattern": "^Aurora/"
+    },
+    {
+      "name": "Autopod",
+      "pattern": "^Autopod/"
+    },
+    {
+      "name": "avassetReader",
+      "pattern": "^avassetReader/"
+    },
+    {
+      "name": "avopodo",
+      "pattern": "^avopodo/"
+    },
+    {
+      "name": "AVPlay",
+      "pattern": "^AVPlay/"
+    },
+    {
+      "name": "Awasu",
+      "pattern": "^Awasu/"
+    },
+    {
+      "name": "Azul",
+      "pattern": "^Azul/"
+    },
+    {
+      "name": "BaladoQuebec",
+      "pattern": "^BaladoQuebec/"
+    },
+    {
+      "name": "Banter",
+      "pattern": "^Banter/|^banter-beta/"
+    },
+    {
+      "name": "Barabbas Road Church",
+      "pattern": "^Barabbas Road Church/"
+    },
+    {
+      "name": "BashPodder",
+      "pattern": "^BashPodder"
+    },
+    {
+      "name": "BBC iPlayer",
+      "pattern": "^BBCiPlayer/"
+    },
+    {
+      "name": "BBC iPlayer Radio",
+      "pattern": "BBCiPlayerRadio/"
+    },
+    {
+      "name": "BBC Sounds",
+      "pattern": "BBC%20Sounds/"
+    },
+    {
+      "name": "Bear",
+      "pattern": "^Bear/"
+    },
+    {
+      "name": "Bergens Tidende Android app",
+      "pattern": "Android BT Hermes/"
+    },
+    {
+      "name": "Bergens Tidende iOS app",
+      "pattern": "iOS BT Hermes/"
+    },
+    {
+      "name": "BeyondPod",
+      "pattern": "; BeyondPod"
+    },
+    {
+      "name": "bgwnr",
+      "pattern": "^bgwnr/"
+    },
+    {
+      "name": "Bible",
+      "pattern": "^Bible/"
+    },
+    {
+      "name": "Bitcast",
+      "pattern": "^Bitcast(\\.fm)?/|^bitcast 4 reel/|^bitcastbitcast/"
+    },
+    {
+      "name": "Bitly",
+      "pattern": "^Bitly/"
+    },
+    {
+      "name": "BizCoachPal",
+      "pattern": "^BizCoachPal/"
+    },
+    {
+      "name": "BMR",
+      "pattern": "^BMR/"
+    },
+    {
+      "name": "Bolt",
+      "pattern": "^Bolt/"
+    },
+    {
+      "name": "Bookmobile",
+      "pattern": "^Bookmobile/"
+    },
+    {
+      "name": "Bookself",
+      "pattern": "^Bookself/"
+    },
+    {
+      "name": "Boom",
+      "pattern": "^Boom/"
+    },
+    {
+      "name": "Boomplay",
+      "pattern": "^Boomplay/"
+    },
+    {
+      "name": "Bose SoundTouch",
+      "pattern": "^Bose/"
+    },
+    {
+      "name": "bPod",
+      "pattern": "^bPod$"
+    },
+    {
+      "name": "Breaker",
+      "pattern": "^Breaker/"
+    },
+    {
+      "name": "Breez",
+      "pattern": "^breez/"
+    },
+    {
+      "name": "BrewApp",
+      "pattern": "^BrewApp/"
+    },
+    {
+      "name": "Broadcast",
+      "pattern": "^Broadcast/"
+    },
+    {
+      "name": "Broadway Podcast Network",
+      "pattern": "BroadwayPodcastNetwork/iOS"
+    },
+    {
+      "name": "Browser",
+      "pattern": "^Browser/"
+    },
+    {
+      "name": "Browser iOS",
+      "pattern": "^browser_ios/"
+    },
+    {
+      "name": "BrowserPlus",
+      "pattern": "^BrowserPlus/"
+    },
+    {
+      "name": "Bullhorn",
+      "pattern": "^Bullhorn(/.*)?$|^Bullhorn \\("
+    },
+    {
+      "name": "Bygdanytt iOS app",
+      "pattern": "iOS Bygdanytt Hermes/"
+    },
+    {
+      "name": "Canvas",
+      "pattern": "^Canvas/"
+    },
+    {
+      "name": "Capital",
+      "pattern": "^Capital/"
+    },
+    {
+      "name": "capsule.fm",
+      "pattern": "^capsule\\.fm/|^capsule-android"
+    },
+    {
+      "name": "Cast",
+      "pattern": "^Cast/"
+    },
+    {
+      "name": "Castamatic",
+      "pattern": "^Castamatic/"
+    },
+    {
+      "name": "Castaway",
+      "pattern": "^Castaway/"
+    },
+    {
+      "name": "CastBox",
+      "pattern": "^Cast[Bb]ox|^fm\\.castbox\\."
+    },
+    {
+      "name": "Casterbate",
+      "pattern": "^Casterbate/"
+    },
+    {
+      "name": "castero",
+      "pattern": "^castero \\d"
+    },
+    {
+      "name": "castget",
+      "pattern": "^castget "
+    },
+    {
+      "name": "Castro",
+      "pattern": "^Castro[/ ]"
+    },
+    {
+      "name": "Casts",
+      "pattern": "^Casts/"
+    },
+    {
+      "name": "CCGF",
+      "pattern": "^CCGF/"
+    },
+    {
+      "name": "CEBrowser",
+      "pattern": "^CEBrowser/"
+    },
+    {
+      "name": "CFC",
+      "pattern": "^CFC/"
+    },
+    {
+      "name": "CHCLeaders",
+      "pattern": "^CHCLeaders/"
+    },
+    {
+      "name": "Childress",
+      "pattern": "^Childress/"
+    },
+    {
+      "name": "chorus",
+      "pattern": "^chorus/"
+    },
+    {
+      "name": "Christian Life Austin",
+      "pattern": "^Christian Life Austin/"
+    },
+    {
+      "name": "Chromecast device",
+      "pattern": "CrKey/|\\(CrKey |^Google;Chromecast"
+    },
+    {
+      "name": "ChurchLink",
+      "pattern": "^ChurchLink/"
+    },
+    {
+      "name": "Clammr",
+      "pattern": "^Clammr/"
+    },
+    {
+      "name": "Client",
+      "pattern": "^Client/"
+    },
+    {
+      "name": "Clementine Music Player",
+      "pattern": "^Clementine "
+    },
+    {
+      "name": "Club",
+      "pattern": "^Club/"
+    },
+    {
+      "name": "Commotion",
+      "pattern": "^Commotion/"
+    },
+    {
+      "name": "Cooler",
+      "pattern": "^CoolerFM/"
+    },
+    {
+      "name": "Copied",
+      "pattern": "^Copied/"
+    },
+    {
+      "name": "CoreDataPlayerSample",
+      "pattern": "^CoreDataPlayerSample/"
+    },
+    {
+      "name": "Cosmicast",
+      "pattern": "^Cosmicast/"
+    },
+    {
+      "name": "CPod",
+      "pattern": "CPod/"
+    },
+    {
+      "name": "Crosspoint City Church",
+      "pattern": "^Crosspoint City Church/"
+    },
+    {
+      "name": "Crosspointe",
+      "pattern": "^Crosspointe/"
+    },
+    {
+      "name": "CrossPreach",
+      "pattern": "^CrossPreach/"
+    },
+    {
+      "name": "Damus",
+      "pattern": "^damus|%D8%AF%D8%A7%D9%85%D9%8F%D8%B3|%E8%BE%BE%E6%91%A9/"
+    },
+    {
+      "name": "DataDogApp",
+      "pattern": "^DataDogApp/"
+    },
+    {
+      "name": "DaumWebtoon",
+      "pattern": "^DaumWebtoon/"
+    },
+    {
+      "name": "De Standaard",
+      "pattern": "be\\.standaard\\.audio|^DS%20Podcast/"
+    },
+    {
+      "name": "Deezer",
+      "pattern": "(^Deezer/|^DeezerJukebox/|^Deezer.*Electron)"
+    },
+    {
+      "name": "Delve",
+      "pattern": "^Delve/"
+    },
+    {
+      "name": "DevCasts",
+      "pattern": "^devcasts/.*CFNetwork"
+    },
+    {
+      "name": "Dlf Audiothek",
+      "pattern": "^DlfAudiothek/|^Dlf Audiothek"
+    },
+    {
+      "name": "DManager",
+      "pattern": "^DManager/"
+    },
+    {
+      "name": "Documents",
+      "pattern": "^Documents/"
+    },
+    {
+      "name": "DoggCatcher",
+      "pattern": "DoggCatcher"
+    },
+    {
+      "name": "DolphiniPad",
+      "pattern": "^Dolphini(Pad|Phone)/"
+    },
+    {
+      "name": "doubleTwist CloudPlayer",
+      "pattern": "^doubleTwist CloudPlayer"
+    },
+    {
+      "name": "Doughnut",
+      "pattern": "^Doughnut/"
+    },
+    {
+      "name": "Downcast",
+      "pattern": "Downcast/"
+    },
+    {
+      "name": "Downie",
+      "pattern": "^Downie/"
+    },
+    {
+      "name": "DownloadAll",
+      "pattern": "^DownloadAll/"
+    },
+    {
+      "name": "Downloader",
+      "pattern": "^Downloader/"
+    },
+    {
+      "name": "DownloaderLite",
+      "pattern": "^DownloaderLite/"
+    },
+    {
+      "name": "DownloaderSound",
+      "pattern": "^DownloaderSound/"
+    },
+    {
+      "name": "Download Shuttle",
+      "pattern": "^Download Shuttle/"
+    },
+    {
+      "name": "DownloadPro",
+      "pattern": "^DownloadPro/"
+    },
+    {
+      "name": "Downloads",
+      "pattern": "^Downloads/"
+    },
+    {
+      "name": "DownMan",
+      "pattern": "^DownMan/"
+    },
+    {
+      "name": "DowntonAppy",
+      "pattern": "^DowntonAppy/"
+    },
+    {
+      "name": "DriveCast",
+      "pattern": "^DriveCast/"
+    },
+    {
+      "name": "DRN1",
+      "pattern": "^DRN1;"
+    },
+    {
+      "name": "DroolRadio",
+      "pattern": "^DroolRadio/"
+    },
+    {
+      "name": "Dynamo",
+      "pattern": "^Dynamo/"
+    },
+    {
+      "name": "E24 Android app",
+      "pattern": "Android E24 Hermes/"
+    },
+    {
+      "name": "E24 iOS app",
+      "pattern": "iOS E24 Hermes/"
+    },
+    {
+      "name": "Earbud",
+      "pattern": "^Earbud/"
+    },
+    {
+      "name": "Earmark",
+      "pattern": "^Earmark/"
+    },
+    {
+      "name": "EasyGet",
+      "pattern": "^EasyGet/"
+    },
+    {
+      "name": "Economist Espresso",
+      "pattern": "^TheEconomist-Darwin-"
+    },
+    {
+      "name": "Elevation Health",
+      "pattern": "^Elevation_Health/"
+    },
+    {
+      "name": "EMAudioPlayer",
+      "pattern": "^EMAudioPlayer "
+    },
+    {
+      "name": "Emacs",
+      "pattern": "^URL/Emacs "
+    },
+    {
+      "name": "Encounter",
+      "pattern": "^Encounter/"
+    },
+    {
+      "name": "EpisodeFever",
+      "pattern": "^EpisodeFever/"
+    },
+    {
+      "name": "EQu",
+      "pattern": "^EQu/"
+    },
+    {
+      "name": "EvanApp",
+      "pattern": "^EvanApp/"
+    },
+    {
+      "name": "Expo",
+      "pattern": "^Expo/"
+    },
+    {
+      "name": "ExtDownloader",
+      "pattern": "^ExtDownloader/"
+    },
+    {
+      "name": "ExtraCloud",
+      "pattern": "^ExtraCloud/"
+    },
+    {
+      "name": "Facebook",
+      "pattern": "(iPhone|iPad).* \\[FBAN|iOS/Facebook|^FB4A/Facebook|^facebook-mobile/|^Facebook/|^\\[FBAN/"
+    },
+    {
+      "name": "faidr",
+      "pattern": "^CFR%20Plus/"
+    },
+    {
+      "name": "FaithPlay",
+      "pattern": "^FaithPlay FaithPlay/"
+    },
+    {
+      "name": "Fallound",
+      "pattern": "^Fallound/"
+    },
+    {
+      "name": "FancyMusic",
+      "pattern": "^FancyMusic/"
+    },
+    {
+      "name": "Fathom",
+      "pattern": "^Fathom/"
+    },
+    {
+      "name": "Feeder",
+      "pattern": "^Feeder/"
+    },
+    {
+      "name": "Feedly",
+      "pattern": "^feedly/"
+    },
+    {
+      "name": "FeedStation",
+      "pattern": "^FeedStation/\\d"
+    },
+    {
+      "name": "Fellowship Bible Church Topeka",
+      "pattern": "^Fellowship Bible Church Topeka/"
+    },
+    {
+      "name": "Filebox",
+      "pattern": "^Filebox/"
+    },
+    {
+      "name": "FileBrowser",
+      "pattern": "^FileBrowser/"
+    },
+    {
+      "name": "Filer",
+      "pattern": "^Filer/"
+    },
+    {
+      "name": "Files",
+      "pattern": "^Files/"
+    },
+    {
+      "name": "FilesPro",
+      "pattern": "^FilesPro/"
+    },
+    {
+      "name": "Fili",
+      "pattern": "^Fili/"
+    },
+    {
+      "name": "Flash",
+      "pattern": "(^MAC |^WIN )"
+    },
+    {
+      "name": "folkebladet.no",
+      "pattern": "^folkebladet\\.no/"
+    },
+    {
+      "name": "FocusPodcast",
+      "pattern": "^FocusPodcast_"
+    },
+    {
+      "name": "foobar2000",
+      "pattern": "^foobar2000/"
+    },
+    {
+      "name": "Fountain",
+      "pattern": "^Fountain|^fountainapp/\\d"
+    },
+    {
+      "name": "Free Download Manager",
+      "pattern": "^FDM/|^FDM \\d"
+    },
+    {
+      "name": "FreeMP3MusicDownload",
+      "pattern": "^FreeMP3MusicDownload/"
+    },
+    {
+      "name": "freemusic",
+      "pattern": "^freemusic/"
+    },
+    {
+      "name": "FreeMusicDownloadPro",
+      "pattern": "^FreeMusicDownloadPro/"
+    },
+    {
+      "name": "FreeMusicPlusFree",
+      "pattern": "^FreeMusicPlusFree/"
+    },
+    {
+      "name": "Fréquence Plus",
+      "pattern": "^FrequencePlus/"
+    },
+    {
+      "name": "Gaana",
+      "pattern": "^GaanaAndroid-|^Gaana-iOS|^Gaana/"
+    },
+    {
+      "name": "Garmin fenix",
+      "pattern": "^Garmin fenix "
+    },
+    {
+      "name": "Garmin Forerunner",
+      "pattern": "^Garmin Forerunner"
+    },
+    {
+      "name": "Garmin tactix",
+      "pattern": "^Garmin tactix"
+    },
+    {
+      "name": "Garmin Venu",
+      "pattern": "^Garmin Venu "
+    },
+    {
+      "name": "Garmin Vivoactive",
+      "pattern": "^Garmin v"
+    },
+    {
+      "name": "GBEngine",
+      "pattern": "^GBEngine/"
+    },
+    {
+      "name": "GMB Show",
+      "pattern": "^GMB Show/"
+    },
+    {
+      "name": "Godster",
+      "pattern": "^Godster/"
+    },
+    {
+      "name": "GoldenPod",
+      "pattern": "^GoldenPod/"
+    },
+    {
+      "name": "GoLoud",
+      "pattern": "^GoLoud/"
+    },
+    {
+      "name": "Goodpods",
+      "pattern": "Goodpods\\.|^[Gg]oodpods/"
+    },
+    {
+      "name": "GoodReader",
+      "pattern": "^GoodReader(4|IPad)?/"
+    },
+    {
+      "name": "Google Assistant",
+      "pattern": "^Google-Speech-Actions"
+    },
+    {
+      "name": "Google Nest Hub",
+      "pattern": "(Fuchsia).* CrKey/"
+    },
+    {
+      "name": "Google Podcasts",
+      "pattern": "(GoogleChirp|^GooglePodcasts/|^Podcasts$|GSA/)"
+    },
+    {
+      "name": "gPodder",
+      "pattern": "^gPodder/|^gpodder\\.net|gpodder"
+    },
+    {
+      "name": "Grace Community Church - Texas",
+      "pattern": "^Grace%20Community%20Church%20-%20Texas/"
+    },
+    {
+      "name": "Grace Evangelical Covenant Church",
+      "pattern": "^Grace%20Evangelical%20Covenant%20Church/"
+    },
+    {
+      "name": "Gretale",
+      "pattern": "^Gretale/"
+    },
+    {
+      "name": "GroupMe",
+      "pattern": "^GroupMe/"
+    },
+    {
+      "name": "Guardian",
+      "pattern": "^Guardian-iOSLive/|GuardianAndroidApp/|^Guardian Podcast"
+    },
+    {
+      "name": "Guacamole",
+      "pattern": "^Guacamole/"
+    },
+    {
+      "name": "GrabRadioWorld",
+      "pattern": "^GrabRadioWorld/"
+    },
+    {
+      "name": "HalfTunes",
+      "pattern": "^HalfTunes/"
+    },
+    {
+      "name": "Hammel",
+      "pattern": "^Hammel/"
+    },
+    {
+      "name": "HardCast",
+      "pattern": "^HardCast/"
+    },
+    {
+      "name": "Hark Audio",
+      "pattern": "^Hark/"
+    },
+    {
+      "name": "Headliner",
+      "pattern": "^Headliner/.*\\(Headliner-.*\\+https://www\\.headliner\\.app\\)$"
+    },
+    {
+      "name": "HermesPod",
+      "pattern": "hermespod\\.com/"
+    },
+    {
+      "name": "HiCast",
+      "pattern": "^HiCast/"
+    },
+    {
+      "name": "Highly",
+      "pattern": "^Highly/"
+    },
+    {
+      "name": "Himalaya",
+      "pattern": "^Himalaya(_test)?/"
+    },
+    {
+      "name": "HopeChurchCleburne",
+      "pattern": "^HopeChurchCleburne/"
+    },
+    {
+      "name": "Horse Radio Network",
+      "pattern": "^HRN/"
+    },
+    {
+      "name": "Hubbard Radio",
+      "pattern": "HubbardApp/"
+    },
+    {
+      "name": "Hubhopper",
+      "pattern": "^Hubhopper$"
+    },
+    {
+      "name": "Hyper",
+      "pattern": "^Hyper/"
+    },
+    {
+      "name": "HyperCatcher",
+      "pattern": "^HyperCatcher"
+    },
+    {
+      "name": "iBuilder",
+      "pattern": "^iBuilder/"
+    },
+    {
+      "name": "iCatcher",
+      "pattern": "^i[Cc]atcher|\\(iCatcher"
+    },
+    {
+      "name": "iDL",
+      "pattern": "^iDL/"
+    },
+    {
+      "name": "iDownloader",
+      "pattern": "IDownloaderApps4StarsFree/|^IDownloaderFree_Apps4Stars/|^iDownloader"
+    },
+    {
+      "name": "iDownloadsAppPlus",
+      "pattern": "^iDownloadsAppPlus/"
+    },
+    {
+      "name": "iFeedTouch",
+      "pattern": "^iFeedTouch/"
+    },
+    {
+      "name": "Iframely",
+      "pattern": "Iframely/"
+    },
+    {
+      "name": "IFTTT",
+      "pattern": "^IFTTT/"
+    },
+    {
+      "name": "iHeartRadio",
+      "pattern": "^iHeartRadio/|^iHeartPodcasts/"
+    },
+    {
+      "name": "iHorror",
+      "pattern": "^iHorror/"
+    },
+    {
+      "name": "InCast",
+      "pattern": "^InCast/"
+    },
+    {
+      "name": "Instacast",
+      "pattern": "^Instacast Instacast/|^Instacast/"
+    },
+    {
+      "name": "Instagram",
+      "pattern": "^Instagram/|Mobile/.* Instagram"
+    },
+    {
+      "name": "iOnGreenville",
+      "pattern": "^iOnGreenville/"
+    },
+    {
+      "name": "IOSAudiobooks",
+      "pattern": "^IOSAudiobooks/"
+    },
+    {
+      "name": "IPF",
+      "pattern": "^IPF/"
+    },
+    {
+      "name": "iPlay",
+      "pattern": "^iPlay/"
+    },
+    {
+      "name": "isitgood",
+      "pattern": "^isitgood/"
+    },
+    {
+      "name": "iTunes",
+      "pattern": "^iTunesU?[/-]"
+    },
+    {
+      "name": "iVoox",
+      "pattern": "^[iI][Vv]oox"
+    },
+    {
+      "name": "iWeb",
+      "pattern": "^iWeb/"
+    },
+    {
+      "name": "Jabbercast",
+      "pattern": "^Jabbercast/"
+    },
+    {
+      "name": "Jam",
+      "pattern": "^Jam/\\d.*listentojam"
+    },
+    {
+      "name": "Jamit",
+      "pattern": "^Jamit$"
+    },
+    {
+      "name": "JamxFeeds",
+      "pattern": "^JamxFeeds/"
+    },
+    {
+      "name": "Jimcast",
+      "pattern": "^Jimcast/"
+    },
+    {
+      "name": "JioSaavn",
+      "pattern": "(^com\\.jio\\.media\\.jiobeats|^com\\.saavn\\.android|^[sS]aavn)"
+    },
+    {
+      "name": "JRiver Media Center",
+      "pattern": "J\\. River Internet Reader"
+    },
+    {
+      "name": "Juice",
+      "pattern": "^Juice/"
+    },
+    {
+      "name": "Kajabi",
+      "pattern": " Kajabi|KajabiPodcast"
+    },
+    {
+      "name": "KakaoTalk",
+      "pattern": "^KakaoTalk/"
+    },
+    {
+      "name": "KaoticRadio.com",
+      "pattern": "^KaoticRadio\\.com/"
+    },
+    {
+      "name": "Kasts",
+      "pattern": "^Kasts/|^kasts "
+    },
+    {
+      "name": "Kids Listen",
+      "pattern": "^Kids(%20| )Listen/"
+    },
+    {
+      "name": "KidsPod",
+      "pattern": "^KidspodMobileClient/"
+    },
+    {
+      "name": "KKBOX",
+      "pattern": "^KKBOX/"
+    },
+    {
+      "name": "Kloudie",
+      "pattern": "^Kloudie/"
+    },
+    {
+      "name": "Knomad",
+      "pattern": "^Knomad/"
+    },
+    {
+      "name": "Kodi",
+      "pattern": "^Kodi/"
+    },
+    {
+      "name": "KREAFUNK",
+      "pattern": "^KREAFUNK/"
+    },
+    {
+      "name": "labs",
+      "pattern": "^labs/"
+    },
+    {
+      "name": "Laughable",
+      "pattern": "^Laughable.+iOS|^Laughable/"
+    },
+    {
+      "name": "Leaf",
+      "pattern": "^Leaf/"
+    },
+    {
+      "name": "Les Indés Radios",
+      "pattern": "(^lesindesradios$|^lesindesradios/)"
+    },
+    {
+      "name": "LG Player",
+      "pattern": "LG Player"
+    },
+    {
+      "name": "LifeEssentials",
+      "pattern": "^Life(%20)?Essentials(App)?/"
+    },
+    {
+      "name": "lifegateburleson",
+      "pattern": "^lifegateburleson/"
+    },
+    {
+      "name": "Life Radio",
+      "pattern": "^life-radio-konsole-app-android"
+    },
+    {
+      "name": "LinkedIn",
+      "pattern": "AppleWebKit.+\\[LinkedInApp\\]|^LinkedIn/"
+    },
+    {
+      "name": "Lisny",
+      "pattern": "Lisny"
+    },
+    {
+      "name": "Listen",
+      "pattern": "^Listen(( |%20)App)?/"
+    },
+    {
+      "name": "Liulo",
+      "pattern": "^Liulo/"
+    },
+    {
+      "name": "Listen5",
+      "pattern": "Listen5"
+    },
+    {
+      "name": "Livio Radio",
+      "pattern": "^Livio Radio/"
+    },
+    {
+      "name": "Luminary",
+      "pattern": "^Luminary(Preprod)?/|^luminary\\.next/"
+    },
+    {
+      "name": "MacJournal",
+      "pattern": "^MacJournal/"
+    },
+    {
+      "name": "Majelan",
+      "pattern": "^MajelanApp"
+    },
+    {
+      "name": "Mame Cast",
+      "pattern": "^Mame%20Cast/"
+    },
+    {
+      "name": "MaxTubePro",
+      "pattern": "^MaxTubePro/"
+    },
+    {
+      "name": "Meadowbrook Church",
+      "pattern": "^Meadowbrook Church/"
+    },
+    {
+      "name": "MediaMonkey",
+      "pattern": "^MediaMonkey"
+    },
+    {
+      "name": "Mediatap",
+      "pattern": "^Mediatap/"
+    },
+    {
+      "name": "Megaphone",
+      "pattern": "^Megaphone\\.fm"
+    },
+    {
+      "name": "Menucast",
+      "pattern": "^Menucast/"
+    },
+    {
+      "name": "Message+",
+      "pattern": "^Message\\+/"
+    },
+    {
+      "name": "Messenger",
+      "pattern": "^Messenger/"
+    },
+    {
+      "name": "Metacast",
+      "pattern": "^Metacast/"
+    },
+    {
+      "name": "Microsoft Outlook",
+      "pattern": "^Outlook-Android/|^Microsoft Office/.*?Microsoft Outlook"
+    },
+    {
+      "name": "Microsoft Xbox",
+      "pattern": "^microsoft;xbox_"
+    },
+    {
+      "name": "Mimir",
+      "pattern": "^Mimir(-macOS|-iOS)?/"
+    },
+    {
+      "name": "Miro",
+      "pattern": "^Miro/.+Windows"
+    },
+    {
+      "name": "Mixcloud",
+      "pattern": "^Mixcloud/"
+    },
+    {
+      "name": "MixerBox",
+      "pattern": "^MixerBox(%20Pro)?/"
+    },
+    {
+      "name": "MobileApp",
+      "pattern": "^MobileApp/"
+    },
+    {
+      "name": "MobileSMS",
+      "pattern": "^MobileSMS/"
+    },
+    {
+      "name": "MoonFM",
+      "pattern": "^Moon ?FM/"
+    },
+    {
+      "name": "mowPod",
+      "pattern": "^mowPod/"
+    },
+    {
+      "name": "MPlayer",
+      "pattern": "^MPlayer \\d"
+    },
+    {
+      "name": "mpv",
+      "pattern": "^mpv 0\\.|^libmpv$"
+    },
+    {
+      "name": "MusicBee",
+      "pattern": "^MusicBee"
+    },
+    {
+      "name": "Music Download App",
+      "pattern": "^Music%20Download/"
+    },
+    {
+      "name": "MyTuner",
+      "pattern": "^myTuner Radio app/|^myTuner%20Radio%20app/|^mytuner_podcasts_androidplayer/|^MyTuner-|^myTuner$|^myTuneriOS%20Free/"
+    },
+    {
+      "name": "NetNewsWire",
+      "pattern": "^NetNewsWire"
+    },
+    {
+      "name": "Newsboat",
+      "pattern": "^Newsboat/"
+    },
+    {
+      "name": "Newsly",
+      "pattern": "^Newsly"
+    },
+    {
+      "name": "Noice",
+      "pattern": "^Noice/"
+    },
+    {
+      "name": "Nos",
+      "pattern": "^Nos|Nos%20Staging|Nos%20Dev/"
+    },
+    {
+      "name": "NPR",
+      "pattern": "^NPR/|^NPR%20One/|^NPROneAndroid|nprone_android/"
+    },
+    {
+      "name": "NRC Audio",
+      "pattern": "^NRC( |%20)Audio/"
+    },
+    {
+      "name": "NRC",
+      "pattern": "nl\\.nrc\\.nrcapp|^NRC-Nieuws/|com\\.twipemobile\\.nrc"
+    },
+    {
+      "name": "Outcast",
+      "pattern": "^Outcast[/ ]"
+    },
+    {
+      "name": "Overcast",
+      "pattern": "^Overcast/|^Overcast.*Apple Watch"
+    },
+    {
+      "name": "Overhaul",
+      "pattern": "^Podcast Overhaul/"
+    },
+    {
+      "name": "Palco MP3",
+      "pattern": "^Palco MP3"
+    },
+    {
+      "name": "Pandora",
+      "pattern": "(^Pandora/| Pandora/)"
+    },
+    {
+      "name": "Parler",
+      "pattern": "^Parler( Staging)?/"
+    },
+    {
+      "name": "PeaCast",
+      "pattern": "^PeaCast/"
+    },
+    {
+      "name": "Playapod",
+      "pattern": "^Playapod"
+    },
+    {
+      "name": "PlaydioCast Podcast Radio",
+      "pattern": "^PlaydioCast/"
+    },
+    {
+      "name": "Player FM",
+      "pattern": "^Player FM|^Player%20FM|^Alpha%20PlayerFM/"
+    },
+    {
+      "name": "Pocket Casts",
+      "pattern": "^Pocket Casts|^PocketCasts/|^Shifty Jelly Pocket Casts"
+    },
+    {
+      "name": "Podbay",
+      "pattern": "^Podbay/"
+    },
+    {
+      "name": "Podbean",
+      "pattern": "^Podbean/"
+    },
+    {
+      "name": "Podcast Guru",
+      "pattern": "^PodcastGuru"
+    },
+    {
+      "name": "Podcast Addict",
+      "pattern": "^Podcast.*Addict/|^Podcast Addict "
+    },
+    {
+      "name": "Podcast Archiver",
+      "pattern": "janwh/podcast-archiver"
+    },
+    {
+      "name": "Podcast Player",
+      "pattern": "^Podcast Player/"
+    },
+    {
+      "name": "Podcast Republic",
+      "pattern": "^PodcastRepublic/"
+    },
+    {
+      "name": "Podcastly",
+      "pattern": "^Podcastly/|^Podcastly$"
+    },
+    {
+      "name": "Podchaser",
+      "pattern": "^Podchaser |^Podchaser-Parser"
+    },
+    {
+      "name": "Podcini",
+      "pattern": "^Podcini/\\d"
+    },
+    {
+      "name": "Podclipper",
+      "pattern": "^Podclipper/"
+    },
+    {
+      "name": "Podcoin",
+      "pattern": "^Podcoin"
+    },
+    {
+      "name": "PodCruncher",
+      "pattern": "^PodCruncher/.* CFNetwork/"
+    },
+    {
+      "name": "poddl - podcast downloader",
+      "pattern": "poddl - podcast downloader"
+    },
+    {
+      "name": "Podeo",
+      "pattern": "^Podeo/"
+    },
+    {
+      "name": "Podfriend",
+      "pattern": "^Podfriend"
+    },
+    {
+      "name": "Podgrab",
+      "pattern": "^Podgrab "
+    },
+    {
+      "name": "Podhero",
+      "pattern": "^Podhero|^Swoot[/ ]"
+    },
+    {
+      "name": "Podhome",
+      "pattern": "^Podhome App"
+    },
+    {
+      "name": "Podimo",
+      "pattern": "^Podimo/"
+    },
+    {
+      "name": "Podium Podcast",
+      "pattern": "^Podium/\\d"
+    },
+    {
+      "name": "PodKast app",
+      "pattern": ".*PodKast$"
+    },
+    {
+      "name": "Podkicker Pro",
+      "pattern": "^Podkicker"
+    },
+    {
+      "name": "PodLink",
+      "pattern": "PodLink"
+    },
+    {
+      "name": "PodLP podcast app for KaiOS",
+      "pattern": ".*PodLP/"
+    },
+    {
+      "name": "PodMe",
+      "pattern": "^Podme android app/|^PodMe/"
+    },
+    {
+      "name": "PodMN",
+      "pattern": "^PodMN/"
+    },
+    {
+      "name": "PodNL",
+      "pattern": "^PodNL/"
+    },
+    {
+      "name": "Podnods",
+      "pattern": "podnods-player"
+    },
+    {
+      "name": "Podopolo",
+      "pattern": "^Podopolo|^podopolo/"
+    },
+    {
+      "name": "Podplay",
+      "pattern": "^Podplay/"
+    },
+    {
+      "name": "PodPuppy",
+      "pattern": "felixwatts/PodPuppy"
+    },
+    {
+      "name": "PodQast",
+      "pattern": "^PodQast/"
+    },
+    {
+      "name": "Pods",
+      "pattern": "^Pods/"
+    },
+    {
+      "name": "Podurama",
+      "pattern": "^Podurama"
+    },
+    {
+      "name": "PodTrapper",
+      "pattern": "^PodTrapper"
+    },
+    {
+      "name": "Podvine",
+      "pattern": "^Podvine/\\d"
+    },
+    {
+      "name": "Podverse",
+      "pattern": "^[Pp]odverse/"
+    },
+    {
+      "name": "Podyssey",
+      "pattern": "Podyssey App|com\\.toysinboxes\\.Echo|fm\\.podyssey\\.podcasts|^Podyssey"
+    },
+    {
+      "name": "ProCast",
+      "pattern": "Pro[Cc]ast"
+    },
+    {
+      "name": "PugPig Bolt",
+      "pattern": "^PugpigBolt "
+    },
+    {
+      "name": "Pypodder",
+      "pattern": "^pypodder$"
+    },
+    {
+      "name": "Radio Downloader",
+      "pattern": "^Podcast Provider.*?Radio Downloader"
+    },
+    {
+      "name": "Radio thmanyah",
+      "pattern": "^Radio thmanyah "
+    },
+    {
+      "name": "radio.de",
+      "pattern": "^(radio\\.[a-z]{2,3}|GetPodcast)[ /]\\d"
+    },
+    {
+      "name": "Radioline",
+      "pattern": "^Radioline%202/|^Radioline$"
+    },
+    {
+      "name": "RadioPlayer",
+      "pattern": "(^Radioplayer Android app|^Radioplayer iOS app)|^Radioplayer(%20UK)?/"
+    },
+    {
+      "name": "RadioPublic",
+      "pattern": "^RadioPublic/android-|^RadioPublic Android|RadioPublic iOS|RadioPublic.+CFNetwork|^RadioPublic/iOS|^RadioPublicDraper/"
+    },
+    {
+      "name": "Reeder",
+      "pattern": "^Reeder/"
+    },
+    {
+      "name": "Repod",
+      "pattern": "(^Repod/.+iOS|^Repod/.+Android)"
+    },
+    {
+      "name": "Roka Stereo",
+      "pattern": "^Roka Stereo/"
+    },
+    {
+      "name": "Roku",
+      "pattern": "^Roku/"
+    },
+    {
+      "name": "Rhythmbox",
+      "pattern": "(^gvfs/|^rhythmbox/)"
+    },
+    {
+      "name": "RSS Radio",
+      "pattern": "^RSSRadio"
+    },
+    {
+      "name": "RSSDemon",
+      "pattern": "com\\.meecel\\.feedreader\\.RssDemonAd"
+    },
+    {
+      "name": "RSSOwl",
+      "pattern": "^RSSOwl.*Windows"
+    },
+    {
+      "name": "RTL+",
+      "pattern": "RTL\\+"
+    },
+    {
+      "name": "SachNoi",
+      "pattern": "^SachNoi\\.app/|^SachNoiApp/"
+    },
+    {
+      "name": "Samsung Podcasts",
+      "pattern": "^sp-agent"
+    },
+    {
+      "name": "ServeStream",
+      "pattern": "^ServeStream Dynamo/|^ServeStream$"
+    },
+    {
+      "name": "Shadow",
+      "pattern": "^Shadow"
+    },
+    {
+      "name": "SiriusXM",
+      "pattern": "^SiriusXM|SXMApp|sxm-android|sxm-apple/"
+    },
+    {
+      "name": "Slack",
+      "pattern": "^Slack/"
+    },
+    {
+      "name": "Snipd",
+      "pattern": "^Snipd/"
+    },
+    {
+      "name": "Snapchat",
+      "pattern": "s~snapchat-proxy"
+    },
+    {
+      "name": "Sodes",
+      "pattern": "^Sodes/"
+    },
+    {
+      "name": "Sonnet",
+      "pattern": "(Sonnet|^Simple Podcast Player)"
+    },
+    {
+      "name": "Sony PlayStation 5",
+      "pattern": "^sony_tv;ps5;"
+    },
+    {
+      "name": "Sonos",
+      "pattern": "Sonos"
+    },
+    {
+      "name": "SoundOn",
+      "pattern": "^SoundOn/"
+    },
+    {
+      "name": "SoundWaves",
+      "pattern": "^SoundWaves-\\d"
+    },
+    {
+      "name": "Sportbladet Android app",
+      "pattern": "Android Sportbladet Hermes/"
+    },
+    {
+      "name": "Sportbladet iOS app",
+      "pattern": "iOS Sportbladet Hermes/"
+    },
+    {
+      "name": "Spotify",
+      "pattern": "^Spotify/.+Linux|Macintosh.+Spotify/|^Spotify/.+OSX|Windows.+Spotify/|^Spotify/.+Win32|^Spotify/.+Android|^Spotify/.+iOS|^Spotify/.+Polestar|^Spotify/.+Volvo|^spotify_|^Spotify-Lite|^Spotify/\\d"
+    },
+    {
+      "name": "Spreaker",
+      "pattern": "(^Spreaker for Android|Spreaker/)"
+    },
+    {
+      "name": "Sprewell",
+      "pattern": "^Sprewell/"
+    },
+    {
+      "name": "Stavanger Aftenblad Android app",
+      "pattern": "Android SA Hermes/"
+    },
+    {
+      "name": "Stavanger Aftenblad iOS app",
+      "pattern": "iOS SA Hermes/"
+    },
+    {
+      "name": "Stitcher",
+      "pattern": "^Stitcher/|^Stitcher Demo/|^AlexaMediaPlayer/Stitcher"
+    },
+    {
+      "name": "Stoler Report",
+      "pattern": "^Stoler(%20| )Report/"
+    },
+    {
+      "name": "Storiyoh",
+      "pattern": "^Storiyoh/"
+    },
+    {
+      "name": "Storybutton",
+      "pattern": "^Storybutton/"
+    },
+    {
+      "name": "StoryShots",
+      "pattern": "^StoryShots/"
+    },
+    {
+      "name": "Strilen iOS app",
+      "pattern": "iOS Strilen Hermes/"
+    },
+    {
+      "name": "Subcast",
+      "pattern": "^Subcast"
+    },
+    {
+      "name": "Substack",
+      "pattern": "^Substack/"
+    },
+    {
+      "name": "Svenska Dagbladet iOS app",
+      "pattern": "iOS SvD Hermes/"
+    },
+    {
+      "name": "Svenska Dagbladet Android app",
+      "pattern": "SvD Hermes/"
+    },
+    {
+      "name": "Swinsian",
+      "pattern": "^Swinsian/"
+    },
+    {
+      "name": "Sybel",
+      "pattern": "^Sybel$"
+    },
+    {
+      "name": "SYOK",
+      "pattern": "^SYOK|^my\\.com\\.astro\\.player"
+    },
+    {
+      "name": "TED",
+      "pattern": "^TED |^TED/"
+    },
+    {
+      "name": "The God Minute",
+      "pattern": "^The God Minute/"
+    },
+    {
+      "name": "The Economist",
+      "pattern": "(^lamarr-iOS|^TheEconomist-Lamarr-ios|^TheEconomist-Lamarr-iOS|^lamarr-android|^TheEconomist-Lamarr-android)"
+    },
+    {
+      "name": "The Podcast App",
+      "pattern": "^ThePodcastApp|iOS.*The Podcast App/|com\\.evolve\\.podcast/|^podcast/\\d* |^PodcastApp/\\d"
+    },
+    {
+      "name": "Twipe Mobile App",
+      "pattern": "^TwipeMobileApp"
+    },
+    {
+      "name": "Mozilla Thunderbird",
+      "pattern": " Thunderbird/"
+    },
+    {
+      "name": "TikTok",
+      "pattern": "musical_ly"
+    },
+    {
+      "name": "Treble",
+      "pattern": "^TREBLE/"
+    },
+    {
+      "name": "Tumult",
+      "pattern": "^Tumult"
+    },
+    {
+      "name": "TuneIn",
+      "pattern": "^TuneIn| TuneIn/"
+    },
+    {
+      "name": "Turtlecast",
+      "pattern": "^(Turtlecast|TURTLECAST)/"
+    },
+    {
+      "name": "Twitter",
+      "pattern": "^Twitter(Android)?/| Twitter for i"
+    },
+    {
+      "name": "Tweetbot",
+      "pattern": "^Tweetbot/"
+    },
+    {
+      "name": "Ubook Player",
+      "pattern": "^Ubook Player"
+    },
+    {
+      "name": "uTorrent",
+      "pattern": "^uTorrent|BTWebClient"
+    },
+    {
+      "name": "Vestnytt iOS app",
+      "pattern": "iOS Vestnytt Hermes/"
+    },
+    {
+      "name": "VG Android app",
+      "pattern": "Android VG Hermes/"
+    },
+    {
+      "name": "VG iOS app",
+      "pattern": "iOS VG Hermes/"
+    },
+    {
+      "name": "VictorReader",
+      "pattern": "^VictorReader Stream|^VictorReader_"
+    },
+    {
+      "name": "VLC media player",
+      "pattern": "^VLC/\\d"
+    },
+    {
+      "name": "Vodacast",
+      "pattern": "^Vodacast"
+    },
+    {
+      "name": "Voiz FM",
+      "pattern": "^Voiz FM/"
+    },
+    {
+      "name": "Wavlake",
+      "pattern": "^Wavlake/"
+    },
+    {
+      "name": "Winamp",
+      "pattern": "^Winamp"
+    },
+    {
+      "name": "WeCast",
+      "pattern": "^WeCast/"
+    },
+    {
+      "name": "WhatsApp",
+      "pattern": "^WhatsApp/"
+    },
+    {
+      "name": "Windows Media Player",
+      "pattern": "^NSPlayer|WMPlayer/|^Windows-Media-Player/"
+    },
+    {
+      "name": "WynkMusic",
+      "pattern": "^WynkMusic/"
+    },
+    {
+      "name": "Xiao Yu Zhou",
+      "pattern": "^Xiaoyuzhou/"
+    },
+    {
+      "name": "XING",
+      "pattern": "iPhone.*XING"
+    },
+    {
+      "name": "Yandex Music",
+      "pattern": "^Ya(ndex)?\\.Music/"
+    },
+    {
+      "name": "Yapa",
+      "pattern": "^yapa/"
+    },
+    {
+      "name": "YouTube Music",
+      "pattern": "^com\\.google\\.android\\.apps\\.youtube\\.music/|^YouTubeMusic/\\d"
+    },
+    {
+      "name": "YouTube Music (ReVanced)",
+      "pattern": "^app\\.revanced\\.android\\.apps\\.youtube\\.music/"
+    },
+    {
+      "name": "Zeno",
+      "pattern": "^Zeno$"
+    },
+    {
+      "name": "Zune",
+      "pattern": "Zune/"
+    },
+    {
+      "name": "小宇宙",
+      "pattern": "^Podcast/1\\."
+    },
+    {
+      "name": "KAIOS podcast app",
+      "pattern": ".*KAIOS/"
+    },
+    {
+      "name": "talkSPORT app",
+      "pattern": "^talkS(PORT|port)/"
+    },
+    {
+      "name": "Times Radio app",
+      "pattern": "^Times(%20|\\s)Radio"
+    },
+    {
+      "name": "Virgin Radio app",
+      "pattern": "^Virgin(%20|\\s)Radio"
+    },
+    {
+      "name": "Global Player",
+      "pattern": "^Global Player/|^Radio X/|^Capital (XTRA|FM)/|^Smooth/|^LBC/|^Heart/|^Classic FM/|^Gold/"
+    },
+    {
+      "name": "TalkRadio",
+      "pattern": "^Talk%20Radio/"
+    }
+  ]
+}
