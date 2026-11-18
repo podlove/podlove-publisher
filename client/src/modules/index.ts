@@ -12,6 +12,7 @@ import PodloveRelatedEpisodes from './related'
 import PodloveSoundbite from './soundbite'
 import PodloveShowSelect from './shows'
 import PodloveLicense from './license'
+import PodloveAssemblyai from './assemblyai'
 
 export default {
   PodloveDescription,
@@ -28,4 +29,5 @@ export default {
   PodloveSoundbite,
   PodloveShowSelect,
   PodloveLicense,
+  PodloveAssemblyai,
 }

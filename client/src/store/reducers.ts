@@ -16,6 +16,7 @@ import * as showsStore from './shows.store'
 import * as adminStore from './admin.store'
 import * as plusFileMigrationStore from './plusFileMigration.store'
 import * as plusStore from './plus.store'
+import * as assemblyaiStore from './assemblyai.store'
 
 export default combineReducers({
   lifecycle: lifecycleStore.reducer,
@@ -35,4 +36,5 @@ export default combineReducers({
   admin: adminStore.reducer,
   plusFileMigration: plusFileMigrationStore.reducer,
   plus: plusStore.reducer,
+  assemblyai: assemblyaiStore.reducer,
 })
